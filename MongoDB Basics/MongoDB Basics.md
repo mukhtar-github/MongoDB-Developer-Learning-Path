@@ -324,7 +324,7 @@ Type "it" for more
 
 * *ObjectId()* is the default value for the *"_id"* field, unless otherwise specified.
 
-* We learned how to insert documents into a collection using *Insert Document* from the *Data Explorer*. And the document was found by searching in the *Filter Field* with the key words *{"business_name": "GARBA AND SONS"}* and using *Find* both from the *Data Explorer*. And the searched document was found as shown below.
+* We learned how to insert documents into a collection using *Insert Document* from the *Data Explorer*. And the document was found by searching in the *Filter Field* of the *Data Explorer*, with the key words *{"business_name": "GARBA AND SONS"}*, then, using *Find* from the *Data Explorer* as well, the searched document was found.
 
 ```javascript
 _id: ObjectId("60cf5489b579883e83e6a77b")
