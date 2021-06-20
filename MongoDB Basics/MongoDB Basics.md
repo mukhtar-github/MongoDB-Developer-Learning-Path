@@ -336,3 +336,5 @@ result: "No Casualties"
 sector: "Organizational"
 address: Object
 ```
+
+### Inserting New Documents - insert() and errors
