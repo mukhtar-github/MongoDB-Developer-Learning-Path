@@ -319,3 +319,5 @@ Type "it" for more
 ## Chapter 3: Creating and Manipulating Documents
 
 ### Inserting New Documents - ObjectId
+
+* "_id" - serves as a unique identifier for a document in a collection.
