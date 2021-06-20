@@ -320,4 +320,6 @@ Type "it" for more
 
 ### Inserting New Documents - ObjectId
 
-* "_id" - serves as a unique identifier for a document in a collection.
+* *"_id"* - serves as a unique identifier for a document in a collection, and it is required in every *MongoDB* document.
+
+* *ObjectId()* is the default value for the *"_id"* field, unless otherwise specified.
