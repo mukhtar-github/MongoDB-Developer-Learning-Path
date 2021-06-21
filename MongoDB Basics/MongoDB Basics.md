@@ -347,7 +347,7 @@ address: Object
 
 How can we insert new documents into a collection using the Mongo shell?
 
-Now that we learned about the ObjectId and its role, we can backtrack a little bit and talk about a scenario where we insert a lot of documents at a time, such as this command.
+Now that we learned about the ObjectId and its role, we can backtrack a little bit and talk about a scenario where we insert a lot of documents at a time, such as this *mongoimport* command.
 
 When I try to insert a collection to a database that already contains the same documents, we get a lot of the same error.
 
