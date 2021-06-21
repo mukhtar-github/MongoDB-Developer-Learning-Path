@@ -340,3 +340,99 @@ address: Object
 ### Inserting New Documents - insert() and errors
 
 * When we try to insert a collection to a database that already contains the same documents, we get alot of the same error. The insertion did not succeed because a document with the exact *id* value already exsits.
+
+* This is why we need to add the *drop* option. This way we remove the whole collection before inserting it back, thus eliminating the duplicate key issue.
+
+* Ofcourse, *importing* entire collections is not the only way to insert documents using the *mongo shell*. Another way is to use the *insert* command.
+
+How can we insert new documents into a collection using the Mongo shell?
+
+Now that we learned about the ObjectId and its role, we can backtrack a little bit and talk about a scenario where we insert a lot of documents at a time, such as this command.
+
+When I try to insert a collection to a database that already contains the same documents, we get a lot of the same error.
+
+If we read what the error says, things may become a little clearer.
+
+The error says duplicate key error followed by a namespace for the collection and the ID value of a document that we attempted to insert.
+
+The insertion did not succeed because a document with this exact ID value already exists.
+
+This is why we need to add the drop option.
+
+This way we remove the whole collection before inserting it back, thus eliminating the duplicate key issue.
+
+Of course, importing entire collections is not the only way to insert documents using the Mongo shell.
+
+Another way is to use the insert command.
+
+As my first try, I want to see if I can replicate the duplicate ID error.
+
+Step one, connect to the Atlas cluster.
+
+Step two, navigate to the database that we need.
+
+Step three, get a random document from a collection.
+
+This is our first time using findOne.
+
+This function is good to have when you're looking for some document that matches a certain query, or to get a general idea about the shape of documents in a collection.
+
+This is a rare case, because most of the time, when a collection is queried, the goal is to get all of the documents that match the query, not just one.
+
+Plus, when you get just one document, you don't know if this is the only document that matches the query or if there are others.
+
+But this function is excellent for the purpose of this example, which is why you're seeing it now.
+
+Step four, copy this random document.
+
+Finally, let's try to insert it into the collection.
+
+See if we get a duplicate key error.
+
+It worked.
+
+We have a duplicate key error.
+
+The response tells us that the number of inserted documents after this command was zero.
+
+And there was a write error, meaning that writing this document to the collection did not succeed.
+
+Great.
+
+This means that we cannot insert documents with identical _id values into the collection.
+
+What happens if we remove the _id field and try to insert this document again?
+
+I just hit the up arrow on my keyboard to get the previously issued command.
+
+Then, I navigate all the way to the _id field and its value, delete this part of the document that I'm trying to insert, and hit Enter.
+
+This worked.
+
+And the response from the database is that the number of inserted documents is one, which is exactly how many documents we tried to insert.
+
+Let's investigate.
+
+I'm going to create a find query looking for all inspections with this ID and certificate number, just to be safe.
+
+Let's not forget to ask for the output to be pretty.
+
+The two documents look identical, except for the _id value.
+
+But we didn't add the _id field when we were inserting the document, you might say.
+
+That is correct.
+
+We did not.
+
+However, it got added automatically upon insertion, and it got assigned a generated ObjectId value.
+
+MongoDB allows you to have documents identical in their content, as long as the _id values are different between those documents.
+
+MongoDB also allows you to prevent inserting identical documents if you choose to manage your database that way.
+
+To place restrictions on the document content that is being inserted, you can check out the MongoDB schema validation functionality, which is unfortunately not part of this course.
+
+The main idea behind the way that insertion and document structure, in general, work in MongoDB, is that there is flexibility in how you choose to use it.
+
+And that's the beauty of it.
