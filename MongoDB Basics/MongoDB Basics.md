@@ -367,7 +367,7 @@ Another way is to use the insert command.
 
 As my first try, I want to see if I can replicate the duplicate ID error.
 
-Step one, connect to the Atlas cluster *mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"*.
+Step one, connect to the Atlas cluster *mongo "mongodb+srv://username:password@<cluster.mongodb.net/admin"*.
 
 Step two, navigate to the database that we need *use sample_training*.
 
