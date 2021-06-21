@@ -406,6 +406,31 @@ Step four, copy this random document.
 
 Finally, let's try to insert it into the collection.
 
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert({
+...       "_id" : ObjectId("56d61033a378eccde8a8354f"),
+...       "id" : "10021-2015-ENFO",
+...       "certificate_number" : 9278806,
+...       "business_name" : "ATLIXCO DELI GROCERY INC.",
+...       "date" : "Feb 20 2015",
+...       "result" : "No Violation Issued",
+...       "sector" : "Cigarette Retail Dealer - 127",
+...       "address" : {
+...               "city" : "RIDGEWOOD",
+...               "zip" : 11385,
+...               "street" : "MENAHAN ST",
+...               "number" : 1712
+...          }
+...   })
+WriteResult({
+	"nInserted" : 0,
+	"writeError" : {
+		"code" : 11000,
+		"errmsg" : "E11000 duplicate key error collection: sample_training.inspections index: _id_ dup key: { _id: ObjectId('56d61033a378eccde8a8354f') }"
+	}
+})
+```
+
 See if we get a duplicate key error.
 
 It worked.
