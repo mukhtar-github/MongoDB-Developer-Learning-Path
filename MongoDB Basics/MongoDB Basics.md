@@ -449,6 +449,11 @@ I just hit the up arrow on my keyboard to get the previously issued command.
 
 Then, I navigate all the way to the _id field and its value, delete this part of the document that I'm trying to insert, and hit Enter.
 
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert({ "id" : "10021-2015-ENFO",       "certificate_number" : 9278806,       "business_name" : "ATLIXCO DELI GROCERY INC.",       "date" : "Feb 20 2015",       "result" : "No Violation Issued",       "sector" : "Cigarette Retail Dealer - 127",       "address" : {               "city" : "RIDGEWOOD",               "zip" : 11385,               "street" : "MENAHAN ST",               "number" : 1712          }   })
+WriteResult({ "nInserted" : 1 })
+```
+
 This worked.
 
 And the response from the database is that the number of inserted documents is one, which is exactly how many documents we tried to insert.
