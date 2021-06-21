@@ -404,7 +404,7 @@ But this function is excellent for the purpose of this example, which is why you
 
 Step four, copy this random document.
 
-Finally, let's try to insert it into the collection.
+Finally, let's try to insert it into the collection. See if we get a duplicate key error.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert({
@@ -430,8 +430,6 @@ WriteResult({
 	}
 })
 ```
-
-See if we get a duplicate key error.
 
 It worked.
 
