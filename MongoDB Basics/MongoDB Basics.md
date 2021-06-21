@@ -367,11 +367,30 @@ Another way is to use the insert command.
 
 As my first try, I want to see if I can replicate the duplicate ID error.
 
-Step one, connect to the Atlas cluster.
+Step one, connect to the Atlas cluster *mongo "mongodb+srv://<username>:<password>@<cluster>.mongodb.net/admin"*.
 
-Step two, navigate to the database that we need.
+Step two, navigate to the database that we need *use sample_training*.
 
-Step three, get a random document from a collection.
+Step three, get a random document from a collection *db.inspections.findOne();*.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.findOne();
+{
+	"_id" : ObjectId("56d61033a378eccde8a8355f"),
+	"id" : "10423-2015-CMPL",
+	"certificate_number" : 9304139,
+	"business_name" : "LISANDRO CABRERA",
+	"date" : "Jul 17 2015",
+	"result" : "No Violation Issued",
+	"sector" : "Mobile Food Vendor - 881",
+	"address" : {
+		"city" : "BRONX",
+		"zip" : 10475,
+		"street" : "PALMER AVE",
+		"number" : 2234
+	}
+}
+```
 
 This is our first time using findOne.
 
