@@ -324,7 +324,7 @@ Type "it" for more
 
 * *ObjectId()* is the default value for the *"_id"* field, unless otherwise specified.
 
-* We learned how to insert documents into a collection using *Insert Document* from the *Data Explorer*. And the document was found by searching in the *Filter Field* of the *Data Explorer*, with the key words *{"business_name": "GARBA AND SONS"}*, then, using *Find* from the *Data Explorer* as well, the searched document was found.
+* We learned how to insert documents into a collection using *Insert Document* from the *Data Explorer*. And the document was found by searching in the *Filter Field* of the *Data Explorer*, with the key words *{"business_name": "GARBA AND SONS"}*, then, using *Find* from the *Data Explorer* as well.
 
 ```javascript
 _id: ObjectId("60cf5489b579883e83e6a77b")
@@ -338,3 +338,5 @@ address: Object
 ```
 
 ### Inserting New Documents - insert() and errors
+
+* When we try to insert a collection to a database that already contains the same documents, we get alot of the same error. The insertion did not succeed because a document with the exact *id* value already exsits.
