@@ -464,6 +464,40 @@ I'm going to create a find query looking for all inspections with this ID and ce
 
 Let's not forget to ask for the output to be pretty.
 
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({"id" : "10021-2015-ENFO", "certificate_number" : 9278806}).pretty()
+{
+	"_id" : ObjectId("56d61033a378eccde8a8354f"),
+	"id" : "10021-2015-ENFO",
+	"certificate_number" : 9278806,
+	"business_name" : "ATLIXCO DELI GROCERY INC.",
+	"date" : "Feb 20 2015",
+	"result" : "No Violation Issued",
+	"sector" : "Cigarette Retail Dealer - 127",
+	"address" : {
+		"city" : "RIDGEWOOD",
+		"zip" : 11385,
+		"street" : "MENAHAN ST",
+		"number" : 1712
+	}
+}
+{
+	"_id" : ObjectId("60d0383080680a0009339523"),
+	"id" : "10021-2015-ENFO",
+	"certificate_number" : 9278806,
+	"business_name" : "ATLIXCO DELI GROCERY INC.",
+	"date" : "Feb 20 2015",
+	"result" : "No Violation Issued",
+	"sector" : "Cigarette Retail Dealer - 127",
+	"address" : {
+		"city" : "RIDGEWOOD",
+		"zip" : 11385,
+		"street" : "MENAHAN ST",
+		"number" : 1712
+	}
+}
+```
+
 The two documents look identical, except for the _id value.
 
 But we didn't add the _id field when we were inserting the document, you might say.
