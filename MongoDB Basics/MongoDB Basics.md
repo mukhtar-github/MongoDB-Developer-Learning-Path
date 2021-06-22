@@ -520,4 +520,18 @@ And that's the beauty of it.
 
 ### Inserting New Documents - insert() order
 
-Can we also *insert* multiple documents at a time, and how that work? Here's the syntax for that operation, *db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])*. I used the command *insert*, and to add multiple documents, I placed them into an array by surrounding them with square brackets.
+Can we also *insert* multiple documents at a time, and how that work? Here's the syntax for that operation, *db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])*. I used the command *insert*, and to add multiple documents, I placed them into an array by surrounding them with square brackets. These documents each have only one field called *test*. So they do not match the rest of the documents in this collection, in structure and in content. But that's still allowed by *MongoDB*, and is definitely very convinient for the purposes of this lesson.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 3,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+```
