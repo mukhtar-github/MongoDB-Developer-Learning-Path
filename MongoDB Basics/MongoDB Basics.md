@@ -554,4 +554,37 @@ BulkWriteResult({
 })
 ```
 
-This didn't work. We did not get the duplicate key error. Why is that? This is because we did not specify the underscore ID values for any of the documents that we inserted. This means that no duplicate IDs were generated. Each one of those now six inserted documents has it's own unique underscore ID value.
+This didn't work. We did not get the duplicate key error. Why is that? This is because we did not specify the underscore ID values for any of the documents that we inserted. This means that no duplicate IDs were generated. Each one of those now six inserted documents has it's own unique underscore ID value. Well, I would still love to demonstrate a duplicate key error. So let's do that within one action.
+
+```javascript
+db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 }, { "_id": 3, "test": 3 }])
+```
+
+Here, *test 1 & test 2* have the same underscore ID value,which equals to 1. Let's hope this fails.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
+... { "_id": 3, "test": 3 }])
+BulkWriteResult({
+	"writeErrors" : [
+		{
+			"index" : 1,
+			"code" : 11000,
+			"errmsg" : "E11000 duplicate key error collection: sample_training.inspections index: _id_ dup key: { _id: 1.0 }",
+			"op" : {
+				"_id" : 1,
+				"test" : 2
+			}
+		}
+	],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+```
+
+And it does, but only kind of. One document is still inserted. Was it *test 1, test 2, or test 3*, the one without the duplicate key in it?
