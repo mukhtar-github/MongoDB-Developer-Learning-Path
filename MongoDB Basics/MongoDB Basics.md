@@ -517,3 +517,7 @@ To place restrictions on the document content that is being inserted, you can ch
 The main idea behind the way that insertion and document structure, in general, work in MongoDB, is that there is flexibility in how you choose to use it.
 
 And that's the beauty of it.
+
+### Inserting New Documents - insert() order
+
+Can we also *insert* multiple documents at a time, and how that work? Here's the syntax for that operation, *db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])*. I used the command *insert*, and to add multiple documents, I placed them into an array by surrounding them with square brackets.
