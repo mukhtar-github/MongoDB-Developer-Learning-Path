@@ -535,3 +535,23 @@ BulkWriteResult({
 	"upserted" : [ ]
 })
 ```
+
+The response from this command conveys alot of information about how this operation went, so far, so good. We see no errors, and all three documents were added to the collection.
+
+Now we're going to try to insert these three documents into the collection again, and hope that this will produce a duplicate key error. Because these documents are duplicates over the ones that we inserted earlier.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 3,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+```
+
+This didn't work. We did not get the duplicate key error. Why is that? This is because we did not specify the underscore ID values for any of the documents that we inserted. This means that no duplicate IDs were generated. Each one of those now six inserted documents has it's own unique underscore ID value.
