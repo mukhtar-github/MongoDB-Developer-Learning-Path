@@ -520,7 +520,7 @@ And that's the beauty of it.
 
 ### Inserting New Documents - insert() order
 
-Can we also *insert* multiple documents at a time, and how that work? Here's the syntax for that operation, *db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])*. I used the command *insert*, and to add multiple documents, I placed them into an array by surrounding them with square brackets. These documents each have only one field called *test*. So they do not match the rest of the documents in this collection, in structure and in content. But that's still allowed by *MongoDB*, and is definitely very convinient for the purposes of this lesson.
+Can we also *insert* multiple documents at a time, and how that work? Here's the syntax for that operation, *db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])*. I used the command *insert*, and to add multiple documents, I placed them into an *array* by surrounding them with square brackets. These documents each have only one field called *test*. So they do not match the rest of the documents in this collection, in structure and in content. But that's still allowed by *MongoDB*, and is definitely very convinient for the purposes of this lesson.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([ { "test": 1 }, { "test": 2 }, { "test": 3 } ])
@@ -594,4 +594,10 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({ "_id": 1 
 { "_id" : 1, "test" : 1 }
 ```
 
-Looks like it was *test 1*. This doesn't seem right. There were two documents that had unique underscore ID values. Why did only one of them get inserted? The error clearly states that the problem document was *test 2*. But we know nothing about *test 3*. This is because, when many documents are inserted,
+Looks like it was *test 1*. This doesn't seem right. There were two documents that had unique underscore ID values. Why did only one of them get inserted? The error clearly states that the problem document was *test 2*. But we know nothing about *test 3*. This is because, when many documents are inserted, the default behavior is to insert them in the order in which they are listed in the array, but we can change that. All we need to do is add the *ordered* option in the *insert* command.
+
+```javascript
+db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
+    { "_id": 3, "test": 3 }],{ "ordered": false })
+```
+
