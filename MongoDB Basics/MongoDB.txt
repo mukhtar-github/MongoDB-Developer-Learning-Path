@@ -7,3 +7,5 @@ sudo systemctl stop mongod
 mongoimport --db mongo-exercises --collection courses --drop --file exercise-data.json --jsonArray
 
 ** dkemg
+
+m001-mongodb-basics
