@@ -597,7 +597,41 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({ "_id": 1 
 Looks like it was *test 1*. This doesn't seem right. There were two documents that had unique underscore ID values. Why did only one of them get inserted? The error clearly states that the problem document was *test 2*. But we know nothing about *test 3*. This is because, when many documents are inserted, the default behavior is to insert them in the order in which they are listed in the array, but we can change that. All we need to do is add the *ordered* option in the *insert* command.
 
 ```javascript
-db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
-    { "_id": 3, "test": 3 }],{ "ordered": false })
+db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 }, { "_id": 3, "test": 3 }],{ "ordered": false })
 ```
 
+Now all documents with unique underscore ID values will be inserted, and all the documents that have duplicate unique underscore ID values will produce their own error.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
+...                        { "_id": 3, "test": 3 }],{ "ordered": false })
+BulkWriteResult({
+	"writeErrors" : [
+		{
+			"index" : 0,
+			"code" : 11000,
+			"errmsg" : "E11000 duplicate key error collection: sample_training.inspections index: _id_ dup key: { _id: 1.0 }",
+			"op" : {
+				"_id" : 1,
+				"test" : 1
+			}
+		},
+		{
+			"index" : 1,
+			"code" : 11000,
+			"errmsg" : "E11000 duplicate key error collection: sample_training.inspections index: _id_ dup key: { _id: 1.0 }",
+			"op" : {
+				"_id" : 1,
+				"test" : 2
+			}
+		}
+	],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 1,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+```
