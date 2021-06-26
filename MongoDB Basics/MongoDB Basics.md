@@ -604,7 +604,7 @@ Now all documents with unique underscore ID values will be inserted, and all the
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert([{ "_id": 1, "test": 1 },{ "_id": 1, "test": 2 },
-...                        { "_id": 3, "test": 3 }],{ "ordered": false })
+...{ "_id": 3, "test": 3 }],{ "ordered": false })
 BulkWriteResult({
 	"writeErrors" : [
 		{
@@ -635,3 +635,7 @@ BulkWriteResult({
 	"upserted" : [ ]
 })
 ```
+
+So, *test 1* is a duplicate key error, because that is the only document that got inserted in the previous bulk insert. Also, *test 2* is a duplicate key error, because also shares the same underscore ID value. And *test 3*, the innocent bystander in this diplicate key drama, finally got inserted into the collection. Hurray! When the default ordered insert happens, the moment there is a duplicate key error, the insert operation halts. And even if the rest of the documents have unique underscore IDs, they won't get a chance to be inserted, just like *test 3*.
+
+If the insert is *unordered*, then every document that has a unique underscore ID values gets added to the collection.
