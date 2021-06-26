@@ -1,0 +1,9 @@
+sudo systemctl start mongod
+
+sudo systemctl status mongod
+
+sudo systemctl stop mongod
+
+mongoimport --db mongo-exercises --collection courses --drop --file exercise-data.json --jsonArray
+
+** dkemg
