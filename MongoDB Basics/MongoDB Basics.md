@@ -638,4 +638,20 @@ BulkWriteResult({
 
 So, *test 1* is a duplicate key error, because that is the only document that got inserted in the previous bulk insert. Also, *test 2* is a duplicate key error, because it also shares the same underscore ID value. And *test 3*, the innocent bystander in this diplicate key drama, finally got inserted into the collection. Hurray! When the default ordered insert happens, the moment there is a duplicate key error, the insert operation halts. And even if the rest of the documents have unique underscore IDs, they won't get a chance to be inserted, just like *test 3*.
 
-If the insert is *unordered*, then every document that has a unique underscore ID values gets added to the collection. Now it's time for a fun fact. See if you can't spot what is wrong here. Feel free to pause the video and give it some thought, if you're up for a puzzle. As a reminder, currently we have successfully inserted the following documents into the database. If I try to insert these documents again,
+If the insert is *unordered*, then every document that has a unique underscore ID values gets added to the collection. Now it's time for a fun fact. See if you can't spot what is wrong here. Feel free to pause the video and give it some thought, if you're up for a puzzle. As a reminder, currently we have successfully inserted the following documents into the database. If I try to insert these documents again, I should get a duplicate key error. So here it goes.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspection.insert([{ "_id": 1, "test": 1 },{ "_id": 3, "test": 3 }])
+BulkWriteResult({
+	"writeErrors" : [ ],
+	"writeConcernErrors" : [ ],
+	"nInserted" : 2,
+	"nUpserted" : 0,
+	"nMatched" : 0,
+	"nModified" : 0,
+	"nRemoved" : 0,
+	"upserted" : [ ]
+})
+```
+
+And the result is no writeErrors, and two documents inserted. Now is time to pause the video if you want to ponder how come these two documents got inserted before you here the actual answer. This one should be a favourite for every developer in the world
