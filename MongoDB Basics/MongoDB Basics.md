@@ -651,4 +651,28 @@ We're going to pretend to be a teacher of class *three three nine*. And we know 
 
 To update one document, we select the edit button that looks like a pencil. You may recognize this view from when you inserted our first document into the collection. Here, we want to update the scores field by adding another score. Since this is an array field that contains sub-documents, aka, object types, when selecting to add a new element, we get a choice of where to nest it. In this case, we want to add an object to an array, so we select that. And change the value type from the default string to object.
 
-We want to follow the structure of other objects in this array for our own consistency and sanity. So the first field should be type and the second should be score. The type is extra credit and the score is 100. Looking at the other scores that the student has, it's a good thing that they submitted some extra credit. We must remember to change the score value type from string to double. This way, if we plan on doing some calculations down the line, we wouldn't have to convert any values from string to numeric types. Finally, we can hit update. Voila! Now the student has a chance of passing class ID *three three nine*.
+We want to follow the structure of other objects in this array for our own consistency and sanity. So the first field should be type and the second should be score. The type is extra credit and the score is 100. Looking at the other scores that the student has, it's a good thing that they submitted some extra credit. We must remember to change the score value type from string to double. This way, if we plan on doing some calculations down the line, we wouldn't have to convert any values from string to numeric types. Finally, we can hit update.
+
+```javascript
+_id: ObjectId ("56d5f7eb604eb380b0d8deb4")
+student_id: 151
+scores: Array
+	0: Object
+		type: "exam"
+		score: 39.44538383489339
+	1: Object
+		type: "quiz"
+		score: 64.12864683143684
+	2: Object
+		type: "homework"
+		score: 46.49129069302115
+	3: Object
+		type: "homework"
+		score: 1.504565288457116
+	4: Object
+		type: "extra-credit"
+		score: 100
+class_id: 339
+```
+
+Voila! Now the student has a chance of passing class ID *three three nine*.
