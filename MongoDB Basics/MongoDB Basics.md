@@ -806,15 +806,68 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.updateMany({ "city": "H
 { "acknowledged" : true, "matchedCount" : 16, "modifiedCount" : 16 }
 ```
 
-16 documents matched our query, and 16 were updated. *$inc* syntax allows us to update multiple fields at the same time by listing the fields and their increment value separated by a comma. *$inc* is not the only update operator in the *MongoDB query language*.
+16 documents matched our query, and 16 were updated. *$inc* syntax allows us to update multiple fields at the same time by listing the fields and their increment value separated by a comma.
 
-Let's use *updateOne* and see if we can try out a different update operator with it. After thorough googling, I found out that the city of Hudson in New York state currently has a population of 17,630 people. So we can update this document to be more accurate. If we try to use the *$inc* operator, then we'll have to find the current population value, then subtract that from the actual population, and then increment by that amount. That sounds exhausting. Instead, we'll use the *$set* operator. When *$set* is used, it updates the value of the given field with a specified value. Check out what happens if we make a typo in the field name. No errors, but we don't have a population field, you might say.
+```javascript
+{ "$inc": { "pop": 10, "<field2>": <increament value>, ... }}
+```
 
-Well, at this point, this behavior should almost be expected. Just like the implicit creation of databases in a collection, there is a precedent for implicit creation of fields. The idea is that if the field doesn't already exist and you're issuing this update, it means that you want to add this field to the document. And so the field gets added. Now this document has the "pop" and "population" field and both have the same value.
+*$inc* is not the only update operator in the *MongoDB query language*.
 
-You can also use *$set* to set the value for multiple fields, much in the same way that the $inc operator does it. When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
+Let's use *updateOne* and see if we can try out a different update operator with it.
 
-Just like with the set operator, if the field that you specify doesn't exist in the document, then $push will add an array field to the document with a specified value.Let's see the $push operator in action. First, we should look at the document that we updated via the UI. There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "zip": "12534" }).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca73239"),
+	"city" : "HUDSON",
+	"zip" : "12534",
+	"loc" : {
+		"y" : 42.246978,
+		"x" : 73.755248
+	},
+	"pop" : 21205,
+	"state" : "NY"
+}
+```
+
+After thorough googling, I found out that the city of Hudson in New York state currently has a population of 17,630 people. So we can update this document to be more accurate. If we try to use the *$inc* operator, then we'll have to find the current population value, then subtract that from the actual population, and then increment by that amount. That sounds exhausting. Instead, we'll use the *$set* operator.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.updateOne({ "zip": "12534" }, { "$set": { "pop": 17630 } })
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+```
+
+When *$set* is used, it updates the value of the given field with a specified value. Check out what happens if we make a typo in the field name.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.updateOne({ "zip": "12534" }, { "$set": { "population": 17630 } })
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+```
+
+No errors, but we don't have a population field, you might say. Well, at this point, this behavior should almost be expected. Just like the implicit creation of databases in a collection, there is a precedent for implicit creation of fields. The idea is that if the field doesn't already exist and you're issuing this update, it means that you want to add this field to the document.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "zip": "12534" }).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca73239"),
+	"city" : "HUDSON",
+	"zip" : "12534",
+	"loc" : {
+		"y" : 42.246978,
+		"x" : 73.755248
+	},
+	"pop" : 17630,
+	"state" : "NY",
+	"population" : 17630
+}
+```
+
+And so the field gets added. Now this document has the "pop" and "population" field and both have the same value.
+
+You can also use *$set* to set the value for multiple fields, much in the same way that the *$inc* operator does it. When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
+
+Just like with the set operator, if the field that you specify doesn't exist in the document, then *$push* will add an array field to the document with a specified value.Let's see the $push operator in action. First, we should look at the document that we updated via the UI. There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
 
 This student looks like they could use a little bit of an extra credit. We'll do the same thing that we did in Data Explorer and add an extra credit score to the "scores" array. This modifies the "scores" array by adding another element to it. In this case, the element added is a document with two field value pairs, type-extra credit and score-100. And there it is. The student got 100 for their extra credit. Hopefully that will improve their class average.
 
