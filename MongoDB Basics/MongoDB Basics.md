@@ -788,6 +788,11 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "city": "HUDSON"
 } ...
 ```
 
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "city": "HUDSON" }).count()
+16
+```
+
 16 to be precise. Let's update all of them. The first argument here specifies the query which will determine which documents will be updated.
 
 The second argument specifies the update that needs to happen. We're using $inc, which is an MQL update operator. It increments the value of a specified field by the given amount. So in this case, we're looking to increment the "pop" field by 10 in every document which lists Hudson as the city. When the operation is complete, we get a summary of whether it succeeded. 16 documents matched our query, and 16 were updated.
