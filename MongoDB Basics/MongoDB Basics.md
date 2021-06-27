@@ -873,8 +873,109 @@ You can also use *$set* to set the value for multiple fields, much in the same w
 
 When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
 
-Just like with the set operator, if the field that you specify doesn't exist in the document, then *$push* will add an array field to the document with a specified value.Let's see the $push operator in action. First, we should look at the document that we updated via the UI. There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
+```javascript
+{ $push: { <field1>: <value1>, ... }}
+```
 
-This student looks like they could use a little bit of an extra credit. We'll do the same thing that we did in Data Explorer and add an extra credit score to the "scores" array. This modifies the "scores" array by adding another element to it. In this case, the element added is a document with two field value pairs, type-extra credit and score-100. And there it is. The student got 100 for their extra credit. Hopefully that will improve their class average.
+Just like with the set operator, if the field that you specify doesn't exist in the document, then *$push* will add an array field to the document with a specified value. Let's see the *$push* operator in action. First, we should look at the document that we updated via the UI.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "student_id": 151, "class_id": 339 }).pretty()
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8deb4"),
+	"student_id" : 151,
+	"scores" : [
+		{
+			"type" : "exam",
+			"score" : 39.44538383489339
+		},
+		{
+			"type" : "quiz",
+			"score" : 64.12864683143684
+		},
+		{
+			"type" : "homework",
+			"score" : 46.49129069302115
+		},
+		{
+			"type" : "homework",
+			"score" : 1.504565288457116
+		},
+		{
+			"type" : "extra-credit",
+			"score" : 100
+		}
+	],
+	"class_id" : 339
+}
+```
+
+There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "student_id": 250, "class_id": 339 }).pretty()
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8e292"),
+	"student_id" : 250,
+	"scores" : [
+		{
+			"type" : "exam",
+			"score" : 3.6641013617826124
+		},
+		{
+			"type" : "quiz",
+			"score" : 16.099760154050923
+		},
+		{
+			"type" : "homework",
+			"score" : 18.069138737846245
+		},
+		{
+			"type" : "homework",
+			"score" : 66.16407292421133
+		}
+	],
+	"class_id" : 339
+}
+```
+
+This student looks like they could use a little bit of an extra credit. We'll do the same thing that we did in Data Explorer and add an extra credit score to the "scores" array. This modifies the "scores" array by adding another element to it. In this case, the element added is a document with two field value pairs, *type-extra credit* and *score-100*.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.updateOne({ "student_id": 250, "class_id": 339 },
+{ "$push": { "scores": { "type": "extra credit", "score": 100 }}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "student_id": 250, "class_id": 339 }).pretty()
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8e292"),
+	"student_id" : 250,
+	"scores" : [
+		{
+			"type" : "exam",
+			"score" : 3.6641013617826124
+		},
+		{
+			"type" : "quiz",
+			"score" : 16.099760154050923
+		},
+		{
+			"type" : "homework",
+			"score" : 18.069138737846245
+		},
+		{
+			"type" : "homework",
+			"score" : 66.16407292421133
+		},
+		{
+			"type" : "extra credit",
+			"score" : 100
+		}
+	],
+	"class_id" : 339
+}
+
+```
+
+And there it is. The student got 100 for their extra credit. Hopefully that will improve their class average.
 
 We will cover other *update operators* in the following lessons, but we won't cover all of them. To learn more about all available update operators in *MQL*, visit our excellent documentation page that is linked in the notes below this video.
