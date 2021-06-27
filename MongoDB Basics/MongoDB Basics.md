@@ -655,3 +655,19 @@ BulkWriteResult({
 ```
 
 And the result is no writeErrors, and two documents inserted. Now is time to pause the video if you want to ponder how come these two documents got inserted before you here the actual answer. This one should be a favourite for every developer in the world. There was a *typo*, and not just any *typo*-- the *collection* name got misspelled. Instead of the plural *inpections*, it was a singular *inspection*. So, why didn't we get an error? What happened? This behavior is by design. *MongoDB* wants it to be simple for you to create a new collection or a database.
+
+So if you insert a document into a collection that doesn't exist, then this collection will get created for you. Now when we run *show collections*.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> show collections
+companies
+grades
+inspection
+inspections
+posts
+routes
+trips
+zips
+```
+
+We see that there is the *inspection* collection, and the *inspections* collection.
