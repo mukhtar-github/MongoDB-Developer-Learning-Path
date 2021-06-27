@@ -629,21 +629,21 @@ Things change, and quite often, we need to update the data that we have in our d
 In the case of the grades collection, we have an array field. Let's expand it and see what that is about. Looks like an array of objects, is that possible? Why not? *MongoDB* has a flexible document model, which means that you can store your data however it makes sense for your application. An array of objects is a common way to store data in certain applications. Let's expand further and see what these objects look like. It appears that student *zero* took a class with the unique ID of *three three nine*, and had four assessments in that class, two *homework assignments*, one *quiz*, and one *exam*
 
 ```javascript
-_id: ObjectId ("56d5f7eb604eb380b0d8d8ce")
-student_id: 0
+_id: ObjectId ("56d5f7eb604eb380b0d8deb4")
+student_id: 151
 scores: Array
 	0: Object
 		type: "exam"
-		score: 78.40446309504266
+		score: 39.44538383489339
 	1: Object
 		type: "quiz"
-		score: 73.36224783231339
+		score: 64.12864683143684
 	2: Object
 		type: "homework"
-		score: 46.980982486720535
+		score: 46.49129069302115
 	3: Object
 		type: "homework"
-		score: 76.67556138656222
+		score: 1.504565288457116
 class_id: 339
 ```
 
