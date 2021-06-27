@@ -345,33 +345,11 @@ address: Object
 
 * Ofcourse, *importing* entire collections is not the only way to insert documents using the *mongo shell*. Another way is to use the *insert* command.
 
-How can we insert new documents into a collection using the Mongo shell?
+How can we insert new documents into a collection using the Mongo shell? Now that we learned about the ObjectId and its role, we can backtrack a little bit and talk about a scenario where we insert a lot of documents at a time, such as this *mongoimport* command. When I try to insert a collection to a database that already contains the same documents, we get a lot of the same error. If we read what the error says, things may become a little clearer. The error says duplicate key error followed by a namespace for the collection and the ID value of a document that we attempted to insert.
 
-Now that we learned about the ObjectId and its role, we can backtrack a little bit and talk about a scenario where we insert a lot of documents at a time, such as this *mongoimport* command.
+The insertion did not succeed because a document with this exact ID value already exists. This is why we need to add the drop option. This way we remove the whole collection before inserting it back, thus eliminating the duplicate key issue. Of course, importing entire collections is not the only way to insert documents using the Mongo shell. Another way is to use the insert command.
 
-When I try to insert a collection to a database that already contains the same documents, we get a lot of the same error.
-
-If we read what the error says, things may become a little clearer.
-
-The error says duplicate key error followed by a namespace for the collection and the ID value of a document that we attempted to insert.
-
-The insertion did not succeed because a document with this exact ID value already exists.
-
-This is why we need to add the drop option.
-
-This way we remove the whole collection before inserting it back, thus eliminating the duplicate key issue.
-
-Of course, importing entire collections is not the only way to insert documents using the Mongo shell.
-
-Another way is to use the insert command.
-
-As my first try, I want to see if I can replicate the duplicate ID error.
-
-Step one, connect to the Atlas cluster *mongo "mongodb+srv://username:password@<cluster.mongodb.net/admin"*.
-
-Step two, navigate to the database that we need *use sample_training*.
-
-Step three, get a random document from a collection *db.inspections.findOne();*.
+As my first try, I want to see if I can replicate the duplicate ID error. Step one, connect to the Atlas cluster *mongo "mongodb+srv://username:password@<cluster.mongodb.net/admin"*. Step two, navigate to the database that we need *use sample_training*. Step three, get a random document from a collection *db.inspections.findOne();*.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.findOne();
@@ -392,19 +370,8 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.findOne();
 }
 ```
 
-This is our first time using findOne.
-
-This function is good to have when you're looking for some document that matches a certain query, or to get a general idea about the shape of documents in a collection.
-
-This is a rare case, because most of the time, when a collection is queried, the goal is to get all of the documents that match the query, not just one.
-
-Plus, when you get just one document, you don't know if this is the only document that matches the query or if there are others.
-
-But this function is excellent for the purpose of this example, which is why you're seeing it now.
-
-Step four, copy this random document.
-
-Finally, let's try to insert it into the collection. See if we get a duplicate key error.
+This is our first time using *findOne*. This function is good to have when you're looking for some document that matches a certain query, or to get a general idea about the shape of documents in a collection. This is a rare case, because most of the time, when a collection is queried, the goal is to get all of the documents that match the query, not just one. Plus, when you get just one document, you don't know if this is the only document that matches the query or if there are others.
+But this function is excellent for the purpose of this example, which is why you're seeing it now. Step four, copy this random document. Finally, let's try to insert it into the collection. See if we get a duplicate key error.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert({
@@ -431,38 +398,14 @@ WriteResult({
 })
 ```
 
-It worked.
-
-We have a duplicate key error.
-
-The response tells us that the number of inserted documents after this command was zero.
-
-And there was a write error, meaning that writing this document to the collection did not succeed.
-
-Great.
-
-This means that we cannot insert documents with identical _id values into the collection.
-
-What happens if we remove the _id field and try to insert this document again?
-
-I just hit the up arrow on my keyboard to get the previously issued command.
-
-Then, I navigate all the way to the _id field and its value, delete this part of the document that I'm trying to insert, and hit Enter.
+It worked. We have a duplicate key error. The response tells us that the number of inserted documents after this command was zero. And there was a write error, meaning that writing this document to the collection did not succeed. Great. This means that we cannot insert documents with identical *_id* values into the collection. What happens if we remove the *_id* field and try to insert this document again? I just hit the up arrow on my keyboard to get the previously issued command.Then, I navigate all the way to the _id field and its value, delete this part of the document that I'm trying to insert, and hit Enter.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.insert({ "id" : "10021-2015-ENFO",       "certificate_number" : 9278806,       "business_name" : "ATLIXCO DELI GROCERY INC.",       "date" : "Feb 20 2015",       "result" : "No Violation Issued",       "sector" : "Cigarette Retail Dealer - 127",       "address" : {               "city" : "RIDGEWOOD",               "zip" : 11385,               "street" : "MENAHAN ST",               "number" : 1712          }   })
 WriteResult({ "nInserted" : 1 })
 ```
 
-This worked.
-
-And the response from the database is that the number of inserted documents is one, which is exactly how many documents we tried to insert.
-
-Let's investigate.
-
-I'm going to create a find query looking for all inspections with this ID and certificate number, just to be safe.
-
-Let's not forget to ask for the output to be pretty.
+This worked. And the response from the database is that the number of inserted documents is one, which is exactly how many documents we tried to insert. Let's investigate. I'm going to create a find query looking for all inspections with this ID and certificate number, just to be safe. Let's not forget to ask for the output to be pretty.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({"id" : "10021-2015-ENFO", "certificate_number" : 9278806}).pretty()
@@ -498,25 +441,9 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({"id" : "10
 }
 ```
 
-The two documents look identical, except for the _id value.
+The two documents look identical, except for the *_id* value. But we didn't add the *_id* field when we were inserting the document, you might say. That is correct. We did not. However, it got added automatically upon insertion, and it got assigned a generated ObjectId value. *MongoDB* allows you to have documents identical in their content, as long as the *_id* values are different between those documents. *MongoDB* also allows you to prevent inserting identical documents if you choose to manage your database that way.
 
-But we didn't add the _id field when we were inserting the document, you might say.
-
-That is correct.
-
-We did not.
-
-However, it got added automatically upon insertion, and it got assigned a generated ObjectId value.
-
-MongoDB allows you to have documents identical in their content, as long as the _id values are different between those documents.
-
-MongoDB also allows you to prevent inserting identical documents if you choose to manage your database that way.
-
-To place restrictions on the document content that is being inserted, you can check out the MongoDB schema validation functionality, which is unfortunately not part of this course.
-
-The main idea behind the way that insertion and document structure, in general, work in MongoDB, is that there is flexibility in how you choose to use it.
-
-And that's the beauty of it.
+To place restrictions on the document content that is being inserted, you can check out the MongoDB schema validation functionality, which is unfortunately not part of this course. The main idea behind the way that insertion and document structure, in general, work in MongoDB, is that there is flexibility in how you choose to use it. And that's the beauty of it.
 
 ### Inserting New Documents - insert() order
 
@@ -670,4 +597,39 @@ trips
 zips
 ```
 
-We see that there is the *inspection* collection, and the *inspections* collection.
+We see that there is the *inspection* collection, and the *inspections* collection. The same goes for databases. If I misspelled a database name, I won't get an error. For example, here we're using *training* instead of *sample training*.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> use training
+switched to db training
+```
+
+And this database is ready to be created, as you can tell by the helpful *switched to db training* message. If I insert a document into some collection right now, then both the collection and this *training* database will become part of my *Atlas Cluster*. But if don't do anything and go back to take a look at all of the databases at my disposal, then this new *training* database should not be there, since there is no data associated with it.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> show dbs
+admin               0.000GB
+local               5.732GB
+sample_airbnb       0.051GB
+sample_analytics    0.009GB
+sample_geospatial   0.001GB
+sample_mflix        0.041GB
+sample_restaurants  0.006GB
+sample_supplies     0.001GB
+sample_training     0.045GB
+sample_weatherdata  0.002GB
+```
+
+Since nothing was inserted, this list does not contain the *training* database.
+
+### Updating Documents - Data Explorer
+
+Things change, and quite often, we need to update the data that we have in our database. Let's see what tools we have to perform an update. For this lesson, we'll use the *grades* collection from the *sample training* data set. The document and this collection seem pretty small compared to what we saw before. But here, we see an example of a different field type. The inspections collection introduced us to the concept of sub-documents, where the address field was an object, aka, a document, with fields and values for the street name, city, and so on.
+
+In the case of the grades collection, we have an array field. Let's expand it and see what that is about. Looks like an array of objects, is that possible? Why not? *MongoDB* has a flexible document model, which means that you can store your data however it makes sense for your application. An array of objects is a common way to store data in certain applications. Let's expand further and see what these objects look like. It appears that student zero took a class with the unique ID of *three three nine*, and had four assessments in that class, two homework assignments, one quiz, and one exam.
+
+We're going to pretend to be a teacher of class *three three nine*. And we know for a fact that a student with ID one five one has done some extra credit work at the end of the semester. Let's update that student's record for the class. When we hover over the document that matches this query, there are a number of actions that we can choose to do, edit, copy, clone, and delete.
+
+To update one document, we select the edit button that looks like a pencil. You may recognize this view from when you inserted our first document into the collection. Here, we want to update the scores field by adding another score. Since this is an array field that contains sub-documents, aka, object types, when selecting to add a new element, we get a choice of where to nest it. In this case, we want to add an object to an array, so we select that. And change the value type from the default string to object.
+
+We want to follow the structure of other objects in this array for our own consistency and sanity. So the first field should be type and the second should be score. The type is extra credit and the score is 100. Looking at the other scores that the student has, it's a good thing that they submitted some extra credit. We must remember to change the score value type from string to double. This way, if we plan on doing some calculations down the line, we wouldn't have to convert any values from string to numeric types. Finally, we can hit update. Voila! Now the student has a chance of passing class ID *three three nine*.
