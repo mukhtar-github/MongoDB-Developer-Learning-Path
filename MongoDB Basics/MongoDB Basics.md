@@ -799,9 +799,14 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "city": "HUDSON"
 db.zips.updateMany({ "city": "HUDSON" }, { "$inc": { "pop": 10 } })
 ```
 
-The first argument here specifies the query which will determine which documents will be updated.The second argument specifies the update that needs to happen. We're using $inc, which is an MQL update operator. It increments the value of a specified field by the given amount. So in this case, we're looking to increment the "pop" field by 10 in every document which lists Hudson as the city. When the operation is complete, we get a summary of whether it succeeded. 16 documents matched our query, and 16 were updated.
+The first argument here specifies the query which will determine which documents will be updated.The second argument specifies the update that needs to happen. We're using *$inc*, which is an *MQL update operator*. It increments the value of a specified field by the given amount. So in this case, we're looking to increment the "pop" field by 10 in every document which lists Hudson as the city. When the operation is complete, we get a summary of whether it succeeded.
 
-*$inc* syntax allows us to update multiple fields at the same time by listing the fields and their increment value separated by a comma. *$inc* is not the only update operator in the *MongoDB query language*. Let's use updateOne and see if we can try out a different update operator with it. After thorough googling, I found out that the city of Hudson in New York state currently has a population of 17,630 people.
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.updateMany({ "city": "HUDSON" }, { "$inc": { "pop": 10 } })
+{ "acknowledged" : true, "matchedCount" : 16, "modifiedCount" : 16 }
+```
+
+16 documents matched our query, and 16 were updated. *$inc* syntax allows us to update multiple fields at the same time by listing the fields and their increment value separated by a comma. *$inc* is not the only update operator in the *MongoDB query language*. Let's use updateOne and see if we can try out a different update operator with it. After thorough googling, I found out that the city of Hudson in New York state currently has a population of 17,630 people.
 
 So we can update this document to be more accurate. If we try to use the $inc operator, then we'll have to find the current population value, then subtract that from the actual population, and then increment by that amount. That sounds exhausting. Instead, we'll use the $set operator. When *$set* is used, it updates the value of the given field with a specified value. Check out what happens if we make a typo in the field name. No errors, but we don't have a population field, you might say.
 
