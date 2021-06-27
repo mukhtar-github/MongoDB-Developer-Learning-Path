@@ -681,7 +681,7 @@ Voila! Now the student has a chance of passing class ID *three three nine*.
 
 Time to switch to the *Mongo shell* and see what kind of document updates we can perform using the *MongoDB Query Language*, also known as *MQL*. In this lesson, we'll talk about two operations used to update documents in the Mongo shell, *updateOne* and *updateMany*.
 
-Earlier, we saw an example of using *findOne*, which returns the first document that happens to match the given query. This is different from find, which returns a cursor with all the documents that correspond to the given query. Likewise, with *UpdateOne*, if there are multiple documents that match a given criteria, only one of them will be updated, whichever one this operation finds first. Whereas using *updateMany* will update all documents that match a given query. With that said, let's see both commands in action. As always, I must connect to my Atlas cluster. For this lesson, we'll use the *sample_training zips* collection.
+Earlier, we saw an example of using *findOne*, which returns the first document that happens to match the given query. This is different from *find*, which returns a cursor with all the documents that correspond to the given query. Likewise, with *UpdateOne*, if there are multiple documents that match a given criteria, only one of them will be updated, whichever one this operation finds first. Whereas using *updateMany* will update all documents that match a given query. With that said, let's see both commands in action. As always, I must connect to my Atlas cluster. For this lesson, we'll use the *sample_training zips* collection.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().pretty()
@@ -717,7 +717,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().pretty()
 	},
 	"pop" : 6055,
 	"state" : "AL"
-}
+} ...
 Type "it" for more
 ```
 
