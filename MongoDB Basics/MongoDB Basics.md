@@ -676,3 +676,32 @@ class_id: 339
 ```
 
 Voila! Now the student has a chance of passing class ID *three three nine*.
+
+### Updating Documents - mongo shell
+
+Time to switch to the *Mongo shell* and see what kind of document updates we can perform using the *MongoDB Query Language*, also known as *MQL*. In this lesson, we'll talk about two operations used to update documents in the Mongo shell, *updateOne* and *updateMany*.
+
+Earlier, we saw an example of using *findOne*, which returns the first document that happens to match the given query. This is different from find, which returns a cursor with all the documents that correspond to the given query. Likewise, with *UpdateOne*, if there are multiple documents that match a given criteria, only one of them will be updated, whichever one this operation finds first.
+
+Whereas using *updateMany* will update all documents that match a given query. With that said, let's see both commands in action. As always, I must connect to my Atlas cluster. For this lesson, we'll use the *sample_training zips* collection.
+This data is a few years old, which means that the population count is no longer accurate. It's safe to assume that the population of most cities in this collection has increased by at least 10 people.
+
+In most cases, the population increased by much, much more, sometimes even doubling. But we'll go with the safe assumption that at least 10 more people were born or moved to every city in the past two years. This data set is based on US cities, which makes it uniquely excellent for something like updateMany, and here's why. If we look up a document using its zip value, it will yield one document.
+
+Remember, zip codes are like postal codes for the rest of the world. In this case, we're looking at the city of Hudson in New York state. However, if we look for all documents where the city is Hudson, regardless of the state or zip code, we get many more entries. 16 to be precise. Let's update all of them. The first argument here specifies the query which will determine which documents will be updated.
+
+The second argument specifies the update that needs to happen. We're using $inc, which is an MQL update operator. It increments the value of a specified field by the given amount. So in this case, we're looking to increment the "pop" field by 10 in every document which lists Hudson as the city. When the operation is complete, we get a summary of whether it succeeded. 16 documents matched our query, and 16 were updated.
+
+*$inc* syntax allows us to update multiple fields at the same time by listing the fields and their increment value separated by a comma. *$inc* is not the only update operator in the *MongoDB query language*. Let's use updateOne and see if we can try out a different update operator with it. After thorough googling, I found out that the city of Hudson in New York state currently has a population of 17,630 people.
+
+So we can update this document to be more accurate. If we try to use the $inc operator, then we'll have to find the current population value, then subtract that from the actual population, and then increment by that amount. That sounds exhausting. Instead, we'll use the $set operator. When *$set* is used, it updates the value of the given field with a specified value. Check out what happens if we make a typo in the field name. No errors, but we don't have a population field, you might say.
+
+Well, at this point, this behavior should almost be expected. Just like the implicit creation of databases in a collection, there is a precedent for implicit creation of fields. The idea is that if the field doesn't already exist and you're issuing this update, it means that you want to add this field to the document. And so the field gets added. Now this document has the "pop" and "population" field and both have the same value.
+
+You can also use *$set* to set the value for multiple fields, much in the same way that the $inc operator does it. When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
+
+Just like with the set operator, if the field that you specify doesn't exist in the document, then $push will add an array field to the document with a specified value.Let's see the $push operator in action. First, we should look at the document that we updated via the UI. There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
+
+This student looks like they could use a little bit of an extra credit. We'll do the same thing that we did in Data Explorer and add an extra credit score to the "scores" array. This modifies the "scores" array by adding another element to it. In this case, the element added is a document with two field value pairs, type-extra credit and score-100. And there it is. The student got 100 for their extra credit. Hopefully that will improve their class average.
+
+We will cover other *update operators* in the following lessons, but we won't cover all of them. To learn more about all available update operators in *MQL*, visit our excellent documentation page that is linked in the notes below this video.
