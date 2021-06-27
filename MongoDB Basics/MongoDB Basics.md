@@ -719,14 +719,76 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().pretty()
 	"state" : "AL"
 }
 Type "it" for more
-
 ```
 
-This data is a few years old, which means that the population count is no longer accurate. It's safe to assume that the population of most cities in this collection has increased by at least 10 people.
+This data is a few years old, which means that the population count is no longer accurate. It's safe to assume that the population of most cities in this collection has increased by at least 10 people. In most cases, the population increased by much, much more, sometimes even doubling. But we'll go with the safe assumption that at least 10 more people were born or moved to every city in the past two years. This data set is based on US cities, which makes it uniquely excellent for something like *updateMany*, and here's why. If we look up a document using its *zip value*, it will yield one document.
 
-In most cases, the population increased by much, much more, sometimes even doubling. But we'll go with the safe assumption that at least 10 more people were born or moved to every city in the past two years. This data set is based on US cities, which makes it uniquely excellent for something like updateMany, and here's why. If we look up a document using its zip value, it will yield one document.
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "zip": "12534" }).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca73239"),
+	"city" : "HUDSON",
+	"zip" : "12534",
+	"loc" : {
+		"y" : 42.246978,
+		"x" : 73.755248
+	},
+	"pop" : 21205,
+	"state" : "NY"
+}
+```
 
-Remember, zip codes are like postal codes for the rest of the world. In this case, we're looking at the city of Hudson in New York state. However, if we look for all documents where the city is Hudson, regardless of the state or zip code, we get many more entries. 16 to be precise. Let's update all of them. The first argument here specifies the query which will determine which documents will be updated.
+Remember, *zip codes* are like postal codes for the rest of the world. In this case, we're looking at the city of Hudson in New York state. However, if we look for all documents where the city is Hudson, regardless of the state or zip code, we get many more entries.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "city": "HUDSON" }).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca6f9ff"),
+	"city" : "HUDSON",
+	"zip" : "80642",
+	"loc" : {
+		"y" : 40.060555,
+		"x" : 104.653208
+	},
+	"pop" : 2369,
+	"state" : "CO"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca6ff48"),
+	"city" : "HUDSON",
+	"zip" : "34669",
+	"loc" : {
+		"y" : 28.350634,
+		"x" : 82.628793
+	},
+	"pop" : 8577,
+	"state" : "FL"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca6ff4c"),
+	"city" : "HUDSON",
+	"zip" : "34667",
+	"loc" : {
+		"y" : 28.364763,
+		"x" : 82.675669
+	},
+	"pop" : 26410,
+	"state" : "FL"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca705ca"),
+	"city" : "HUDSON",
+	"zip" : "61748",
+	"loc" : {
+		"y" : 40.620485,
+		"x" : 88.975931
+	},
+	"pop" : 1850,
+	"state" : "IL"
+} ...
+```
+
+16 to be precise. Let's update all of them. The first argument here specifies the query which will determine which documents will be updated.
 
 The second argument specifies the update that needs to happen. We're using $inc, which is an MQL update operator. It increments the value of a specified field by the given amount. So in this case, we're looking to increment the "pop" field by 10 in every document which lists Hudson as the city. When the operation is complete, we get a summary of whether it succeeded. 16 documents matched our query, and 16 were updated.
 
