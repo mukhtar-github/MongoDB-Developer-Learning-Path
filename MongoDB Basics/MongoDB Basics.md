@@ -654,4 +654,4 @@ BulkWriteResult({
 })
 ```
 
-And the result is no writeErrors, and two documents inserted. Now is time to pause the video if you want to ponder how come these two documents got inserted before you here the actual answer. This one should be a favourite for every developer in the world. There was a *typo*, and not just any *typo*-- the *collection* name got misspelled. Instead of the plural *inpections*, it aws a singular *inspection*. So, why didn't we get an error?
+And the result is no writeErrors, and two documents inserted. Now is time to pause the video if you want to ponder how come these two documents got inserted before you here the actual answer. This one should be a favourite for every developer in the world. There was a *typo*, and not just any *typo*-- the *collection* name got misspelled. Instead of the plural *inpections*, it was a singular *inspection*. So, why didn't we get an error? What happened? This behavior is by design. *MongoDB* wants it to be simple for you to create a new collection or a database.
