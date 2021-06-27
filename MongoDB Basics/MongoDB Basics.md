@@ -626,7 +626,26 @@ Since nothing was inserted, this list does not contain the *training* database.
 
 Things change, and quite often, we need to update the data that we have in our database. Let's see what tools we have to perform an update. For this lesson, we'll use the *grades* collection from the *sample training* data set. The document and this collection seem pretty small compared to what we saw before. But here, we see an example of a different field type. The inspections collection introduced us to the concept of sub-documents, where the address field was an object, aka, a document, with fields and values for the street name, city, and so on.
 
-In the case of the grades collection, we have an array field. Let's expand it and see what that is about. Looks like an array of objects, is that possible? Why not? *MongoDB* has a flexible document model, which means that you can store your data however it makes sense for your application. An array of objects is a common way to store data in certain applications. Let's expand further and see what these objects look like. It appears that student *zero* took a class with the unique ID of *three three nine*, and had four assessments in that class, two *homework assignments*, one *quiz*, and one *exam*.
+In the case of the grades collection, we have an array field. Let's expand it and see what that is about. Looks like an array of objects, is that possible? Why not? *MongoDB* has a flexible document model, which means that you can store your data however it makes sense for your application. An array of objects is a common way to store data in certain applications. Let's expand further and see what these objects look like. It appears that student *zero* took a class with the unique ID of *three three nine*, and had four assessments in that class, two *homework assignments*, one *quiz*, and one *exam
+
+```javascript
+_id: ObjectId ("56d5f7eb604eb380b0d8d8ce")
+student_id: 0
+scores: Array
+	0: Object
+		type: "exam"
+		score: 78.40446309504266
+	1: Object
+		type: "quiz"
+		score: 73.36224783231339
+	2: Object
+		type: "homework"
+		score: 46.980982486720535
+	3: Object
+		type: "homework"
+		score: 76.67556138656222
+class_id: 339
+```
 
 We're going to pretend to be a teacher of class *three three nine*. And we know for a fact that a student with ID one five one has done some extra credit work at the end of the semester. Let's update that student's record for the class. When we hover over the document that matches this query, there are a number of actions that we can choose to do, edit, copy, clone, and delete.
 
