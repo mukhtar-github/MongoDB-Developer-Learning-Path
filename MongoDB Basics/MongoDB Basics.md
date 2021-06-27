@@ -865,7 +865,13 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "zip": "12534" }
 
 And so the field gets added. Now this document has the "pop" and "population" field and both have the same value.
 
-You can also use *$set* to set the value for multiple fields, much in the same way that the *$inc* operator does it. When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
+You can also use *$set* to set the value for multiple fields, much in the same way that the *$inc* operator does it.
+
+```javascript
+{ "$set": { "pop": 17630, "<field2>": <new value>, ... }}
+```
+
+When we updated the student record via the Data Explorer UI, we updated an array field. It would be great to know how to do that via the Mongo shell as well. To add an element to an array field, one of the options is to use the *$push* operator, which has this syntax.
 
 Just like with the set operator, if the field that you specify doesn't exist in the document, then *$push* will add an array field to the document with a specified value.Let's see the $push operator in action. First, we should look at the document that we updated via the UI. There, we see the extra credit score that we added earlier. Let's give some extra credit to another student in that class.
 
