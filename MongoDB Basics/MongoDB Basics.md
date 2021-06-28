@@ -985,3 +985,19 @@ We will cover other *update operators* in the following lessons, but we won't co
 Now that we've added a new collection, and some new documents, and updated a few other documents along the way, it's time to learn how to *delete* documents and collections in *MongoDB*. If we're look to perform such operation through the *Data Explorer*, the handy garbage can button will do the trickfor most cases. We caan delete a database, a collection, or a document by clicking on the garbage can sign where ever we please.
 
 However, we're looking to utilize the mongo shell,our options in how things get deleted vary a little more. First, we have our now familiar *deleteOne and deleteMany* options, which work in a similar way to *updateOne and updateMany*. Except in this case, the only update that happens in that the document gets removed from the database. With that being said, I want to emphasize that the only times when *deleteOne* is a good aproach to deleting documents is when we are querying by the underscore ID value, thus guaranteeing this is the only document matching this query.
+
+Otherwise, we're running the risk of deleting one of a few, or even one of many documents that we needed to delete. We can consistently rely on *findOne, updateOne, deleteOne* to always return the same document when multiple fit the search query, unless we are querying by the underscore ID value. Now, let's connect to our *Atlas Cluster* and delete some stuff. First, it will be good to delete those *test* documents that we created when working with the *inspections* collection.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({ "test": 1 }).pretty()
+{ "_id" : ObjectId("60d174e7307e3aeced4e3686"), "test" : 1 }
+{ "_id" : ObjectId("60d17734307e3aeced4e3689"), "test" : 1 }
+{ "_id" : 1, "test" : 1 }
+
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({ "test": 3 }).pretty()
+{ "_id" : ObjectId("60d174e7307e3aeced4e3688"), "test" : 3 }
+{ "_id" : ObjectId("60d17734307e3aeced4e368b"), "test" : 3 }
+{ "_id" : 3, "test" : 3 }
+```
+
+There is the *test1* documents and the *test3* documents.
