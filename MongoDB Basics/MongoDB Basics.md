@@ -1000,4 +1000,14 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.find({ "test": 3
 { "_id" : 3, "test" : 3 }
 ```
 
-There is the *test1* documents and the *test3* documents.
+There is the *test1* documents and the *test3* documents. These are the six documents that we want to remove. In this case, we have to use *deleteMany* since we just did a search and know that there are multiple documents that match each criteria.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.deleteMany({ "test": 1 })
+{ "acknowledged" : true, "deletedCount" : 3 }
+
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.deleteMany({ "test": 3 })
+{ "acknowledged" : true, "deletedCount" : 3 }
+```
+
+First, we delete the ones that match *test1* criteria, and then the ones that match the *test3* criteria.
