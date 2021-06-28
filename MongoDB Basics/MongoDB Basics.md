@@ -1044,4 +1044,20 @@ trips
 zips
 ```
 
-Here we see the *inspection* collection withing the database
+Here we see the *inspection* collection withing the database. Then, we drop it.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspection.drop()
+true
+
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> show collections
+companies
+grades
+inspections
+posts
+routes
+trips
+zips
+```
+
+And now, the misspelled collection is no longer part of our *sample training* database.
