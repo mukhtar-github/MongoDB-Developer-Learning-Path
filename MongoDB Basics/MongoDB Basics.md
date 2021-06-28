@@ -979,3 +979,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "student_id": 
 And there it is. The student got 100 for their extra credit. Hopefully that will improve their class average.
 
 We will cover other *update operators* in the following lessons, but we won't cover all of them. To learn more about all available update operators in *MQL*, visit our excellent documentation page that is linked in the notes below this video.
+
+### Deleting Documents and Collections
+
+Now that we've added a new collection, and some new documents, and updated a few other documents along the way, it's time to learn how to *delete* documents and collections in *MongoDB*.
