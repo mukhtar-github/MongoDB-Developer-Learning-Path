@@ -1010,4 +1010,38 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspections.deleteMany({ "te
 { "acknowledged" : true, "deletedCount" : 3 }
 ```
 
-First, we delete the ones that match *test1* criteria, and then the ones that match the *test3* criteria.
+First, we delete the ones that match *test1* criteria, and then the ones that match the *test3* criteria. To delete a collection, we need to use *drop*, which is a command that we used earlier when importing new collections. We used this form.
+
+```javascript
+mongoimport --uri="mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/sample_supplies" --drop sales.json
+```
+
+Where we *dropped* the collection that we were importing, so that we don't get the duplicate key error. We can also *drop* from the *Mongo shell* with the following syntax.
+
+```javascript
+dp.collections.drop()
+```
+
+Where the collection is referring to collection name. If you remember earlier, we learnt about the implicit creation of collections and databases by creating the *inspection* collection.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.inspection.find().pretty()
+{ "_id" : 1, "test" : 1 }
+{ "_id" : 3, "test" : 3 }
+```
+
+It contains two test documents, which we can safely remove together with the collection using *drop*.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> show collections
+companies
+grades
+inspection
+inspections
+posts
+routes
+trips
+zips
+```
+
+Here we see the *inspection* collection withing the database
