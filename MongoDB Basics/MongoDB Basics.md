@@ -1061,3 +1061,7 @@ zips
 ```
 
 And now, the misspelled collection is no longer part of our *sample training* database.
+
+## Chapter 4: Advanced CRUD Operations
+
+### Query Operators - Comparison
