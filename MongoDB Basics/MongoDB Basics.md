@@ -982,4 +982,4 @@ We will cover other *update operators* in the following lessons, but we won't co
 
 ### Deleting Documents and Collections
 
-Now that we've added a new collection, and some new documents, and updated a few other documents along the way, it's time to learn how to *delete* documents and collections in *MongoDB*.
+Now that we've added a new collection, and some new documents, and updated a few other documents along the way, it's time to learn how to *delete* documents and collections in *MongoDB*. If we're look to perform such operation through the *Data Explorer*, the handy garbage can button will do the trickfor most cases. We caan delete a database, a collection, or a document by clicking on the garbage can sign where ever we please.
