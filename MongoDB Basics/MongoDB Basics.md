@@ -1076,4 +1076,4 @@ What do we have at our disposal and how do they work? Here, we have the obligato
 { <field>: { <operator>: <value> } }
 ```
 
-Let's see some of them in action and getb a better understanding of how to use them.
+Let's see some of them in action and get a better understanding of how to use them. The *trips* collection is an open source data sample from *Citi Bike*, a bycicle rental in New York City. The trip duration field list how long the trip was in seconds. Let's see if we can find any trips that took a minute or less.
