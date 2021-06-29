@@ -1066,4 +1066,4 @@ And now, the misspelled collection is no longer part of our *sample training* da
 
 ### Query Operators - Comparison
 
-It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operatorsto our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *update* operators,
+It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operatorsto our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *Update* operators, like *$set, $inc, and $unset*, which enabled you to modify data in your database. *Query* operators provide additional ways to locate data within the database.
