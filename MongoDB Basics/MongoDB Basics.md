@@ -1070,4 +1070,10 @@ It's time to upgrade our *MQL* skills and add some complexity to our queries. Le
 
 What *Query* operators have in common with all kinds of operators is the dollar sign that preceds the operator. The dollar sign is used for multiple things in *MongoDB*, operators, aggregation pipeline stages and accessing field values. We will introduce some aggregation basics later in the course, but if you want to learn more about the aggregation pipeline or the use of variables when creating *MongoDB*, check out our aggregation pipeline course.
 
-What do we have at our disposal and how do they work? Here, we have the obligatory equal *$eq* and not equal *$ne*. Where we see if the specified values equal or do not equal to each other. Then there is the similarly required greater than *$gt*, less than *$lt*, and greater than or equal to *$gte*, and less than or equal to *$lte*
+What do we have at our disposal and how do they work? Here, we have the obligatory equal *$eq* and not equal *$ne*. Where we see if the specified values equal or do not equal to each other. Then there is the similarly required greater than *$gt*, less than *$lt*, and greater than or equal to *$gte*, and less than or equal to *$lte*. All use the same syntax of field, colon, and then in curly brackets, operator, colon, and value.
+
+```javascript
+{ <field>: { <operator>: <value> } }
+```
+
+Let's see some of them in action and getb a better understanding of how to use them.
