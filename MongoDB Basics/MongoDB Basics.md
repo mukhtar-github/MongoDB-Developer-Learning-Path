@@ -1067,3 +1067,5 @@ And now, the misspelled collection is no longer part of our *sample training* da
 ### Query Operators - Comparison
 
 It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operatorsto our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *Update* operators, like *$set, $inc, and $unset*, which enabled you to modify data in your database. *Query* operators provide additional ways to locate data within the database.
+
+What *Query* operators have in common with all kinds of operators is the dollar sign that preceds the operator. The dollar sign is used for multiple things in *MongoDB*, operators, aggregation pipeline stages and accessing field values. We will introduce some aggregation basics later in the course, but if you want to learn more about the aggregation pipeline or the use of variables when creating *MongoDB*, check out our aggregation pipeline course.
