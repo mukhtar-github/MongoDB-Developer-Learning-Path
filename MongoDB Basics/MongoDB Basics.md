@@ -1114,3 +1114,4 @@ stop time:2016-01-01T02:44:21.000+00:00
 ...
 ```
 
+And they did. We have 10 people who rented a bike to ride for less than a minute and 10 seconds. Taking a short ride on a rental bike is much cheaper with a subscription.
