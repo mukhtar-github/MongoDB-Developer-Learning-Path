@@ -1065,3 +1065,5 @@ And now, the misspelled collection is no longer part of our *sample training* da
 ## Chapter 4: Advanced CRUD Operations
 
 ### Query Operators - Comparison
+
+It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operatorsto our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *update* operators,
