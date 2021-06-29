@@ -1076,4 +1076,41 @@ What do we have at our disposal and how do they work? Here, we have the obligato
 { <field>: { <operator>: <value> } }
 ```
 
-Let's see some of them in action and get a better understanding of how to use them. The *trips* collection is an open source data sample from *Citi Bike*, a bycicle rental in New York City. The trip duration field list how long the trip was in seconds. Let's see if we can find any trips that took a minute or less.
+Let's see some of them in action and get a better understanding of how to use them. The *trips* collection is an open source data sample from *Citi Bike*, a bycicle rental in New York City. The trip duration field list how long the trip was in seconds. Let's see if we can find any trips that took a minute or less. Alright, here we go.
+
+```javascript
+{ "tripduration": { "$lte": 60 } }
+
+QUERY RESULTS 0
+```
+
+Turns out there were none. That's understandable. Let's give these riders an additional 10 seconds and see if anyone rented a bike to ride it for only 70 seconds.
+
+```javascript
+{ "tripduration": { "$lte": 70 } }
+
+_id: ObjectId("572bb8222b288919b68ac2d4")
+tripduration: 61
+start station id: 3150
+start station name: "E 85 St & York Ave"
+end station id: 3150
+end station name: "E 85 St & York Ave"
+bikeid: 22299
+usertype: "Subscriber"
+birth year: 1989
+gender: 1
+start station location: Object
+	type: "Point"
+	coordinates: Array
+		0: -73.94803392
+		1: 40.77536905
+end station location: Object
+	type: "Point"
+	coordinates: Array
+		0: -73.94803392
+		1: 40.77536905
+start time: 2016-01-01T02:43:19.000+00:00
+stop time:2016-01-01T02:44:21.000+00:00
+...
+```
+
