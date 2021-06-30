@@ -1114,8 +1114,7 @@ stop time:2016-01-01T02:44:21.000+00:00
 ...
 ```
 
-And they did. We have 10 people who rented a bike to ride for less than a minute and 10 seconds. Taking a short ride on a rental bike is much cheaper with a subscription. Let's see how many of these riders were not subscribers. I'm adding another condition, where the *usertype* is not equal to subscriber
-
+And they did. We have 10 people who rented a bike to ride for less than a minute and 10 seconds. Taking a short ride on a rental bike is much cheaper with a subscription. Let's see how many of these riders were not subscribers. I'm adding another condition, where the *usertype* is not equal to subscriber.
 
 ```javascript
 { "tripduration": { "$lte": 70 }, "usertype": { "$ne": "Subscriber" } }
@@ -1144,4 +1143,38 @@ start time: 2016-01-02T11:49:11.000+00:00
 stop time:2016-01-02T11:50:18.000+00:00
 ```
 
-Looks like only one person was not an annual subscriber and took a short trip around the same renting station. Let's try this out in the shell. We are connected to the *Atlas Cluster* and we chose to use the *sample training* database.
+Looks like only one person was not an annual subscriber and took a short trip around the same renting station. Let's try this out in the shell. We are connected to the *Atlas Cluster* and we chose to use the *sample training* database. In a *Mongo Shell* we have to use the *Find* command. This query syntax is already familiar to us. Let's not forget to make the output pretty.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration": { "$lte": 70 }, "usertype": { "$ne": "Subscriber" } }).pretty()
+{
+	"_id" : ObjectId("572bb8232b288919b68af7cd"),
+	"tripduration" : 66,
+	"start station id" : 460,
+	"start station name" : "S 4 St & Wythe Ave",
+	"end station id" : 460,
+	"end station name" : "S 4 St & Wythe Ave",
+	"bikeid" : 23779,
+	"usertype" : "Customer",
+	"birth year" : "",
+	"gender" : 0,
+	"start station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.96590294,
+			40.71285887
+		]
+	},
+	"end station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.96590294,
+			40.71285887
+		]
+	},
+	"start time" : ISODate("2016-01-02T11:49:11Z"),
+	"stop time" : ISODate("2016-01-02T11:50:18Z")
+}
+```
+
+This query syntax is already familiar to us. Let's not forget to make the output pretty.
