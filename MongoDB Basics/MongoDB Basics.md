@@ -1144,3 +1144,4 @@ start time: 2016-01-02T11:49:11.000+00:00
 stop time:2016-01-02T11:50:18.000+00:00
 ```
 
+Looks like only one person was not an annual subscriber and took a short trip around the same renting station. Let's try this out in the shell. We are connected to the *Atlas Cluster* and we chose to use the *sample training* database.
