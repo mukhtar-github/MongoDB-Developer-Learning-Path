@@ -1114,4 +1114,33 @@ stop time:2016-01-01T02:44:21.000+00:00
 ...
 ```
 
-And they did. We have 10 people who rented a bike to ride for less than a minute and 10 seconds. Taking a short ride on a rental bike is much cheaper with a subscription.
+And they did. We have 10 people who rented a bike to ride for less than a minute and 10 seconds. Taking a short ride on a rental bike is much cheaper with a subscription. Let's see how many of these riders were not subscribers. I'm adding another condition, where the *usertype* is not equal to subscriber
+
+
+```javascript
+{ "tripduration": { "$lte": 70 }, "usertype": { "$ne": "Subscriber" } }
+
+_id: ObjectId("572bb8232b288919b68af7cd")
+tripduration: 66
+start station id: 460
+start station name: "S 4 St & Wythe Ave"
+end station id: 460
+end station name: "S 4 St & Wythe Ave"
+bikeid: 23779
+usertype: "Customer"
+birth year: ""
+gender: 0
+start station location: Object
+	type: "Point"
+	coordinates: Array
+		0: -73.96590294
+		1: 40.71285887
+end station location: Object
+	type: "Point"
+	coordinates: Array
+		0: -73.94803392
+		1: 40.77536905
+start time: 2016-01-02T11:49:11.000+00:00
+stop time:2016-01-02T11:50:18.000+00:00
+```
+
