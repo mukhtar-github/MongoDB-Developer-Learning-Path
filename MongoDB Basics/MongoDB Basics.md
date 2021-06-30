@@ -1176,5 +1176,3 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration":
 	"stop time" : ISODate("2016-01-02T11:50:18Z")
 }
 ```
-
-This query syntax is already familiar to us. Let's not forget to make the output pretty.
