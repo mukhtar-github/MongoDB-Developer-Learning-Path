@@ -1176,3 +1176,44 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration":
 	"stop time" : ISODate("2016-01-02T11:50:18Z")
 }
 ```
+
+There are only two *usertypes* in this collection, so we could also write this query *usertype* as equals *customer*.
+
+```javascript
+"usertype": { "$eq": "Customer" }
+```
+
+which gives us the same result. However, the *$eq* operator is implicit in situations like these, which means that this query will also return the same result and be equivalent to the first query.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration": { "$lte": 70 }, "usertype": { "$eq": "Customer" } }).pretty()
+
+{
+	"_id" : ObjectId("572bb8232b288919b68af7cd"),
+	"tripduration" : 66,
+	"start station id" : 460,
+	"start station name" : "S 4 St & Wythe Ave",
+	"end station id" : 460,
+	"end station name" : "S 4 St & Wythe Ave",
+	"bikeid" : 23779,
+	"usertype" : "Customer",
+	"birth year" : "",
+	"gender" : 0,
+	"start station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.96590294,
+			40.71285887
+		]
+	},
+	"end station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.96590294,
+			40.71285887
+		]
+	},
+	"start time" : ISODate("2016-01-02T11:49:11Z"),
+	"stop time" : ISODate("2016-01-02T11:50:18Z")
+}
+```
