@@ -1223,7 +1223,7 @@ The only difference is that we omitted the *$eq* operator in this case.
 
 #### Problem
 
-How many documents in the sample_training.zips collection have fewer than 1000 people listed in the pop field?
+How many documents in the *sample_training.zips* collection have fewer than 1000 people listed in the *pop* field?
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "pop": { "$lt": 1000 } }).count()
