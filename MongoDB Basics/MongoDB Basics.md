@@ -1247,3 +1247,17 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 18
 18 - 12 = 6
 ```
+
+### Lab 3: Comparison Operators
+
+#### Problem
+
+Using the *sample_training.routes* collection find out which of the following statements will return all routes that have at least one *stop* in them?
+
+#### Answer
+
+```javascript
+db.routes.find({ "stops": { "$gt": 0 }}).pretty()
+
+db.routes.find({ "stops": { "$ne": 0 }}).pretty()
+```
