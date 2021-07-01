@@ -1261,3 +1261,5 @@ db.routes.find({ "stops": { "$gt": 0 }}).pretty()
 
 db.routes.find({ "stops": { "$ne": 0 }}).pretty()
 ```
+
+### Query Operators - Logic
