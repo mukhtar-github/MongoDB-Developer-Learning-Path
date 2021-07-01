@@ -1183,11 +1183,10 @@ There are only two *usertypes* in this collection, so we could also write this q
 "usertype": { "$eq": "Customer" }
 ```
 
-which gives us the same result. However, the *$eq* operator is implicit in situations like these, which means that this query will also return the same result and be equivalent to the first query.
+which gives us the same result. However, the *$eq* operator is implicit in situations like these, which means that this query will also return the same result and be equivalent to the previous query.
 
 ```javascript
-MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration": { "$lte": 70 }, "usertype": { "$eq": "Customer" } }).pretty()
-
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration": { "$lte": 70 }, "usertype": "Customer" }).pretty()
 {
 	"_id" : ObjectId("572bb8232b288919b68af7cd"),
 	"tripduration" : 66,
@@ -1217,3 +1216,5 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "tripduration":
 	"stop time" : ISODate("2016-01-02T11:50:18Z")
 }
 ```
+
+The only difference is that we omitted the *$eq* operator in this case.
