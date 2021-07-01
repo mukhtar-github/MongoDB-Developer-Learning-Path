@@ -1066,7 +1066,7 @@ And now, the misspelled collection is no longer part of our *sample training* da
 
 ### Query Operators - Comparison
 
-It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operatorsto our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *Update* operators, like *$set, $inc, and $unset*, which enabled you to modify data in your database. *Query* operators provide additional ways to locate data within the database.
+It's time to upgrade our *MQL* skills and add some complexity to our queries. Let's start by introducing *comparison* operators to our tool box. We already used *MQL* Operators in the previous lessons, where we saw examples of *Update* operators, like *$set, $inc, and $unset*, which enabled you to modify data in your database. *Query* operators provide additional ways to locate data within the database.
 
 What *Query* operators have in common with all kinds of operators is the dollar sign that preceds the operator. The dollar sign is used for multiple things in *MongoDB*, operators, aggregation pipeline stages and accessing field values. We will introduce some aggregation basics later in the course, but if you want to learn more about the aggregation pipeline or the use of variables when creating *MongoDB*, check out our aggregation pipeline course.
 
@@ -1230,4 +1230,20 @@ How many documents in the *sample_training.zips* collection have fewer than 1000
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({ "pop": { "$lt": 1000 } }).count()
 8065
+```
+
+### Lab 2: Comparison Operators
+
+#### Problem
+
+What is the difference between the number of people *born in 1998* and the number of people *born after 1998* in the *sample_training.trips* collection?
+
+#### Answer
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": { "$eq": 1998 } }).count()
+12
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": { "$gt": 1998 } }).count()
+18
+18 - 12 = 6
 ```
