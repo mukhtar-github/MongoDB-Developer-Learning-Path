@@ -1263,3 +1263,4 @@ db.routes.find({ "stops": { "$ne": 0 }}).pretty()
 ```
 
 ### Query Operators - Logic
+Now that we discussed *comparison* operators, it's time to look at the *logic* operators. In *MQL* we have the standard set of four logical operators. And as any electrical engineer or programmer tell you 
