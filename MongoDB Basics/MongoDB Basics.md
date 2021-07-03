@@ -1263,4 +1263,4 @@ db.routes.find({ "stops": { "$ne": 0 }}).pretty()
 ```
 
 ### Query Operators - Logic
-Now that we discussed *comparison* operators, it's time to look at the *logic* operators. In *MQL* we have the standard set of four logical operators. And as any electrical engineer or programmer tell you, that's more than we need. They're your usual suspects, *$and, $or, $nor, and $not*. *$and* returns the documents that meet all of the specified query clauses. *$or* returns the documents as long as at least one of the query clauses is matched.
+Now that we discussed *comparison* operators, it's time to look at the *logic* operators. In *MQL* we have the standard set of four logical operators. And as any electrical engineer or programmer tell you, that's more than we need. They're your usual suspects, *$and, $or, $nor, and $not*. *$and* returns the documents that meet all of the specified query clauses. *$or* returns the documents as long as at least one of the query clauses is matched. *$nor* returns all documents that fail to match both clauses. And last but not the least, *$not* negates the query requirements and returns all documents that do not match the query.
