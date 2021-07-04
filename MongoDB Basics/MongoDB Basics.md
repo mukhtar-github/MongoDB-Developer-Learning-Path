@@ -1279,4 +1279,8 @@ Now that we discussed *comparison* operators, it's time to look at the *logic* o
 
 Let's see what we can do with these using the *Data Explorer*. We haven't visited the *inspections collection* in a while. And scrolling through it, I see the *results* of the *inspections* are mainly *No Violation Issued* or *Violation Issued*. But I also see a *Pass*. I want to filter out the *violation* ones and see if there are any other *pass results* and just generally what other values they have here. So I'll use a *$nor* statement.
 
-Okay, it looks like there is *Unable to Locate, pass, a warning, fail* and a bunch of other type of results.
+```javascript
+{$nor : [{result : "No Violation Issued"}, {result : "Violation Issued"}]}
+```
+
+Okay, it looks like there is *Unable to Locate, pass, warning, fail*, and a bunch of other type of results. Let's exclude the *pass and fail* as well. For that, I just append the other conditions to this array of clauses that *$nor* is looking at.
