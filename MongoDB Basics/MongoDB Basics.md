@@ -1268,7 +1268,13 @@ Now that we discussed *comparison* operators, it's time to look at the *logic* o
 *$and, $or, and $nor* have similar to each other syntax where the operator precedes an array of clauses that it will operate on.
 
 ```javascript
-{<operator> : {[{statement1}, {statement2}, ...]}}
+{<operator> : [{statement1}, {statement2}, ...]}
 ```
 
-*$not* is a bit different and simply negates
+*$not* is a bit different and simply negates what is in front of it. Thus, array syntax is not necessary.
+
+```javascript
+{$not: {statement}}
+```
+
+Let's see what we can do with these using the *Data Explorer*.
