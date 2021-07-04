@@ -1277,4 +1277,4 @@ Now that we discussed *comparison* operators, it's time to look at the *logic* o
 {$not: {statement}}
 ```
 
-Let's see what we can do with these using the *Data Explorer*.
+Let's see what we can do with these using the *Data Explorer*. We haven't visited the *inspections collection* in a while. And scrolling through it, I see the *results* of the *inspections* are mainly *No Violation Issued* or *Violation Issued*. But I also see a *Pass*.
