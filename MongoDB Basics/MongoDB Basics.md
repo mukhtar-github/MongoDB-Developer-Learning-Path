@@ -1285,4 +1285,8 @@ Let's see what we can do with these using the *Data Explorer*. We haven't visite
 
 Okay, it looks like there is *Unable to Locate, pass, warning, fail*, and a bunch of other type of results. Let's exclude the *pass and fail* as well. For that, I just append the other conditions to this array of clauses that *$nor* is looking at. Here, I'm adding that I don't want the *results* to include *pass* or *fail*. So, neither *pass, fail, Violation Issued or No Violation Issued* should be part of the results.
 
+```javascript
+{$nor : [{result : "No Violation Issued"}, {result : "Violation Issued"}, {result : "Pass"}, {result : "Fail"}]}
+```
+
 All right, still lots of other results are available. This is us using *$nor*, which is essentially a combination of *$not, $and, $or*.
