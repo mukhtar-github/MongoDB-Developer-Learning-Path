@@ -1289,4 +1289,4 @@ Okay, it looks like there is *Unable to Locate, pass, warning, fail*, and a bunc
 {$nor : [{result : "No Violation Issued"}, {result : "Violation Issued"}, {result : "Pass"}, {result : "Fail"}]}
 ```
 
-All right, still lots of other results are available. This is us using *$nor*, which is essentially a combination of *$not, $and, $or*.
+All right, still lots of other results are available. This was us using *$nor*, which is essentially a combination of *$not, $and, $or*. So it's almost like we covered three *logic* operators in one go. So it's time to talk about the *$and* operator. I left it for a longer discussion at the end because it is special.
