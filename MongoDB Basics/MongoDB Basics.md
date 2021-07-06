@@ -1289,4 +1289,4 @@ Okay, it looks like there is *Unable to Locate, pass, warning, fail*, and a bunc
 {$nor : [{result : "No Violation Issued"}, {result : "Violation Issued"}, {result : "Pass"}, {result : "Fail"}]}
 ```
 
-All right, still lots of other results are available. This was us using *$nor*, which is essentially a combination of *$not, $and, $or*. So it's almost like we covered three *logic* operators in one go. So it's time to talk about the *$and* operator. I left it for a longer discussion at the end because it is special.
+All right, still lots of other results are available. This was us using *$nor*, which is essentially a combination of *$not, $and, $or*. So it's almost like we covered three *logic* operators in one go. So it's time to talk about the *$and* operator. I left it for a longer discussion at the end because it is special. One of the reasons that *$and* is special is because it is already present in your queries by default. Just like we discussed the default presence of *equals* when issuing a query, similar logic works for *$and*. 
