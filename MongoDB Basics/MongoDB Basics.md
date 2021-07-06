@@ -1304,4 +1304,12 @@ Is the same as:
 
 For example, this query actually reads as an *$and* statement. *$and* is already present in your queries by default, if you have multiple criteria that must be true for your query. Another example of an implicit *$and* can be seen when we apply multiple conditions to the same field.
 
-In the *grades* collection, to find out whch student IDs are greater than 25 and less than 100, we
+> Find which student ids are > 25 and < 100 in the sample_training.grades collection.
+
+In the *grades* collection, to find out whch student IDs are greater than 25 and less than 100, we could issue an *$and* query like this.
+
+```javascript
+{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}]}
+```
+
+But we could also simplify it significantly.
