@@ -1309,7 +1309,15 @@ For example, this query actually reads as an *$and* statement. *$and* is already
 In the *grades* collection, to find out whch student IDs are greater than 25 and less than 100, we could issue an *$and* query like this.
 
 ```javascript
-{"$and" : [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}]}
+{"$and": [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}]}
 ```
 
 But we could also simplify it significantly.
+
+Better:
+
+```javascript
+{"student_id": {"$gt": 25, "$lt": 100}}
+```
+
+Since we're querying on the same field, we can get rid of the implied *$and*.
