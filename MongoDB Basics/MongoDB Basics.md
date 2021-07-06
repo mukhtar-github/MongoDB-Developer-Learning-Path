@@ -1347,3 +1347,16 @@ Let's try this on the *Atlas UI*. Here's our query.
 ```
 
 If we don't specify an explicit *$and* like this, and just list one *$or* after another, we'll get documents that match either of the two *$or* queries.
+
+```javascript
+{"_id":{"$oid":"56e9b39b732b6122f877fa31"},
+"airline":{"id":{"$numberInt":"410"},
+	"name":"Aerocondor",
+	"alias":"2B",
+	"iata":"ARD"},
+"src_airport":"CEK",
+"dst_airport":"KZN",
+"codeshare":"","
+stops":{"$numberInt":"0"},
+"airplane":"CR2"}
+```
