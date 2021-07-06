@@ -1376,4 +1376,11 @@ This one seems fine. There's the *KZN* and the *CR2* for the airplane, which is 
 "airplane":{"$numberInt":"321"}}
 ```
 
-And that is the correct airport, but the wrong airplane.
+And that is the correct airport, but the wrong airplane. This does match my query, but it's not the results that I was looking for. So I need to change my query to get the right results. So let's add an explicit *$and* in the begining.
+
+
+```javascript
+{"$and": [{"$or": [{dst_airport: "KZN"}, {src_airport: "KZN"}]}, {"$or": [{airplane: "CR2"}, {airplane: "A81"}]}]}
+```
+
+I add the operator, and then include the two *$or* conditions in square brackets. And yeah, we get 18 routes that come through the *KZN* airport, either as source or destination. And all documents have either the *CR2* airplane or the *A81* airplane.
