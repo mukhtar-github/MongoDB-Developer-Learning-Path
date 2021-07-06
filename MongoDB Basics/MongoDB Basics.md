@@ -1293,7 +1293,13 @@ All right, still lots of other results are available. This was us using *$nor*, 
 > *$and* is used as the default operator when an operator is not specified.
 
 ```javascript
-{sector : "Mobile Food Vendor - 881", result : "Warning" }
+{ sector : "Mobile Food Vendor - 881", result : "Warning" }
 ```
 
-For example, this query actually reads as an *$and* statement
+Is the same as
+
+```javascript
+{ $and : [{ sector : "Mobile Food Vendor - 881" }, { result : "Warning" }]}
+```
+
+For example, this query actually reads as an *$and* statement. *$and* is already present in your queries by default, if you have multiple criteria that must be true for your query.
