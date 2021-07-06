@@ -1331,5 +1331,19 @@ For example, if we look at the *routes* collection, we might be interested to se
 If we want to get all airplanes going through Kazan, we need either the *source* airport or *destination* airport to equal to *KZN*, like so:
 
 ```javascript
-{"$or": [{dst-airport: "KZN"}, {src-airport: "KZN"}]}
+{"$or": [{dst_airport: "KZN"}, {src_airport: "KZN"}]}
 ```
+
+To get the specific airplane types, we need another statement.
+
+```javascript
+{"$or": [{airplane: "CR2"}, {airplane: "A81"}]}
+```
+
+Let's try this on the *Atlas UI*. Here's our query.
+
+```javascript
+{"$or": [{dst_airport: "KZN"}, {src_airport: "KZN"}]}, {"$or": [{airplane: "CR2"}, {airplane: "A81"}]}
+```
+
+If we don't specify an explicit *$and* like this, and just list one *$or* after another, we'll get documents that match either of the two *$or* queries.
