@@ -1296,10 +1296,12 @@ All right, still lots of other results are available. This was us using *$nor*, 
 { sector : "Mobile Food Vendor - 881", result : "Warning" }
 ```
 
-Is the same as
+Is the same as:
 
 ```javascript
 { $and : [{ sector : "Mobile Food Vendor - 881" }, { result : "Warning" }]}
 ```
 
-For example, this query actually reads as an *$and* statement. *$and* is already present in your queries by default, if you have multiple criteria that must be true for your query.
+For example, this query actually reads as an *$and* statement. *$and* is already present in your queries by default, if you have multiple criteria that must be true for your query. Another example of an implicit *$and* can be seen when we apply multiple conditions to the same field.
+
+In the *grades* collection, to find out whch student IDs are greater than 25 and less than 100, we
