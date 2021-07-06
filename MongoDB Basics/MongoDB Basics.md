@@ -1360,3 +1360,20 @@ If we don't specify an explicit *$and* like this, and just list one *$or* after 
 stops":{"$numberInt":"0"},
 "airplane":"CR2"}
 ```
+
+This one seems fine. There's the *KZN* and the *CR2* for the airplane, which is what we are looking for. But if I scroll further, suddenly, there is something that I'm not looking for.
+
+```javascript
+{"_id":{"$oid":"56e9b39b732b6122f87806f7"},
+"airline":{"id":{"$numberInt":"3788"},
+	"name":"Onur Air",
+	"alias":"8Q",
+	"iata":"OHY"},
+"src_airport":"KZN",
+"dst_airport":"AYT",
+"codeshare":"",
+"stops":{"$numberInt":"0"},
+"airplane":{"$numberInt":"321"}}
+```
+
+And that is the correct airport, but the wrong airplane.
