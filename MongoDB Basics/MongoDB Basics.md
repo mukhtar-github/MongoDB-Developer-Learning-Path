@@ -1320,4 +1320,4 @@ Better:
 {"student_id": {"$gt": 25, "$lt": 100}}
 ```
 
-Since we're querying on the same field, we can get rid of the implied *$and*.
+Since we're querying on the same field, we can get rid of the implied *$and*. Then, we can also combine both conditions in a single statement like so. This makes for another example where we do not need an explicit *$and*. But we did learn how to combine several requirements for one field in a single query, so that's nice. Then, when do we explicitly include *$and*?
