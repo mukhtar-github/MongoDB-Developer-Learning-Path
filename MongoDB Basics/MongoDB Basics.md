@@ -1321,3 +1321,15 @@ Better:
 ```
 
 Since we're querying on the same field, we can get rid of the implied *$and*. Then, we can also combine both conditions in a single statement like so. This makes for another example where we do not need an explicit *$and*. But we did learn how to combine several requirements for one field in a single query, so that's nice. Then, when do we explicitly include *$and*?
+
+> The general rule is to use it when you need to include the same operator more than once in a query.
+
+For example, if we look at the *routes* collection, we might be interested to see how many CR2 and A81 airplanes come through the Kazan Airport.
+
+> Using the *routes* collection, find out how many CR2 and A81 airplanes come through the *KZN* Airport?
+
+If we want to get all airplanes going through Kazan, we need either the *source* airport or *destination* airport to equal to *KZN*, like so:
+
+```javascript
+{"$or": [{dst-airport: "KZN"}, {src-airport: "KZN"}]}
+```
