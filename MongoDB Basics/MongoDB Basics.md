@@ -1394,3 +1394,26 @@ db.routes.find({ "$and": [ { "$or" :[ { "dst_airport": "KZN" }, { "src_airport":
 ```
 
 And it does. Try to recreate the queries that we issued via the *Data Explorer*, using the *end browser ID* at the end of this chapter.
+
+#### Problem 1:
+
+How many businesses in the sample_training.inspections dataset have the inspection result *"Out of Business"* and belong to the *"Home Improvement Contractor - 100"* sector?
+
+```javascript
+{ sector : "Home Improvement Contractor - 100", result : "Out of Business" }
+```
+
+#### Answer:
+
+4
+
+#### Problem 2:
+
+Which is the most succinct query to return all documents from the sample_training.inspections collection where the inspection date is either "Feb 20 2015", or "Feb 21 2015" and the company is not part of the "Cigarette Retail Dealer - 127" sector?
+
+#### Answer:
+
+```javascript
+db.inspections.find({ "$or": [ { "date": "Feb 20 2015" }, { "date": "Feb 21 2015" } ],
+ "sector": { "$ne": "Cigarette Retail Dealer - 127" }}).pretty()
+```
