@@ -1417,3 +1417,14 @@ Which is the most succinct query to return all documents from the sample_trainin
 db.inspections.find({ "$or": [ { "date": "Feb 20 2015" }, { "date": "Feb 21 2015" } ],
  "sector": { "$ne": "Cigarette Retail Dealer - 127" }}).pretty()
 ```
+
+#### Problem 3:
+
+How many zips in the sample_training.zips dataset are neither over-populated nor under-populated? In this case, we consider population of more than 1,000,000 to be over- populated and less than 5,000 to be under-populated.
+
+#### Answer:
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({"$nor" : [{"pop" : {"$gt": 1000000}}, {"pop" : {"$lt": 5000}}]}).count()
+11193
+```
