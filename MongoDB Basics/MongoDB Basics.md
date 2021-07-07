@@ -1385,9 +1385,12 @@ And that is the correct airport, but the wrong airplane. This does match my quer
 
 I add the operator, and then include the two *$or* conditions in square brackets. And yeah, we get 18 routes that come through the *KZN* airport, either as source or destination. And all documents have either the *CR2* airplane or the *A81* airplane.
 
-Let's try this out in the shell. To query using the *Logic* operators, we use the already familiar syntax of the find command.
+Let's try this out in the shell. To query using the *Logic* operators, we use the already familiar syntax of the find command. We can also use *count* to see if the returned cursor matches what we saw in the *Data Explorer*.
 
 ```javascript
 db.routes.find({ "$and": [ { "$or" :[ { "dst_airport": "KZN" }, { "src_airport": "KZN" } ] }, 
-	{ "$or" :[ { "airplane": "CR2" }, { "airplane": "A81" } ] } ]}).pretty()
+	{ "$or" :[ { "airplane": "CR2" }, { "airplane": "A81" } ] } ]}).count()
+18
 ```
+
+And it does. Try to recreate the queries that we issued via the *Data Explorer*, using the *end browser ID* at the end of this chapter.
