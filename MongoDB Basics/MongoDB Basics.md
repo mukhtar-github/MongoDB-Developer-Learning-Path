@@ -1420,7 +1420,7 @@ db.inspections.find({ "$or": [ { "date": "Feb 20 2015" }, { "date": "Feb 21 2015
 
 #### Problem 3:
 
-How many zips in the sample_training.zips dataset are neither over-populated nor under-populated? In this case, we consider population of more than 1,000,000 to be over- populated and less than 5,000 to be under-populated.
+How many zips in the *sample_training.zips* dataset are neither *over-populated* nor *under-populated*? In this case, we consider population of more than 1,000,000 to be over- populated and less than 5,000 to be under-populated.
 
 #### Answer:
 
