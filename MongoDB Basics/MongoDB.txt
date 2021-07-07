@@ -8,4 +8,6 @@ mongoimport --db mongo-exercises --collection courses --drop --file exercise-dat
 
 ** dkemg
 
+mongo "mongodb+srv://cluster0.dkemg.mongodb.net/admin" --username m001-student
+
 m001-mongodb-basics
