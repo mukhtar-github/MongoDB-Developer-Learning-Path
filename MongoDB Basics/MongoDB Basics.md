@@ -1428,3 +1428,7 @@ How many zips in the *sample_training.zips* dataset are neither *over-populated*
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({"$nor" : [{"pop" : {"$gt": 1000000}}, {"pop" : {"$lt": 5000}}]}).count()
 11193
 ```
+
+```javascript
+{"$and": [{"founded_year" : 2004: [{"$or": {"category_code" : "web"}, {"category_code" : "social"}}]}, {"founded_month" : 10: [{"$or": {"category_code" : "web"}, {"category_code" : "social"}}]}}
+```
