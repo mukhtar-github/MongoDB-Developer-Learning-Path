@@ -1312,15 +1312,13 @@ In the *grades* collection, to find out which student IDs are greater than 25 an
 {"$and": [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}]}
 ```
 
-But we could also simplify it significantly.
-
-Better:
+But we could also simplify it significantly. Since we're querying on the same field, we can get rid of the implied *$and*. Then, we can also combine both conditions in a single statement like so.
 
 ```javascript
 {"student_id": {"$gt": 25, "$lt": 100}}
 ```
 
-Since we're querying on the same field, we can get rid of the implied *$and*. Then, we can also combine both conditions in a single statement like so. This makes for another example where we do not need an explicit *$and*. But we did learn how to combine several requirements for one field in a single query, so that's nice. Then, when do we explicitly include *$and*?
+This makes for another example where we do not need an explicit *$and*. But we did learn how to combine several requirements for one field in a single query, so that's nice. Then, when do we explicitly include *$and*?
 
 > The general rule is to use it when you need to include the same operator more than once in a query.
 
