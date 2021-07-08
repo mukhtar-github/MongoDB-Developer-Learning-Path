@@ -1306,7 +1306,7 @@ For example, this query actually reads as an *$and* statement. *$and* is already
 
 > Find which student ids are > 25 and < 100 in the sample_training.grades collection.
 
-In the *grades* collection, to find out whch student IDs are greater than 25 and less than 100, we could issue an *$and* query like this.
+In the *grades* collection, to find out which student IDs are greater than 25 and less than 100, we could issue an *$and* query like this.
 
 ```javascript
 {"$and": [{"student_id": {"$gt": 25}}, {"student_id": {"$lt": 100}}]}
