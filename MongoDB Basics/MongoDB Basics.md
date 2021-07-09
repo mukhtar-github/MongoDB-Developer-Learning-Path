@@ -1500,6 +1500,9 @@ Another question that I have for this data set is how many of these people rente
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] } }).count()
 316
+
+db.trips.find({ "$expr": { "$and": [ { "$gt": [ "$tripduration", 1200 ]},
+ { "$eq": [ "$end station id", "$start station id" ]}]}}).count()
 ```
 
 So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point? Again, we're already connected to the Atlas cluster. If you're not, make sure to connect when you're trying this on your own. And we're going to be using the sample training database.
