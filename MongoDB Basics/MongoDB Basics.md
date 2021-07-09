@@ -1445,17 +1445,18 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$and": [{ 
 ### Expressive Query Operator
 
 Let's take it up a notch and look at *$expr*, the expressive query operator. The versatility of this operator is already clear from its name, *$expr*. It's expressive, meaning it can do more than one simple operation.
-> *$expr* allows the use of aggregation expressions within the query language, and it uses this syntax.
+> *$expr* allows the use of *aggregation expressions* within the query language, and it uses this syntax.
 
 ```javascript
-{ "$expr": { <expression> } }
+{ $expr: { <expression> } }
 ```
 
-We haven't yet learned what aggregation expressions are so it might seem premature to talk about this operator. However, *$expr* also allows us to use variables and conditional statements. So let's get started with that and see how it works. In the later lessons, we will also cover aggregation expressions so that you can utilize the power of $expr to its fullest.
+We haven't yet learned what *aggregation expressions* are, so it might seem premature to talk about this operator.
+> However, *$expr* also allows us to use variables and conditional statements. 
 
-When we learned about comparison operators, we were comparing a field's value to some number. But can we compare fields within the same document to each other? It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out.
+So let's get started with that and see how it works. In the later lessons, we will also cover *aggregation expressions* so that you can utilize the power of *$expr* to its fullest. When we learned about *comparison* operators, we were comparing a field's value to some number. But can we compare fields within the same document to each other? It sounds crazy, I know. But it's not such a rare occurrence. 
 
-*$expr* allows me to compare the start station ID value directly with the end station ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
+Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out. *$expr* allows me to compare the *start station* ID value directly with the *end station* ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
 
 Fantastic.
 
