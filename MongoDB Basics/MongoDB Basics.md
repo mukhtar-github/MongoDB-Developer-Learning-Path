@@ -1431,7 +1431,9 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({"$nor" : [{"pop" 
 
 How many companies in the sample_training.companies dataset were either founded in 2004
 
-* [and] either have the *social* category_code [or] *web* category_code, [or] were founded in the month of October
+* [and] either have the *social* category_code [or] *web* category_code, 
+
+[or] were founded in the month of October
 
 * [and] also either have the *social* category_code [or] *web* category_code?
 
@@ -1478,6 +1480,7 @@ It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm tryi
 
 Fantastic. I get results. If I scroll through a little bit, I see that these documents seem to match my query. But what are these *dollar* signs everywhere? Are there *start station* ID and *end station* ID operators now too? Great question. The *dollar* sign symbol has a lot of wonderful superpowers in *MQL*.
 > One of them is to denote when you're using an operator.
+
 > Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
 
 In this example, given a document, when we issue an expression like this.
@@ -1486,17 +1489,20 @@ In this example, given a document, when we issue an expression like this.
 { "$expr": { "$eq": [ "$end station id", "$start station id"] } }
 ```
 
-The *$start station* ID means the value 439. And if we were to use *$start station* name, that would mean *E 4th Street and 2nd Avenue*. If we don't use the *dollar* sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document. If we were to replace the ID with name, we should get the same exact results.
+The *$start station ID* means the value 439. And if we were to use *$start station name*, that would mean *E 4th Street and 2nd Avenue*. If we don't use the *dollar* sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document. If we were to replace the *ID* with *name*, we should get the same exact results.
+
+```javascript
+{ "$expr": { "$eq": [ "$end station name", "$start station name"] } }
+```
 
 Another question that I have for this data set is how many of these people rented the bikes out for more than a couple of minutes? For that I'll add another condition to this expression and move to the show to play around with this data more. One thing to know before we switch from the Atlas interface, though, is that this particular collection contains 10,000 documents.
 
-So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] } }).count()
+316
+```
 
-Again, we're already connected to the Atlas cluster.
-
-If you're not, make sure to connect when you're trying this on your own.
-
-And we're going to be using the sample training database.
+So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point? Again, we're already connected to the Atlas cluster. If you're not, make sure to connect when you're trying this on your own. And we're going to be using the sample training database.
 
 This is the initial query that we issued in the Atlas UI in the Data Explorer.
 
@@ -1534,6 +1540,3 @@ It allows for more complex queries and for comparing fields within a document.
 
 We also learned about another way that the dollar sign is used in the MongoDB query language, and even got a peek at how to use comparison operators via the aggregation pipeline before we even got to learn about the aggregation pipeline.
 
-```javascript
-{"$and": [{"$or": [{"founded_month": 10}, {"category_code": "social"}, {"category_code": "web"}]}]}
-```
