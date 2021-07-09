@@ -1454,9 +1454,10 @@ Let's take it up a notch and look at *$expr*, the expressive query operator. The
 We haven't yet learned what *aggregation expressions* are, so it might seem premature to talk about this operator.
 > However, *$expr* also allows us to use variables and conditional statements. 
 
-So let's get started with that and see how it works. In the later lessons, we will also cover *aggregation expressions* so that you can utilize the power of *$expr* to its fullest. When we learned about *comparison* operators, we were comparing a field's value to some number. But can we compare fields within the same document to each other? It sounds crazy, I know. But it's not such a rare occurrence. 
+So let's get started with that and see how it works. In the later lessons, we will also cover *aggregation expressions* so that you can utilize the power of *$expr* to its fullest. When we learned about *comparison* operators, we were comparing a field's value to some number.
+> But can we compare fields **within the same document** to each other?
 
-Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out. *$expr* allows me to compare the *start station* ID value directly with the *end station* ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
+It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out. *$expr* allows me to compare the *start station* ID value directly with the *end station* ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
 
 Fantastic.
 
