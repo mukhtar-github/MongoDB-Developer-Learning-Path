@@ -1454,27 +1454,34 @@ Let's take it up a notch and look at *$expr*, the expressive query operator. The
 We haven't yet learned what *aggregation expressions* are, so it might seem premature to talk about this operator.
 > However, *$expr* also allows us to use variables and conditional statements. 
 
-So let's get started with that and see how it works. In the later lessons, we will also cover *aggregation expressions* so that you can utilize the power of *$expr* to its fullest. When we learned about *comparison* operators, we were comparing a field's value to some number.
+So let's get started with that and see how it works. In the later lessons, we will also cover *aggregation expressions* so that you can utilize the power of *$expr* to its fullest. When we learned about *comparison* operators, we were comparing a *field's* value to some number.
 > But can we compare fields **within the same document** to each other?
 
-It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out. *$expr* allows me to compare the *start station* ID value directly with the *end station* ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
+It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm trying to learn more about *city bike* users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out. *$expr* allows me to compare the *start station* ID value directly with the *end station* ID value within the same document, without specifying what those values should equal to on their own. And this is how we do it.
 
-Fantastic.
+```javascript
+{ "$expr": { "$eq": [ "$end station id", "$start station id"] } }
 
-I get results.
+{"_id":{"$oid":"572bb8222b288919b68abf62"},
+"tripduration":{"$numberInt":"1480"},
+"start station id":{"$numberInt":"2006"},
+"start station name":"Central Park S & 6 Ave",
+"end station id":{"$numberInt":"2006"},
+"end station name":"Central Park S & 6 Ave",
+"bikeid":{"$numberInt":"14562"},
+"usertype":"Subscriber",
+"birth year":{"$numberInt":"1952"},
+"gender":{"$numberInt":"1"},
+"start station location":{"type":"Point",
+ "coordinates":[{"$numberDouble":"-73.97634151"},{"$numberDouble":"40.76590936"}]},
+"end station location":{"type":"Point",
+ "coordinates":[{"$numberDouble":"-73.97634151"},{"$numberDouble":"40.76590936"}]},
+"start time":{"$date":{"$numberLong":"1451606472000"}},
+"stop time":{"$date":{"$numberLong":"1451607952000"}}}
+```
 
-If I scroll through a little bit, I see that these documents seem to match my query.
-
-But what are these dollar signs everywhere?
-
-Are there start station ID and end station ID operators now too?
-
-Great question.
-
-The dollar sign symbol has a lot of wonderful superpowers in MQL.
-
-One of them is to denote when you're using an operator.
-
+Fantastic. I get results. If I scroll through a little bit, I see that these documents seem to match my query. But what are these *dollar* signs everywhere? Are there *start station* ID and *end station* ID operators now too? Great question. The dollar sign symbol has a lot of wonderful superpowers in *MQL*.
+> One of them is to denote when you're using an operator.
 Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
 
 In this example, given a document, when we issue an expression like this, the $start station ID means the value 439.
