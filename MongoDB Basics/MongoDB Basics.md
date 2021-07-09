@@ -1427,6 +1427,25 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({"$nor" : [{"pop" 
 11193
 ```
 
+#### Problem:
+
+How many companies in the sample_training.companies dataset were either founded in 2004
+
+* [and] either have the social category_code [or] web category_code, [or] were founded in the month of October
+
+* [and] also either have the social category_code [or] web category_code?
+
+#### Answer:
+
 ```javascript
-{"$and": [{"founded_year" : 2004: [{"$or": {"category_code" : "web"}, {"category_code" : "social"}}]}, {"founded_month" : 10: [{"$or": {"category_code" : "web"}, {"category_code" : "social"}}]}}
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$and": [{ "$or": [ { "founded_year": 2004 }, { "founded_month": 10 } ] }, { "$or": [ { "category_code": "web" }, { "category_code": "social" }]}]}).count()
+149
+```
+
+```javascript
+
+{"$and": [{"$or": [{"founded_year": 2004}, {"$and": [{"$or": [{"category_code": "social"}, {"category_code": "web"}]}]}]}, {"$or": [{"founded_month": 10}, {"$and": [{"$or": [{"category_code": "social"}, {"category_code": "web"}]}]}]}]}
+
+{"$and": [{"$or": [{"founded_month": 10}, {"category_code": "social"}, {"category_code": "web"}]}]}
+
 ```
