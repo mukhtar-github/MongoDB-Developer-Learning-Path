@@ -1429,13 +1429,13 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find({"$nor" : [{"pop" 
 
 #### Problem:
 
-How many companies in the sample_training.companies dataset were either founded in 2004
+How many companies in the *sample_training.companies* data set were either founded in 2004
 
-* [and] either have the *social* category_code [or] *web* category_code, 
+* [and] either have the *social category_code* [or] *web category_code*, 
 
 [or] were founded in the month of October
 
-* [and] also either have the *social* category_code [or] *web* category_code?
+* [and] also either have the *social category_code* [or] *web category_code*?
 
 #### Answer:
 
