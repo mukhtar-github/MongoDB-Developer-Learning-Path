@@ -1462,31 +1462,25 @@ It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm tryi
 ```javascript
 { "$expr": { "$eq": [ "$end station id", "$start station id"] } }
 
-{"_id":{"$oid":"572bb8222b288919b68abf62"},
-"tripduration":{"$numberInt":"1480"},
-"start station id":{"$numberInt":"2006"},
-"start station name":"Central Park S & 6 Ave",
-"end station id":{"$numberInt":"2006"},
-"end station name":"Central Park S & 6 Ave",
-"bikeid":{"$numberInt":"14562"},
-"usertype":"Subscriber",
-"birth year":{"$numberInt":"1952"},
-"gender":{"$numberInt":"1"},
-"start station location":{"type":"Point",
- "coordinates":[{"$numberDouble":"-73.97634151"},{"$numberDouble":"40.76590936"}]},
-"end station location":{"type":"Point",
- "coordinates":[{"$numberDouble":"-73.97634151"},{"$numberDouble":"40.76590936"}]},
-"start time":{"$date":{"$numberLong":"1451606472000"}},
-"stop time":{"$date":{"$numberLong":"1451607952000"}}}
+{"_id":{"$oid":"572bb8222b288919b68abf70"},
+"tripduration":{"$numberInt":"110"},
+"start station id":{"$numberInt":"439"},
+"start station name":"E 4 St & 2 Ave",
+"end station id":{"$numberInt":"439"},
+"end station name":"E 4 St & 2 Ave",
+"bikeid":{"$numberInt":"24021"},
+"usertype":"Customer",
+"birth year":"",
+"gender":{"$numberInt":"0"},
+"start station location":{"type":"Point","coordinates":[{"$numberDouble":"-73.98978041"},{"$numberDouble":"40.7262807"}]},"end station location":{"type":"Point","coordinates":[{"$numberDouble":"-73.98978041"},{"$numberDouble":"40.7262807"}]},"start time":{"$date":{"$numberLong":"1451607024000"}},
+"stop time":{"$date":{"$numberLong":"1451607135000"}}}
 ```
 
 Fantastic. I get results. If I scroll through a little bit, I see that these documents seem to match my query. But what are these *dollar* signs everywhere? Are there *start station* ID and *end station* ID operators now too? Great question. The dollar sign symbol has a lot of wonderful superpowers in *MQL*.
 > One of them is to denote when you're using an operator.
 Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
 
-In this example, given a document, when we issue an expression like this, the $start station ID means the value 439.
-
-And if we were to use $start station name, that would mean E 4th Street and 2nd Avenue.
+In this example, given a document, when we issue an expression like this, the *$start station* ID means the value 439. And if we were to use *$start station* name, that would mean E 4th Street and 2nd Avenue.
 
 If we don't use the dollar sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document.
 
