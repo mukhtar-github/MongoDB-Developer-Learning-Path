@@ -1476,21 +1476,19 @@ It sounds crazy, I know. But it's not such a rare occurrence. Let's say I'm tryi
 "stop time":{"$date":{"$numberLong":"1451607135000"}}}
 ```
 
-Fantastic. I get results. If I scroll through a little bit, I see that these documents seem to match my query. But what are these *dollar* signs everywhere? Are there *start station* ID and *end station* ID operators now too? Great question. The dollar sign symbol has a lot of wonderful superpowers in *MQL*.
+Fantastic. I get results. If I scroll through a little bit, I see that these documents seem to match my query. But what are these *dollar* signs everywhere? Are there *start station* ID and *end station* ID operators now too? Great question. The *dollar* sign symbol has a lot of wonderful superpowers in *MQL*.
 > One of them is to denote when you're using an operator.
-Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
+> Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
 
-In this example, given a document, when we issue an expression like this, the *$start station* ID means the value 439. And if we were to use *$start station* name, that would mean E 4th Street and 2nd Avenue.
+In this example, given a document, when we issue an expression like this.
 
-If we don't use the dollar sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document.
+```javascript
+{ "$expr": { "$eq": [ "$end station id", "$start station id"] } }
+```
 
-If we were to replace the ID with name, we should get the same exact results.
+The *$start station* ID means the value 439. And if we were to use *$start station* name, that would mean *E 4th Street and 2nd Avenue*. If we don't use the *dollar* sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document. If we were to replace the ID with name, we should get the same exact results.
 
-Another question that I have for this data set is how many of these people rented the bikes out for more than a couple of minutes?
-
-For that I'll add another condition to this expression and move to the show to play around with this data more.
-
-One thing to know before we switch from the Atlas interface, though, is that this particular collection contains 10,000 documents.
+Another question that I have for this data set is how many of these people rented the bikes out for more than a couple of minutes? For that I'll add another condition to this expression and move to the show to play around with this data more. One thing to know before we switch from the Atlas interface, though, is that this particular collection contains 10,000 documents.
 
 So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
 
