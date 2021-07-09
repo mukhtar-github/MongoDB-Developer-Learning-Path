@@ -1442,10 +1442,114 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$and": [{ 
 149
 ```
 
+### Expressive Query Operator
+
+Let's take it up a notch and look at *$expr*, the expressive query operator. The versatility of this operator is already clear from its name, *$expr*. It's expressive, meaning it can do more than one simple operation.
+> *$expr* allows the use of aggregation expressions within the query language
+and it uses this syntax.
+
 ```javascript
+{ "$expr": { <expression> } }
+```
 
-{"$and": [{"$or": [{"founded_year": 2004}, {"$and": [{"$or": [{"category_code": "social"}, {"category_code": "web"}]}]}]}, {"$or": [{"founded_month": 10}, {"$and": [{"$or": [{"category_code": "social"}, {"category_code": "web"}]}]}]}]}
+We haven't yet learned what aggregation expressions are so it might seem premature to talk about this operator.
 
+However, $expr also allows us to use variables and conditional statements.
+
+So let's get started with that and see how it works.
+
+In the later lessons, we will also cover aggregation expressions so that you can utilize the power of $expr to its fullest.
+
+When we learned about comparison operators, we were comparing a field's value to some number.
+
+But can we compare fields within the same document to each other?
+
+It sounds crazy, I know.
+
+But it's not such a rare occurrence.
+
+Let's say I'm trying to learn more about city bike users in New York City, and I want to know how many of them return the bicycle to the same station from which they rented it out.
+
+$expr allows me to compare the start station ID value directly with the end station ID value within the same document, without specifying what those values should equal to on their own.
+
+And this is how we do it.
+
+Fantastic.
+
+I get results.
+
+If I scroll through a little bit, I see that these documents seem to match my query.
+
+But what are these dollar signs everywhere?
+
+Are there start station ID and end station ID operators now too?
+
+Great question.
+
+The dollar sign symbol has a lot of wonderful superpowers in MQL.
+
+One of them is to denote when you're using an operator.
+
+Another one is to signify that you're looking at the value of that field, rather than just the field name itself.
+
+In this example, given a document, when we issue an expression like this, the $start station ID means the value 439.
+
+And if we were to use $start station name, that would mean E 4th Street and 2nd Avenue.
+
+If we don't use the dollar sign in this case, we have to look for a specific field value in all documents, rather than compare a value that varies from document to document to another value that varies from document to document.
+
+If we were to replace the ID with name, we should get the same exact results.
+
+Another question that I have for this data set is how many of these people rented the bikes out for more than a couple of minutes?
+
+For that I'll add another condition to this expression and move to the show to play around with this data more.
+
+One thing to know before we switch from the Atlas interface, though, is that this particular collection contains 10,000 documents.
+
+So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
+
+Again, we're already connected to the Atlas cluster.
+
+If you're not, make sure to connect when you're trying this on your own.
+
+And we're going to be using the sample training database.
+
+This is the initial query that we issued in the Atlas UI in the Data Explorer.
+
+And we want to find out how many trips started and ended at the same station.
+
+So there's a count at the end, and the final result is 360 trips, which is only about 3% of the total number of 10,000 trips.
+
+Looks like New York City is living up to its reputation, and most people are, in fact, rushing to some other destination.
+
+So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
+
+For that, I issue this query.
+
+And here I am adding another condition where I want the trip duration to be greater than 1,200 seconds-- 173.
+
+OK, let's break this query down to take a closer look at the syntax and what this query really does.
+
+First, we added a greater than operator to our equals operator under the same "$and" umbrella.
+
+Something here is still a bit off from how we learned to use comparison operators.
+
+In MQL, comparison operator syntax uses the field name first and the comparison operator applied later.
+
+This syntax, however, is using the aggregation operator instead.
+
+It looks the same way, but the syntax is slightly different.
+
+We will cover the aggregation pipeline and operators, I promise, later in this course.
+
+So stay with me.
+
+This is it for the expressive operator.
+
+It allows for more complex queries and for comparing fields within a document.
+
+We also learned about another way that the dollar sign is used in the MongoDB query language, and even got a peek at how to use comparison operators via the aggregation pipeline before we even got to learn about the aggregation pipeline.
+
+```javascript
 {"$and": [{"$or": [{"founded_month": 10}, {"category_code": "social"}, {"category_code": "web"}]}]}
-
 ```
