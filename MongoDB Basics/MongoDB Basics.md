@@ -1498,24 +1498,17 @@ The *$start station ID* means the value 439. And if we were to use *$start stati
 Another question that I have for this data set is how many of these people rented the bikes out for more than a couple of minutes? For that I'll add another condition to this expression and move to the show to play around with this data more. One thing to know before we switch from the Atlas interface, though, is that this particular collection contains 10,000 documents.
 
 ```javascript
-MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] } }).count()
-316
-
 db.trips.find({ "$expr": { "$and": [ { "$gt": [ "$tripduration", 1200 ]},
  { "$eq": [ "$end station id", "$start station id" ]}]}}).count()
 ```
 
-So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point? Again, we're already connected to the Atlas cluster. If you're not, make sure to connect when you're trying this on your own. And we're going to be using the sample training database.
+So how many of these, were just rides around the area that lasted longer than a few minutes, and returned to the starting point? Again, we're already connected to the Atlas cluster. If you're not, make sure to connect when you're trying this on your own. And we're going to be using the sample training database. This is the initial query that we issued in the Atlas UI in the Data Explorer. And we want to find out how many trips started and ended at the same station.
 
-This is the initial query that we issued in the Atlas UI in the Data Explorer.
-
-And we want to find out how many trips started and ended at the same station.
-
-So there's a count at the end, and the final result is 360 trips, which is only about 3% of the total number of 10,000 trips.
-
-Looks like New York City is living up to its reputation, and most people are, in fact, rushing to some other destination.
-
-So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$eq": [ "$end station id", "$start station id"] } }).count()
+316
+```
+So there's a count at the end, and the final result is 316 *trips*, which is only about 3% of the total number of 10,000 trips. Looks like New York City is living up to its reputation, and most people are, in fact, rushing to some other destination. So how many of these were just rides around the area that lasted longer than a few minutes, and returned to the starting point?
 
 For that, I issue this query.
 
