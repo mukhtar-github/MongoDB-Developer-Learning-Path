@@ -1601,13 +1601,13 @@ To mitigate this, we can add a *projection* to our *Find* query. A *projection* 
 The *"$size"* array operator will return all documents where the specified array field is exactly the given length.
 
 ```javascript
-{<array field>: { "$size": <number>}
+{ <array field>: { "$size": <number> }
 ```
 
-The *"$all"* array operator will return a cursor with all documents in which the specified array field contains all the given elements, regardless of their order in the array.
+The *"$all"* array operator will return a cursor with all documents in which the specified *array field* contains all the given elements, regardless of their order in the array.
 
 ```javascript
-{<array field>: { "$size": <array>}
+{ <array field>: { "$all": <array> }
 ```
 
 When querying an array field with an array match, *MongoDB* will look for an exact array match, unless specified otherwise. When querying an array field with a single element, *MongoDB* will return all documents where the specified array field contains this given element.
