@@ -1577,13 +1577,13 @@ And that's a zero. All right. It appears that the order does matter. Of course, 
 > *MQL* has a great operator for that called *"$all"*. This query should return all documents that have at least these elements in the *amenities* field.
 
 ```javascript
-{"amenities": {"$all": ["Internet", "Wifi", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}
+{"amenities": {"$all": ["Wifi", "Internet", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}
 ```
 
 Most matches will have these, and more. Something tells me that the more *amenities* are listed, the more expensive the place is going to be. We're trying to travel on a budget, so we can either make our query limit the results by price, or we can learn more about*array operators* and limit the results by *array length*. To limit the result cursor by restricting their *array length*, add the *size operator* to your query, like so.
 
 ```javascript
-{"amenities": {"$size": 20, "$all": ["Cable TV", "TV", "Wifi", "Air conditioning", "Pool", "Kitchen", "Free parking on premises", "Elevator", "Hot tub", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace", "Self check-in", "Lockbox", "Hot water", "Bed linens", "Extra pillows and blankets", "Ethernet connection", "Microwave", "Coffee maker", "Refrigerator", "Dishes and silverware", "Cooking basics", "Stove", "BBQ grill", "Garden or backyard", "Well-lit path to entrance", "Disabled parking spot", "Step-free access", "Wide clearance to bed", "Step-free access"]}}
+{"amenities": {"$size": 20, "$all": ["Wifi", "Internet", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}
 ```
 
 This will only return documents that list exactly *20 amenities* in this field and contain the amenities that we're looking for. You can also just query by *array length* using the *size operator* as your only query condition. But we do not need it in this scenario.
