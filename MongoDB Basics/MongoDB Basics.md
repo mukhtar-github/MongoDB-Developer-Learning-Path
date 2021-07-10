@@ -1602,7 +1602,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> use sample_airbnb
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({"amenities": {"$size": 20, "$all": ["Wifi", "Internet", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}).pretty()
 ```
 
-If we just issue this query as is, reading the results in the shell will be as cumbersome as it is reading them in the Atlas UI. Because there's just too many fields and too much information.
+If we just issue this query as it is, reading the results in the shell will be as cumbersome as it is reading them in the *Atlas* UI. Because there's just too many fields and too much information.
 
 To mitigate this, we can add a *projection* to our *Find* query. A *projection* allows us to decide which document fields will be part of the resulting cursor. We will cover *projection* in a future lesson. For now, let's summarize what we learned about querying arrays in *MongoDB*.
 
@@ -1619,3 +1619,15 @@ The *"$all"* array operator will return a cursor with all documents in which the
 ```
 
 When querying an array field with an array match, *MongoDB* will look for an exact array match, unless specified otherwise. When querying an array field with a single element, *MongoDB* will return all documents where the specified array field contains this given element.
+
+#### Problem:
+
+What is the name of the listing in the sample_airbnb.listingsAndReviews dataset that accommodates more than 6 people and has exactly 50 reviews?
+
+#### Answer:
+
+```javascript
+{"accommodates": {"$gt": 6}, "number_of_reviews": 50}
+
+name: "Sunset Beach Lodge Retreat"
+```
