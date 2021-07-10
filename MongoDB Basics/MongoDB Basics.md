@@ -1541,3 +1541,14 @@ db.companies.find({ "$expr": { "$lt": [ "$founded_year", "$number_of_employees" 
 db.companies.find({ "$expr": { "$gt": [ "$number_of_employees", "$founded_year" ] } }).count()
 ```
 
+#### Problem:
+
+How many companies in the sample_training.companies collection have the same permalink as their twitter_username?
+
+#### Answer:
+
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$expr": { "$eq": [ "$permalink", "$twitter_username" ] } }).count()
+1299
+```
