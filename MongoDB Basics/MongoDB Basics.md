@@ -1524,8 +1524,20 @@ This syntax, however, is using the *aggregation operator* instead.
 ```javascript
 { <operator>: { <field>, <value> } }
 ```
-
+ 
 It looks the same way, but the syntax is slightly different. We will cover the *aggregation pipeline and operators*, I promise, later in this course.
 
 So stay with me. This is it for the *expressive operator*. It allows for more complex queries and for comparing fields within a document. We also learned about another way that the dollar sign is used in the *MongoDB query language*, and even got a peek at how to use *comparison operators* via the *aggregation pipeline* before we even got to learn about the *aggregation pipeline*.
+
+#### Problem:
+
+Which of the following statements will find all the companies that have more employees than the year in which they were founded?
+
+#### Answer:
+
+```javascript
+db.companies.find({ "$expr": { "$lt": [ "$founded_year", "$number_of_employees" ] } }).count()
+
+db.companies.find({ "$expr": { "$gt": [ "$number_of_employees", "$founded_year" ] } }).count()
+```
 
