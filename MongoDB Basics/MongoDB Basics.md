@@ -1511,27 +1511,9 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$an
 173
 ```
 
-And here I am adding another condition where I want the trip duration to be greater than 1,200 seconds-- 173.
+And here I am adding another condition where I want the trip duration to be greater than 1,200 seconds -- 173. OK, let's break this query down to take a closer look at the syntax and what this query really does. First, we added a greater than operator to our equals operator under the same "$and" umbrella. Something here is still a bit off from how we learned to use comparison operators.
 
-OK, let's break this query down to take a closer look at the syntax and what this query really does.
+In MQL, comparison operator syntax uses the field name first and the comparison operator applied later. This syntax, however, is using the *aggregation operator* instead. It looks the same way, but the syntax is slightly different. We will cover the *aggregation pipeline and operators*, I promise, later in this course.
 
-First, we added a greater than operator to our equals operator under the same "$and" umbrella.
-
-Something here is still a bit off from how we learned to use comparison operators.
-
-In MQL, comparison operator syntax uses the field name first and the comparison operator applied later.
-
-This syntax, however, is using the aggregation operator instead.
-
-It looks the same way, but the syntax is slightly different.
-
-We will cover the aggregation pipeline and operators, I promise, later in this course.
-
-So stay with me.
-
-This is it for the expressive operator.
-
-It allows for more complex queries and for comparing fields within a document.
-
-We also learned about another way that the dollar sign is used in the MongoDB query language, and even got a peek at how to use comparison operators via the aggregation pipeline before we even got to learn about the aggregation pipeline.
+So stay with me. This is it for the *expressive operator*. It allows for more complex queries and for comparing fields within a document. We also learned about another way that the dollar sign is used in the *MongoDB query language*, and even got a peek at how to use *comparison operators* via the *aggregation pipeline* before we even got to learn about the *aggregation pipeline*.
 
