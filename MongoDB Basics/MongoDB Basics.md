@@ -1555,25 +1555,13 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$expr": { 
 
 ### Array Operators
 
-So far we queried documents by fields that have string, numeric, and Boolean values.
+So far we queried documents by fields that have *string*, *numeric*, and *Boolean* values. It's time that we look at more complex elements and see what *MQL* has to offer to query *array* fields.
 
-It's time that we look at more complex elements and see what MQL has to offer to query array fields.
+> The correct functionality of the *$push* operator is that when the *field* is not an array, the operation will fail. However, if the *field* is absent in the document to update, *$push* adds the *array field* with the value as its element.
 
-We already learned one array operator, $push, which allows us to add an element to an array or turn a field into an array field if it was previously a different type of value.
+Let's see what happens when we query for a value in an *array field* using the methods that we already learned for other types of fields. I'm looking to start traveling, and I heard a lot about this *Airbnb* place. The sample *Airbnb* database contains an excellent example of *array fields*, plus it can help me figure out where and how I want to travel.
 
-Let's see what happens when we query for a value in an array field using the methods that we already learned for other types of fields.
-
-I'm looking to start traveling, and I heard a lot about this Airbnb place.
-
-The sample Airbnb database contains an excellent example of array fields, plus it can help me figure out where and how I want to travel.
-
-Each Airbnb listing has a field with an array of available amenities.
-
-Let's say that not having shampoo in the Airbnb is a deal breaker for me.
-
-So I query for "amenities" "Shampoo" to isolate all entries that have shampoo in them.
-
-Notice that the resulting documents match this criterion in such a way that shampoo is one of the array elements, even though the query itself doesn't specify that "amenties" has to be an array.
+Each *Airbnb* listing has a field with an array of *available amenities*. Let's say that not having *shampoo* in the *Airbnb* is a deal breaker for me. So I query for *"amenities" "Shampoo"* to isolate all entries that have *shampoo* in them. Notice that the resulting documents match this criterion in such a way that *shampoo* is one of the array elements, even though the query itself doesn't specify that *"amenties"* has to be an array.
 
 So this looks like we're querying a field that could just have a string as a value.
 
