@@ -1567,16 +1567,24 @@ So this looks like we're querying a field that could just have a *string* as a v
 
 Nope. You might think that the result will be documents where the *amenities* field is an array field. However, now *MongoDB* is looking for a document where the value of the array field is a single element, *shampoo*. Because without any additional operators, it will look for an exact match. Now the question is, does the order of elements in an array field query matter? To test this out, we'll just copy an array field from one of the documents and do a search that way.
 
-As a result, we can either get all documents that contain the same amenities, regardless of their order in the array field, or all the documents that have the amenities listed in this exact order. Hmm. The result is a single document with a listing of an apartment in Montreal, Canada. To fully test which scenario we're observing, let's swap the order of the first two elements in this array. If the order doesn't matter, we'll get the same document back. But if the order does matter, we'll get a different document, or nothing if no documents have that exact array in them.
+```javascript
+{"amenities": ["Internet", "Wifi", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}
+```
+
+As a result, we can either get all documents that contain the same *amenities*, regardless of their order in the array field, or all the documents that have the *amenities* listed in this exact order. Hmm. The result is a single document with a listing of an apartment in Montreal, Canada. To fully test which scenario we're observing, let's swap the order of the first two elements in this array. If the order doesn't matter, we'll get the same document back. But if the order does matter, we'll get a different document, or nothing if no documents have that exact array in them.
 
 And that's a zero. All right. It appears that the order does matter. Of course, the order matters. It's an array. That's the whole point of them, you might say. Well, I wish you'd told me that earlier, and I didn't have to go through all this trouble testing things out. So the question now is, how do we find all documents that contain more than one *amenity* without caring about the order of array elements?
 > *MQL* has a great operator for that called *"$all"*. This query should return all documents that have at least these elements in the *amenities* field.
 
 ```javascript
-{"amenities": {"$all": ["Cable TV", "TV", "Wifi", "Air conditioning", "Pool", "Kitchen", "Free parking on premises", "Elevator", "Hot tub", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace", "Self check-in", "Lockbox", "Hot water", "Bed linens", "Extra pillows and blankets", "Ethernet connection", "Microwave", "Coffee maker", "Refrigerator", "Dishes and silverware", "Cooking basics", "Stove", "BBQ grill", "Garden or backyard", "Well-lit path to entrance", "Disabled parking spot", "Step-free access", "Wide clearance to bed", "Step-free access"]}}
+{"amenities": {"$all": ["Internet", "Wifi", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}
 ```
 
 Most matches will have these, and more. Something tells me that the more *amenities* are listed, the more expensive the place is going to be. We're trying to travel on a budget, so we can either make our query limit the results by price, or we can learn more about*array operators* and limit the results by *array length*. To limit the result cursor by restricting their *array length*, add the *size operator* to your query, like so.
+
+```javascript
+{"amenities": {"$size": 20, "$all": ["Cable TV", "TV", "Wifi", "Air conditioning", "Pool", "Kitchen", "Free parking on premises", "Elevator", "Hot tub", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace", "Self check-in", "Lockbox", "Hot water", "Bed linens", "Extra pillows and blankets", "Ethernet connection", "Microwave", "Coffee maker", "Refrigerator", "Dishes and silverware", "Cooking basics", "Stove", "BBQ grill", "Garden or backyard", "Well-lit path to entrance", "Disabled parking spot", "Step-free access", "Wide clearance to bed", "Step-free access"]}}
+```
 
 This will only return documents that list exactly *20 amenities* in this field and contain the amenities that we're looking for. You can also just query by *array length* using the *size operator* as your only query condition. But we do not need it in this scenario.
 
