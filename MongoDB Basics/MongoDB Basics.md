@@ -1552,3 +1552,125 @@ How many companies in the sample_training.companies collection have the same per
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "$expr": { "$eq": [ "$permalink", "$twitter_username" ] } }).count()
 1299
 ```
+
+### Array Operators
+
+So far we queried documents by fields that have string, numeric, and Boolean values.
+
+It's time that we look at more complex elements and see what MQL has to offer to query array fields.
+
+We already learned one array operator, $push, which allows us to add an element to an array or turn a field into an array field if it was previously a different type of value.
+
+Let's see what happens when we query for a value in an array field using the methods that we already learned for other types of fields.
+
+I'm looking to start traveling, and I heard a lot about this Airbnb place.
+
+The sample Airbnb database contains an excellent example of array fields, plus it can help me figure out where and how I want to travel.
+
+Each Airbnb listing has a field with an array of available amenities.
+
+Let's say that not having shampoo in the Airbnb is a deal breaker for me.
+
+So I query for "amenities" "Shampoo" to isolate all entries that have shampoo in them.
+
+Notice that the resulting documents match this criterion in such a way that shampoo is one of the array elements, even though the query itself doesn't specify that "amenties" has to be an array.
+
+So this looks like we're querying a field that could just have a string as a value.
+
+How can we differentiate and look for documents where amenities is specifically an array field?
+
+Let's try a different approach.
+
+What if I place ["shampoo"] in square brackets, making it an array.
+
+Will this work?
+
+Nope.
+
+You might think that the result will be documents where the amenities field is an array field.
+
+However, now MongoDB is looking for a document where the value of the array field is a single element, shampoo.
+
+Because without any additional operators, it will look for an exact match.
+
+Now the question is, does the order of elements in an array field query matter?
+
+To test this out, we'll just copy an array field from one of the documents and do a search that way.
+
+As a result, we can either get all documents that contain the same amenities, regardless of their order in the array field, or all the documents that have the amenities listed in this exact order.
+
+Hmm.
+
+The result is a single document with a listing of an apartment in Montreal, Canada.
+
+To fully test which scenario we're observing, let's swap the order of the first two elements in this array.
+
+If the order doesn't matter, we'll get the same document back.
+
+But if the order does matter, we'll get a different document, or nothing if no documents have that exact array in them.
+
+And that's a zero.
+
+All right.
+
+It appears that the order does matter.
+
+Of course, the order matters.
+
+It's an array.
+
+That's the whole point of them, you might say.
+
+Well, I wish you'd told me that earlier, and I didn't have to go through all this trouble testing things out.
+
+So the question now is, how do we find all documents that contain more than one amenity without caring about the order of array elements?
+
+MQL has a great operator for that called "$all".
+
+This query should return all documents that have at least these elements in the amenities field.
+
+Most matches will have these, and more.
+
+Something tells me that the more amenities are listed, the more expensive the place is going to be.
+
+We're trying to travel on a budget, so we can either make our query limit the results by price, or we can learn more about array operators and limit the results by a ray length.
+
+To limit the result cursor by restricting their ray length, add the size operator to your query, like so.
+
+This will only return documents that list exactly 20 amenities in this field and contain the amenities that we're looking for.
+
+You can also just query by array length using the size operator as your only query condition.
+
+But we do not need it in this scenario.
+
+Finally, I would like to make an informed choice about this journey.
+
+But the documents in this collection are just too big to quickly compare and choose my travel destination.
+
+For that, let's switch to the Mongo shell and learn about projection.
+
+As always, I'm already connected to the cluster.
+
+If you are not, make sure to be connected to it when you're following along with this lesson.
+
+And I want to specify which database I'll be using for this exercise.
+
+If we just issue this query as is, reading the results in the shell will be as cumbersome as it is reading them in the Atlas UI.
+
+Because there's just too many fields and too much information.
+
+To mitigate this, we can add a projection to our Find query.
+
+A projection allows us to decide which document fields will be part of the resulting cursor.
+
+We will cover projection in a future lesson.
+
+For now, let's summarize what we learned about querying arrays in MongoDB.
+
+The "$size" array operator will return all documents where the specified array field is exactly the given length.
+
+The "$all" array operator will return a cursor with all documents in which the specified array field contains all the given elements, regardless of their order in the array.
+
+When querying an array field with an array match, MongoDB will look for an exact array match, unless specified otherwise.
+
+When querying an array field with a single element, MongoDB will return all documents where the specified array field contains this given element.
