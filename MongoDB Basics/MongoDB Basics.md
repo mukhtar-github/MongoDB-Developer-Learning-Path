@@ -1631,3 +1631,14 @@ What is the name of the listing in the sample_airbnb.listingsAndReviews dataset 
 
 name: "Sunset Beach Lodge Retreat"
 ```
+
+#### Problem:
+
+Using the *sample_airbnb.listingsAndReviews* collection find out how many documents have the *"property_type" "House"*, and include *"Changing table"* as one of the *"amenities"*?
+
+#### Answer:
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({"property_type": "House", "amenities": {"$all": ["Changing table"]}}).count()
+11
+```
