@@ -1586,9 +1586,13 @@ Most matches will have these, and more. Something tells me that the more *amenit
 {"amenities": {"$size": 20, "$all": ["Wifi", "Internet", "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace"]}}
 ```
 
-This will only return documents that list exactly *20 amenities* in this field and contain the amenities that we're looking for. You can also just query by *array length* using the *size operator* as your only query condition. But we do not need it in this scenario.
+This will only return documents that list exactly *20 amenities* in this field and contain the *amenities* that we're looking for. You can also just query by *array length* using the *size operator* as your only query condition.
 
-Finally, I would like to make an informed choice about this journey. But the documents in this collection are just too big to quickly compare and choose my travel destination. For that, let's switch to the *Mongo shell* and learn about projection.
+```javascript
+{"amenities": {"$size": 20}}
+```
+
+But we do not need it in this scenario. Finally, I would like to make an informed choice about this journey. But the documents in this collection are just too big to quickly compare and choose my travel destination. For that, let's switch to the *Mongo shell* and learn about projection.
 
 As always, I'm already connected to the cluster. If you are not, make sure to be connected to it when you're following along with this lesson. And I want to specify which database I'll be using for this exercise. If we just issue this query as is, reading the results in the shell will be as cumbersome as it is reading them in the Atlas UI. Because there's just too many fields and too much information.
 
