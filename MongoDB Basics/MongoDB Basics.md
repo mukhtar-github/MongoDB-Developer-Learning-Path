@@ -1592,10 +1592,22 @@ This will only return documents that list exactly *20 amenities* in this field a
 {"amenities": {"$size": 20}}
 ```
 
-But we do not need it in this scenario. Finally, I would like to make an informed choice about this journey. But the documents in this collection are just too big to quickly compare and choose my travel destination. For that, let's switch to the *Mongo shell* and learn about projection.
+But we do not need it in this scenario. Finally, I would like to make an informed choice about this journey. But the documents in this collection are just too big to quickly compare and choose my travel destination. For that, let's switch to the *Mongo shell* and learn about *projection*.
 
 As always, I'm already connected to the cluster. If you are not, make sure to be connected to it when you're following along with this lesson. And I want to specify which database I'll be using for this exercise. If we just issue this query as is, reading the results in the shell will be as cumbersome as it is reading them in the Atlas UI. Because there's just too many fields and too much information.
 
 To mitigate this, we can add a *projection* to our *Find* query. A *projection* allows us to decide which document fields will be part of the resulting cursor. We will cover *projection* in a future lesson. For now, let's summarize what we learned about querying arrays in *MongoDB*.
 
-The *"$size"* array operator will return all documents where the specified array field is exactly the given length. The *"$all"* array operator will return a cursor with all documents in which the specified array field contains all the given elements, regardless of their order in the array. When querying an array field with an array match, *MongoDB* will look for an exact array match, unless specified otherwise. When querying an array field with a single element, *MongoDB* will return all documents where the specified array field contains this given element.
+The *"$size"* array operator will return all documents where the specified array field is exactly the given length.
+
+```javascript
+{<array field>: { "$size": <number>}
+```
+
+The *"$all"* array operator will return a cursor with all documents in which the specified array field contains all the given elements, regardless of their order in the array.
+
+```javascript
+{<array field>: { "$size": <array>}
+```
+
+When querying an array field with an array match, *MongoDB* will look for an exact array match, unless specified otherwise. When querying an array field with a single element, *MongoDB* will return all documents where the specified array field contains this given element.
