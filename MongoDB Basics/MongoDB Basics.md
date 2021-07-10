@@ -1641,4 +1641,119 @@ Using the *sample_airbnb.listingsAndReviews* collection find out how many docume
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({"property_type": "House", "amenities": {"$all": ["Changing table"]}}).count()
 11
+or
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({ "property_type": "House","amenities": "Changing table" }).count()
+11
 ```
+
+#### Problem:
+
+Which of the following queries will return all listings that have *"Free parking on premises", "Air conditioning", and "Wifi"* as part of their *amenities*, and have at *least 2 bedrooms* in the sample_airbnb.listingsAndReviews collection?
+
+#### Answer:
+
+```javascript
+db.listingsAndReviews.find({ "amenities": { "$all": [ "Free parking on premises", "Wifi", "Air conditioning" ] }, "bedrooms": { "$gte":  2 } } ).pretty()
+```
+
+### Array Operators and Projection
+
+In this lesson, we'll cover more array operators, and the second argument in the Find command called projection.
+
+When we look at the sample Airbnb data set, we see documents with lots of fields that often don't fit on the screen.
+
+To mitigate this, we can add a projection to our Find queries, and only look at fields that we're interested in at the moment.
+
+Here's a query that looks for documents in the sample Airbnb database.
+
+The first part of the Find query describes the content that we're looking for, though we didn't write out the whole list on this slide.
+
+The second is a projection, describing specifically which fields we're looking for.
+
+This way, the cursor doesn't have to include every single field in the result set.
+
+At this point in my travel search, I want to know the price and address information only, so that is what I specify in my projection.
+
+Let's issue this query and see what we get.
+
+Now I can just look at the address and the price for that address for every single listing that matches my query.
+
+My initial theory about Airbnb listings was, if there is a shorter list of amenities present, then the booking will be cheaper.
+
+It looks like my theory about the number of amenities correlating with the price was wildly off.
+
+The prices and the results set ranged from $45 in Barcelona, Spain, to $999 in Bronte, Australia.
+
+I guess I'm going to have to do some other kind of search to find the perfect travel destination.
+
+Searching by price might be a better option, but we already know how to do that.
+
+So let's learn more about projection, instead.
+
+When using projection, you can specify which fields you do or do not want to see in the resulting cursor.
+
+Use 1 to specify the fields that you want to see, and 0 to specify the fields that you don't want to see.
+
+You cannot mix zeros and ones in a single projection.
+
+If you're using ones, then you'll only get the fields that you specified, plus the underscore ID fields.
+
+If you're using zeros, then you'll get all the fields except for the ones that you specifically excluded.
+
+The only time when you can mix ones and zeros is when you're specifically asking to exclude the _id field, because it will be included by default otherwise.
+
+So this is a valid projection, because the 0 is used to explicitly exclude the default _id value, but this is not.
+
+As you can see, we get an error when running it.
+
+Plus it seems redundant to specify that a field shouldn't be included when it is already not included.
+
+Now let's look at some more advanced projection that is specific to array fields.
+
+Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day.
+
+Going through student data can be a grueling task, unless, of course, you're good at querying data.
+
+Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
+
+First, let's look at the documents and the grades collection to remind ourselves what type of fields we will be querying.
+
+Here we see that the Scores field is an array of documents.
+
+We don't care about the type of assessment, we only care about the score.
+
+How can we access elements in these sub documents of an array field?
+
+There is a handy array operator, elemMatch, which we will use for this query.
+
+Here it is in the query itself.
+
+Let's see what result we get, and then see how this works.
+
+The results shows all the documents that match the query, but we're not getting every field value for every document.
+
+For some documents, we're not getting anything other than the _id added value, since that is the default projection behavior.
+
+For other documents, we're getting the _id value, and the element of the array that matches our elemMatch condition, which is that the score field has a value of greater than 85, just like it says over here when we issued a query.
+
+Since array elements, in this case, are documents, we're getting the full document that matches the condition.
+
+So not only the score, but also the type of the evaluation.
+
+Here elemMatch is used in the projection part of the query, but it can also be used in the query part of the Find command as well.
+
+To try that out, let's find every student who received extra credit for any class.
+
+So I'm looking for anyone who has, in the "scores" array, a field that is called "type," and the value for the type is "extra credit." There is no projection in this query.
+
+This student really needed extra credit, so it's a good thing that they got it for this class.
+
+Since elemMatch is being used in the query part, the result is the full document that matches the condition for at least one of the elements in the array, and that is to contain the field, "type," with the value, "extra credit." In this lesson, we learned that we can use projection to specify the fields that we want to see in documents when the cursor returns what matches the query condition.
+
+You can use ones and zeros to specify whether a field should or shouldn't be included, but you can not mix and match, including and excluding fields, with the exception of explicitly excluding the _id field, which is present by default.
+
+We also learned about elemMatch, an array operator that can be used both in query and projection part of the Find command.
+
+elemMatch matches documents that contain an array field with at least one element that matches all the specified query criteria, or projects only the array elements with at least one element that matches the specified criteria.
+
+Isn't that cool?
