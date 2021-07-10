@@ -1519,7 +1519,13 @@ In *MQL*, *comparison operator* syntax uses the *field* name first and the *comp
 { <field>: { <operator>: <value> } }
 ```
 
-This syntax, however, is using the *aggregation operator* instead. It looks the same way, but the syntax is slightly different. We will cover the *aggregation pipeline and operators*, I promise, later in this course.
+This syntax, however, is using the *aggregation operator* instead.
+
+```javascript
+{ <operator>: { <field>, <value> } }
+```
+
+It looks the same way, but the syntax is slightly different. We will cover the *aggregation pipeline and operators*, I promise, later in this course.
 
 So stay with me. This is it for the *expressive operator*. It allows for more complex queries and for comparing fields within a document. We also learned about another way that the dollar sign is used in the *MongoDB query language*, and even got a peek at how to use *comparison operators* via the *aggregation pipeline* before we even got to learn about the *aggregation pipeline*.
 
