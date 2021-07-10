@@ -1511,9 +1511,9 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "$expr": { "$an
 173
 ```
 
-And here I am adding another condition where I want the trip duration to be greater than 1,200 seconds -- 173. OK, let's break this query down to take a closer look at the syntax and what this query really does. First, we added a greater than operator to our equals operator under the same "$and" umbrella. Something here is still a bit off from how we learned to use comparison operators.
+And here I am adding another condition where I want the trip duration to be greater than 1,200 seconds -- 173. OK, let's break this query down to take a closer look at the syntax and what this query really does. First, we added a *greater than operator* to our *equals operator* under the same *"$and"* umbrella. Something here is still a bit off from how we learned to use *comparison operators*.
 
-In MQL, comparison operator syntax uses the field name first and the comparison operator applied later.
+In *MQL*, *comparison operator* syntax uses the *field* name first and the *comparison operator* applied later.
 
 ```javascript
 { <field>: { <operator>: <value> } }
