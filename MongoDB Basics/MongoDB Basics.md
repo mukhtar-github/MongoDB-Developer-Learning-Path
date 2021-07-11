@@ -1892,13 +1892,45 @@ db.companies.find({ "funding_rounds": { "$size": 8 } }, { "name": 1, "_id": 0 })
 
 *MongoDB* has a flexible model for storing data, which means that developers get to decide how to best store their data. So it's common to see *sub-documents* or *arrays of documents* stored in *MongoDB*. Let's learn more about querying those fields. I'm already connected to my *Atlas cluster*, and I'm choosing to use the *sample training* database. In this lesson, we'll learn to query *sub-documents* and specific *array* elements.
 
-We'll start with the *trips* collection. Each document in the collection has two perfect fields for our purposes, the start station location and the end station location. Each field contains a document, and each document contains an array. First, we want to know how to get to the array field in those nested documents.
+We'll start with the *trips* collection. Each document in the collection has two perfect fields for our purposes, the *start station location* and *the end station location*. Each field contains a document, and each document contains an array. First, we want to know how to get to the *array* field in those nested documents.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.findOne({ "start station location.type": "Point" })
+{
+	"_id" : ObjectId("572bb8222b288919b68abf5a"),
+	"tripduration" : 379,
+	"start station id" : 476,
+	"start station name" : "E 31 St & 3 Ave",
+	"end station id" : 498,
+	"end station name" : "Broadway & W 32 St",
+	"bikeid" : 17827,
+	"usertype" : "Subscriber",
+	"birth year" : 1969,
+	"gender" : 1,
+	"start station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.97966069,
+			40.74394314
+		]
+	},
+	"end station location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.98808416,
+			40.74854862
+		]
+	},
+	"start time" : ISODate("2016-01-01T00:00:45Z"),
+	"stop time" : ISODate("2016-01-01T00:07:04Z")
+}
+```
 
 For that, *MQL* uses something called *dot-notation*. Let's look at it in action. All documents in this collection match this query. Every document has a station location where there is a field with the name *type*, and a value *point*. But we are using *findOne*, so we only get one document back.
 
-The top level field of the document called *start station location* stores an object which is a *sub document*. This *sub document* has two fields, *type and coordinates*. To get the value of either field, I can use *dot-notation*. The field name from the *sub document* follows the top-level field separated by a dot or a period, and the whole thing is included in quotes.
+The top level field of the document called *start station location* stores an object which is a *sub document*. This *sub document* has two fields, *type and coordinates*. To get the value of either field, I can use *dot-notation*. The field name from the *sub document* follows the top-level field separated by a *dot* or a *period*, and the whole thing is included in quotes.
 
-You can think of it as a path to the field that you're looking for almost like a namespace for a collection-- where you go from a database level to the collection level, using a dot to separate the two objects. This notation can be used to go as deep in the document as needed. So if you have a field that has a document as a value, and that document has a field with another document as a value, you can still use dot notation to get the last atomic non-document value in that hierarchy.
+You can think of it as a path to the field that you're looking for almost like a namespace for a collection -- where you go from a database level to the collection level, using a dot to separate the two objects -- **db.collection**. This notation can be used to go as deep in the document as needed. So if you have a field that has a document as a value, and that document has a field with another document as a value, you can still use dot notation to get the last atomic non-document value in that hierarchy.
 
 Here's an example using the company's collection in our class sample training data set. Let's examine the documents in that data set for a moment. The relationships array contains objects, and each object describes the title, current status with relation to the company title, and personal details, like first and last name. All personal info is stored in a nested document in that array element.
 
