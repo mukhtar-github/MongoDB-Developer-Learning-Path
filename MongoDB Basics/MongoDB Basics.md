@@ -1890,122 +1890,28 @@ db.companies.find({ "funding_rounds": { "$size": 8 } }, { "name": 1, "_id": 0 })
 
 ### Array Operators and Sub-Documents
 
-MongoDB has a flexible model for storing data, which means that developers get to decide how to best store their data.
+*MongoDB* has a flexible model for storing data, which means that developers get to decide how to best store their data. So it's common to see *sub-documents* or *arrays of documents* stored in *MongoDB*. Let's learn more about querying those fields. I'm already connected to my *Atlas cluster*, and I'm choosing to use the *sample training* database. In this lesson, we'll learn to query *sub-documents* and specific *array* elements.
 
-So it's common to see sub-documents or arrays of documents stored in MongoDB.
+We'll start with the *trips* collection. Each document in the collection has two perfect fields for our purposes, the start station location and the end station location. Each field contains a document, and each document contains an array. First, we want to know how to get to the array field in those nested documents.
 
-Let's learn more about querying those fields.
+For that, *MQL* uses something called *dot-notation*. Let's look at it in action. All documents in this collection match this query. Every document has a station location where there is a field with the name *type*, and a value *point*. But we are using *findOne*, so we only get one document back.
 
-I'm already connected to my Atlas cluster, and I'm choosing to use the sample training database.
+The top level field of the document called *start station location* stores an object which is a *sub document*. This *sub document* has two fields, *type and coordinates*. To get the value of either field, I can use *dot-notation*. The field name from the *sub document* follows the top-level field separated by a dot or a period, and the whole thing is included in quotes.
 
-In this lesson, we'll learn to query sub-documents and specific array elements.
+You can think of it as a path to the field that you're looking for almost like a namespace for a collection-- where you go from a database level to the collection level, using a dot to separate the two objects. This notation can be used to go as deep in the document as needed. So if you have a field that has a document as a value, and that document has a field with another document as a value, you can still use dot notation to get the last atomic non-document value in that hierarchy.
 
-We'll start with the trips collection.
+Here's an example using the company's collection in our class sample training data set. Let's examine the documents in that data set for a moment. The relationships array contains objects, and each object describes the title, current status with relation to the company title, and personal details, like first and last name. All personal info is stored in a nested document in that array element.
 
-Each document in the collection has two perfect fields for our purposes, the start station location and the end station location.
+This query looks at the first element in the relationships array using dot notation. Array elements in most languages and data structures are enumerated starting from zero. *MongoDB* is no different, so the first element is at position zero. And that document is the value of the person field. So we use dot notation for that, as well. Finally, we are only interested in Zuckerberg, so we search for his last name.
 
-Each field contains a document, and each document contains an array.
+Because the documents in this collection are so big, we add a projection for the company name. Now, we're searching for anyone with the last name Zuckerberg in the first element of the relationships array. Let's try it out in the shell. It looks like the result is just one company, and it is the expected Facebook. The relationships array lists higher-level company executives. Let's see how many of them are CEOs whose first name is Mark and who are listed as the first relationship in this array for their company's entry.
 
-First, we want to know how to get to the array field in those nested documents.
+To do this, we need to slightly modify this query-- change the last name to first name, and change Zuckerberg to Mark. And then, add another condition where the title in this element contains the string CEO. For this, I can use a regex operator to specify the string that I'm trying to match. You can find more about the regex operator and syntax in the lecture notes below this video. We run the query to find how many Mark's are CEOs and are the first to be listed in this array field.
 
-For that, MQL uses something called dot-notation.
+Looks like we have 52 Mark's. And when we take a peek at the first 20, using the pretty directive, we see Facebook, Bitly, and a company called Are You Watching This? Which is a great name, in my opinion. Now that we have this new found wisdom on querying embedded documents and array elements, it would be a good time to put this knowledge together in a query that looks for all marks who used to be in the senior company leadership array, a.k.a. the relationships array, but are no longer with the company.
 
-Let's look at it in action.
+This means that we will be searching through every array element in every document. There is a field called is past, which can tell us whether this person is still with the company. So if they left, the value should be true. And the first name field value, under the person field in the array element, should equal to mark. Thankfully, we have a handy elemMatch operator which can look through every array element and match these conditions. So our find command, in this case, is going to be much shorter than the previous two.
 
-All documents in this collection match this query.
+Here, we say that we're looking for elements in the relationships array where there is past field is true, and the person dot first name field is Mark. We can also take a peek at the company names that match these criteria, or we can count them. All right 256-- lovely number. Now that we've got through all the nested documents and giant array fields, it is time to summarize what we learned.
 
-Every document has a station location where there is a field with the name type, and a value point.
-
-But we are using findOne, so we only get one document back.
-
-The top level field of the document called start station location stores an object which is a sub document.
-
-This sub document has two fields, type and coordinates.
-
-To get the value of either field, I can use dot-notation.
-
-The field name from the sub document follows the top-level field separated by a dot or a period, and the whole thing is included in quotes.
-
-You can think of it as a path to the field that you're looking for almost like a namespace for a collection-- where you go from a database level to the collection level, using a dot to separate the two objects.
-
-This notation can be used to go as deep in the document as needed.
-
-So if you have a field that has a document as a value, and that document has a field with another document as a value, you can still use dot notation to get the last atomic non-document value in that hierarchy.
-
-Here's an example using the company's collection in our class sample training data set.
-
-Let's examine the documents in that data set for a moment.
-
-The relationships array contains objects, and each object describes the title, current status with relation to the company title, and personal details, like first and last name.
-
-All personal info is stored in a nested document in that array element.
-
-This query looks at the first element in the relationships array using dot notation.
-
-Array elements in most languages and data structures are enumerated starting from zero.
-
-MongoDB is no different, so the first element is at position zero.
-
-And that document is the value of the person field.
-
-So we use dot notation for that, as well.
-
-Finally, we are only interested in Zuckerberg, so we search for his last name.
-
-Because the documents in this collection are so big, we add a projection for the company name.
-
-Now, we're searching for anyone with the last name Zuckerberg in the first element of the relationships array.
-
-Let's try it out in the shell.
-
-It looks like the result is just one company, and it is the expected Facebook.
-
-The relationships array lists higher-level company executives.
-
-Let's see how many of them are CEOs whose first name is Mark and who are listed as the first relationship in this array for their company's entry.
-
-To do this, we need to slightly modify this query-- change the last name to first name, and change Zuckerberg to Mark.
-
-And then, add another condition where the title in this element contains the string CEO.
-
-For this, I can use a regex operator to specify the string that I'm trying to match.
-
-You can find more about the regex operator and syntax in the lecture notes below this video.
-
-We run the query to find how many Mark's are CEOs and are the first to be listed in this array field.
-
-Looks like we have 52 Mark's.
-
-And when we take a peek at the first 20, using the pretty directive, we see Facebook, Bitly, and a company called Are You Watching This?
-
-Which is a great name, in my opinion.
-
-Now that we have this new found wisdom on querying embedded documents and array elements, it would be a good time to put this knowledge together in a query that looks for all marks who used to be in the senior company leadership array, a.k.a.
-
-the relationships array, but are no longer with the company.
-
-This means that we will be searching through every array element in every document.
-
-There is a field called is past, which can tell us whether this person is still with the company.
-
-So if they left, the value should be true.
-
-And the first name field value, under the person field in the array element, should equal to mark.
-
-Thankfully, we have a handy elemMatch operator which can look through every array element and match these conditions.
-
-So our find command, in this case, is going to be much shorter than the previous two.
-
-Here, we say that we're looking for elements in the relationships array where there is past field is true, and the person dot first name field is Mark.
-
-We can also take a peek at the company names that match these criteria, or we can count them.
-
-All right 256-- lovely number.
-
-Now that we've got through all the nested documents and giant array fields, it is time to summarize what we learned.
-
-To query an array field by a specific element location or to query an element in sub-documents, MQL uses dot-notation to specify the address of these elements in the doc.
-
-You can use dot-notation to go as deep into the nested document as you wish.
-
-To use dot-notation with arrays, specify the position of the element in the array.
+To query an array field by a specific element location or to query an element in sub-documents, MQL uses dot-notation to specify the address of these elements in the doc. You can use dot-notation to go as deep into the nested document as you wish. To use dot-notation with arrays, specify the position of the element in the array.
