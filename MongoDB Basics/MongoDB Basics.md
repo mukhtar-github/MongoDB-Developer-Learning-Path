@@ -1658,13 +1658,7 @@ db.listingsAndReviews.find({ "amenities": { "$all": [ "Free parking on premises"
 
 ### Array Operators and Projection
 
-In this lesson, we'll cover more array operators, and the second argument in the Find command called projection.
-
-When we look at the sample Airbnb data set, we see documents with lots of fields that often don't fit on the screen.
-
-To mitigate this, we can add a projection to our Find queries, and only look at fields that we're interested in at the moment.
-
-Here's a query that looks for documents in the sample Airbnb database.
+In this lesson, we'll cover more *array* operators, and the second argument in the *Find* command called *projection*. When we look at the sample *Airbnb* data set, we see documents with lots of fields that often don't fit on the screen. To mitigate this, we can add a projection to our Find queries, and only look at fields that we're interested in at the moment. Here's a query that looks for documents in the sample *Airbnb* database.
 
 The first part of the Find query describes the content that we're looking for, though we didn't write out the whole list on this slide.
 
