@@ -1664,15 +1664,34 @@ In this lesson, we'll cover more *array* operators, and the second argument in t
 db.listingsAndReviews.find({ "amenities": { "$size": 20, "$all": [ "Internet", "Wifi",  "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace" ] } }, {"price": 1, "address": 1}).pretty()
 ```
 
-The first part of the Find query describes the content that we're looking for, though we didn't write out the whole list on this slide.
-
-The second is a projection, describing specifically which fields we're looking for.
-
-This way, the cursor doesn't have to include every single field in the result set.
-
-At this point in my travel search, I want to know the price and address information only, so that is what I specify in my projection.
+The first part of the *Find* query describes the content that we're looking for, though we didn't write out the whole list on this slide. The second is a *projection*, describing specifically which fields we're looking for. This way, the cursor doesn't have to include every single field in the result set. At this point in my travel search, I want to know the *price* and *address* information only, so that is what I specify in my projection.
 
 Let's issue this query and see what we get.
+
+```javascript
+db.listingsAndReviews.find({ "amenities": { "$size": 20, "$all": [ "Internet", "Wifi",  "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace" ] } }, {"price": 1, "address": 1}).pretty()
+
+{
+	"_id" : "10992286",
+	"price" : NumberDecimal("105.00"),
+	"address" : {
+		"street" : "Volcano, HI, United States",
+		"suburb" : "Island of Hawaiʻi",
+		"government_area" : "Puna",
+		"market" : "The Big Island",
+		"country" : "United States",
+		"country_code" : "US",
+		"location" : {
+			"type" : "Point",
+			"coordinates" : [
+				-155.2403,
+				19.43344
+			],
+			"is_location_exact" : true
+		}
+	}
+}...
+```
 
 Now I can just look at the address and the price for that address for every single listing that matches my query.
 
