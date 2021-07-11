@@ -2043,3 +2043,38 @@ db.companies.find({ "relationships": { "$elemMatch": { "is_past": true, "person.
 Here, we say that we're looking for elements in the *relationships* array where there *is past* field is true, and the *person dot first name* field is *Mark*. We can also take a peek at the company names that match these criteria, or we can *count* them. All right 256 -- lovely number. Now that we've got through all the nested documents and giant array fields, it is time to summarize what we learned.
 
 To query an array field by a specific element location or to query an element in *sub-documents*, *MQL* uses *dot-notation* to specify the address of these elements in the doc. You can use *dot-notation* to go as deep into the nested document as you wish. To use *dot-notation* with arrays, specify the position of the element in the array.
+
+#### Problem:
+
+How many *trips* in the *sample_training.trips* collection started at stations that are to the west of the -74 longitude coordinate?
+
+#### Answer:
+
+```javascript
+db.trips.find({ "start station location.coordinates.0": { "$lt": -74 } }).count()
+1928
+
+address:
+city:"NEW YORK"
+```
+
+#### Problem:
+
+How many inspections from the *sample_training.inspections* collection were conducted in the *city of NEW YORK?*
+
+#### Answer:
+
+```javascript
+db.inspections.find({ "address.city": "NEW YORK" }).count()
+18279
+```
+
+#### Problem:
+
+Which of the following queries will return the names and addresses of all listings from the *sample_airbnb.listingsAndReviews* collection where the first *amenity* in the list is *"Internet"*?
+
+#### Answer:
+
+```javascript
+db.listingsAndReviews.find({ "amenities.0": "Internet" }, { "name": 1, "address": 1 }).pretty()
+```
