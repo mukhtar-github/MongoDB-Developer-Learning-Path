@@ -2078,3 +2078,8 @@ Which of the following queries will return the names and addresses of all listin
 ```javascript
 db.listingsAndReviews.find({ "amenities.0": "Internet" }, { "name": 1, "address": 1 }).pretty()
 ```
+
+## Chapter 5: Indexing and Aggregation Pipeline
+
+### Aggregation Framework
+
