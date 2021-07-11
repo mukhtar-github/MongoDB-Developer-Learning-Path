@@ -1761,15 +1761,66 @@ As you can see, we get an error when running it. Plus it seems redundant to spec
 
 Now let's look at some more advanced projection that is specific to *array* fields. Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day. Going through student data can be a grueling task, unless, of course, you're good at querying data. Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
 
-First, let's look at the documents and the *grades* collection to remind ourselves what type of fields we will be querying. Here we see that the *Scores* field is an *array* of documents. We don't care about the type of assessment, we only care about the *score*. How can we access elements in these *sub documents* of an array field?
+First, let's look at the documents in the *grades* collection to remind ourselves what type of fields we will be querying.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> use sample_training
+switched to db sample_training
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.findOne()
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8d8ce"),
+	"student_id" : 0,
+	"scores" : [
+		{
+			"type" : "exam",
+			"score" : 78.40446309504266
+		},
+		{
+			"type" : "quiz",
+			"score" : 73.36224783231339
+		},
+		{
+			"type" : "homework",
+			"score" : 46.980982486720535
+		},
+		{
+			"type" : "homework",
+			"score" : 76.67556138656222
+		}
+	],
+	"class_id" : 339
+}
+```
+
+Here we see that the *Scores* field is an *array* of documents. We don't care about the type of assessment, we only care about the *score*. How can we access elements in these *sub documents* of an *array* field?
 
 There is a handy *array* operator, *elemMatch*, which we will use for this query. Here it is in the query itself. Let's see what result we get, and then see how this works.
 
-The results shows all the documents that match the query, but we're not getting every field value for every document.
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "class_id": 431 }, { "scores": { "$elemMatch": { "score": { "$gt": 85 } } } }).pretty()
+{ "_id" : ObjectId("56d5f7eb604eb380b0d8d8fb") }
+{ "_id" : ObjectId("56d5f7eb604eb380b0d8dbf2") }
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8dca5"),
+	"scores" : [
+		{
+			"type" : "homework",
+			"score" : 96.91641379652361
+		}
+	]
+}
+{
+	"_id" : ObjectId("56d5f7eb604eb380b0d8de16"),
+	"scores" : [
+		{
+			"type" : "exam",
+			"score" : 86.41243160598542
+		}
+	]
+}...
+```
 
-For some documents, we're not getting anything other than the _id added value, since that is the default projection behavior.
-
-For other documents, we're getting the _id value, and the element of the array that matches our elemMatch condition, which is that the score field has a value of greater than 85, just like it says over here when we issued a query.
+The results shows all the documents that match the query, but we're not getting every field value for every document. For some documents, we're not getting anything other than the *_id* added value, since that is the default projection behavior. For other documents, we're getting the*_id* value, and the element of the array that matches our elemMatch condition, which is that the score field has a value of greater than 85, just like it says over here when we issued a query.
 
 Since array elements, in this case, are documents, we're getting the full document that matches the condition.
 
