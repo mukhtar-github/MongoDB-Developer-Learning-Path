@@ -1694,10 +1694,22 @@ db.listingsAndReviews.find({ "amenities": { "$size": 20, "$all": [ "Internet", "
 ```
 
 Now I can just look at the address and the price for that address for every single listing that matches my query. My initial theory about Airbnb listings was, if there is a shorter list of amenities present, then the booking will be cheaper. It looks like my theory about the number of amenities correlating with the price was wildly off. The prices and the results set ranged from $45 in Barcelona, Spain, to $999 in Bronte, Australia. I guess I'm going to have to do some other kind of search to find the perfect travel destination. Searching by price might be a better option, but we already know how to do that. So let's learn more about *projection*, instead.
+
 When using *projection*, you can specify which fields you do or do not want to see in the resulting cursor. Use 1 to specify the fields that you want to see, and 0 to specify the fields that you don't want to see. You cannot mix *zeros* and *ones* in a single projection. If you're using *ones*, then you'll only get the fields that you specified, plus the underscore ID fields. If you're using *zeros*, then you'll get all the fields except for the ones that you specifically excluded.
 
 ```javascript
-db.listingsAndReviews.find({ "amenities": { "$size": 20, "$all": [ "Internet", "Wifi",  "Kitchen", "Heating", "Family/kid friendly", "Washer", "Dryer", "Essentials", "Shampoo", "Hangers", "Hair dryer", "Iron", "Laptop friendly workspace" ] } }, {"price": 1, "address": 1}).pretty()
+db.<collection>.find( { <query> }, { <projection> })
+
+1 - include the field
+0 - exclude the field
+Use only 1s or only 0s
+
+db.<collection>.find( { <query> }, { <field1>: 1, <field2>: 1 })
+or
+db.<collection>.find( { <query> }, { <field1>: 0, <field2>: 0 })
+
+exception:
+db.<collection>.find( { <query> }, { <field1>: 1, "_id": 0 })
 ```
 
 The only time when you can mix *ones* and *zeros* is when you're specifically asking to exclude the _id field, because it will be included by default otherwise. So this is a valid projection, because the 0 is used to explicitly exclude the default_id value, but this is not.
