@@ -1859,4 +1859,5 @@ There is no *projection* in this query. This student really needed *extra credit
 
 In this lesson, we learned that we can use *projection* to specify the fields that we want to see in documents when the cursor returns what matches the query condition. You can use *ones* and *zeros* to specify whether a field should or shouldn't be included, but you can not mix and match, including and excluding fields, with the exception of explicitly excluding the *_id* field, which is present by default.
 
-We also learned about *elemMatch*, an array operator that can be used both in query and projection part of the *Find* command. *elemMatch* matches documents that contain an *array* field with at least one element that matches all the specified query criteria, or projects only the array elements with at least one element that matches the specified criteria. Isn't that cool?
+We also learned about *elemMatch*, an array operator that can be used both in query and projection part of the *Find* command.
+> *elemMatch* matches documents that contain an *array* field with at least one element that matches all the specified query criteria, or projects only the array elements with at least one element that matches the specified criteria. Isn't that cool?
