@@ -1712,19 +1712,15 @@ exception:
 db.<collection>.find( { <query> }, { <field1>: 1, "_id": 0 })
 ```
 
-The only time when you can mix *ones* and *zeros* is when you're specifically asking to exclude the _id field, because it will be included by default otherwise. So this is a valid projection, because the 0 is used to explicitly exclude the default_id value, but this is not.
+The only time when you can mix *ones* and *zeros* is when you're specifically asking to exclude the *_id* field, because it will be included by default otherwise.
 
-As you can see, we get an error when running it.
+```javascript
+db.listingsAndReviews.find({ "amenities": "Wifi" }, { "price": 1, "address": 1, "_id": 0 }).pretty()
+```
 
-Plus it seems redundant to specify that a field shouldn't be included when it is already not included.
+So this is a valid projection, because the 0 is used to explicitly exclude the default_id value, but this is not. As you can see, we get an error when running it. Plus it seems redundant to specify that a field shouldn't be included when it is already not included. Now let's look at some more advanced projection that is specific to *array* fields.
 
-Now let's look at some more advanced projection that is specific to array fields.
-
-Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day.
-
-Going through student data can be a grueling task, unless, of course, you're good at querying data.
-
-Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
+Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day. Going through student data can be a grueling task, unless, of course, you're good at querying data. Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
 
 First, let's look at the documents and the grades collection to remind ourselves what type of fields we will be querying.
 
