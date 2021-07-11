@@ -1693,7 +1693,7 @@ db.listingsAndReviews.find({ "amenities": { "$size": 20, "$all": [ "Internet", "
 }...
 ```
 
-Now I can just look at the address and the price for that address for every single listing that matches my query. My initial theory about Airbnb listings was, if there is a shorter list of amenities present, then the booking will be cheaper. It looks like my theory about the number of amenities correlating with the price was wildly off. The prices and the results set ranged from $45 in Barcelona, Spain, to $999 in Bronte, Australia. I guess I'm going to have to do some other kind of search to find the perfect travel destination. Searching by price might be a better option, but we already know how to do that. So let's learn more about *projection*, instead.
+Now I can just look at the address and the price for that address for every single listing that matches my query. My initial theory about Airbnb listings was, if there is a shorter list of amenities present, then the booking will be cheaper. It looks like my theory about the number of amenities correlating with the price was wildly off. The prices and the results set ranged from *$45* in Barcelona, Spain, to *$999* in Bronte, Australia. I guess I'm going to have to do some other kind of search to find the perfect travel destination. Searching by price might be a better option, but we already know how to do that. So let's learn more about *projection*, instead.
 
 When using *projection*, you can specify which fields you do or do not want to see in the resulting cursor. Use 1 to specify the fields that you want to see, and 0 to specify the fields that you don't want to see. You cannot mix *zeros* and *ones* in a single projection. If you're using *ones*, then you'll only get the fields that you specified, plus the underscore ID fields. If you're using *zeros*, then you'll get all the fields except for the ones that you specifically excluded.
 
@@ -1712,29 +1712,58 @@ exception:
 db.<collection>.find( { <query> }, { <field1>: 1, "_id": 0 })
 ```
 
-The only time when you can mix *ones* and *zeros* is when you're specifically asking to exclude the *_id* field, because it will be included by default otherwise.
+The only time when you can mix *ones* and *zeros* is when you're specifically asking to exclude the *_id* field, because it will be included by default otherwise. So this is a valid projection, because the 0 is used to explicitly exclude the default_id value.
 
 ```javascript
-db.listingsAndReviews.find({ "amenities": "Wifi" }, { "price": 1, "address": 1, "_id": 0 }).pretty()
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({ "amenities": "Wifi" }, { "price": 1, "address": 1, "_id": 0 }).pretty()
+{
+	"price" : NumberDecimal("80.00"),
+	"address" : {
+		"street" : "Porto, Porto, Portugal",
+		"suburb" : "",
+		"government_area" : "Cedofeita, Ildefonso, Sé, Miragaia, Nicolau, Vitória",
+		"market" : "Porto",
+		"country" : "Portugal",
+		"country_code" : "PT",
+		"location" : {
+			"type" : "Point",
+			"coordinates" : [
+				-8.61308,
+				41.1413
+			],
+			"is_location_exact" : false
+		}
+	}
+}...
 ```
 
-So this is a valid projection, because the 0 is used to explicitly exclude the default_id value, but this is not. As you can see, we get an error when running it. Plus it seems redundant to specify that a field shouldn't be included when it is already not included. Now let's look at some more advanced projection that is specific to *array* fields.
+But this is not.
 
-Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day. Going through student data can be a grueling task, unless, of course, you're good at querying data. Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({ "amenities": "Wifi" }, { "price": 1, "address": 1, "_id": 0, "maximum_nights":0 }).pretty()
+Error: error: {
+	"operationTime" : Timestamp(1625990014, 1),
+	"ok" : 0,
+	"errmsg" : "Cannot do exclusion on field maximum_nights in inclusion projection",
+	"code" : 31254,
+	"codeName" : "Location31254",
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1625990014, 1),
+		"signature" : {
+			"hash" : BinData(0,"RgHeoroQj8nLDJ/Tp0JZvcdN4lM="),
+			"keyId" : NumberLong("6930006272708182017")
+		}
+	}
+}
+```
 
-First, let's look at the documents and the grades collection to remind ourselves what type of fields we will be querying.
+As you can see, we get an error when running it. Plus it seems redundant to specify that a field shouldn't be included when it is already not included.
 
-Here we see that the Scores field is an array of documents.
+Now let's look at some more advanced projection that is specific to *array* fields. Before I started working at Mongo DB, I was a high school teacher teaching 160 to 190 students a day. Going through student data can be a grueling task, unless, of course, you're good at querying data. Say I'm looking for all students who took class 431 and got an 85 or higher for any type of assessment.
 
-We don't care about the type of assessment, we only care about the score.
+First, let's look at the documents and the *grades* collection to remind ourselves what type of fields we will be querying. Here we see that the *Scores* field is an *array* of documents. We don't care about the type of assessment, we only care about the *score*. How can we access elements in these *sub documents* of an array field?
 
-How can we access elements in these sub documents of an array field?
-
-There is a handy array operator, elemMatch, which we will use for this query.
-
-Here it is in the query itself.
-
-Let's see what result we get, and then see how this works.
+There is a handy *array* operator, *elemMatch*, which we will use for this query. Here it is in the query itself. Let's see what result we get, and then see how this works.
 
 The results shows all the documents that match the query, but we're not getting every field value for every document.
 
