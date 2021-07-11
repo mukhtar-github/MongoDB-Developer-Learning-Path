@@ -1949,18 +1949,97 @@ db.collection.find({ "field 1.other field.also a field": "value" })
 }
 ```
 
-Here's an example using the company's collection in our class sample training data set. Let's examine the documents in that data set for a moment. The relationships array contains objects, and each object describes the title, current status with relation to the company title, and personal details, like first and last name. All personal info is stored in a nested document in that array element.
+Here's an example using the *company's collection* in our class *sample training data set*. Let's examine the documents in that data set for a moment. The *relationships array* contains objects, and each object describes the *title, current status* with relation to the company title, and personal details, like *first and last name*. All personal info is stored in a nested document in that array element.
 
-This query looks at the first element in the relationships array using dot notation. Array elements in most languages and data structures are enumerated starting from zero. *MongoDB* is no different, so the first element is at position zero. And that document is the value of the person field. So we use dot notation for that, as well. Finally, we are only interested in Zuckerberg, so we search for his last name.
+```javascript
+db.companies.find({ "relationships.0.person.last_name": "Zuckerberg" }, { "name": 1 }).pretty()
+```
 
-Because the documents in this collection are so big, we add a projection for the company name. Now, we're searching for anyone with the last name Zuckerberg in the first element of the relationships array. Let's try it out in the shell. It looks like the result is just one company, and it is the expected Facebook. The relationships array lists higher-level company executives. Let's see how many of them are CEOs whose first name is Mark and who are listed as the first relationship in this array for their company's entry.
+This query looks at the first element in the *relationships* array using *dot* notation. Array elements in most languages and data structures are enumerated starting from zero. *MongoDB* is no different, so the first element is at position *zero*. And that document is the value of the *person* field. So we use *dot* notation for that, as well. Finally, we are only interested in *Zuckerberg*, so we search for his *last name*.
 
-To do this, we need to slightly modify this query-- change the last name to first name, and change Zuckerberg to Mark. And then, add another condition where the title in this element contains the string CEO. For this, I can use a regex operator to specify the string that I'm trying to match. You can find more about the regex operator and syntax in the lecture notes below this video. We run the query to find how many Mark's are CEOs and are the first to be listed in this array field.
+Because the documents in this collection are so big, we add a *projection* for the company *name*. Now, we're searching for anyone with the *last name Zuckerberg* in the first element of the *relationships* array. Let's try it out in the shell.
 
-Looks like we have 52 Mark's. And when we take a peek at the first 20, using the pretty directive, we see Facebook, Bitly, and a company called Are You Watching This? Which is a great name, in my opinion. Now that we have this new found wisdom on querying embedded documents and array elements, it would be a good time to put this knowledge together in a query that looks for all marks who used to be in the senior company leadership array, a.k.a. the relationships array, but are no longer with the company.
+```javascript
+db.companies.find({ "relationships.0.person.last_name": "Zuckerberg" }, { "name": 1 }).pretty()
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8e"), "name" : "Facebook" }
+```
 
-This means that we will be searching through every array element in every document. There is a field called is past, which can tell us whether this person is still with the company. So if they left, the value should be true. And the first name field value, under the person field in the array element, should equal to mark. Thankfully, we have a handy elemMatch operator which can look through every array element and match these conditions. So our find command, in this case, is going to be much shorter than the previous two.
+It looks like the result is just one company, and it is the expected *Facebook*. The *relationships* array lists higher-level company executives. Let's see how many of them are CEOs whose *first name* is Mark and who are listed as the first *relationship* in this array for their company's entry.
 
-Here, we say that we're looking for elements in the relationships array where there is past field is true, and the person dot first name field is Mark. We can also take a peek at the company names that match these criteria, or we can count them. All right 256-- lovely number. Now that we've got through all the nested documents and giant array fields, it is time to summarize what we learned.
+To do this, we need to slightly modify this query-- change the *last name to first name*, and change *Zuckerberg to Mark*. And then, add another condition where the title in this element contains the string *CEO*. For this, I can use a *regex* operator to specify the string that I'm trying to match. You can find more about the *regex* operator and syntax in the lecture notes below this video. We run the query to find how many Mark's are CEOs and are the first to be listed in this array field.
 
-To query an array field by a specific element location or to query an element in sub-documents, MQL uses dot-notation to specify the address of these elements in the doc. You can use dot-notation to go as deep into the nested document as you wish. To use dot-notation with arrays, specify the position of the element in the array.
+```javascript
+db.companies.find({ "relationships.0.person.first_name": "Mark", "relationships.0.title": { "$regex": "CEO" } }, 
+{ "name": 1 }).count()
+52
+```
+
+Looks like we have 52 Mark's.
+
+```javascript
+db.companies.find({ "relationships.0.person.first_name": "Mark", "relationships.0.title": { "$regex": "CEO" } }, 
+{ "name": 1 }).pretty()
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8e"), "name" : "Facebook" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dd3"), "name" : "iSkoot" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297efc"), "name" : "Helium" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297fb5"), "name" : "Feedjit" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297fbf"), "name" : "Avvo" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675298077"), "name" : "eXelate" }
+{ "_id" : ObjectId("52cdef7c4bab8bd6752980ed"), "name" : "Bloglines" }
+{ "_id" : ObjectId("52cdef7c4bab8bd67529838c"), "name" : "HipLogic" }
+{ "_id" : ObjectId("52cdef7c4bab8bd6752983f1"), "name" : "Surf Canyon" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675298543"), "name" : "SignalDemand" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675298655"), "name" : "Wiredset" }
+{ "_id" : ObjectId("52cdef7d4bab8bd675298c18"), "name" : "Market Sentinel" }
+{ "_id" : ObjectId("52cdef7d4bab8bd675298e2b"), "name" : "Courtland Brooks" }
+{
+	"_id" : ObjectId("52cdef7d4bab8bd675298ec2"),
+	"name" : "Are You Watching This?!"
+}
+{ "_id" : ObjectId("52cdef7d4bab8bd675299659"), "name" : "MESoft" }
+{ "_id" : ObjectId("52cdef7d4bab8bd67529906d"), "name" : "SNASM" }
+{ "_id" : ObjectId("52cdef7d4bab8bd67529914b"), "name" : "Bitly" }
+{ "_id" : ObjectId("52cdef7d4bab8bd6752991fa"), "name" : "N-Play" }
+{ "_id" : ObjectId("52cdef7d4bab8bd6752992c2"), "name" : "SAVO" }
+{ "_id" : ObjectId("52cdef7d4bab8bd6752993d7"), "name" : "AirMe" }
+Type "it" for more
+```
+
+And when we take a peek at the first 20, using the *pretty* directive, we see Facebook, Bitly, and a company called Are You Watching This? Which is a great name, in my opinion. Now that we have this new found wisdom on querying embedded documents and array elements, it would be a good time to put this knowledge together in a query that looks for all marks who used to be in the senior company leadership array, a.k.a. the *relationships array*, but are no longer with the company.
+
+This means that we will be searching through every array element in every document. There is a field called *is past*, which can tell us whether this person is still with the company. So if they left, the value should be *true*. And the *first name* field value, under the *person* field in the array element, should equal to *mark*. Thankfully, we have a handy *elemMatch* operator which can look through every array element and match these conditions. So our *find* command, in this case, is going to be much shorter than the previous two.
+
+```javascript
+db.companies.find({ "relationships": { "$elemMatch": { "is_past": true, "person.first_name": "Mark" } } }, { "name": 1 }).pretty()
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d94"), "name" : "Twitter" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d9e"), "name" : "CBS" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da0"), "name" : "Babelgum" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da2"), "name" : "Cisco" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da3"), "name" : "Yahoo!" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da4"), "name" : "Powerset" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc4"), "name" : "Intel" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297def"), "name" : "KickApps" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297df7"), "name" : "Bebo" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297e0c"), "name" : "LinkedIn" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297e6f"), "name" : "Sony" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297e79"), "name" : "Wikia" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297e89"), "name" : "PayPal" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297ed4"), "name" : "Yola" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297ed6"), "name" : "BitTorrent" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297ee9"), "name" : "Sun Microsystems" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297efa"), "name" : "TechCrunch" }
+{
+	"_id" : ObjectId("52cdef7c4bab8bd675297f07"),
+	"name" : "Shock Treatment Management"
+}
+{ "_id" : ObjectId("52cdef7c4bab8bd675297f34"), "name" : "Webshots" }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297f57"), "name" : "Lycos" }
+Type "it" for more
+
+db.companies.find({ "relationships": { "$elemMatch": { "is_past": true, "person.first_name": "Mark" } } }, { "name": 1 }).count()
+256
+```
+
+Here, we say that we're looking for elements in the *relationships* array where there *is past* field is true, and the *person dot first name* field is *Mark*. We can also take a peek at the company names that match these criteria, or we can *count* them. All right 256 -- lovely number. Now that we've got through all the nested documents and giant array fields, it is time to summarize what we learned.
+
+To query an array field by a specific element location or to query an element in *sub-documents*, *MQL* uses *dot-notation* to specify the address of these elements in the doc. You can use *dot-notation* to go as deep into the nested document as you wish. To use *dot-notation* with arrays, specify the position of the element in the array.
