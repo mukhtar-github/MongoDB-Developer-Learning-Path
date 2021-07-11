@@ -1820,7 +1820,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.grades.find({ "class_id": 43
 }...
 ```
 
-The results shows all the documents that match the query, but we're not getting every field value for every document. For some documents, we're not getting anything other than the *_id* added value, since that is the default projection behavior. For other documents, we're getting the *_id* value, and the element of the array that matches our *elemMatch* condition, which is that the score field has a value of greater than 85, just like it says over here when we issued a query.
+The results shows all the documents that match the query, but we're not getting every field value for every document. For some documents, we're not getting anything other than the *_id* added value, since that is the default projection behavior. For other documents, we're getting the *_id* value, and the element of the array that matches our *elemMatch* condition, which is that the *score* field has a value of greater than 85, just like it says over here when we issued a query.
 
 Since *array* elements, in this case, are documents, we're getting the full document that matches the condition. So not only the *score*, but also the *type* of the evaluation. Here *elemMatch* is used in the *projection* part of the query, but it can also be used in the query part of the *Find* command as well. To try that out, let's find every student who received *extra credit* for any class. So I'm looking for anyone who has, in the *"scores"* array, a field that is called *"type,"* and the value for the type is *"extra credit"*.
 
@@ -1866,3 +1866,24 @@ We also learned about *elemMatch*, an array operator that can be used both in qu
 ```
 
 > *elemMatch* matches documents that contain an *array* field with at least one element that matches all the specified query criteria, or projects only the array elements with at least one element that matches the specified criteria. Isn't that cool?
+
+#### Problem:
+
+How many companies in the *sample_training.companies* collection have *offices* in the *city of Seattle*?
+
+#### Answer:
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.companies.find({ "offices": { "$elemMatch": { "city": "Seattle" } } }).count()
+117
+```
+
+#### Problem:
+
+Which of the following queries will return only the *names of companies* from the *sample_training.companies* collection that had exactly *8 funding rounds*?
+
+#### Answer:
+
+```javascript
+db.companies.find({ "funding_rounds": { "$size": 8 } }, { "name": 1, "_id": 0 })
+```
