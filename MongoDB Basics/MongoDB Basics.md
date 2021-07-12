@@ -2192,9 +2192,24 @@ Let's look at the *$group* stage syntax to see how it works and how we can get a
 }
 ```
 
-As the *$group* stage receives documents from the previous stage, it uses the expression that we provide in the *_id* field to identify the group that this document belongs to.
+As the *$group* stage receives documents from the previous stage, it uses the *expression* that we provide in the *_id* field to identify the group that this document belongs to.
 
-We're not going to use a complex expression. We're simply looking to group data by the *address.country* value. So we can state exactly that. Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has.
+We're not going to use a complex expression. We're simply looking to group data by the *address.country* value. So we can state exactly that. 
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate([ { "$project": { "address": 1, "_id": 0 }}, { "$group": { "_id": "$address.country" }}])
+{ "_id" : "Spain" }
+{ "_id" : "Portugal" }
+{ "_id" : "Turkey" }
+{ "_id" : "Hong Kong" }
+{ "_id" : "China" }
+{ "_id" : "United States" }
+{ "_id" : "Australia" }
+{ "_id" : "Canada" }
+{ "_id" : "Brazil" }
+```
+
+Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has.
 
 With *aggregation*, that's easy to do. The second part of the *$group* syntax allows us to do more quantitative analysis across the data that's coming through the pipeline. Here, we're creating another field for the documents that are created in the pipeline, and we're calling this field *"count"*. Then we're using the *$sum* operator, in which case the value of the *"price"* field in each document for a given group criteria will be added to the total value of the total for that group.
 
