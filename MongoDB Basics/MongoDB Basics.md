@@ -2087,6 +2087,29 @@ What is the *MongoDB aggregation framework*? Why do we need it? How do we use it
 
 Here's an example. Let's find all documents that have *Wi-Fi* as one of the *amenities*, only include the *price* and *address* in the resulting cursor. With *MQL*, we will use this command. Let's actually use it in the shell. First, let's switch to the database that we need. I'm already connected to the Atlas cluster.
 
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.find({ "amenities": "Wifi" }, { "price": 1, "address": 1, "_id": 0 }).pretty()
+{
+	"price" : NumberDecimal("80.00"),
+	"address" : {
+		"street" : "Porto, Porto, Portugal",
+		"suburb" : "",
+		"government_area" : "Cedofeita, Ildefonso, Sé, Miragaia, Nicolau, Vitória",
+		"market" : "Porto",
+		"country" : "Portugal",
+		"country_code" : "PT",
+		"location" : {
+			"type" : "Point",
+			"coordinates" : [
+				-8.61308,
+				41.1413
+			],
+			"is_location_exact" : false
+		}
+	}
+}...
+```
+
 Here's the *MQL* query. We get the first 20 results. Fantastic. With the *aggregation framework*, we use this command. Let's look at the syntax and see what's similar and what's different. To use the *aggregation framework*, we use *aggregate* instead of *find*. The reason for that is because sometimes we might want to *aggregate*, as in group or modify our data in some way, instead of always just filtering for the right documents.
 
 This means that you can perform operations other than finding and projecting data. But you can also calculate using aggregation. All right, so we used *aggregate*. Then we have the start square bracket, which makes me think arrays. In arrays, the order of elements is important. And you often access elements by knowing their position in the array.
