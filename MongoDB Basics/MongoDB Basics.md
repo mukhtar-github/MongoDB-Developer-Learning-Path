@@ -2083,3 +2083,38 @@ db.listingsAndReviews.find({ "amenities.0": "Internet" }, { "name": 1, "address"
 
 ### Aggregation Framework
 
+What is the *MongoDB aggregation framework*? Why do we need it? How do we use it? This lesson will provide answers to some of these questions. The *aggregation framework*, in its simplest form, is just another way to query data in *MongoDB*. Everything we know how to do using the *MongoDB query language* can also be done using the *aggregation framework*.
+
+Here's an example. Let's find all documents that have *Wi-Fi* as one of the *amenities*, only include the *price* and *address* in the resulting cursor. With *MQL*, we will use this command. Let's actually use it in the shell. First, let's switch to the database that we need. I'm already connected to the Atlas cluster.
+
+Here's the *MQL* query. We get the first 20 results. Fantastic. With the *aggregation framework*, we use this command. Let's look at the syntax and see what's similar and what's different. To use the *aggregation framework*, we use *aggregate* instead of *find*. The reason for that is because sometimes we might want to *aggregate*, as in group or modify our data in some way, instead of always just filtering for the right documents.
+
+This means that you can perform operations other than finding and projecting data. But you can also calculate using aggregation. All right, so we used *aggregate*. Then we have the start square bracket, which makes me think arrays. In arrays, the order of elements is important. And you often access elements by knowing their position in the array.
+
+The *aggregation framework* works as a pipeline, where the order of actions in the pipeline matters. And each action is executed in the order in which we list it. Meaning that we give our data to the pipeline on one end, then we describe how this pipeline is going to treat our data using *aggregation* stages. And then the transformed data emerges at the end of the pipeline.
+
+In this case, if our pipeline was to be represented as a literal set of connected pipes, we can think of it as having two separate filters. The first filter is the *$match* stage, which acts as a filter that keeps all the *amenities* without *Wi-Fi* from passing through to the next stage of the pipeline. The second filter is the *$project* stage that filters out all the fields that are not *address* or *price* from each document.
+
+So it must be an even finer filter than the first one. The rest of the syntax looks pretty similar. For each stage, we specify what we want to do. We want all documents that match the given criteria. And we want the following fields to be projected and the ID excluded. So what's the big deal? Why does *MongoDB* have the *aggregation framework*? And what is it good for?
+
+Excellent questions. *Aggregation framework* allows us to do incredible things with data. For example, you can build an equivalent of whatever this is, but with data. It's more of a chemical factory and less of a pipeline at this point. So let's talk about a stage which takes us beyond the capabilities of *MQL*, which will hopefully get you curious to explore more.
+
+Introducing the *$group* stage. The *$group* stage is one of the many stages that differentiates the *aggregation framework* from *MQL*. With *MQL*, we can filter and update data. With the *aggregation framework*, we can compute and reshape data. If the previous pipeline visualization used two filters, visualizing the *$group* stage looks something like this -- an operator that takes the incoming stream of data and siphons it into multiple distinct reservoirs.
+
+At this point, it is important to note that the nonfiltering stages in the *aggregation framework* are not modifying the original data when they do the summaries, calculations, and groupings of data. Instead, they work with the data that they get from the previous stage in the pipeline, which is in its own cursor.
+
+Let's look at a concrete example. We've been querying the *Airbnb* data set for a while. Let's find out which countries are listed in the sample set. First things first. We don't need the entire document to find an answer to this inquiry. We can use the *"address"* field to find the answer, and that's enough.
+
+This query gets one document from the collection and projects only the *address* value into the return cursor. Looks like if we group documents by the *address.country* field value, we should find out how many and which countries are used in this data set. But for that, we need to know the syntax of the *$group* stage.
+
+Let's look at the *$group* stage syntax to see how it works and how we can get a list of countries that are featured in our data set. The *$group* stage has this form. As the *$group* stage receives documents from the previous stage, it uses the expression that we provide in the *_id* field to identify the group that this document belongs to.
+
+We're not going to use a complex expression. We're simply looking to group data by the *address.country* value. So we can state exactly that. Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has.
+
+With *aggregation*, that's easy to do. The second part of the *$group* syntax allows us to do more quantitative analysis across the data that's coming through the pipeline. Here, we're creating another field for the documents that are created in the pipeline, and we're calling this field *"count"*. Then we're using the *$sum* operator, in which case the value of the *"price"* field in each document for a given group criteria will be added to the total value of the total for that group.
+
+In our case, we're simply adding the number one for each document that folds into each group. We now know which countries have listings in this data set and how many listings each country has. Can we do more complex and cool calculations? Absolutely. Developers have been known to create *Conway's Game of Life* and build *fractals* using the *aggregation framework*.
+
+So, sky's the limit. To learn more about the power of the *aggregation framework*, take our *aggregation framework* course. Let's summarize what we've learned. The *aggregation framework* is a powerful tool that exceeds the filtering capabilities of *MQL* through its ability to compute, reshape, and reorganize data.
+
+Data in the *aggregation pipeline* exists within the pipeline. It does not inherently modify or change your original data. *Aggregation framework* syntax is in the form of a pipeline, where stages are executed in the order in which they are listed. The stage name is preceded with a dollar sign and followed by the required action descriptions, like *$sum* or a filter or some other type of modification.
