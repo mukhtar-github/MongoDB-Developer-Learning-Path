@@ -2210,8 +2210,8 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate
 { "_id" : "Brazil" }
 ```
 
-Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has. With *aggregation*, that's easy to do. The second part of the *$group* syntax allows us to do more quantitative analysis across the data that's coming through the pipeline.
-> *Project* only the *address* field value for each document, then *group* all documents into one document per *address.country* value, and count one for each document in each group.
+Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has. With *aggregation*, that's easy to do. The second part of the *$group* syntax allows us to do more *quantitative analysis* across the data that's coming through the pipeline.
+> *Project* only the *address* field value for each document, then *group* all documents into one document per *address.country* value, and *count* one for each document in each group.
 
 ```javascript
 MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate([{ "$project": { "address": 1, "_id": 0 }}, { "$group": { "_id": "$address.country", "count": { "$sum": 1 } } }])
@@ -2226,10 +2226,8 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate
 { "_id" : "Turkey", "count" : 661 }
 ```
 
-Here, we're creating another field for the documents that are created in the pipeline, and we're calling this field *"count"*. Then we're using the *$sum* operator, in which case the value of the *"price"* field in each document for a given group criteria will be added to the total value of the total for that group.
+Here, we're creating another field for the documents that are created in the pipeline, and we're calling this field *"count"*. Then we're using the *$sum* operator. In our case, we're simply adding the number one for each document that folds into each group. We now know which countries have listings in this data set and how many listings each country has. 
 
-In our case, we're simply adding the number one for each document that folds into each group. We now know which countries have listings in this data set and how many listings each country has. Can we do more complex and cool calculations? Absolutely. Developers have been known to create *Conway's Game of Life* and build *fractals* using the *aggregation framework*.
+Can we do more complex and cool calculations? Absolutely. Developers have been known to create *Conway's Game of Life* and build *fractals* using the *aggregation framework*. So, sky's the limit. To learn more about the power of the *aggregation framework*, take our *aggregation framework* course. 
 
-So, sky's the limit. To learn more about the power of the *aggregation framework*, take our *aggregation framework* course. Let's summarize what we've learned. The *aggregation framework* is a powerful tool that exceeds the filtering capabilities of *MQL* through its ability to compute, reshape, and reorganize data.
-
-Data in the *aggregation pipeline* exists within the pipeline. It does not inherently modify or change your original data. *Aggregation framework* syntax is in the form of a pipeline, where stages are executed in the order in which they are listed. The stage name is preceded with a dollar sign and followed by the required action descriptions, like *$sum* or a filter or some other type of modification.
+Let's summarize what we've learned. The *aggregation framework* is a powerful tool that exceeds the filtering capabilities of *MQL* through its ability to compute, reshape, and reorganize data. Data in the *aggregation pipeline* exists within the pipeline. It does not inherently modify or change your original data. *Aggregation framework* syntax is in the form of a pipeline, where stages are executed in the order in which they are listed. The stage name is preceded with a dollar sign and followed by the required action descriptions, like *$sum* or a filter or some other type of modification.
