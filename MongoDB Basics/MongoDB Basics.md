@@ -2140,9 +2140,9 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate
 
 Let's look at the syntax and see what's similar and what's different. To use the *aggregation framework*, we use *aggregate* instead of *find*. The reason for that is because sometimes we might want to *aggregate*, as in group or modify our data in some way, instead of always just filtering for the right documents.
 
-This means that you can perform operations other than finding and projecting data. But you can also calculate using aggregation. All right, so we used *aggregate*. Then we have the start square bracket, which makes me think arrays. In arrays, the order of elements is important. And you often access elements by knowing their position in the array.
+This means that you can perform operations other than finding and projecting data. But you can also calculate using *aggregation*. All right, so we used *aggregate*. Then we have the *start square bracket*, which makes me think *arrays*. In *arrays*, the *order* of elements is important. And you often access elements by knowing *their position in the array*.
 
-The *aggregation framework* works as a pipeline, where the order of actions in the pipeline matters. And each action is executed in the order in which we list it. Meaning that we give our data to the pipeline on one end, then we describe how this pipeline is going to treat our data using *aggregation* stages. And then the transformed data emerges at the end of the pipeline.
+The *aggregation framework* works as a pipeline, where the *order of actions* in the pipeline matters. And each action is executed in the *order* in which we list it. Meaning that we give our data to the pipeline on one end, then we describe how this pipeline is going to treat our data using *aggregation stages*. And then the transformed data emerges at the end of the pipeline.
 
 In this case, if our pipeline was to be represented as a literal set of connected pipes, we can think of it as having two separate filters. The first filter is the *$match* stage, which acts as a filter that keeps all the *amenities* without *Wi-Fi* from passing through to the next stage of the pipeline. The second filter is the *$project* stage that filters out all the fields that are not *address* or *price* from each document.
 
