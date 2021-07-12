@@ -2180,7 +2180,19 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.findOne({
 
 This query gets one document from the collection and projects only the *address* value into the return cursor. Looks like if we group documents by the *address.country* field value, we should find out how many and which countries are used in this data set. But for that, we need to know the syntax of the *$group* stage.
 
-Let's look at the *$group* stage syntax to see how it works and how we can get a list of countries that are featured in our data set. The *$group* stage has this form. As the *$group* stage receives documents from the previous stage, it uses the expression that we provide in the *_id* field to identify the group that this document belongs to.
+Let's look at the *$group* stage syntax to see how it works and how we can get a list of countries that are featured in our data set. The *$group* stage has this form.
+
+```javascript
+{ $group:
+	{
+		_id: <expression>, // Group by expression
+		<field>: { <accumulator1> : <expression1> },
+		...
+	}
+}
+```
+
+As the *$group* stage receives documents from the previous stage, it uses the expression that we provide in the *_id* field to identify the group that this document belongs to.
 
 We're not going to use a complex expression. We're simply looking to group data by the *address.country* value. So we can state exactly that. Fantastic. It looks like we have nine countries in this set, and they span multiple continents. That's wonderful. It would also be cool to know how many listings each country has.
 
