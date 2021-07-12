@@ -2150,11 +2150,33 @@ So it must be an even finer filter than the first one. The rest of the syntax lo
 
 Excellent questions. *Aggregation framework* allows us to do incredible things with data. For example, you can build an equivalent of whatever this is, but with data. It's more of a chemical factory and less of a pipeline at this point. So let's talk about a stage which takes us beyond the capabilities of *MQL*, which will hopefully get you curious to explore more.
 
-Introducing the *$group* stage. The *$group* stage is one of the many stages that differentiates the *aggregation framework* from *MQL*. With *MQL*, we can filter and update data. With the *aggregation framework*, we can compute and reshape data. If the previous pipeline visualization used two filters, visualizing the *$group* stage looks something like this -- an operator that takes the incoming stream of data and siphons it into multiple distinct reservoirs.
+Introducing the *$group* stage. The *$group* stage is one of the many stages that differentiates the *aggregation framework* from *MQL*. With *MQL*, we can *filter* and *update* data. With the *aggregation framework*, we can *compute* and *reshape* data. If the previous pipeline visualization used two filters, visualizing the *$group* stage looks something like this -- an operator that takes the incoming stream of data and siphons it into multiple distinct reservoirs.
 
 At this point, it is important to note that the nonfiltering stages in the *aggregation framework* are not modifying the original data when they do the summaries, calculations, and groupings of data. Instead, they work with the data that they get from the previous stage in the pipeline, which is in its own cursor.
 
 Let's look at a concrete example. We've been querying the *Airbnb* data set for a while. Let's find out which countries are listed in the sample set. First things first. We don't need the entire document to find an answer to this inquiry. We can use the *"address"* field to find the answer, and that's enough.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.findOne({ },{ "address": 1, "_id": 0 })
+{
+	"address" : {
+		"street" : "Porto, Porto, Portugal",
+		"suburb" : "",
+		"government_area" : "Cedofeita, Ildefonso, Sé, Miragaia, Nicolau, Vitória",
+		"market" : "Porto",
+		"country" : "Portugal",
+		"country_code" : "PT",
+		"location" : {
+			"type" : "Point",
+			"coordinates" : [
+				-8.61308,
+				41.1413
+			],
+			"is_location_exact" : false
+		}
+	}
+}
+```
 
 This query gets one document from the collection and projects only the *address* value into the return cursor. Looks like if we group documents by the *address.country* field value, we should find out how many and which countries are used in this data set. But for that, we need to know the syntax of the *$group* stage.
 
