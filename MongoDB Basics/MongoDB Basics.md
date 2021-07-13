@@ -2301,7 +2301,46 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().sort({ "pop": -1
 }
 ```
 
-This way, we see that the most populated zip code in this database is in Chicago. We can use the same approach to get the top 10 most populated zip codes. All we have to do is increase the limit of the cursor from 1 to 10, and now we see the top 10 zip codes by population. Now let's break down the syntax a little bit. *Sort()* and *limit()* are cursor methods. We already know other cursor methods, like *pretty()* and *count()*, so these two are an addition to our knowledge base. A cursor method is not applied to the data that is stored in the database. It is instead applied to the results set that lives in the cursor.
+This way, we see that the most populated zip code in this database is in Chicago. We can use the same approach to get the top 10 most populated zip codes. All we have to do is increase the limit of the cursor from 1 to 10.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().sort({ "pop": -1 }).limit(10).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca7044d"),
+	"city" : "CHICAGO",
+	"zip" : "60623",
+	"loc" : {
+		"y" : 41.849015,
+		"x" : 87.7157
+	},
+	"pop" : 112047,
+	"state" : "IL"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca7307f"),
+	"city" : "BROOKLYN",
+	"zip" : "11226",
+	"loc" : {
+		"y" : 40.646694,
+		"x" : 73.956985
+	},
+	"pop" : 111396,
+	"state" : "NY"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca72fa0"),
+	"city" : "NEW YORK",
+	"zip" : "10021",
+	"loc" : {
+		"y" : 40.768476,
+		"x" : 73.958805
+	},
+	"pop" : 106564,
+	"state" : "NY"
+}...
+```
+
+And now we see the top 10 zip codes by population. Now let's break down the syntax a little bit. *Sort()* and *limit()* are cursor methods. We already know other cursor methods, like *pretty()* and *count()*, so these two are an addition to our knowledge base. A cursor method is not applied to the data that is stored in the database. It is instead applied to the results set that lives in the cursor.
 
 After the cursor is populated with the filter data that's the result of the Find command, we can then apply the sort() method, which will sort the data based on the criteria that we provided. You can sort the data by one or more fields in increasing or decreasing direction, like this.
 
