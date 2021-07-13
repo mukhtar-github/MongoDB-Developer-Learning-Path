@@ -2230,4 +2230,20 @@ Here, we're creating another field for the documents that are created in the pip
 
 Can we do more complex and cool calculations? Absolutely. Developers have been known to create *Conway's Game of Life* and build *fractals* using the *aggregation framework*. So, sky's the limit. To learn more about the power of the *aggregation framework*, take our *aggregation framework* course. 
 
-Let's summarize what we've learned. The *aggregation framework* is a powerful tool that exceeds the filtering capabilities of *MQL* through its ability to compute, reshape, and reorganize data. Data in the *aggregation pipeline* exists within the pipeline. It does not inherently modify or change your original data. *Aggregation framework* syntax is in the form of a pipeline, where stages are executed in the order in which they are listed. The stage name is preceded with a dollar sign and followed by the required action descriptions, like *$sum* or a filter or some other type of modification.
+Let's summarize what we've learned. The *aggregation framework* is a powerful tool that exceeds the filtering capabilities of *MQL* through its ability to compute, reshape, and reorganize data. Data in the *aggregation pipeline* exists within the pipeline. It does not inherently modify or change your original data.
+
+*Aggregation framework* syntax is in the form of a pipeline, where stages are executed in the order in which they are listed. The stage name is preceded with a dollar sign and followed by the required action descriptions, like *$sum* or a filter or some other type of modification.
+
+#### Problem:
+
+What room types are present in the *sample_airbnb.listingsAndReviews* collection?
+
+#### Answer:
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate([ { "$project": { "room_type": 1, "_id": 0 }}, { "$group": { "_id": "$room_type" }}])
+{ "_id" : "Private room" }
+{ "_id" : "Entire home/apt" }
+{ "_id" : "Shared room" }
+```
+
