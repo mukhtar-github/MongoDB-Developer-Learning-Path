@@ -2260,7 +2260,22 @@ What are the differences between using *aggregate()* and *find()*?
 
 In this lesson, we learned how to use these *sort()* and *limit()* methods. Sometimes, when you're creating a collection, you're not interested in all results, but are looking for the top 3 or top 10 results. In this lesson, we'll learn how to get the results in the order and quantity that we're looking for.
 
-Let's say we want to find the least populated zip code in the *Zips* collection. I'm already connected to my Atlas cluster, and I'm going to switch to it using the sample_training database. And let's get right to it. Looks like I forgot to add the pretty() directive. Much better.
+Let's say we want to find the least populated zip code in the *Zips* collection. I'm already connected to my Atlas cluster, and I'm going to switch to it using the sample_training database. And let's get right to it. Looks like I forgot to add the *pretty()* directive. Much better.
+
+```javascript
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().sort({ "pop": 1 }).limit(1).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca6eea3"),
+	"city" : "ALLEN",
+	"zip" : "36419",
+	"loc" : {
+		"y" : 31.624266,
+		"x" : 87.66746
+	},
+	"pop" : 0,
+	"state" : "AL"
+}
+```
 
 This query gets all the documents, sorts them by their population count in increasing order, and only returns the first document in the cursor, a.k.a. the one with the smallest population value. This is weird. It looks like there can be a zip code -- or a postal code, if you're not from the US -- with zero people living in it.
 
