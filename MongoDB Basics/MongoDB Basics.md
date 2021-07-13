@@ -2397,3 +2397,13 @@ db.companies.find({ "founded_year": { "$ne": null }},
 ```
 
 While the *limit() and sort()* methods are not listed in the correct order, *MongoDB* flips their order when executing the query, delivering the results that the question prompt is looking for.
+
+#### Problem:
+
+In what year was the youngest bike rider from the *sample_training.trips* collection born?
+
+#### Answer:
+
+```javascript
+db.trips.find({ "birth year": { "$ne": null }}).sort({ "birth year": -1 }).limit(1).pretty()
+```
