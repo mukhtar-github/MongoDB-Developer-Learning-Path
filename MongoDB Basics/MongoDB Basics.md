@@ -2340,9 +2340,16 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().sort({ "pop": -1
 }...
 ```
 
-And now we see the top 10 zip codes by population. Now let's break down the syntax a little bit. *Sort()* and *limit()* are cursor methods. We already know other cursor methods, like *pretty()* and *count()*, so these two are an addition to our knowledge base. A cursor method is not applied to the data that is stored in the database. It is instead applied to the results set that lives in the cursor.
+And now we see the top 10 zip codes by population. Now let's break down the syntax a little bit. *Sort()* and *limit()* are cursor methods. We already know other cursor methods, like *pretty()* and *count()*, so these two are an addition to our knowledge base.
 
-After the cursor is populated with the filter data that's the result of the Find command, we can then apply the sort() method, which will sort the data based on the criteria that we provided. You can sort the data by one or more fields in increasing or decreasing direction, like this.
+> A cursor method is not applied to the data that is stored in the database. It is instead applied to the results set that lives in the cursor.
+
+After the cursor is populated with the filter data that's the result of the *Find* command, we can then apply the *sort()* method, which will sort the data based on the criteria that we provided. You can sort the data by one or more fields in increasing or decreasing direction, like this.
+
+
+```javascript
+db.zips.find().sort({ "pop": 1, "city": -1 })
+```
 
 Here, the results that we get are sorted in increasing order by population and decreasing order by the city name. If you're looking for some specific number of results that best match your query, you can use *limit()*. The caveat with *limit()* is that if you use *limit()* without *sort()*, you will most likely get some results without any guarantee of its order.
 
