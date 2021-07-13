@@ -2247,3 +2247,11 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.listingsAndReviews.aggregate
 { "_id" : "Shared room" }
 ```
 
+#### Problem:
+
+What are the differences between using *aggregate()* and *find()*?
+
+#### Answer:
+
+* aggregate() can do what find() can and more.
+* aggregate() allows us to compute and reshape data in the cursor.
