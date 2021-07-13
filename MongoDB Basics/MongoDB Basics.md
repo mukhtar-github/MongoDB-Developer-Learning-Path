@@ -2255,3 +2255,23 @@ What are the differences between using *aggregate()* and *find()*?
 
 * aggregate() can do what find() can and more.
 * aggregate() allows us to compute and reshape data in the cursor.
+
+### sort() and limit() Methods
+
+In this lesson, we learned how to use these *sort()* and *limit()* methods. Sometimes, when you're creating a collection, you're not interested in all results, but are looking for the top 3 or top 10 results. In this lesson, we'll learn how to get the results in the order and quantity that we're looking for.
+
+Let's say we want to find the least populated zip code in the *Zips* collection. I'm already connected to my Atlas cluster, and I'm going to switch to it using the sample_training database. And let's get right to it. Looks like I forgot to add the pretty() directive. Much better.
+
+This query gets all the documents, sorts them by their population count in increasing order, and only returns the first document in the cursor, a.k.a. the one with the smallest population value. This is weird. It looks like there can be a zip code -- or a postal code, if you're not from the US -- with zero people living in it.
+
+Now I'm kind of curious how many of these zip codes we have in this collection. 67. It looks like a lot. I certainly didn't expect a number this high. Maybe it makes more sense to look for the most populated zip code instead of the least populated one.
+
+For this, we reverse the direction of the sort and make it decreasing, so that the highest values are first in the cursor. This way, we see that the most populated zip code in this database is in Chicago. We can use the same approach to get the top 10 most populated zip codes. All we have to do is increase the limit of the cursor from 1 to 10, and now we see the top 10 zip codes by population.
+
+Now let's break down the syntax a little bit. *Sort()* and *limit()* are cursor methods. We already know other cursor methods, like *pretty()* and *count()*, so these two are an addition to our knowledge base. A cursor method is not applied to the data that is stored in the database. It is instead applied to the results set that lives in the cursor.
+
+After the cursor is populated with the filter data that's the result of the Find command, we can then apply the sort() method, which will sort the data based on the criteria that we provided. You can sort the data by one or more fields in increasing or decreasing direction, like this.
+
+Here, the results that we get are sorted in increasing order by population and decreasing order by the city name. If you're looking for some specific number of results that best match your query, you can use *limit()*. The caveat with *limit()* is that if you use *limit()* without *sort()*, you will most likely get some results without any guarantee of its order.
+
+Similarly, if you use *limit()* before you *sort()*, you might miss some of the data that you meant to sort and include in the results set. Which is why MongoDB assumes that when you use sort() and limit(), you always mean to sort first, regardless of the order in which you type these.
