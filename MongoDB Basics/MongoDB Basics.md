@@ -2385,7 +2385,7 @@ Which of the following commands will return the *name and founding year* for the
 
 ```javascript
 db.companies.find({ "founded_year": { "$ne": null }},
- { "name": 1, "founded_year": 1 }).sort({ "founded_year": 1 }).limit(5)
+ { "name": 1, "founded_year": 1 }).sort({ "founded_year": 1 }).limit(5).pretty()
 ```
 We first must filter out the documents where the founded year is not null, then project the fields that we are looking for, which is *name*, and *founded_year* in this case. Then we sort the cursor in increasing order, so the first results will have the smallest value for the *founded_year* field. Finally, we limit the results to our top 5 documents in the cursor, thus getting the 5 oldest companies in this collection.
 
@@ -2405,5 +2405,11 @@ In what year was the youngest bike rider from the *sample_training.trips* collec
 #### Answer:
 
 ```javascript
-db.trips.find({ "birth year": { "$ne": null }}).sort({ "birth year": -1 }).limit(1).pretty()
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": { "$ne": "" }},
+ { "bikeid": 1, "birth year": 1 }).sort({ "birth year": -1 }).limit(1).pretty()
+{
+	"_id" : ObjectId("572bb8222b288919b68ac17d"),
+	"bikeid" : 23959,
+	"birth year" : 1999
+}
 ```
