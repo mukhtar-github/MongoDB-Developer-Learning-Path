@@ -2413,3 +2413,6 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 	"birth year" : 1999
 }
 ```
+
+### Introduction to Indexes
+
