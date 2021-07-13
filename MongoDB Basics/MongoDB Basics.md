@@ -2348,9 +2348,31 @@ After the cursor is populated with the filter data that's the result of the *Fin
 
 
 ```javascript
-db.zips.find().sort({ "pop": 1, "city": -1 })
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.zips.find().sort({ "pop": 1, "city": -1 }).pretty()
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca756c9"),
+	"city" : "WALLOPS ISLAND",
+	"zip" : "23337",
+	"loc" : {
+		"y" : 37.827338,
+		"x" : 75.506503
+	},
+	"pop" : 0,
+	"state" : "VA"
+}
+{
+	"_id" : ObjectId("5c8eccc1caa187d17ca6f948"),
+	"city" : "VINTON",
+	"zip" : "96135",
+	"loc" : {
+		"y" : 39.720719,
+		"x" : 120.204994
+	},
+	"pop" : 0,
+	"state" : "CA"
+}...
 ```
 
 Here, the results that we get are sorted in increasing order by population and decreasing order by the city name. If you're looking for some specific number of results that best match your query, you can use *limit()*. The caveat with *limit()* is that if you use *limit()* without *sort()*, you will most likely get some results without any guarantee of its order.
 
-Similarly, if you use *limit()* before you *sort()*, you might miss some of the data that you meant to sort and include in the results set. Which is why MongoDB assumes that when you use sort() and limit(), you always mean to sort first, regardless of the order in which you type these.
+Similarly, if you use *limit()* before you *sort()*, you might miss some of the data that you meant to sort and include in the results set. Which is why *MongoDB* assumes that when you use *sort() and limit()*, you always mean to sort first, regardless of the order in which you type these.
