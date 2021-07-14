@@ -2421,3 +2421,6 @@ In this lesson we will learn about *indexes*. Now that we learned to query and m
 So what is an *Index*? An *Index* in a database is, by its function, similar to an *index* in a book. When you have an alphabetical list of names and subjects with references to the places where they occur. And you can typically find an *index* at the end of the book.
 
 Say we have a book about 20th century Nobel Prize winners in literature, and we're looking to find all mentions of *Tony Morrison*. You have two options on how to go about this search. First, you can look through every page in the book carefully and find what you're looking for, or you can look through an alphabetically organized *index*, go to the *M* section, and find all the pages pertaining to *Morrison*.
+> *Index* in a database, is a special data structure that stores a small portion of the collection's data set in an easy to tranverse form.
+
+Which method is faster? Using the *index* is way faster. It cuts down on the search by the number of pages that the book has. Instead of looking through all of them, you just look at the *index* and get the information that you need.
