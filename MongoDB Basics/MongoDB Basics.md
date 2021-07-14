@@ -2416,4 +2416,4 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 
 ### Introduction to Indexes
 
-In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to makke these queries as efficient as possible.
+In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to makke these queries as efficient as possible. Ther are multiple ways in which we can improve our queries, but the most impactful way is through adding indexes to support your queries. So what is an *Index*? 
