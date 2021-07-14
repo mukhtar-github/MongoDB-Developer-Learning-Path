@@ -2416,3 +2416,4 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 
 ### Introduction to Indexes
 
+In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to makke these queries as efficient as possible.
