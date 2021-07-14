@@ -2418,4 +2418,6 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 
 In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to makke these queries as efficient as possible. Ther are multiple ways in which we can improve our queries, but the most impactful way is through adding indexes to support your queries.
 
-So what is an *Index*? An *Index* in a database is, by its function, similar to an *index* in a book. When you have an alphabetical list of names and subjects with references to the places where they occur. And you can typically find an *index* at the end of the book. Say we have a book about 20th century Nobel Prize winners in literature, and we're looking for
+So what is an *Index*? An *Index* in a database is, by its function, similar to an *index* in a book. When you have an alphabetical list of names and subjects with references to the places where they occur. And you can typically find an *index* at the end of the book.
+
+Say we have a book about 20th century Nobel Prize winners in literature, and we're looking to find all mentions of *Tony Morrison*. You have two options on how to go about this search. First, you can look through every page in the book carefully and find what you're looking for, or you can look through an alphabetically organized *index*, go to the *M* section, and find all the pages pertaining to *Morrison*.
