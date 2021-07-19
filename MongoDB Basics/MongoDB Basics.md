@@ -2435,4 +2435,9 @@ db.trips.find({ "birth year": 1989 })
 db.trips.find({ "start station id": 476 }).sort( { "birth year": 1 } )
 ```
 
-The first query filters data by the value of the *birth year* field. The second *sorts* by the value of that field
+The first query filters data by the value of the *birth year* field. The second *sorts* by the value of that field. Both could benefit from an *index*. So let's create one base on the *birth year* values.
+
+```javascript
+db.trips.createIndex({ "birth year": 1 })
+```
+This command creates an *index* on the *birth year*
