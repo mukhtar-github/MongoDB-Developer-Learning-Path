@@ -2435,5 +2435,4 @@ db.trips.find({ "birth year": 1989 })
 db.trips.find({ "start station id": 476 }).sort( { "birth year": 1 } )
 ```
 
-
-The first query filters data by the value of the *birth year*field. The second
+The first query filters data by the value of the *birth year* field. The second *sorts* by the value of that field
