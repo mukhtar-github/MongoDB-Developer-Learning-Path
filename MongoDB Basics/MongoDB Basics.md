@@ -2440,4 +2440,4 @@ The first query filters data by the value of the *birth year* field. The second 
 ```javascript
 db.trips.createIndex({ "birth year": 1 })
 ```
-This command creates an *index* on the *birth year*
+This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*
