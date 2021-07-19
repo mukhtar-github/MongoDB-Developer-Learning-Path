@@ -2424,9 +2424,10 @@ Say we have a book about 20th century Nobel Prize winners in literature, and we'
 
 > *Index* in a database, is a special data structure that stores a small portion of the collection's data set in an easy to tranverse form.
 
-Which method is faster? Using the *index* is way faster. It cuts down on the search by the number of pages that the book has. Instead of looking through all of them, you just look at the *index* and get the information that you need. An *index* in a collection serves the same purpose, but instead of always being alphabetical, an *index* in a collection is a special data structure that stores a small portion of the collection's data set in an easy-to-tranverse form. Or put simply, an index is a data structure that optimizes queries.
+Which method is faster? Using the *index* is way faster. It cuts down on the search by the number of pages that the book has. Instead of looking through all of them, you just look at the *index* and get the information that you need. An *index* in a collection serves the same purpose, but instead of always being alphabetical, an *index* in a collection is a special data structure that stores a small portion of the collection's data set in an easy-to-tranverse form.
+> Or put simply, an *index* is a data structure that optimizes queries.
 
-You should build an index to support your queries. For example, if I'm running queries on the *trips* collection and find that I often query by the *birth year*, then I should have an index that support these queries.
+You should build an *index* to support your queries. For example, if I'm running queries on the *trips* collection and find that I often query by the *birth year*, then I should have an *index* that support these queries.
 
 ```javascript
 db.trips.find({ "birth year": 1989 })
