@@ -2440,4 +2440,4 @@ The first query filters data by the value of the *birth year* field. The second 
 ```javascript
 db.trips.createIndex({ "birth year": 1 })
 ```
-This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*
+This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*, where we issue this query, *MongoDB* doesn't have to look at every document to get the needed result.
