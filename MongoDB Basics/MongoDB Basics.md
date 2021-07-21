@@ -2416,7 +2416,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.find({ "birth year": {
 
 ### Introduction to Indexes
 
-In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to makke these queries as efficient as possible. Ther are multiple ways in which we can improve our queries, but the most impactful way is through adding indexes to support your queries.
+In this lesson we will learn about *indexes*. Now that we learned to query and modify data, it will be super helpful to know how to make these queries as efficient as possible. Ther are multiple ways in which we can improve our queries, but the most impactful way is through adding indexes to support your queries.
 
 So what is an *Index*? An *Index* in a database is, by its function, similar to an *index* in a book. When you have an alphabetical list of names and subjects with references to the places where they occur. And you can typically find an *index* at the end of the book.
 
@@ -2487,3 +2487,7 @@ MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.createIndex({ "start s
 ```
 
 To make the second query more efficient, we need to use a *Compound index*, which is an *index* on multiple fields. This *index* will first order documents by the *start station id* value, then by the *birth year* value. It co-exist with the previous *index* in the same *trips* collection, but this *index* is much better suited for our second query. It helps us immediately locate all *start stations* with *id 476*, and thanks to our *index*, the documents there are already sorted by *birth year*.
+
+### Introduction to Data Modeling
+
+
