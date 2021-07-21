@@ -2457,4 +2457,4 @@ Compound Index
 db.trips.createIndex({ "start station id": 1,"birth year": 1 })
 ```
 
-To make a second query more efficient, we need to use a *Compound index*, which is an *index* on multiple fields.
+To make the second query more efficient, we need to use a *Compound index*, which is an *index* on multiple fields. This *index* will first order documents by the *start station id* value, then by the *birth year* value. It co-exist with the previous *index* in the same *trips* collection, but this *index* is much better suited for our second query. It helps us immediately locate all *start stations* with *id 476*, and thanks to our *index*, the documents there are already sorted by *birth year*.
