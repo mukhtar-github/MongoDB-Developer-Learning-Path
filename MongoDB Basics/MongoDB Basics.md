@@ -2490,7 +2490,7 @@ To make the second query more efficient, we need to use a *Compound index*, whic
 
 ### Introduction to Data Modeling
 
-In this lesson, we'll discuss data modeling. *MongoDB* doesn't enforce how data is organized by default. So how can we decide what structure to use to store our data? Where should we create sub-documents? And where should we use arrays of values? At which point should the data get its own collection?
+In this lesson, we'll discuss *data modeling*. *MongoDB* doesn't enforce how data is organized by default. So how can we decide what structure to use to store our data? Where should we create *sub-documents*? And where should we use *arrays of values*? At which point should the data get its own *collection*?
 
 Making these decisions about the shape and structure of your data is called *data modeling*.
 > More specifically, *data modeling* is a way to organize fields in a document to support your application performance and querying capabilities.
