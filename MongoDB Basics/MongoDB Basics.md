@@ -2490,4 +2490,21 @@ To make the second query more efficient, we need to use a *Compound index*, whic
 
 ### Introduction to Data Modeling
 
+In this lesson, we'll discuss data modeling. *MongoDB* doesn't enforce how data is organized by default. So how can we decide what structure to use to store our data? Where should we create sub-documents? And where should we use arrays of values? At which point should the data get its own collection?
 
+Making these decisions about the shape and structure of your data is called *data modeling*.
+> More specifically, *data modeling* is a way to organize fields in a document to support your application performance and querying capabilities.
+
+Today, I'll introduce *data modeling for MongoDB*. The most important rule of thumb in *data modeling with MongoDB* is that data is stored in the way that it is used. This notion determines the decision that you make about the shape of your document and the number of your collections.
+
+For example, say we're building an application that stores patient information. Each patient has a varied amount of information associated with them. One might have multiple phone numbers, prescriptions, and visit history but prefer to be contacted by email, or another might have zero prescriptions in their medical history and no patient visit records.
+
+Just from this, we can see how the document sizes will vary per patient -- that is, if we were to store all patient-pertaining information in one collection. We now have a general idea of what kind of data we're looking to store, such as contact info, visit history, prescriptions, age, gender, which is great but not enough to make any *data modeling* decisions just yet.
+
+The other important and probably the most important consideration is how this data will be queried. Who is using our application, and how? Let's consider that this application is being used by doctors in a network of medical facilities. It is most useful for the doctor to see the current prescriptions, diagnosis, and patient contact information when they pull up their record.
+
+Occasionally, depending on the patient, it would also be helpful to look up and cross-reference medication that the patient is taking for side effects, allergies, and other information. We can organize data in any way that we please. But if we want to optimize for fast and easy data retrieval, we can have a collection called *patient records* where we structure data as is most helpful for our application and another collection containing information about various medications.
+
+This way, when a doctor is looking for patient information to create a new prescription, contact them, or prepare for their next visit, all the relevant information is already in one collection and one document and therefore doesn't have to be gathered from across multiple sources, thus taking too long. Everything that is regularly queried together is stored together for fast retrieval.
+
+In this lesson, we learned that when *data modeling with MongoDB*, data that is accessed together should be stored together. It's also important to keep in mind that as your application is changing and evolving, your data model should also be evolving. And *MongoDB* is built for quick data model changes and evolution. To learn more about *data modeling with MongoDB*, take our *Data Modeling* course as your next venture into the land of *MongoDB*.
