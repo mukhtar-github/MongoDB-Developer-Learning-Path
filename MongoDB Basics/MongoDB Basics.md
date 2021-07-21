@@ -2495,7 +2495,7 @@ In this lesson, we'll discuss *data modeling*. *MongoDB* doesn't enforce how dat
 Making these decisions about the shape and structure of your data is called *data modeling*.
 > More specifically, *data modeling* is a way to organize fields in a document to support your application performance and querying capabilities.
 
-Today, I'll introduce *data modeling for MongoDB*. The most important rule of thumb in *data modeling with MongoDB* is that data is stored in the way that it is used. This notion determines the decision that you make about the shape of your document and the number of your collections.
+Today, I'll introduce *data modeling for MongoDB*. The most important rule of thumb in *data modeling with MongoDB* is that **data is stored in the way that it is used**. This notion determines the decision that you make about the shape of your document and the number of your collections.
 
 For example, say we're building an application that stores patient information. Each patient has a varied amount of information associated with them. One might have multiple phone numbers, prescriptions, and visit history but prefer to be contacted by email, or another might have zero prescriptions in their medical history and no patient visit records.
 
