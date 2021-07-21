@@ -2440,4 +2440,8 @@ The first query filters data by the value of the *birth year* field. The second 
 ```javascript
 db.trips.createIndex({ "birth year": 1 })
 ```
-This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*, where we issue this query, *MongoDB* doesn't have to look at every document to get the needed results. It will just go directly to where the *1989* documents live and retreive them. For this query, however, *MongoDB* will still have to look through all the documents, to find those where the *start station id* is 476. But the good news is that it can use the *index* that we created in order to retrieve those results in sorted order by *birth year*, so there won't be a need to sort the cursor after the data is filtered.
+This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*, where we issue this query, *MongoDB* doesn't have to look at every document to get the needed results. It will just go directly to where the *1989* documents live and retreive them. For this query, however, *MongoDB* will still have to look through all the documents, to find those where the *start station id* is 476.
+
+But the good news is that it can use the *index* that we created in order to retrieve those results in sorted order by *birth year*, so there won't be a need to sort the cursor after the data is filtered. This is quiet awesome, because it massively improves the speed and overall performance of our queries, making them even faster and more efficient. The programmers among us know how memory and time-consuming sorting can be, especially for large amount of data.
+
+So it's very important to use the right *indexes*
