@@ -2438,7 +2438,21 @@ db.trips.find({ "start station id": 476 }).sort( { "birth year": 1 } )
 The first query filters data by the value of the *birth year* field. The second *sorts* by the value of that field. Both could benefit from an *index*. So let's create one base on the *birth year* values.
 
 ```javascript
-db.trips.createIndex({ "birth year": 1 })
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.createIndex({ "birth year": 1 })
+{
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 2,
+	"note" : "all indexes already exist",
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1626871526, 13),
+		"signature" : {
+			"hash" : BinData(0,"cr+Xfe6yUrTtOSo2FNYXLB9QnwA="),
+			"keyId" : NumberLong("6930006272708182017")
+		}
+	},
+	"operationTime" : Timestamp(1626871526, 13)
+}
 ```
 This command creates an *index* on the *birth year* field in increasing order. Now that we have this *index*, where we issue this query, *MongoDB* doesn't have to look at every document to get the needed results. It will just go directly to where the *1989* documents live and retreive them. For this query, however, *MongoDB* will still have to look through all the documents, to find those where the *start station id* is 476.
 
@@ -2454,7 +2468,22 @@ Not Perfect For
 db.trips.find({ "start station id": 476 }).sort( { "birth year": 1 } )
 
 Compound Index
-db.trips.createIndex({ "start station id": 1,"birth year": 1 })
+MongoDB Enterprise atlas-ty4m6s-shard-0:PRIMARY> db.trips.createIndex({ "start station id": 1, "birth year": 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"commitQuorum" : "votingMembers",
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1626871633, 9),
+		"signature" : {
+			"hash" : BinData(0,"h+ALYaPC/dDDy8nnuisz9T5Cu4U="),
+			"keyId" : NumberLong("6930006272708182017")
+		}
+	},
+	"operationTime" : Timestamp(1626871633, 9)
+}
 ```
 
 To make the second query more efficient, we need to use a *Compound index*, which is an *index* on multiple fields. This *index* will first order documents by the *start station id* value, then by the *birth year* value. It co-exist with the previous *index* in the same *trips* collection, but this *index* is much better suited for our second query. It helps us immediately locate all *start stations* with *id 476*, and thanks to our *index*, the documents there are already sorted by *birth year*.
