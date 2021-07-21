@@ -2444,4 +2444,4 @@ This command creates an *index* on the *birth year* field in increasing order. N
 
 But the good news is that it can use the *index* that we created in order to retrieve those results in sorted order by *birth year*, so there won't be a need to sort the cursor after the data is filtered. This is quiet awesome, because it massively improves the speed and overall performance of our queries, making them even faster and more efficient. The programmers among us know how memory and time-consuming sorting can be, especially for large amount of data.
 
-So it's very important to use the right *indexes*
+So it's very important to use the right *indexes* for queries that use *sort*. Now the question is whether we can make both queries that we're talking about more efficient using *indexes*. We certainly can. Our collection already has a *Single field index* that we created before. We call that *"Single field"*, well because it *indexes* documents using one field.
