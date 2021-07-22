@@ -2518,4 +2518,5 @@ Now that we learned some more complex ways to query data and a bit about structu
 db.collection.updateOne({<query to locate>}, {<update>})
 ```
 
-So the first part of the *update operation* is the *query to locate* the document in question. One of the awesome features of *MQL* is the *upsert* option within the *update* command. *Upsert* is the hybrid of *update* and *insert*
+So the first part of the *update operation* is the *query to locate* the document in question. One of the awesome features of *MQL* is the *upsert* option within the *update* command.
+> *Upsert* is the hybrid of *update* and *insert* and should only be used when needed.
