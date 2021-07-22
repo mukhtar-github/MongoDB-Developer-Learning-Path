@@ -2526,3 +2526,5 @@ db.collection.updateOne({<query>}, {<update>}, {"upsert": true})
 ```
 
 The syntax for *upsert* is to list it as the third option right after your *update* directive. So let's talk about what *upsert* is and when should we use it. By default *upsert* is set to *false*. But if you set it to *true* you can expect it to either do an *update* or an *insert*. The *update* will happen if there are documents that match the filter criteria of the *update* operation.
+
+The *insert* will happen if there are no documents that match this criteria. If this option didn't exist, you would have to search before inserting new documents in order to avoid duplicate records with inconsistencies between them, or not search and get documents with identical information.
