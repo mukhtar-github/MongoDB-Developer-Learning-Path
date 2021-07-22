@@ -2512,4 +2512,8 @@ In this lesson, we learned that when *data modeling with MongoDB*, data that is 
 ### Upsert - Update or Insert?
 
 Now that we learned some more complex ways to query data and a bit about structuring data, we can expand into more complex ways to update data. Let's learn about *Upsert*.
-> First, it's important to that everything we learn in *MQL* that's used to locate a document in a collection can also be used to modify this document.
+> First, it's important to that everything we learn in *MQL* that's used to locate a document in a collection can also be used to modify this document. So the first part of the *update operation*
+
+```javascript
+db.collection.updateOne({<query to locate>}, {<update>})
+```
