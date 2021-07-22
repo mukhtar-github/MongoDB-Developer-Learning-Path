@@ -2533,4 +2533,4 @@ Imaging we are running an *internet of Things* application that gathers data fro
 
 I have a separate collection per sensor and a separate documents for 48 sensor readings. Each documents contains the sensor *id, date, an array of data coolected so far*, and a couple of fields with summary information about the readings in the documents so far. Every time there's a new sensor reading, what is the best way to add that information to the respective document -- *update, insert*? I'll argue that *update* with *upsert: true* is the best course of action.
 
-Here's why.
+Here's why. Say we have a sensor reading coming in. Let's call it *r* for reading. It contains the information abut the sensor *id*, the value that it's sensing today, and the time at which this reading is recorded, which is at 10 minutes past midnight. We need to *update* our existing document. But it is important to keep a few things in mind.
