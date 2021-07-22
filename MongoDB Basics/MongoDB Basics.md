@@ -2508,3 +2508,7 @@ Occasionally, depending on the patient, it would also be helpful to look up and 
 This way, when a doctor is looking for patient information to create a new prescription, contact them, or prepare for their next visit, all the relevant information is already in one collection and one document and therefore doesn't have to be gathered from across multiple sources, thus taking too long. Everything that is regularly queried together is stored together for fast retrieval.
 
 In this lesson, we learned that when *data modeling with MongoDB*, data that is accessed together should be stored together. It's also important to keep in mind that as your application is changing and evolving, your data model should also be evolving. And *MongoDB* is built for quick data model changes and evolution. To learn more about *data modeling with MongoDB*, take our *Data Modeling* course as your next venture into the land of *MongoDB*.
+
+### Upsert - Update or Insert?
+
+Now that we learned some more complex ways to query data and a bit about structuring data, we can expand into more complex ways to update data.
