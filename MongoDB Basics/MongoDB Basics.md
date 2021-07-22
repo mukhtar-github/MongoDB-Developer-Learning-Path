@@ -2525,4 +2525,4 @@ So the first part of the *update operation* is the *query to locate* the documen
 db.collection.updateOne({<query>}, {<update>}, {"upsert": true})
 ```
 
-The syntax for *upsert* is to list it as the third option right after your *update* directive.
+The syntax for *upsert* is to list it as the third option right after your *update* directive. So let's talk about what *upsert* is and when should we use it. By default *upsert* is set to *false*. But if you set it to *true* you can expect it to either do an *update* or an *insert*. The *update* will happen if there are documents that match the filter criteria of the *update* operation.
