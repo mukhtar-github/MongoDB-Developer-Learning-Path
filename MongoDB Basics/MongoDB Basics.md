@@ -2535,4 +2535,6 @@ I have a separate collection per sensor and a separate documents for 48 sensor r
 
 Here's why. Say we have a sensor reading coming in. Let's call it *r* for reading. It contains the information abut the *sensor id*, the value that it's sensing today, and the time at which this reading is recorded, which is at 10 minutes past midnight. We need to *update* our existing document. But it is important to keep a few things in mind. We have to query for the *sensor and date* of the reading to match the document.
 
-We also have to ensure that there are no more than 48 readings in the readings array. Instead of finding the array size every time, we can just keep the number of readings in a *valcount* field.
+We also have to ensure that there are no more than 48 readings in the readings array. Instead of finding the array size every time, we can just keep the number of readings in a *valcount* field. The actual *update* portion of this command is pushing the new reading information about the value and time to the readings array. But now we have three readings in the array. So we increament the *valcount* by 1.
+
+Finally, I added a *total* field, which keep track of the sum of all the values in the array.
