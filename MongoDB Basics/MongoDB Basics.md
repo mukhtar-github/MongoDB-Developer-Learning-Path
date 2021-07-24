@@ -2584,12 +2584,22 @@ If the *valcount* becomes greater than or equal to 48, the existing document wil
 ```javascript
 Current document
 {
-	"_id": ObjectId("abcd12345309"),
+	"_id": ObjectId("abcd12340101"),
  	"sensor": 5,
  	"date": Date("2021-05-11"),
  	"valcount": 48,
  	"total": 3742,
  	"readings": [ { "v": 70, "t": "0000"}, . . . ]
+}
+
+New document
+{
+	"_id": ObjectId("abcd12345309"),
+ 	"sensor": 5,
+ 	"date": Date("2021-05-11"),
+ 	"valcount": 1,
+ 	"total": 72,
+ 	"readings": [ { "v": 72, "t": "0010"} ]
 }
 ```
 
