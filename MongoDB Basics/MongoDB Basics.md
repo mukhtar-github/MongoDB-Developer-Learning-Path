@@ -2617,13 +2617,13 @@ We already learned in general terms that *Atlas* is a data platform and even use
 
 The *Data Explorer* has a number of tabs in it that we haven't used yet. The first one, after our familiar *Find*, is *Indexes*. You can use this tab to view what indexes our collection has. We can create a new index and drop an index if we want to. But most importantly, this is a performance advisor for your database.
 
-Here you can see how often an index is used, when it was created, and who created it to get the best performance out of your Atlas cluster. The *schema Anti-Pattern* tab will provide you with sound advice about your data model once enough queries have been issued against the collection.
+Here you can see how often an *index* is used, when it was created, and who created it to get the best performance out of your Atlas cluster. The *schema Anti-Pattern* tab will provide you with sound advice about your data model once enough queries have been issued against the collection.
 
-The Aggregation tab allows us to build aggregation pipelines in the UI and see how data is transformed from one stage of the pipeline to another. Let's add in the stages that we've learned so far and see how that works. First, we match all documents that have Wi-Fi as one of their amenities.
+The *Aggregation* tab allows us to build aggregation pipelines in the UI and see how data is transformed from one stage of the pipeline to another. Let's add in the stages that we've learned so far and see how that works. First, we *match* all documents that have *Wi-Fi* as one of their amenities.
 
-We entered the stage name. And this UI autocompletes suggestions of stages for us. Then there is a comment reminding of the syntax, saying the query in *MQL*. And the curly brackets are already here for us-- how convenient. All I have left to do is enter the field name amenities and the value Wi-Fi.
+We entered the stage name. And this UI autocompletes suggestions of stages for us. Then there is a comment reminding of the syntax, saying the query in *MQL*. And the curly brackets are already here for us -- how convenient. All I have left to do is enter the field name amenities and the value *Wi-Fi*.
 
-And voila, the section on the right is populated with the output after this match stage is applied. Let's add another stage. Project is another one that we learned. I'll go with the same example as before and keep only the price and address in the pipeline, getting rid of even the _ID field value.
+And voila, the section on the right is populated with the output after this *match* stage is applied. Let's add another stage. *Project* is another one that we learned. I'll go with the same example as before and keep only the *price and address* in the pipeline, getting rid of even the _ID field value.
 
 And again, the right side of the UI shows how the data is now transformed in the pipeline. Note that if I reorder stages like this and put project before match, the match stage will return zero documents, because we eliminated the amenities field from the pipeline using project.
 
