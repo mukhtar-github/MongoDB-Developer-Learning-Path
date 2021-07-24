@@ -2608,3 +2608,35 @@ The *id* value will be taken care of, because it's automatically generated on *i
 Setting *upsert* to *true* is a great option. But you have to be mindful of the *update* that is happening and whether the *update* directive is enough to create the new document in the collection, which will work with the rest of the documents in that collection. If you have a scenario where this is possible, then you have yourself a great use case for *upsert*. *Upsert* is a good option to use for conditional *updates*, when you may want a new document instead of an updated document.
 
 In all other cases, where you're just looking to make an *update* to an existing document, or are looking to insert a brand new document, you should use the respective *update* with default *upsert: false* and *insert* commands.
+
+## Chapter 6: Next Steps
+
+### Atlas Features - More Data Explorer
+
+We already learned in general terms that Atlas is a data platform and even used a built-in sample data set for this entire course. Let's see what else Atlas has to offer at this point of our MongoDB journey. Let's start with the Data Explorer, which we've seen a lot in this course.
+
+The Data Explorer has a number of tabs in it that we haven't used yet. The first one, after our familiar Find, is Indexes. You can use this tab to view what indexes our collection has. We can create a new index and drop an index if we want to. But most importantly, this is a performance advisor for your database.
+
+Here you can see how often an index is used, when it was created, and who created it to get the best performance out of your Atlas cluster. The schema Anti-Pattern tab will provide you with sound advice about your data model once enough queries have been issued against the collection.
+
+The Aggregation tab allows us to build aggregation pipelines in the UI and see how data is transformed from one stage of the pipeline to another. Let's add in the stages that we've learned so far and see how that works. First, we match all documents that have Wi-Fi as one of their amenities.
+
+We entered the stage name. And this UI autocompletes suggestions of stages for us. Then there is a comment reminding of the syntax, saying the query in *MQL*. And the curly brackets are already here for us-- how convenient. All I have left to do is enter the field name amenities and the value Wi-Fi.
+
+And voila, the section on the right is populated with the output after this match stage is applied. Let's add another stage. Project is another one that we learned. I'll go with the same example as before and keep only the price and address in the pipeline, getting rid of even the _ID field value.
+
+And again, the right side of the UI shows how the data is now transformed in the pipeline. Note that if I reorder stages like this and put project before match, the match stage will return zero documents, because we eliminated the amenities field from the pipeline using project.
+
+This tool already showed us that the order matters when building an aggregation pipeline. Let's bring it all back and add another stage, group. And again, there it is, our helpful syntax reminder. Looks like I don't even need to go to the Documentation page to remind myself of the syntax-- how great.
+
+I'll use the same accumulator as in earlier lessons to group documents by country, count how many listings each country has, and just for fun, add all the listing prices together per country. And here it is. I see the results. I can scroll all the way to the right to see all of them.
+
+But say at this point I just want to know how many countries are in the previous stage. That's no problem. We can have a stage for that too. Let's add count. And all it wants me to do is provide a field name for the count. I'll call it *num_countries*. And suddenly I know that listings in nine countries offer Wi-Fi as one of their amenities in this data set.
+
+And that's not even the coolest part about it all. Say I'm now confident in my pipeline. And I want to add it to my application logic-- easy. By hitting this button, you can export the pipeline code to language and then select which language you're writing your application in.
+
+I'll select Java. On the left is the aggregation pipeline. On the right is the same pipeline but using Java. This I can just copy/paste into my code. To add some more useful information, I'll choose to include the import statements and driver syntax. And suddenly I have everything I need to implement this pipeline and any other aggregation pipeline in my application.
+
+Finally, there's a feature called Atlas Search, which is a fancier fine-grade indexing that enables advanced search functionality in your collection. Check out the lecture notes to learn more about it. To try it out yourself, you can go through the tutorial that is outlined in the docs.
+
+I linked it below the video. Luckily, the tutorial uses the now familiar sample data set. This wraps up our Data Explorer journey. We looked at the Performance Advisor using the Indexes tab and the Aggregation Builder. We also learned that Atlas provides schema Anti-Pattern advisory and an advanced text search.
