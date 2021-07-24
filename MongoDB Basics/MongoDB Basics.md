@@ -2623,13 +2623,29 @@ The *Aggregation* tab allows us to build aggregation pipelines in the UI and see
 
 We entered the stage name. And this UI autocompletes suggestions of stages for us. Then there is a comment reminding of the syntax, saying the query in *MQL*. And the curly brackets are already here for us -- how convenient. All I have left to do is enter the field name amenities and the value *Wi-Fi*.
 
-And voila, the section on the right is populated with the output after this *match* stage is applied. Let's add another stage. *Project* is another one that we learned. I'll go with the same example as before and keep only the *price and address* in the pipeline, getting rid of even the _ID field value.
+And voila, the section on the right is populated with the output after this *match* stage is applied. Let's add another stage. *Project* is another one that we learned. I'll go with the same example as before and keep only the *price and address* in the pipeline, getting rid of even the *_ID* field value.
 
-And again, the right side of the UI shows how the data is now transformed in the pipeline. Note that if I reorder stages like this and put project before match, the match stage will return zero documents, because we eliminated the amenities field from the pipeline using project.
+And again, the right side of the *UI* shows how the data is now transformed in the pipeline. Note that if I re-order stages like this and put *project* before *match*, the *match* stage will return zero documents, because we eliminated the *amenities* field from the pipeline using *project*.
 
-This tool already showed us that the order matters when building an aggregation pipeline. Let's bring it all back and add another stage, group. And again, there it is, our helpful syntax reminder. Looks like I don't even need to go to the Documentation page to remind myself of the syntax-- how great.
+This tool already showed us that the *order* matters when building an *aggregation pipeline*. Let's bring it all back and add another stage, *group*. And again, there it is, our helpful syntax reminder. Looks like I don't even need to go to the Documentation page to remind myself of the syntax -- how great.
 
-I'll use the same accumulator as in earlier lessons to group documents by country, count how many listings each country has, and just for fun, add all the listing prices together per country. And here it is. I see the results. I can scroll all the way to the right to see all of them.
+I'll use the same *accumulator* as in earlier lessons to group documents by *country*, count how many listings each country has, and just for fun, add all the listing *prices* together per country. And here it is. I see the results. I can scroll all the way to the right to see all of them.
+
+```javascript
+{
+	"$group": { _id: "$address.country", count: { "$sum": 1 }, total_price: { sum:"$price" } }
+}
+db.listingsAndReviews.aggregate([{ "$project": { "address": 1, "_id": 0 }}, { "$group": { "_id": "$address.country", "count": { "$sum": 1 } } }])
+{ "_id" : "Hong Kong", "count" : 600 }
+{ "_id" : "Canada", "count" : 649 }
+{ "_id" : "Brazil", "count" : 606 }
+{ "_id" : "China", "count" : 19 }
+{ "_id" : "Australia", "count" : 610 }
+{ "_id" : "United States", "count" : 1222 }
+{ "_id" : "Spain", "count" : 633 }
+{ "_id" : "Portugal", "count" : 555 }
+{ "_id" : "Turkey", "count" : 661 }
+```
 
 But say at this point I just want to know how many countries are in the previous stage. That's no problem. We can have a stage for that too. Let's add count. And all it wants me to do is provide a field name for the count. I'll call it *num_countries*. And suddenly I know that listings in nine countries offer Wi-Fi as one of their amenities in this data set.
 
