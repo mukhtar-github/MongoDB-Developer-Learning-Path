@@ -2564,7 +2564,7 @@ db.iot.updateOne({
 
 We also have to ensure that there are no more than 48 readings in the *readings* array. Instead of finding the array size every time, we can just keep the number of readings in a *valcount* field. The actual *update* portion of this command is pushing the new reading information about the *value and time* to the *readings* array. But now we have three readings in the array. So we increament the *valcount* by 1.
 
-Finally, I added a *total* field, which keep track of the sum of all the values in the array. So with this field being present in the dock, it also needs updating with each new reading. Here we're increamenting it by the *reading value*. And now it's time for the *upsert: true* option to be explicitly stated. If the *valcount* becomes greater than or equal to 48, the existing document will no longer match this query.
+Finally, I added a *total* field, which keep track of the sum of all the values in the array. So with this field being present in the dock, it also needs updating with each new reading. Here we're increamenting it by the *reading value*. And now it's time for the *upsert: true* option to be explicitly stated.
 
 ```javascript
 Current document
@@ -2578,7 +2578,22 @@ Current document
 }
 ```
 
-This command will insert a new document. The *id* value will be taken care of, because it's automatically generated on insert. The values in the rest of the fields like *sensor, date, valcount and total* will also be taken care of. *Inc* will create the fields and assign them values. And finally, the readings field will automatically be an array, because we're using the *push* operator. This one command can both *update and insert*, depending on the result of the query search.
+If the *valcount* becomes greater than or equal to 48, the existing document will no longer match this query. This command will insert a new document.
+
+
+```javascript
+Current document
+{
+	"_id": ObjectId("abcd12345309"),
+ 	"sensor": 5,
+ 	"date": Date("2021-05-11"),
+ 	"valcount": 48,
+ 	"total": 3742,
+ 	"readings": [ { "v": 70, "t": "0000"}, . . . ]
+}
+```
+
+The *id* value will be taken care of, because it's automatically generated on *insert*. The values in the rest of the fields like *sensor, date, valcount and total* will also be taken care of. *Inc* will create the fields and assign them values. And finally, the readings field will automatically be an array, because we're using the *push* operator. This one command can both *update and insert*, depending on the result of the query search.
 
 Setting *upsert* to *true* is a great option. But you have to be mindful of the *update* that is happening and whether the *update* directive is enough to create the new document in the collection, which will work with the rest of the documents in that collection. If you have a scenario where this is possible, then you have yourself a great use case for *upsert*. *Upsert* is a good option to use for conditional *updates*, when you may want a new document instead of an updated document.
 
