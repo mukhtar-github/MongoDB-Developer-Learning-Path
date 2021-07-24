@@ -2562,7 +2562,7 @@ db.iot.updateOne({
     "$inc": { "valcount": 1, "total": r.value } }, { "upsert": true })
 ```
 
-We also have to ensure that there are no more than 48 readings in the readings array. Instead of finding the array size every time, we can just keep the number of readings in a *valcount* field. The actual *update* portion of this command is pushing the new reading information about the *value and time* to the *readings* array. But now we have three readings in the array. So we increament the *valcount* by 1.
+We also have to ensure that there are no more than 48 readings in the *readings* array. Instead of finding the array size every time, we can just keep the number of readings in a *valcount* field. The actual *update* portion of this command is pushing the new reading information about the *value and time* to the *readings* array. But now we have three readings in the array. So we increament the *valcount* by 1.
 
 Finally, I added a *total* field, which keep track of the sum of all the values in the array. So with this field being present in the dock, it also needs updating with each new reading. Here we're increamenting it by the reading value. And now it's time for the *upsert: true* option to be explicitly stated. If the *valcount* becomes greater than or equal to 48, the existing document will no longer match this query.
 
