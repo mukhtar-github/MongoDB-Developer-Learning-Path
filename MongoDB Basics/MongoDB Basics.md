@@ -2573,7 +2573,7 @@ Current document
  	"sensor": 5,
  	"date": Date("2021-05-11"),
  	"valcount": 3,
- 	"tot": 144,
+ 	"tot": 216,
  	"readings": [ { "v": 70, "t": "0000"}, { "v": 74, "t": "0005"}, { "v": 72, "t": "0010"} ]
 }
 ```
