@@ -2613,11 +2613,11 @@ In all other cases, where you're just looking to make an *update* to an existing
 
 ### Atlas Features - More Data Explorer
 
-We already learned in general terms that Atlas is a data platform and even used a built-in sample data set for this entire course. Let's see what else Atlas has to offer at this point of our MongoDB journey. Let's start with the Data Explorer, which we've seen a lot in this course.
+We already learned in general terms that *Atlas* is a data platform and even used a built-in *sample data set* for this entire course. Let's see what else *Atlas* has to offer at this point of our *MongoDB* journey. Let's start with the *Data Explorer*, which we've seen a lot in this course.
 
-The Data Explorer has a number of tabs in it that we haven't used yet. The first one, after our familiar Find, is Indexes. You can use this tab to view what indexes our collection has. We can create a new index and drop an index if we want to. But most importantly, this is a performance advisor for your database.
+The *Data Explorer* has a number of tabs in it that we haven't used yet. The first one, after our familiar *Find*, is *Indexes*. You can use this tab to view what indexes our collection has. We can create a new index and drop an index if we want to. But most importantly, this is a performance advisor for your database.
 
-Here you can see how often an index is used, when it was created, and who created it to get the best performance out of your Atlas cluster. The schema Anti-Pattern tab will provide you with sound advice about your data model once enough queries have been issued against the collection.
+Here you can see how often an index is used, when it was created, and who created it to get the best performance out of your Atlas cluster. The *schema Anti-Pattern* tab will provide you with sound advice about your data model once enough queries have been issued against the collection.
 
 The Aggregation tab allows us to build aggregation pipelines in the UI and see how data is transformed from one stage of the pipeline to another. Let's add in the stages that we've learned so far and see how that works. First, we match all documents that have Wi-Fi as one of their amenities.
 
