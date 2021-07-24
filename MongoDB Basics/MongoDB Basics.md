@@ -2537,7 +2537,7 @@ Imaging we are running an *internet of Things* application that gathers data fro
  	"sensor": 5,
  	"date": Date("2021-05-11"),
  	"valcount": 2,
- 	"tot": 144,
+ 	"total": 144,
  	"readings": [ { "v": 70, "t": "0000"}, { "v": 74, "t": "0005"} ]
 }
 ```
@@ -2573,7 +2573,7 @@ Current document
  	"sensor": 5,
  	"date": Date("2021-05-11"),
  	"valcount": 3,
- 	"tot": 216,
+ 	"total": 216,
  	"readings": [ { "v": 70, "t": "0000"}, { "v": 74, "t": "0005"}, { "v": 72, "t": "0010"} ]
 }
 ```
