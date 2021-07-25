@@ -2649,7 +2649,7 @@ db.listingsAndReviews.aggregate([{ "$project": { "address": 1, "_id": 0 }}, { "$
 
 But say at this point I just want to know how many countries are in the previous stage. That's no problem. We can have a stage for that too. Let's add *count*. And all it wants me to do is provide a field name for the *count*. I'll call it *num_countries*. And suddenly I know that listings in *nine* countries offer *Wi-Fi* as one of their amenities in this data set.
 
-And that's not even the coolest part about it all. Say I'm now confident in my pipeline. And I want to add it to my application logic -- easy. By hitting this button, you can export the pipeline code to language and then select which language you're writing your application in.
+And that's not even the coolest part about it all. Say I'm now confident in my pipeline. And I want to add it to my application logic -- easy. By hitting the *Export pipeline code* button, you can export the pipeline code to language and then select which language you're writing your application in.
 
 I'll select *Node*. On the left is the aggregation pipeline. On the right is the same pipeline but using *Node*. This I can just copy/paste into my code. To add some more useful information, I'll choose to include the import statements and driver syntax. And suddenly I have everything I need to implement this pipeline and any other aggregation pipeline in my application.
 
