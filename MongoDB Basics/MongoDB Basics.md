@@ -2651,10 +2651,18 @@ But say at this point I just want to know how many countries are in the previous
 
 And that's not even the coolest part about it all. Say I'm now confident in my pipeline. And I want to add it to my application logic -- easy. By hitting the *Export pipeline code* button, you can export the pipeline code to language and then select which language you're writing your application in.
 
-I'll select *Node*. On the left is the aggregation pipeline. On the right is the same pipeline but using *Node*. This I can just copy/paste into my code. To add some more useful information, I'll choose to include the import statements and driver syntax. And suddenly I have everything I need to implement this pipeline and any other aggregation pipeline in my application.
+I'll select *Node*. On the left is the aggregation pipeline. On the right is the same pipeline but using *Node*. This I can just copy/paste into my code. To add some more useful information, I'll choose to include the *import statements and driver syntax*. And suddenly I have everything I need to implement this pipeline and any other aggregation pipeline in my application.
 
 ```javascript
-[
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+
+/*
+ * Requires the MongoDB Node.js Driver
+ * https://mongodb.github.io/node-mongodb-native
+ */
+
+const agg = [
   {
     '$match': {
       'amenities': 'Wifi'
@@ -2678,9 +2686,21 @@ I'll select *Node*. On the left is the aggregation pipeline. On the right is the
   }, {
     '$count': 'num_countries'
   }
-]
+];
+
+MongoClient.connect(
+  '',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function(connectErr, client) {
+    assert.equal(null, connectErr);
+    const coll = client.db('').collection('');
+    coll.aggregate(agg, (cmdErr, result) => {
+      assert.equal(null, cmdErr);
+    });
+    client.close();
+  });
 ```
 
-Finally, there's a feature called Atlas Search, which is a fancier fine-grade indexing that enables advanced search functionality in your collection. Check out the lecture notes to learn more about it. To try it out yourself, you can go through the tutorial that is outlined in the docs.
+Finally, there's a feature called *Atlas Search*, which is a fancier fine-grade indexing that enables advanced search functionality in your collection. Check out the lecture notes to learn more about it. To try it out yourself, you can go through the tutorial that is outlined in the docs.
 
 I linked it below the video. Luckily, the tutorial uses the now familiar sample data set. This wraps up our Data Explorer journey. We looked at the Performance Advisor using the Indexes tab and the Aggregation Builder. We also learned that Atlas provides schema Anti-Pattern advisory and an advanced text search.
