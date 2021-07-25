@@ -2703,4 +2703,4 @@ MongoClient.connect(
 
 Finally, there's a feature called *Atlas Search*, which is a fancier fine-grade indexing that enables advanced search functionality in your collection. Check out the lecture notes to learn more about it. To try it out yourself, you can go through the tutorial that is outlined in the docs.
 
-I linked it below the video. Luckily, the tutorial uses the now familiar sample data set. This wraps up our Data Explorer journey. We looked at the Performance Advisor using the Indexes tab and the Aggregation Builder. We also learned that Atlas provides schema Anti-Pattern advisory and an advanced text search.
+I linked it below the video. Luckily, the tutorial uses the now familiar sample data set. This wraps up our *Data Explorer* journey. We looked at the Performance Advisor using the *Indexes tab* and the *Aggregation Builder*. We also learned that *Atlas* provides schema *Anti-Pattern advisory* and an *Advanced Text Search*.
