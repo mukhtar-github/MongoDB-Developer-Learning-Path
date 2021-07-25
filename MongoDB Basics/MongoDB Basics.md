@@ -2704,3 +2704,109 @@ MongoClient.connect(
 Finally, there's a feature called *Atlas Search*, which is a fancier fine-grade indexing that enables advanced search functionality in your collection. Check out the lecture notes to learn more about it. To try it out yourself, you can go through the tutorial that is outlined in the docs.
 
 I linked it below the video. Luckily, the tutorial uses the now familiar sample data set. This wraps up our *Data Explorer* journey. We looked at the Performance Advisor using the *Indexes tab* and the *Aggregation Builder*. We also learned that *Atlas* provides schema *Anti-Pattern advisory* and an *Advanced Text Search*.
+
+### Atlas Products and Options
+
+Let's see what else Atlas has in stock.
+
+In this lesson, we'll discuss user access options with Atlas, and two Atlas products, Realm and Charts.
+
+Let's start with Atlas.
+
+The first thing to know is how projects are structured within Atlas.
+
+When you first started with Atlas, you had to create something called an Organization.
+
+An Atlas, this is a way to group projects, teams, and billing at the highest level.
+
+If you are using a free tier cluster, there is no need to think about billing.
+
+But if you're using a different kind of cluster, the billing happens at the organization level, and you can find the information about it right here.
+
+Within Atlas organizations, you can find Projects.
+
+Here I have three projects, each dedicated to a different course that I'm taking, or a different application that I'm working on.
+
+To make it easier to manage access within an organization, users can be grouped into teams, and granted access on project level by team, so that there isn't a need to add and shuffle access around on an individual user basis.
+
+Each project can have multiple Atlas clusters within it, as long as each cluster has a unique name.
+
+From this project view, I can access some other awesome Atlas features, like Realm and Charts.
+
+Let's talk Realm.
+
+Realm offers services that let developers build web or mobile applications, or just integrate MongoDB Atlas data into an application, all without worrying about managing or scaling servers.
+
+But they can still easily track the database side of things from this view, once they have launched an application.
+
+Realm, just like all other MongoDB products, has a great documentation page that looks like this.
+
+I linked some resources for learning more about Realm, and app development with and without Realm, below this video.
+
+Now let's return back to our cluster, and see what Charts are all about.
+
+I personally think that Charts are fabulous.
+
+This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like.
+
+In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting Add Dashboard.
+
+I'll call mine "Airbnb," with the description saying, "prices heat map." A dashboard can have many charts in it.
+
+But for this example, we'll only create one.
+
+First I'm going to choose a data source, which will be the sample Airbnb database, with the listings and reviews collection as the actual source.
+
+I can pre-process the data by applying a query or an aggregation pipeline to the data first.
+
+I can also select Sample mode, so that only a sample of documents is going to be used in this chart.
+
+I'm not going to do either of those things right now, but you can certainly-- and should, if you want to-- check out this tool to its full potential.
+
+You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore.
+
+Next, I'll select a chart type, and as the description suggested, it will be a heat map.
+
+So I select Geospatial, and then Heat Map.
+
+The section below the chart type is helpfully telling me that I need some information about coordinates, since I'm using a map, and some information by which the intensity of the map will be visualized.
+
+For coordinates, I can use the location field in the address sub-document, and for intensity I'll be using the Price field.
+
+And I want the price on Max, meaning that the heat on this map will be determined by the max price as the hottest price.
+
+Here's our first chart.
+
+I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey.
+
+Looks like the hottest Airbnb rental is in Istanbul.
+
+I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field.
+
+There, much better.
+
+We're only looking at prices that are less than $20,000 per listing.
+
+I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
+
+I can go back and zoom into listings in other countries, too.
+
+We can spend a lot more time exploring this chart, but I'll leave it to do it on your own time.
+
+If I click on this button, I find that I can view the aggregation pipeline that was used to create this chart.
+
+And we already know about aggregation pipelines, so this should be easy enough to read.
+
+It looks like behind this visualization, there's a pretty simple aggregation pipeline.
+
+There are many other awesome Atlas tools and features that we are not going to cover in this course, but stay alert for more online content about MongoDB Atlas.
+
+For now, let's summarize what we learned.
+
+In Atlas, billing happens at the organization level.
+
+All projects can be viewed within an organization, and you can use Teams to bulk assign organization users to projects within the organization.
+
+A cluster must have a unique name within a project.
+
+We also learned about Realm, Charts, and below the video you can find links to more learning resources on app development with MongoDB.
