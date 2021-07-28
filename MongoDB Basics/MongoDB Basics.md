@@ -2717,13 +2717,7 @@ Each project can have multiple Atlas clusters within it, as long as each cluster
 
 But they can still easily track the database side of things from this view, once they have launched an application. *Realm*, just like all other MongoDB products, has a great documentation page that looks like this. I linked some resources for learning more about *Realm*, and app development with and without *Realm*, below this video.
 
-Now let's return back to our cluster, and see what Charts are all about.
-
-I personally think that Charts are fabulous.
-
-This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like.
-
-In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting Add Dashboard.
+Now let's return back to our cluster, and see what *Charts* are all about. I personally think that *Charts* are fabulous. This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like. In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting Add Dashboard.
 
 I'll call mine "Airbnb," with the description saying, "prices heat map." A dashboard can have many charts in it.
 
