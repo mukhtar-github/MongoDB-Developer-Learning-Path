@@ -2723,31 +2723,13 @@ I'll call mine "Airbnb," with the description saying, "prices heat map." A dashb
 
 I can pre-process the data by applying a query or an aggregation pipeline to the data first. I can also select Sample mode, so that only a sample of documents is going to be used in this chart. I'm not going to do either of those things right now, but you can certainly-- and should, if you want to-- check out this tool to its full potential.
 
-You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore.
+You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore. Next, I'll select a chart type, and as the description suggested, it will be a heat map. So I select Geospatial, and then Heat Map.
 
-Next, I'll select a chart type, and as the description suggested, it will be a heat map.
+The section below the chart type is helpfully telling me that I need some information about coordinates, since I'm using a map, and some information by which the intensity of the map will be visualized. For coordinates, I can use the location field in the address sub-document, and for intensity I'll be using the Price field.
 
-So I select Geospatial, and then Heat Map.
+And I want the price on Max, meaning that the heat on this map will be determined by the max price as the hottest price. Here's our first chart. I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey.Looks like the hottest Airbnb rental is in Istanbul.
 
-The section below the chart type is helpfully telling me that I need some information about coordinates, since I'm using a map, and some information by which the intensity of the map will be visualized.
-
-For coordinates, I can use the location field in the address sub-document, and for intensity I'll be using the Price field.
-
-And I want the price on Max, meaning that the heat on this map will be determined by the max price as the hottest price.
-
-Here's our first chart.
-
-I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey.
-
-Looks like the hottest Airbnb rental is in Istanbul.
-
-I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field.
-
-There, much better.
-
-We're only looking at prices that are less than $20,000 per listing.
-
-I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
+I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field. There, much better. We're only looking at prices that are less than $20,000 per listing. I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
 
 I can go back and zoom into listings in other countries, too.
 
