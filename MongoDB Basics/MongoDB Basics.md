@@ -2713,13 +2713,7 @@ An *Atlas*, this is a way to group projects, teams, and billing at the highest l
 
 Within *Atlas* organizations, you can find Projects. Here I have three projects, each dedicated to a different course that I'm taking, or a different application that I'm working on. To make it easier to manage access within an organization, users can be grouped into teams, and granted access on project level by team, so that there isn't a need to add and shuffle access around on an individual user basis.
 
-Each project can have multiple Atlas clusters within it, as long as each cluster has a unique name.
-
-From this project view, I can access some other awesome Atlas features, like Realm and Charts.
-
-Let's talk Realm.
-
-Realm offers services that let developers build web or mobile applications, or just integrate MongoDB Atlas data into an application, all without worrying about managing or scaling servers.
+Each project can have multiple Atlas clusters within it, as long as each cluster has a unique name. From this project view, I can access some other awesome Atlas features, like Realm and Charts. Let's talk *Realm*. *Realm* offers services that let developers build web or mobile applications, or just integrate MongoDB Atlas data into an application, all without worrying about managing or scaling servers.
 
 But they can still easily track the database side of things from this view, once they have launched an application.
 
