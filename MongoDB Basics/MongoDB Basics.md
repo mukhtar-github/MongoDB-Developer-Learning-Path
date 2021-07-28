@@ -2715,11 +2715,7 @@ Within *Atlas* organizations, you can find Projects. Here I have three projects,
 
 Each project can have multiple Atlas clusters within it, as long as each cluster has a unique name. From this project view, I can access some other awesome Atlas features, like Realm and Charts. Let's talk *Realm*. *Realm* offers services that let developers build web or mobile applications, or just integrate MongoDB Atlas data into an application, all without worrying about managing or scaling servers.
 
-But they can still easily track the database side of things from this view, once they have launched an application.
-
-Realm, just like all other MongoDB products, has a great documentation page that looks like this.
-
-I linked some resources for learning more about Realm, and app development with and without Realm, below this video.
+But they can still easily track the database side of things from this view, once they have launched an application. *Realm*, just like all other MongoDB products, has a great documentation page that looks like this. I linked some resources for learning more about *Realm*, and app development with and without *Realm*, below this video.
 
 Now let's return back to our cluster, and see what Charts are all about.
 
