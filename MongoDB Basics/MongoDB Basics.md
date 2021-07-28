@@ -2707,15 +2707,7 @@ I linked it below the video. Luckily, the tutorial uses the now familiar sample 
 
 ### Atlas Products and Options
 
-Let's see what else Atlas has in stock.
-
-In this lesson, we'll discuss user access options with Atlas, and two Atlas products, Realm and Charts.
-
-Let's start with Atlas.
-
-The first thing to know is how projects are structured within Atlas.
-
-When you first started with Atlas, you had to create something called an Organization.
+Let's see what else *Atlas* has in stock. In this lesson, we'll discuss user access options with *Atlas*, and two *Atlas* products, *Realm and Charts*. Let's start with *Atlas*. The first thing to know is how projects are structured within *Atlas*. When you first started with *Atlas*, you had to create something called an Organization.
 
 An Atlas, this is a way to group projects, teams, and billing at the highest level.
 
