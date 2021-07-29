@@ -2707,7 +2707,7 @@ I linked it below the video. Luckily, the tutorial uses the now familiar sample 
 
 ### Atlas Products and Options
 
-Let's see what else *Atlas* has in stock. In this lesson, we'll discuss user access options with *Atlas*, and two *Atlas* products, *Realm and Charts*. Let's start with *Atlas*. The first thing to know is how projects are structured within *Atlas*. When you first started with *Atlas*, you had to create something called an Organization.
+Let's see what else *Atlas* has in stock. In this lesson, we'll discuss user access options with *Atlas*, and two *Atlas* products, *Realm and Charts*. Let's start with *Access Manager*. The first thing to know is how projects are structured within *Atlas*. When you first started with *Atlas*, you had to create something called an Organization.
 
 An *Atlas*, this is a way to group projects, teams, and billing at the highest level. If you are using a free tier cluster, there is no need to think about billing. But if you're using a different kind of cluster, the billing happens at the organization level, and you can find the information about it right here.
 
