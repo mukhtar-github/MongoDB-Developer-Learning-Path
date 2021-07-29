@@ -2709,7 +2709,7 @@ I linked it below the video. Luckily, the tutorial uses the now familiar sample 
 
 Let's see what else *Atlas* has in stock. In this lesson, we'll discuss *user access* options with *Atlas*, and two *Atlas* products, *Realm and Charts*. Let's start with *Access Manager*. The first thing to know is how projects are structured within *Atlas*. When you first started with *Atlas*, you had to create something called an Organization.
 
-In *Atlas*, this is a way to group projects, teams, and billing at the highest level. If you are using a free tier cluster, there is no need to think about billing. But if you're using a different kind of cluster, the billing happens at the organization level, and you can find the information about it right here.
+In *Atlas*, this is a way to group projects, teams, and billing at the highest level. If you are using a free tier cluster, there is no need to think about billing. But if you're using a different kind of cluster, the billing happens at the organization level, and you can find the information about it when you click on the billing tab.
 
 Within *Atlas* organizations, you can find Projects. Here I have three projects, each dedicated to a different course that I'm taking, or a different application that I'm working on. To make it easier to manage access within an organization, users can be grouped into teams, and granted access on project level by team, so that there isn't a need to add and shuffle access around on an individual user basis.
 
