@@ -2725,7 +2725,7 @@ I can pre-process the data by applying a *query* or an *aggregation pipeline* to
 
 You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore. Next, I'll select a chart type, and as the description suggested, it will be a *heat map*. So I select *Geospatial*, and then *Heat Map*.
 
-The section below the chart type is helpfully telling me that I need some information about coordinates, since I'm using a map, and some information by which the intensity of the map will be visualized. For coordinates, I can use the location field in the address sub-document, and for intensity I'll be using the Price field.
+The section below the chart type is helpfully telling me that I need some information about *coordinates*, since I'm using a map, and some information by which the *intensity* of the map will be visualized. For *coordinates*, I can use the *location* field in the *address* sub-document, and for *intensity* I'll be using the *Price field*.
 
 And I want the price on Max, meaning that the heat on this map will be determined by the max price as the hottest price. Here's our first chart. I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey.Looks like the hottest Airbnb rental is in Istanbul.
 
