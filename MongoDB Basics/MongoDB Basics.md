@@ -2727,15 +2727,11 @@ You may have noticed that when I chose a data source, the Field section on the l
 
 The section below the chart type is helpfully telling me that I need some information about *coordinates*, since I'm using a map, and some information by which the *intensity* of the map will be visualized. For *coordinates*, I can use the *location* field in the *address* sub-document, and for *intensity* I'll be using the *Price field*.
 
-And I want the price on Max, meaning that the heat on this map will be determined by the max price as the hottest price. Here's our first chart. I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey.Looks like the hottest Airbnb rental is in Istanbul.
+And I want the *price on Max*, meaning that the heat on this map will be determined by the *max price* as the hottest price. Here's our first chart. I'll title it "Airbnb Prices Heat Map." Right away, I see that something is going on in Turkey. Looks like the hottest *Airbnb* rental is in Istanbul.
 
-I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field. There, much better. We're only looking at prices that are less than $20,000 per listing. I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
+I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field -- *{"price": {"$lt": 20000}}*. There, much better. We're only looking at prices that are less than *$20,000* per listing. I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
 
-I can go back and zoom into listings in other countries, too.
-
-We can spend a lot more time exploring this chart, but I'll leave it to do it on your own time.
-
-If I click on this button, I find that I can view the aggregation pipeline that was used to create this chart.
+I can go back and zoom into listings in other countries, too. We can spend a lot more time exploring this chart, but I'll leave it to do it on your own time. If I click on this button, I find that I can view the aggregation pipeline that was used to create this chart.
 
 And we already know about aggregation pipelines, so this should be easy enough to read.
 
