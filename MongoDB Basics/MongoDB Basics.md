@@ -2719,11 +2719,11 @@ But they can still easily track the database side of things from the *Advanced C
 
 Now let's return back to our cluster, and see what *Charts* are all about. I personally think that *Charts* are fabulous. This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like. In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting *Add Dashboard*.
 
-I'll call mine "Airbnb," with the description saying, "prices heat map." A dashboard can have many charts in it. But for this example, we'll only create one. First I'm going to choose a data source, which will be the *sample Airbnb database*, with the listings and reviews collection as the actual source.
+I'll call mine "Airbnb," with the description saying, "prices heat map." A dashboard can have many charts in it. But for this example, we'll only create one. First I'm going to choose a data source, which will be the *sample Airbnb database*, with the *listings and reviews* collection as the actual source.
 
-I can pre-process the data by applying a query or an aggregation pipeline to the data first. I can also select Sample mode, so that only a sample of documents is going to be used in this chart. I'm not going to do either of those things right now, but you can certainly-- and should, if you want to-- check out this tool to its full potential.
+I can pre-process the data by applying a *query* or an *aggregation pipeline* to the data first. I can also select *Sample mode*, so that only a sample of documents is going to be used in this chart. I'm not going to do either of those things right now, but you can certainly -- and should, if you want to -- check out this tool to its full potential.
 
-You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore. Next, I'll select a chart type, and as the description suggested, it will be a heat map. So I select Geospatial, and then Heat Map.
+You may have noticed that when I chose a data source, the Field section on the left got populated with all the fields the documents in this collection have, which is super handy because I don't have to worry about spelling anymore. Next, I'll select a chart type, and as the description suggested, it will be a *heat map*. So I select *Geospatial*, and then *Heat Map*.
 
 The section below the chart type is helpfully telling me that I need some information about coordinates, since I'm using a map, and some information by which the intensity of the map will be visualized. For coordinates, I can use the location field in the address sub-document, and for intensity I'll be using the Price field.
 
