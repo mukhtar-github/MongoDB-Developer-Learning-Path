@@ -2715,9 +2715,9 @@ Within *Atlas* organizations, you can find Projects. Here I have three projects,
 
 Each project can have multiple Atlas clusters within it, as long as each cluster has a unique name. From this project view, I can access some other awesome Atlas features, like *Realm and Charts*. Let's talk *Realm*. *Realm* offers services that let developers build web or mobile applications, or just integrate *MongoDB Atlas* data into an application, all without worrying about managing or scaling servers.
 
-But they can still easily track the database side of things from the *Advanced Configuration* view, once they have launched an application. *Realm*, just like all other *MongoDB* products, has a great documentation page. I linked some resources for learning more about *Realm*, and app development with and without *Realm*, below this video.
+But they can still easily track the database side of things from the *Advanced Configuration* view, once they have launched an application. *Realm*, just like all other *MongoDB* products, has a great documentation page. I linked some resources for learning more about *Realm*, and *app* development with and without *Realm*, below this video.
 
-Now let's return back to our cluster, and see what *Charts* are all about. I personally think that *Charts* are fabulous. This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like. In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting Add Dashboard.
+Now let's return back to our cluster, and see what *Charts* are all about. I personally think that *Charts* are fabulous. This tool allows us to create dynamic data visualizations, and use those visualizations wherever we like. In fact, in this course, we learned enough to create our own data visualization, so let's get started by hitting *Add Dashboard*.
 
 I'll call mine "Airbnb," with the description saying, "prices heat map." A dashboard can have many charts in it. But for this example, we'll only create one. First I'm going to choose a data source, which will be the *sample Airbnb database*, with the listings and reviews collection as the actual source.
 
