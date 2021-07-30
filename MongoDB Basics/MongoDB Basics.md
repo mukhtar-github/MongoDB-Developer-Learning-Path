@@ -2731,20 +2731,10 @@ And I want the *price on Max*, meaning that the heat on this map will be determi
 
 I happen to know that this is incorrect, and there is just a crazy price listed there, so I'll exclude it using the Query field -- *{"price": {"$lt": 20000}}*. There, much better. We're only looking at prices that are less than *$20,000* per listing. I can now zoom in on Turkey, for example, and find out which Istanbul neighborhoods are the most expensive.
 
-I can go back and zoom into listings in other countries, too. We can spend a lot more time exploring this chart, but I'll leave it to do it on your own time. If I click on this button, I find that I can view the aggregation pipeline that was used to create this chart.
+I can go back and zoom into listings in other countries, too. We can spend a lot more time exploring this chart, but I'll leave it to do it on your own time. If I click on *view aggregation pipeline* button, I find that I can view the aggregation pipeline that was used to create this chart.
 
-And we already know about aggregation pipelines, so this should be easy enough to read.
+And we already know about aggregation pipelines, so this should be easy enough to read. It looks like behind this visualization, there's a pretty simple aggregation pipeline. There are many other awesome Atlas tools and features that we are not going to cover in this course, but stay alert for more online content about MongoDB Atlas.
 
-It looks like behind this visualization, there's a pretty simple aggregation pipeline.
-
-There are many other awesome Atlas tools and features that we are not going to cover in this course, but stay alert for more online content about MongoDB Atlas.
-
-For now, let's summarize what we learned.
-
-In Atlas, billing happens at the organization level.
-
-All projects can be viewed within an organization, and you can use Teams to bulk assign organization users to projects within the organization.
-
-A cluster must have a unique name within a project.
+For now, let's summarize what we learned. In Atlas, billing happens at the organization level. All projects can be viewed within an organization, and you can use Teams to bulk assign organization users to projects within the organization. A cluster must have a unique name within a project.
 
 We also learned about Realm, Charts, and below the video you can find links to more learning resources on app development with MongoDB.
