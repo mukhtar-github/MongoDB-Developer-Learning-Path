@@ -2743,4 +2743,6 @@ For now, let's summarize what we learned. In *Atlas*, billing happens at the org
 
 If you are connecting to a local deployment or something other than an *Atlas Cluster*, click on *Fill in connection fields individually*, and you can provide more detailed information about the deployment that you are looking to connect to. There, you see fields for the *Hostname and username/password info*. But you can also provide other options, such as the *replica set name and the security protocol* for your connection.
 
-Now let's go to our *Cluster* and get that *connection string* for *Compass*. I hit connect, and the third option is *Connect using MongoDB Compass*. I choose my version of *Compass* and copy the *connection string* from *Atlas to Compass*.
+Now let's go to our *Cluster* and get that *connection string* for *Compass*. I hit connect, and the third option is *Connect using MongoDB Compass*. I choose my version of *Compass* and copy the *connection string* from *Atlas to Compass*. Notice that the password isn't filled in. So, I go ahead and add my password to the *connection string*. Now let's hit *connect*.
+
+The *Compass* view is now populated with the database that present in our cluster, plus the *admin, config, and local* databases.
