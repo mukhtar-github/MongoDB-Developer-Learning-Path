@@ -2750,4 +2750,4 @@ The *Compass* view is now populated with the database that are present in our cl
 
 For each database, we can see the *size* of it, as well as the number of *collections* and *indexes* that it contains. We acn also expand each of the databases on the leftside bar, to view the collections that contain. Or we can select a database in this view to see a more detailed collection list for this database.
 
-Alot of useful numbers here for each collection. We have the *number of documents, average document size, total document size, number of indexes, and total index size*. Already we know quite alot about our data in this database. Let's dig further.
+Alot of useful numbers here for each collection. We have the *number of documents, average document size, total document size, number of indexes, and total index size*. Already we know quite alot about our data in this database. Let's dig further. The view of the document is a familiar view, something I've already seen in the *Data Explorer in Atlas*. However, I'm here to tell you that there are other features here that you haven't seen yet.
