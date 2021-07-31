@@ -2793,3 +2793,4 @@ MongoClient.connect(
   });
 ```
 
+The *Aggregation tab* in *Compass* works just like the same tab does in the *Atlas Data Explorer*, which we look at earlier. You can save your pipelines, import pipelines from text, and export pipelines into a programming language of your choice. The next tab is called *Schema*.
