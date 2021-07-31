@@ -2745,4 +2745,7 @@ If you are connecting to a local deployment or something other than an *Atlas Cl
 
 Now let's go to our *Cluster* and get that *connection string* for *Compass*. I hit connect, and the third option is *Connect using MongoDB Compass*. I choose my version of *Compass* and copy the *connection string* from *Atlas to Compass*. Notice that the password isn't filled in. So, I go ahead and add my password to the *connection string*. Now let's hit *connect*.
 
-The *Compass* view is now populated with the database that present in our cluster, plus the *admin, config, and local* databases. These three are automatically created and used for various database management purposes, such as user access information, data about their application process, and other instance-specific data.
+The *Compass* view is now populated with the database that are present in our cluster, plus the *admin, config, and local* databases. These three are automatically created and used for various database management purposes, such as user access information, data about their application process, and other instance-specific data.
+> The rule of thumb is to never touch those databases, unless explicitly directed by support.
+
+For each database, we can see the *size* of it, as well as the number of *collections* and *indexes* that it contains. We acn also expand each of the databases on the leftside bar, to view the collections that contain.
