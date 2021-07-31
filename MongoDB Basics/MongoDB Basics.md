@@ -2739,4 +2739,4 @@ For now, let's summarize what we learned. In *Atlas*, billing happens at the org
 
 ### What is MongoDB Compass?
 
-*MongoDB* has a great UI tool called *Compass*. Let's learn about it. There is a page that gives a general overview of what *Compass* is.
+*MongoDB* has a great UI tool called *Compass*. Let's learn about it. There is a page that gives a general overview of what *Compass* is. It also provides a download link and a link to documentation, kind of like a one-stop-shop for *Compass* things. Once you download, install, and open *Compass* you will see the *GUI*. There you can provide a *connection string* to your data source, which, in our case is an *Atlas Cluster*.
