@@ -2736,3 +2736,7 @@ I can go back and zoom into listings in other countries, too. We can spend a lot
 And we already know about *aggregation pipelines*, so this should be easy enough to read. It looks like behind this visualization, there's a pretty simple *aggregation pipeline*. There are many other awesome Atlas tools and features that we are not going to cover in this course, but stay alert for more online content about *MongoDB Atlas*.
 
 For now, let's summarize what we learned. In *Atlas*, billing happens at the organization level. All projects can be viewed within an organization, and you can use Teams to bulk assign organization users to projects within the organization. A *cluster* must have a unique name within a project. We also learned about *Realm, Charts*, and below the video you can find links to more learning resources on *app development with MongoDB*.
+
+### What is MongoDB Compass?
+
+*MongoDB* has a great UI tool called *Compass*. Let's learn about it. There is a page that gives a general overview of what *Compass* is.
