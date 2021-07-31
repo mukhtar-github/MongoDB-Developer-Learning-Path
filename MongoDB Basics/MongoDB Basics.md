@@ -2754,4 +2754,7 @@ Alot of useful numbers here for each collection. We have the *number of document
 
 Let's start from the top. We have the *namespace* that we're exploring and other numeric summaries about this collection. Then, we have the various tabs that we're going to now take a closer look at. First, the *Documents tab*. It provides us with a view of the documents in the collection and the ability to filter data. It also allows us to choose a *view*. We can see this formatted view of *fields and values* or we can view data in *JSON* format, or even in a *table* format, if that is something that is more familiar to you at the moment.
 
-We can also expand the *filter* view to get a breakdown of the different *options* that we can use to query our data. For example, we can find the 20th smallest company from the ones founded in 2005 by filtering documents by *founded_year* and excluding the ones where the *number_of_employees is null*.
+We can also expand the *filter* view to get a breakdown of the different *options* that we can use to query our data. For example, we can find the 20th smallest company from the ones founded in 2005 by filtering documents by *founded_year* and excluding the ones where the *number_of_employees is null*. Then, *Project* only the *name and number_of_employees*. After, that we can *sort* by the *number_of_employees* in increasing order, *skip* the first 19, and get our 20th smallest company.
+
+Now, if I want to add this query to my application
+
