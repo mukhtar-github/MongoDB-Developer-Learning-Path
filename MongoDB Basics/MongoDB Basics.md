@@ -2756,5 +2756,40 @@ Let's start from the top. We have the *namespace* that we're exploring and other
 
 We can also expand the *filter* view to get a breakdown of the different *options* that we can use to query our data. For example, we can find the 20th smallest company from the ones founded in 2005 by filtering documents by *founded_year* and excluding the ones where the *number_of_employees is null*. Then, *Project* only the *name and number_of_employees*. After, that we can *sort* by the *number_of_employees* in increasing order, *skip* the first 19, and get our 20th smallest company.
 
-Now, if I want to add this query to my application
+Now, if I want to add this query to my application, I can import it to language using the *Export to language* botton. I picked a laguage which is *Node*, *Include Import Statement* and *Driver Syntax*, and I can start querying from my application if I want to.
+
+```javascript
+/*
+ * Requires the MongoDB Node.js Driver
+ * https://mongodb.github.io/node-mongodb-native
+ */
+
+const filter = {
+  'founded_year': 2005, 
+  'number_of_employees': {
+    '$ne': null
+  }
+};
+const projection = {
+  'name': 1, 
+  'number_of_employees': 1
+};
+const sort = {
+  'number_of_employees': 1
+};
+const skip = 19;
+const limit = 10;
+
+MongoClient.connect(
+  'mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test?authSource=admin&replicaSet=atlas-ty4m6s-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function(connectErr, client) {
+    assert.equal(null, connectErr);
+    const coll = client.db('sample_training').collection('companies');
+    coll.find(filter, { projection: projection, sort: sort, skip: skip, limit: limit }, (cmdErr, result) => {
+      assert.equal(null, cmdErr);
+    });
+    client.close();
+  });
+```
 
