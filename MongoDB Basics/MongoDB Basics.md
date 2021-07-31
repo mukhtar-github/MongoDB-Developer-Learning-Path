@@ -2793,4 +2793,6 @@ MongoClient.connect(
   });
 ```
 
-The *Aggregation tab* in *Compass* works just like the same tab does in the *Atlas Data Explorer*, which we look at earlier. You can save your pipelines, import pipelines from text, and export pipelines into a programming language of your choice. The next tab is called *Schema*.
+The *Aggregation tab* in *Compass* works just like the same tab does in the *Atlas Data Explorer*, which we look at earlier. You can save your pipelines, import pipelines from text, and export pipelines into a programming language of your choice. The next tab is called *Schema*. It takes a sample of 1000 documents and analyzes their *schema*, so that you can have a high level overview of the shape of your documents.
+
+Here, you can learn a bunch of interesting information about your collection. For example, if the *_id* feild value has the type *ObjectId*, then it stores the information about when this document was created. In this case, all the documents from this sample of data were created on a *Wednesday in January of 2014.
