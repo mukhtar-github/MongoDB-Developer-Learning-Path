@@ -2807,4 +2807,4 @@ I like to query this data by the year the company was founded. So I will add tha
 
 Then, I can choose the order of indexing, ascending or decending. And I'm done with creating a *simple, single-field index*. There are other *options* below, though. I can add another field, if I want a *compound index*. And I can choose how this *Index* will be built. To laern more about these *options and indexes* in general, take our *Performance course*.
 
-Now we can take a look at the *Explain Plan* tab. This tab is used to explain how the data that you're looking for was found and retrieved from the database. Let's see what that means. I'm going to look for all companies that were founded after the year 2010.
+Now we can take a look at the *Explain Plan* tab. This tab is used to explain how the data that you're looking for was found and retrieved from the database. Let's see what that means. I'm going to look for all companies that were founded after the year 2010. Notice that if I add an extra curly bracket accidentally, or make some other mistake, the *grey filter will turn red*.
