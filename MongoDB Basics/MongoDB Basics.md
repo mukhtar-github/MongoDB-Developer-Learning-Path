@@ -2827,6 +2827,6 @@ Let's say I'm not a big fan of having to constantly clean up data from *nulls*. 
 
 Last but not least, one more trip to the *Schema* tab, but with a different *collection*. This time, lets select the *sample_airbnb listingsAndReviews collection*. Hit *Analyze Schema*, and let's look at the *Address field*. Here we see our nine countries and the breakdown by frequency in this sample, then the country code that should match in frequency more or less, the government area, which is basically the neighborhood that the listing is in.
 
-But now, is the cool part -- *location*. It's a map. Since this data is given as *coordinates*, Compass recognizes that and immediately gives you the most helpful visualization of that data. You can even zoom in to see more details -- wow, so cool. All right, that's it for our Compass exploration.
+But now, is the cool part -- *location*. It's a map. Since this data is given as *coordinates*, *Compass* recognizes that and immediately gives you the most helpful visualization of that data. You can even zoom in to see more details -- wow, so cool. All right, that's it for our *Compass* exploration.
 
-In this lesson, we looked closely at the Explain, Validation, and the Schema tab again. I hope that from here you continue this learning journey on your own or with the support of our docs and community.
+In this lesson, we looked closely at the *Explain, Validation, and the Schema* tab again. I hope that from here you continue this learning journey on your own or with the support of our docs and community.
