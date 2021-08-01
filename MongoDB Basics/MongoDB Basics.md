@@ -2823,10 +2823,10 @@ So we looked at extra 40 documents to get this result, which is not the most eff
 
 Last but not least is the *Validation* tab. *MongoDB* is all about being flexible and supporting you in working with data, which includes giving you the tools to dictate what is allowed and what is not allowed to be written to your database. I can demand here that all documents that have the field *homepage_url* must have the value of the field be a *string*.
 
-Let's say I'm not a big fan of having to constantly clean up data from nulls. So I can choose to throw an error when the data type is incorrect. I can also set fields to be required or fit within a specific range, or establish even more complex rules. For more on that, check out the links below the video.
+Let's say I'm not a big fan of having to constantly clean up data from *nulls*. So I can choose to throw an error when the data type is incorrect. I can also set fields to be required or fit within a specific range, or establish even more complex rules. For more on that, check out the links below the video.
 
-Last but not least, one more trip to the Schema tab, but with a different collection. This time, lets select the sample_airbnb listingsAndReviews collection. Hit Analyze Schema, and let's look at the Address field. Here we see our nine countries and the breakdown by frequency in this sample, then the country code that should match in frequency more or less, the government area, which is basically the neighborhood that the listing is in.
+Last but not least, one more trip to the *Schema* tab, but with a different *collection*. This time, lets select the *sample_airbnb listingsAndReviews collection*. Hit *Analyze Schema*, and let's look at the *Address field*. Here we see our nine countries and the breakdown by frequency in this sample, then the country code that should match in frequency more or less, the government area, which is basically the neighborhood that the listing is in.
 
-But now, now is the cool part -- location. It's a map. Since this data is given as coordinates, Compass recognizes that and immediately gives you the most helpful visualization of that data. You can even zoom in to see more details-- wow, so cool. All right, that's it for our Compass exploration.
+But now, is the cool part -- *location*. It's a map. Since this data is given as *coordinates*, Compass recognizes that and immediately gives you the most helpful visualization of that data. You can even zoom in to see more details -- wow, so cool. All right, that's it for our Compass exploration.
 
 In this lesson, we looked closely at the Explain, Validation, and the Schema tab again. I hope that from here you continue this learning journey on your own or with the support of our docs and community.
