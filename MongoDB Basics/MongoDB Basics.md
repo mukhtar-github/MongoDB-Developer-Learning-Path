@@ -2797,4 +2797,6 @@ The *Aggregation tab* in *Compass* works just like the same tab does in the *Atl
 
 Here, you can learn a bunch of interesting information about your collection. For example, if the *_id* feild value has the type *ObjectId*, then it stores the information about when this document was created. In this case, all the documents from this sample of data were created on a *Wednesday in January of 2014*.
 
-The next feild is *acquisition*. At a high level, we see that most documents have the value *null* in the feild. But approximately 14% in this sample are sub-documents. Clicking on that, we find that they each have nine nested fields. When I expand this field, I can see a breakdown for each of those field in the sub-documents, which is awesome.
+The next feild is *acquisition*. At a high level, we see that most documents have the value *null* in the field. But approximately 14% in this sample are sub-documents. Clicking on that, we find that they each have nine nested fields. When I expand this field, I can see a breakdown for each of those field in the sub-documents, which is awesome. This view shows me the types and range of values that are present in the collection.
+
+And if there are more nested data types, like the *acquiring_company* field, I can expand that as well and see the summary of values for this nested document. There are more field and types to explore, but I hope that you will do that on your own time. Lots of clicking and exploring is a great way to pass the time and learn something new.
