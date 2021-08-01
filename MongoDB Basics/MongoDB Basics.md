@@ -2813,7 +2813,7 @@ So far we've covered *Compass connection and the Documents, Schema and Indexes t
 
 ### What is MongoDB Compass? (part 2)
 
-Before we add an actual index to support this query, MongoDB has to scan the full collection to get this data. Now let's add an index and see how things change. This time around, Explain shows that it did an index scan and immediately got the documents that were requested without visiting any additional documents.
+Before we add an actual *index* to support this query, *MongoDB* has to scan the full collection to get this data. Now let's add an *index* and see how things change. This time around, *Explain* shows that it did an *index scan* and immediately got the documents that were requested without visiting any additional documents.
 
 You can get details about each stage of retrieving this data. And you can also view it in raw JSON as you would in the shell. If I add another criteria to this query, the index won't be as useful anymore. And the Explain tab will show why. Let's view all companies that were founded in the month of October in addition to being founded after 2010.
 
