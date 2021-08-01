@@ -2809,4 +2809,24 @@ Then, I can choose the order of indexing, ascending or decending. And I'm done w
 
 Now we can take a look at the *Explain Plan* tab. This tab is used to explain how the data that you're looking for was found and retrieved from the database. Let's see what that means. I'm going to look for all companies that were founded after the year 2010. Notice that if I add an extra curly bracket accidentally, or make some other mistake, the *grey filter will turn red*. And when I click on it to find out what's wrong, it takes me to the relevant decumentation.
 
-So far we've covered *Compass connection and the Documents, Schema and Indexes tab*. Back to explain, though.
+So far we've covered *Compass connection and the Documents, Schema and Indexes tab*. Back to explain, though. Let's explain.
+
+### What is MongoDB Compass? (part 2)
+
+Before we add an actual index to support this query, MongoDB has to scan the full collection to get this data. Now let's add an index and see how things change. This time around, Explain shows that it did an index scan and immediately got the documents that were requested without visiting any additional documents.
+
+You can get details about each stage of retrieving this data. And you can also view it in raw JSON as you would in the shell. If I add another criteria to this query, the index won't be as useful anymore. And the Explain tab will show why. Let's view all companies that were founded in the month of October in addition to being founded after 2010.
+
+Notice that I don't get an error here when using improper JSON and skipping the quotes around the field name. That's OK. MongoDB is here to help. And we'll assume that you meant to have quotes here. So let's explain again. This time, the index located and looked at 44 documents. But only 4 documents match the query.
+
+So we looked at extra 40 documents to get this result, which is not the most efficient way to find data and is a sign that this index isn't perfect for this query. This tab Compass helps understand and improve the performance of your queries, which is invaluable knowledge. Last but not least is the Validation tab.
+
+MongoDB is all about being flexible and supporting you in working with data, which includes giving you the tools to dictate what is allowed and what is not allowed to be written to your database. I can demand here that all documents that have the field homepage_url must have the value of the field be a string.
+
+Let's say I'm not a big fan of having to constantly clean up data from nulls. So I can choose to throw an error when the data type is incorrect. I can also set fields to be required or fit within a specific range, or establish even more complex rules. For more on that, check out the links below the video.
+
+Last but not least, one more trip to the Schema tab, but with a different collection. This time, lets select the sample_airbnb listingsAndReviews collection. Hit Analyze Schema, and let's look at the Address field. Here we see our nine countries and the breakdown by frequency in this sample, then the country code that should match in frequency more or less, the government area, which is basically the neighborhood that the listing is in.
+
+But now, now is the cool part -- location. It's a map. Since this data is given as coordinates, Compass recognizes that and immediately gives you the most helpful visualization of that data. You can even zoom in to see more details-- wow, so cool. All right, that's it for our Compass exploration.
+
+In this lesson, we looked closely at the Explain, Validation, and the Schema tab again. I hope that from here you continue this learning journey on your own or with the support of our docs and community.
