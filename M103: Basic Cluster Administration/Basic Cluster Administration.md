@@ -4,11 +4,11 @@
 
 ### Introduction to the Course
 
-Hi there, and welcome to *M103, basic cluster administration*. My name's Matt, and I'm going to be one of your instructors for this course. Together, we'll learn about deploying *MongoDB* in various architectures, and how to use the basic administrative tools at your disposal.
+Hi there, and welcome to *M103, basic cluster administration*. My name's Matt, and I'm going to be one of your instructors for this course. Together, we'll learn about deploying *MongoDB* in various *architectures*, and how to use the basic administrative tools at your disposal.
 
-In the first chapter, we'll discuss Mongod, which is the core database process that handles data requests and manages data access. We'll also cover important aspects of deploying a single Mongod process, such as enabling authentication and exploring the database logs.
+In the first chapter, we'll discuss *Mongod*, which is the core database process that handles data requests and manages data access. We'll also cover important aspects of deploying a single *Mongod process*, such as enabling *authentication* and exploring the database logs.
 
-In the second chapter, we'll discuss how MongoDB supports high availability by replicating our data. With multiple copies of data on different database servers, replication provides a level of fault tolerance against the loss of a single database server.
+In the second chapter, we'll discuss how *MongoDB* supports high availability by replicating our data. With multiple copies of data on different database servers, replication provides a level of fault tolerance against the loss of a single database server.
 
 In this course, we'll go through the general architecture and behavior of a replica set, and the different deployment strategies you can use to better suit your application. In the final chapter, we'll discuss scalability and how MongoDB scales horizontally through sharding. In this course, we're going to cover topics like the architecture of a sharded cluster, how queries are handled, and how to choose the way your data is distributed.
 
