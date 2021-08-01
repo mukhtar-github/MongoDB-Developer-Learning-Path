@@ -2804,3 +2804,5 @@ And if there are more nested data types, like the *acquiring_company* field, I c
 We are going to skip the *Explain Plan* tab for now and look at the *Index* tab. Currently, we only have one *Index*, which is the default *Index in MongoDB*. All documents are indexed by their *_id* value. As we learned earlier in the course, to increase query performance, we need more than just an *_id index*. Unlesss, of course, we only query data by its *_id* value, which almost never happens in reality.
 
 I like to query this data by the year the company was founded. So I will add that *Index* in the *Create Index* tab. The *UI* prompts me to give this *Index* a name, which is handy, because with a good name, I'll know exactly what this *Index* does. I start typing the field name and suggestions immediately appear. So I don't have to worry about spelling or remembering much.
+
+Then, I can choose the order of indexing, ascending or decending. And I'm done with creating a *simple, single-field index*. There are other *options* below, though. I can add another field, if I want a *compound index*. And I can choose how this *Index* will be built.
