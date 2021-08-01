@@ -2805,4 +2805,6 @@ We are going to skip the *Explain Plan* tab for now and look at the *Index* tab.
 
 I like to query this data by the year the company was founded. So I will add that *Index* in the *Create Index* tab. The *UI* prompts me to give this *Index* a name, which is handy, because with a good name, I'll know exactly what this *Index* does. I start typing the field name and suggestions immediately appear. So I don't have to worry about spelling or remembering much.
 
-Then, I can choose the order of indexing, ascending or decending. And I'm done with creating a *simple, single-field index*. There are other *options* below, though. I can add another field, if I want a *compound index*. And I can choose how this *Index* will be built.
+Then, I can choose the order of indexing, ascending or decending. And I'm done with creating a *simple, single-field index*. There are other *options* below, though. I can add another field, if I want a *compound index*. And I can choose how this *Index* will be built. To laern more about these *options and indexes* in general, take our *Performance course*.
+
+Now we can take a look at the *Explain Plan* tab. This tab is used to explain how the data that you're looking for was found and retrieved from the database. Let's see what that means. I'm going to look for all companies that were founded after the year 2010.
