@@ -91,8 +91,18 @@ Let's recap what we learned in this lesson. We defined *mongod as the main daemo
 
 ### Mongod Options
 
-Below are some of the available options for mongod. Note that this is not a comprehensive list of all possible mongod configurations. To see all available options, run mongod with the help flag.
+Below are some of the available options for mongod. Note that this is not a comprehensive list of all possible *mongod* configurations. To see all available options, run *mongod with the help flag*.
 
 ```javascript
 mongod --help
+```
+
+This command will output the various options for *mongod* with a description of their functionality. Note: The *--fork* option is not available on the Windows operating system.
+
+#### dbpath
+
+The *dbpath* is the directory where all the data files for your database are stored. The *dbpath* also contains *journaling logs* to provide durability in case of a crash. As we saw before, the default *dbpath is /data/db*; however, you can specify any directory that exists on your machine. The directory must have *read/write* permissions since database and journaling files will be written to the directory. To use the *dbpath* option, include the *dbpath flag* and specify the name of your directory:
+
+```javascript
+mongod --dbpath <directory path>
 ```
