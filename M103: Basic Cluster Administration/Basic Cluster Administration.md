@@ -61,53 +61,20 @@ We issue *database* commands, like document *inserts* or *updates*, to the clien
 
 Now that we have an idea of what *mongod* is used for, let's talk about how to use it. The easiest way to start up a *mongod* process is to run the command *mongod* in the terminal. Notice that we no longer have a command prompt in our terminal. If we try to type a command, such as ls, we'll just get a new line. If we want to continue using the terminal, we need to open a new window.
 
-As we'll see in later lessons, we can configure mongod by providing a configuration file or specifying flags.
+As we'll see in later lessons, we can configure *mongod* by providing a configuration file or specifying flags. But there are some default values to be aware of when launching *mongod* without any options. The port *mongod* listens on will default to *27017*. Clients that want to access *mongod* should specify the same port.
 
-But there are some default values to be aware of when launching mongod without any options.
+The default dbpath is */data/db*. This is where the data files representing your databases, collections, and indexes are stored so that your data persists after *mongod* stops running. The dbpath also stores journaling information so that your data remains consistent in the case of an unexpected crash.
+> *mongod* binds to localhost by default.
 
-The port mongod listens on will default to 27017.
+This means that the only database clients that can connect with *mongod* are ones local to the machine where *mongod* is running. We'll learn in later lessons how to bind to other IP addresses and hosts to allow remote clients to connect. Authentication is turned off by default. This means that unless we enable off, database clients are not required to authenticate before accessing the database.
 
-Clients that want to access mongod should specify the same port.
+Understanding the default values should make it easier to read the *mongod* output. On the first line, we can see the dbpath and the port. A little further down we also have two warnings, that access control is not enabled -- that is, we have not turned on authentication -- and that *mongod* is only bound to localhost.
 
-The default dbpath is /data/db.
+> As we said before, we don't communicate with *mongod* directly when we issue commands to our database. Instead, we issue commands through a *database client*.
 
-This is where the data files representing your databases, collections, and indexes are stored so that your data persists after mongod stops running.
+In this lesson, we'll use the *Mongo Shell* as our *database client* to communicate with *mongod*. And we'll issue our commands with the *Mongo query language*. The *Mongo Shell* allows us to interact with *MongoDB* directly in the terminal. By default, the *Mongo Shell* will connect to *port 27017*, which is the port our *mongod* process is currently listening on.
 
-The dbpath also stores journaling information so that your data remains consistent in the case of an unexpected crash.
-
-mongod binds to localhost by default.
-
-This means that the only database clients that can connect with mongod are ones local to the machine where mongod is running.
-
-We'll learn in later lessons how to bind to other IP addresses and hosts to allow remote clients to connect.
-
-Authentication is turned off by default.
-
-This means that unless we enable off, database clients are not required to authenticate before accessing the database.
-
-Understanding the default values should make it easier to read the mongod output.
-
-On the first line, we can see the dbpath and the port.
-
-A little further down we also have two warnings, that access control is not enabled-- that is, we have not turned on authentication-- and that mongod is only bound to localhost.
-
-As we said before, we don't communicate with mongod directly when we issue commands to our database.
-
-Instead, we issue commands through a database client.
-
-In this lesson, we'll use the Mongo Shell as our database client to communicate with mongod.
-
-And we'll issue our commands with the Mongo query language.
-
-The Mongo Shell allows us to interact with MongoDB directly in the terminal.
-
-By default, the Mongo Shell will connect to port 27017, which is the port our mongod process is currently listening on.
-
-To get the Mongo Shell up and running, we just need to type the command mongo.
-
-To verify the Mongo Shell is connected to our mongod process, we can check the output in the mongod window.
-
-The output shows that one connection is now open, and that the application is the MongoDB shell.
+To get the *Mongo Shell* up and running, we just need to type the command *mongo*. To verify the *Mongo Shell* is connected to our *mongod* process, we can check the output in the *mongod window*. The output shows that one connection is now open, and that the application is the *MongoDB shell*.
 
 Once the Mongo Shell is connected to mongod, we can issue database commands like insert and find.
 
