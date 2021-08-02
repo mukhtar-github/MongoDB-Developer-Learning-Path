@@ -55,31 +55,11 @@ A *daemon* is a program or process that's meant to be run but not interacted wit
 
 It is the core server of the database, handling connections, requests, and most importantly, persisting your data. *mongod* contains all of the configuration options we can use to make our database secure, distributed, and consistent. Our *MongoDB* deployment may consist of more than one server.
 
-For example, our data may be distributed in a *replica set* or across a *sharded cluster*.
+For example, our data may be distributed in a *replica set* or across a *sharded cluster*. In this case, we run a separate *mongod* process for each server in our cluster. When we launch *mongod*, we're essentially starting up a new *database*. But we don't interact with the *mongod* process directly. Instead, we use a *database* client that is programmed to communicate with *mongod*.
 
-In this case, we run a separate mongod process for each server in our cluster.
+We issue *database* commands, like document *inserts* or *updates*, to the client, and the client takes care of communicating with *mongod* to execute those commands. If our deployment has multiple servers, we can configure our client to communicate with each of these *mongod* processes as needed. So we don't need to figure out which server to connect to ourselves.
 
-When we launch mongod, we're essentially starting up a new database.
-
-But we don't interact with the mongod process directly.
-
-Instead, we use a database client that is programmed to communicate with mongod.
-
-We issue database commands, like document inserts or updates, to the client, and the client takes care of communicating with mongod to execute those commands.
-
-If our deployment has multiple servers, we can configure our client to communicate with each of these mongod processes as needed.
-
-So we don't need to figure out which server to connect to ourselves.
-
-Now that we have an idea of what mongod is used for, let's talk about how to use it.
-
-The easiest way to start up a mongod process is to run the command mongod in the terminal.
-
-Notice that we no longer have a command prompt in our terminal.
-
-If we try to type a command, such as ls, we'll just get a new line.
-
-If we want to continue using the terminal, we need to open a new window.
+Now that we have an idea of what *mongod* is used for, let's talk about how to use it. The easiest way to start up a *mongod* process is to run the command *mongod* in the terminal. Notice that we no longer have a command prompt in our terminal. If we try to type a command, such as ls, we'll just get a new line. If we want to continue using the terminal, we need to open a new window.
 
 As we'll see in later lessons, we can configure mongod by providing a configuration file or specifying flags.
 
