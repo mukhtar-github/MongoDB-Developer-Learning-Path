@@ -88,3 +88,11 @@ We can also see the results of the *createCollection* command in the *mongod* ou
 Of course, the *Mongo Shell* isn't the only way we can connect to *mongod*. *MongoDB* provides other database clients such as *MongoDB Compass*, which is a graphical user interface for *MongoDB*, and drivers in several different languages like *Node.js*, which provide *APIs* to connect to *mongod* in your applications.
 
 Let's recap what we learned in this lesson. We defined *mongod as the main daemon process for MongoDB*. We talked about some default configurations when we run *mongod*. And we learned about database clients and used the *Mongo Shell to connect with mongod*.
+
+### Mongod Options
+
+Below are some of the available options for mongod. Note that this is not a comprehensive list of all possible mongod configurations. To see all available options, run mongod with the help flag.
+
+```javascript
+mongod --help
+```
