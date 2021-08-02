@@ -76,32 +76,10 @@ In this lesson, we'll use the *Mongo Shell* as our *database client* to communic
 
 To get the *Mongo Shell* up and running, we just need to type the command *mongo*. To verify the *Mongo Shell* is connected to our *mongod* process, we can check the output in the *mongod window*. The output shows that one connection is now open, and that the application is the *MongoDB shell*.
 
-Once the Mongo Shell is connected to mongod, we can issue database commands like insert and find.
+Once the *Mongo Shell* is connected to *mongod*, we can issue database commands like *insert and find*. Let's try an example. Say we want to add an *employees* collection to our database. All we need to do is type in the command *db.createCollection* and pass in the name of the collection we want to create. The shell outputs an OK message to indicate that we successfully created a new collection.
 
-Let's try an example.
+We can also see the results of the *createCollection* command in the *mongod* output. When we're done, we can use the shell to close our *mongod* connection with the following command -- use admin *db.shutdownServer* and exit. Again, let's check the *mongod* window to verify that *mongod* is no longer running. *mongod* outputs that it received the shell command and cleaned up after itself by closing sockets and shutting down.
 
-Say we want to add an employees collection to our database.
+Of course, the *Mongo Shell* isn't the only way we can connect to *mongod*. *MongoDB* provides other database clients such as *MongoDB Compass*, which is a graphical user interface for *MongoDB*, and drivers in several different languages, which provide *APIs* to connect to *mongod* in your applications.
 
-All we need to do is type in the command db.createCollection and pass in the name of the collection we want to create.
-
-The shell outputs an OK message to indicate that we successfully created a new collection.
-
-We can also see the results of the createCollection command in the mongod output.
-
-When we're done, we can use the shell to close our mongod connection with the following command-- use admin db.shutdownServer and exit.
-
-Again, let's check the mongod window to verify that mongod is no longer running.
-
-mongod outputs that it received the shell command and cleaned up after itself by closing sockets and shutting down.
-
-Of course, the Mongo Shell isn't the only way we can connect to mongod.
-
-MongoDB provides other database clients such as MongoDB Compass, which is a graphical user interface for MongoDB, and drivers in several different languages, which provide APIs to connect to mongod in your applications.
-
-Let's recap what we learned in this lesson.
-
-We defined mongod as the main daemon process for MongoDB.
-
-We talked about some default configurations when we run mongod.
-
-And we learned about database clients and used the Mongo Shell to connect with mongod.
+Let's recap what we learned in this lesson. We defined *mongod as the main daemon process for MongoDB*. We talked about some default configurations when we run *mongod*. And we learned about database clients and used the *Mongo Shell to connect with mongod*.
