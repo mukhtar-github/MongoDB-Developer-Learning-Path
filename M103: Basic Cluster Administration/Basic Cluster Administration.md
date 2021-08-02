@@ -114,3 +114,13 @@ The**port** option allows us to specify the port on which mongod will listen for
 ```javascript
 mongod --port <port number>
 ```
+
+#### auth
+
+**auth** enables authentication to control which users can access the database. When **auth** is specified, all database clients who want to connect to *mongod* first need to authenticate.
+
+Before any database users have been configured, a *Mongo shell* running on localhost will have access to the database. We can then configure users and their permission levels using the shell. Once one or more users have been configured, the shell will no longer have default access. To enable authentication, run *mongod with the auth option*:
+
+```javascript
+mongod --auth
+```
