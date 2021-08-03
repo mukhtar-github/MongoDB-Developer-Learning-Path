@@ -161,13 +161,7 @@ Starting with 3.6, you need to set *bind ip* to include a network adapter on the
 
 These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The *SSL options* are related to *tls ssl transport encryption*. You don't need to know much about these options in detail for this course. Take a look at *M310* here on *MongoDB University* for an in-depth course on *cluster security*, including *tsl ssl*.
 
-Alternatively, take a look at our documentation.
-
-Finally, we have fork, which just tells the MongoD run as a daemon instead of being tied to a terminal window.
-
-So what are the configuration file counterparts to these command line options?
-
-On the right, I have the full path to the configuration option.
+Alternatively, take a look at our documentation. Finally, we have *fork*, which just tells the *MongoD run as a daemon* instead of being tied to a terminal window. So what are the *configuration file* counterparts to these command line options? On the right, I have the full path to the configuration option.
 
 That means each key in the path to the final value is the parent of the YAML file.
 
