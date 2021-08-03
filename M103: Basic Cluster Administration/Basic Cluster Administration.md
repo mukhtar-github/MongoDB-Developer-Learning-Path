@@ -155,15 +155,13 @@ mongod --dbpath /data/db --logpath /data/log/mongod.log --fork --replSet "M103" 
 
 But there are problems with this approach. We would have to type this whole thing over again every time we would like to launch a new *MongoD* in a different server. If we want to track these settings, we would need to grep the existing services running in the server or run a command within *MongoDB*. Finally, it's harder to read and look for individual options along this very long command line string.
 
-Before we get into the *configuration file*, let's start with a few common command line options. You have your basic path configuration options -- *dbpath and logpath*. Starting with 3.6, you need to set *bind ip* to include a network adapter on the host that provides access to the network. Otherwise, the *MongoD* can only accept connections on that same host.
+Before we get into the *configuration file*, let's start with a few common command line options. You have your basic path configuration options -- **dbpath and logpath**. Starting with *3.6*, you need to set **bind ip** to include a network adapter on the host that provides access to the network. Otherwise, the *MongoD* can only accept connections on that same host.
 
-Setting the *replSet and keyFile* options starts up the *MongoD* in replication mode with basic intercluster *auth security and user authentication* enabled. These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The *SSL options* are related to *tls ssl transport encryption*. You don't need to know much about these options in detail for this course.
+Setting the **replSet and keyFile** options starts up the *MongoD in replication mode* with basic *intercluster auth security and user authentication* enabled. These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The **SSL options** are related to **tls ssl** transport encryption. You don't need to know much about these options in detail for this course.
 
-Take a look at *M310* here on *MongoDB University* for an in-depth course on *cluster security*, including *tsl ssl*. Alternatively, take a look at our documentation. Finally, we have *fork*, which just tells the *MongoD run as a daemon* instead of being tied to a terminal window. So what are the *configuration file* counterparts to these command line options? On the right, I have the full path to the configuration option.
+Take a look at *M310* here on *MongoDB University* for an in-depth course on *cluster security*, including *tsl ssl*. Alternatively, take a look at our documentation. Finally, we have **fork**, which just tells the *MongoD run as a daemon* instead of being tied to a terminal window.
 
-That means each key in the path to the final value is the parent of the YAML file.
-
-So the replSet name configuration option falls under the replication parent key.
+So what are the *configuration file* counterparts to these command line options? On the right, I have the full path to the configuration option. That means each key in the path to the final value is the parent of the YAML file. So the replSet name configuration option falls under the replication parent key.
 
 Configuration files to support deeper nesting as well.
 
