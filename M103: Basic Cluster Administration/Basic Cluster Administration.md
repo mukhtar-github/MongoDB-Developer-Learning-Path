@@ -124,3 +124,12 @@ Before any database users have been configured, a *Mongo shell* running on local
 ```javascript
 mongod --auth
 ```
+
+#### bind_ip
+
+The **bind_ip** option allows us to specify which IP addresses *mongod* should bind to. When *mongod* binds to an IP address, clients from that address are able to connect to *mongod*. For instance, if we wanted to allow clients on IP address *123.123.123.123* to access our database, we'd use the following command:
+
+```javascript
+mongod --bind_ip 123.123.123.123
+```
+
