@@ -189,15 +189,9 @@ So what are the *configuration file* counterparts to these *command line options
 
 *Configuration files* to support deeper nesting as well. Take a look at these two options -- *sslPEMKey and sslCA* file. These are both under the *SSL parent*, which themselves are under the *net parent*. The *net parent* also captures *bind ip*. All three options are related to the *net parent*, but *sslPEMKey and sslCAKey* are specific to *net.ssl*.
 
-Now, how did I get to these mappings?
+Now, how did I get to these mappings? This is where our fantastic manual comes to the rescue. All of our *command line options and our configuration file options* are well documented in these two links -- <https://docs.mongodb.com/manual/reference/program/mongod/#options> and <https://docs.mongodb.com/manual/reference/configuration-options/>. I invite you to give these a look to find out about which *command line options or configuration file options* are available and how to map between the two.
 
-This is where our fantastic manual comes to the rescue.
-
-All of our command line options and our configuration file options are well documented in these two links.
-
-I invite you to give these a look to find out about which command line options or configuration file options are available and how to map between the two.
-
-Now let's take our list of configuration file options with the full path to the option and translate that into our configuration YAML file.
+Now let's take our list of *configuration file options* with the full path to the option and translate that into our *configuration YAML file*.
 
 YAML stands for Yet Another Markup Language.
 
