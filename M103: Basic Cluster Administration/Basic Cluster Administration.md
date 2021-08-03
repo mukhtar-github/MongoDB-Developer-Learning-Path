@@ -140,3 +140,121 @@ mongod --bind_ip localhost,123.123.123.123
 ```
 
 If using the **bind_ip** option with external IP addresses, it's recommended to enable **auth** to ensure that remote clients connecting to **mongod** have the proper credentials.
+
+### Configuration File
+
+The *MongoDB configuration file* is a way to organize the options you need to run the *MongoD or MongoS* process into an easy to parse *YAML* file. For the majority of use cases outside of the most basic of development or evaluation, you should be using a *configuration file* for storing your *MongoD or MongoS* startup options.
+
+Before we get into more detail on the *configuration file*, let's first start with what a *MongoD* option is. If you've interacted with a program in a terminal or shell environment, you are likely already familiar with how the command line options work. Typically you have your main executable -- for example, the *MongoD*.
+
+Then you chain in your command line options. Some of them like take a value, like *dbpath and logpath*. Others work like a flag and don't require a value to direct behavior, like *fork*. In the end, you have your full command on the command line with potentially dozens of options and values. This command is perfectly valid and would work fine in production environments.
+
+But there are problems with this approach. We would have to type this whole thing over again every time we would like to launch a new *MongoD* in a different server. If we want to track these settings, we would need to grep the existing services running in the server or run a command within *MongoDB*.
+
+Finally, it's harder to read and look for individual options along this very long command line string.
+
+Before we get into the configuration file, let's start with a few common command line options.
+
+You have your basic path configuration options-- dbpath and logpath.
+
+Starting with 3.6, you need to set bind ip to include a network adapter on the host that provides access to the network.
+
+Otherwise, the MongoD can only accept connections on that same host.
+
+Setting the replSet and keyFile options starts up the MongoD in replication mode with basic intercluster auth security and user authentication enabled.
+
+These are very common options, and chances are, you'll see at least one of these in any MongoDB deployment.
+
+The SSL options are related to tls ssl transport encryption.
+
+You don't need to know much about these options in detail for this course.
+
+Take a look at M3 10 here on MongoDB University for an in-depth course on cluster security, including tsl ssl.
+
+Alternatively, take a look at our documentation.
+
+Finally, we have fork, which just tells the MongoD run as a daemon instead of being tied to a terminal window.
+
+So what are the configuration file counterparts to these command line options?
+
+On the right, I have the full path to the configuration option.
+
+That means each key in the path to the final value is the parent of the YAML file.
+
+So the replSet name configuration option falls under the replication parent key.
+
+Configuration files to support deeper nesting as well.
+
+Take a look at these two options-- sslPEMKey and sslCA file.
+
+These are both under the SSL parent, which themselves are under the net parent.
+
+The net parent also captures a bind ip.
+
+All three options are related to the net parent, but as a sslPEMKey and sslCAKey are specific to net.ssl.
+
+Now, how did I get to these mappings?
+
+This is where our fantastic manual comes to the rescue.
+
+All of our command line options and our configuration file options are well documented in these two links.
+
+I invite you to give these a look to find out about which command line options or configuration file options are available and how to map between the two.
+
+Now let's take our list of configuration file options with the full path to the option and translate that into our configuration YAML file.
+
+YAML stands for Yet Another Markup Language.
+
+You have your key value pairs.
+
+The top level key and a MongoDB a configuration file represents a logical grouping of options.
+
+Each nested element under a top level key represents an option related to that top level key.
+
+So here we see that dbPath is a storage option.
+
+Remember, previously this was listed as storage.dbPath.
+
+The command line option was dash dash dbPath.
+
+A key can have multiple embedded key pair values, each representing an option related to the top level key.
+
+So here we have our system log family of options where I am specifying the path to the log file and the file type.
+
+You'll notice that our one option, log path, became two.
+
+Sometimes a configuration file option will have one or more required chained options.
+
+The documentation will always clearly state these relationships.
+
+It's also easier to see distinct groupings of related options.
+
+I can clearly distinguish the storage options from the system logging options from the replication options.
+
+I've even added a comment to improve readability and comprehension.
+
+The configuration file options have the same effect as the command line options, but as you can see, the YAML format provides significant advantages.
+
+These are all of the options from our initial example.
+
+The effect on the MongoD is the same, but the organization and readability is vastly improved.
+
+Now how do we use a configuration file?
+
+We are going to have to use at least one command line option for this to work.
+
+Specify dash dash config or dash f along with a path to the configuration file.
+
+For many Linux distributions, when installing MongoDB through a package manager, you'll find a default configuration file in etc/mongod.conf.
+
+Feel free to modify this or point to your own configuration file.
+
+You just need to ensure that the MongoD process can access the file location and read the file.
+
+You can find the complete list of configuration file options and how to use them on our online documentation.
+
+The documentation also includes structural examples, as well as a description of how the options work and what the expected values are.
+
+To recap, configuration file options provide the same functionality as our command line options.
+
+They improve the readability of our configuration settings, and you can use the documentation to facilitate mapping a command line option to a configuration file option.
