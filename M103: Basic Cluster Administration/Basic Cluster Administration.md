@@ -155,17 +155,9 @@ mongod --dbpath /data/db --logpath /data/log/mongod.log --fork --replSet "M103" 
 
 But there are problems with this approach. We would have to type this whole thing over again every time we would like to launch a new *MongoD* in a different server. If we want to track these settings, we would need to grep the existing services running in the server or run a command within *MongoDB*.
 
-Finally, it's harder to read and look for individual options along this very long command line string.
+Finally, it's harder to read and look for individual options along this very long command line string. Before we get into the *configuration file*, let's start with a few common command line options. You have your basic path configuration options -- *dbpath and logpath*.
 
-Before we get into the configuration file, let's start with a few common command line options.
-
-You have your basic path configuration options-- dbpath and logpath.
-
-Starting with 3.6, you need to set bind ip to include a network adapter on the host that provides access to the network.
-
-Otherwise, the MongoD can only accept connections on that same host.
-
-Setting the replSet and keyFile options starts up the MongoD in replication mode with basic intercluster auth security and user authentication enabled.
+Starting with 3.6, you need to set *bind ip* to include a network adapter on the host that provides access to the network. Otherwise, the *MongoD* can only accept connections on that same host. Setting the *replSet and keyFile* options starts up the *MongoD* in replication mode with basic intercluster *auth security and user authentication* enabled.
 
 These are very common options, and chances are, you'll see at least one of these in any MongoDB deployment.
 
