@@ -173,7 +173,7 @@ Setting the **replSet and keyFile** options starts up the *MongoD in replication
 
 Take a look at *M310* here on *MongoDB University* for an in-depth course on *cluster security*, including *tsl ssl*. Alternatively, take a look at our documentation. Finally, we have **fork**, which just tells the *MongoD run as a daemon* instead of being tied to a terminal window.
 
-So what are the *configuration file* counterparts to these *command line options*? On the right, I have the full path to the configuration option. That means each key in the path to the final value is the parent of the *YAML* file. So the replSet name configuration option falls under the replication parent key.
+So what are the *configuration file* counterparts to these *command line options*? Below, I have the full path to the configuration option. That means each key in the path to the final value is the parent of the *YAML* file. So the *replSet name* configuration option falls under the *replication parent key*.
 
 #### Configuration file options
 
@@ -187,15 +187,7 @@ So what are the *configuration file* counterparts to these *command line options
 8. net.sslMode
 9. processManagement.fork
 
-Configuration files to support deeper nesting as well.
-
-Take a look at these two options-- sslPEMKey and sslCA file.
-
-These are both under the SSL parent, which themselves are under the net parent.
-
-The net parent also captures a bind ip.
-
-All three options are related to the net parent, but as a sslPEMKey and sslCAKey are specific to net.ssl.
+*Configuration files* to support deeper nesting as well. Take a look at these two options -- *sslPEMKey and sslCA* file. These are both under the *SSL parent*, which themselves are under the *net parent*. The *net parent* also captures *bind ip*. All three options are related to the *net parent*, but *sslPEMKey and sslCAKey* are specific to *net.ssl*.
 
 Now, how did I get to these mappings?
 
