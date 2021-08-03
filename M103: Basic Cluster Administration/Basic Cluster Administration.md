@@ -175,6 +175,18 @@ Take a look at *M310* here on *MongoDB University* for an in-depth course on *cl
 
 So what are the *configuration file* counterparts to these *command line options*? On the right, I have the full path to the configuration option. That means each key in the path to the final value is the parent of the *YAML* file. So the replSet name configuration option falls under the replication parent key.
 
+#### Configuration file options
+
+1. storage.dbPath
+2. systemLog.path and systemLog.destination
+3. net.bind_ip
+4. replication.replSetName
+5. security.keyFile
+6. net.ssl.sslPEMKey
+7. net.ssl.sslCAKey
+8. net.sslMode
+9. processManagement.fork
+
 Configuration files to support deeper nesting as well.
 
 Take a look at these two options-- sslPEMKey and sslCA file.
