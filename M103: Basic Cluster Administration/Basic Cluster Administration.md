@@ -157,10 +157,17 @@ But there are problems with this approach. We would have to type this whole thin
 
 Before we get into the *configuration file*, let's start with a few common *command line options*. You have your basic path configuration options -- **dbpath and logpath**. Starting with *3.6*, you need to set **bind ip** to include a network adapter on the host that provides access to the network. Otherwise, the *MongoD* can only accept connections on that same host.
 
-#### command line options
+#### Command line options
 
 1. --dbpath
 2. --logpath
+3. --bind_ip
+4. --replSet
+5. --keyFile
+6. --sslPEMKey
+7. --sslCAKey
+8. --sslMode
+9. --fork
 
 Setting the **replSet and keyFile** options starts up the *MongoD in replication mode* with basic *intercluster auth security and user authentication* enabled. These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The **SSL options** are related to **tls ssl** transport encryption. You don't need to know much about these options in detail for this course.
 
