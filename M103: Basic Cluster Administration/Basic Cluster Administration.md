@@ -133,3 +133,10 @@ The **bind_ip** option allows us to specify which IP addresses *mongod* should b
 mongod --bind_ip 123.123.123.123
 ```
 
+To *bind* to multiple addresses and/or hosts, you can specify them in a comma-separated list:
+
+```javascript
+mongod --bind_ip localhost,123.123.123.123
+```
+
+If using the **bind_ip** option with external IP addresses, it's recommended to enable **auth** to ensure that remote clients connecting to **mongod** have the proper credentials.
