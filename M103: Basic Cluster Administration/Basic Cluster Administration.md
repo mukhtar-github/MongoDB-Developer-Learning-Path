@@ -159,8 +159,8 @@ Before we get into the *configuration file*, let's start with a few common *comm
 
 #### command line options
 
-*--dbpath
-*--logpath
+1. --dbpath
+2. --logpath
 
 Setting the **replSet and keyFile** options starts up the *MongoD in replication mode* with basic *intercluster auth security and user authentication* enabled. These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The **SSL options** are related to **tls ssl** transport encryption. You don't need to know much about these options in detail for this course.
 
