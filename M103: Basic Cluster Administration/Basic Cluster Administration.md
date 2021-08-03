@@ -191,11 +191,10 @@ So what are the *configuration file* counterparts to these *command line options
 
 Now, how did I get to these mappings? This is where our fantastic manual comes to the rescue. All of our *command line options and our configuration file options* are well documented in these two links -- <https://docs.mongodb.com/manual/reference/program/mongod/#options> and <https://docs.mongodb.com/manual/reference/configuration-options/>. I invite you to give these a look to find out about which *command line options or configuration file options* are available and how to map between the two.
 
-Now let's take our list of *configuration file options* with the full path to the option and translate that into our *configuration YAML file*. *YAML* Ain't Markup Language. **YAML** is a *data serialization language* that is often used for writing *configuration files and in applications where data is being stored or transmitted*. You have your key value pairs. The top level key and a MongoDB a configuration file represents a logical grouping of options. Each nested element under a top level key represents an option related to that top level key.
+Now let's take our list of *configuration file options* with the full path to the option and translate that into our *configuration YAML file*. *YAML* Ain't Markup Language.
+> *YAML* is a *data serialization language* that is often used for writing *configuration files and in applications where data is being stored or transmitted*.
 
-So here we see that dbPath is a storage option.
-
-Remember, previously this was listed as storage.dbPath.
+You have your *key value* pairs. The *top level key and a MongoDB a configuration file* represents a logical grouping of options. Each nested element under a top level key represents an option related to that top level key. So here we see that *dbPath* is a storage option. Remember, previously this was listed as *storage.dbPath*.
 
 The command line option was dash dash dbPath.
 
