@@ -159,13 +159,7 @@ Finally, it's harder to read and look for individual options along this very lon
 
 Starting with 3.6, you need to set *bind ip* to include a network adapter on the host that provides access to the network. Otherwise, the *MongoD* can only accept connections on that same host. Setting the *replSet and keyFile* options starts up the *MongoD* in replication mode with basic intercluster *auth security and user authentication* enabled.
 
-These are very common options, and chances are, you'll see at least one of these in any MongoDB deployment.
-
-The SSL options are related to tls ssl transport encryption.
-
-You don't need to know much about these options in detail for this course.
-
-Take a look at M3 10 here on MongoDB University for an in-depth course on cluster security, including tsl ssl.
+These are very common options, and chances are, you'll see at least one of these in any *MongoDB* deployment. The *SSL options* are related to *tls ssl transport encryption*. You don't need to know much about these options in detail for this course. Take a look at *M310* here on *MongoDB University* for an in-depth course on *cluster security*, including *tsl ssl*.
 
 Alternatively, take a look at our documentation.
 
