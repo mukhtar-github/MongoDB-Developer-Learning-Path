@@ -194,45 +194,17 @@ Now, how did I get to these mappings? This is where our fantastic manual comes t
 Now let's take our list of *configuration file options* with the full path to the option and translate that into our *configuration YAML file*. *YAML* Ain't Markup Language.
 > *YAML* is a *data serialization language* that is often used for writing *configuration files and in applications where data is being stored or transmitted*.
 
-You have your *key value* pairs. The *top level key and a MongoDB a configuration file* represents a logical grouping of options. Each nested element under a top level key represents an option related to that top level key. So here we see that *dbPath* is a storage option. Remember, previously this was listed as *storage.dbPath*.
+You have your *key value* pairs. The *top level key and a MongoDB configuration file* represents a logical grouping of options. Each nested element under a top level key represents an option related to that top level key. So here we see that *dbPath* is a storage option. Remember, previously this was listed as *storage.dbPath*.
 
-The command line option was dash dash dbPath.
+The command line option was *--dbPath*. A key can have multiple embedded key pair values, each representing an option related to the top level key. So here we have our system log family of options where I am specifying the path to the log file and the file type. You'll notice that our one option, log path, became two.
 
-A key can have multiple embedded key pair values, each representing an option related to the top level key.
+Sometimes a *configuration file* option will have one or more required chained options. The documentation will always clearly state these relationships. It's also easier to see distinct groupings of related options. I can clearly distinguish the storage options from the system logging options from the replication options.
 
-So here we have our system log family of options where I am specifying the path to the log file and the file type.
+I've even added a comment to improve readability and comprehension. The configuration file options have the same effect as the command line options, but as you can see, the YAML format provides significant advantages. These are all of the options from our initial example. The effect on the *MongoD* is the same, but the organization and readability is vastly improved.
 
-You'll notice that our one option, log path, became two.
+Now how do we use a *configuration file*? We are going to have to use at least one command line option for this to work. Specify dash dash config or dash f along with a path to the configuration file. For many Linux distributions, when installing *MongoDB* through a package manager, you'll find a default *configuration file in etc/mongod.conf*.
 
-Sometimes a configuration file option will have one or more required chained options.
-
-The documentation will always clearly state these relationships.
-
-It's also easier to see distinct groupings of related options.
-
-I can clearly distinguish the storage options from the system logging options from the replication options.
-
-I've even added a comment to improve readability and comprehension.
-
-The configuration file options have the same effect as the command line options, but as you can see, the YAML format provides significant advantages.
-
-These are all of the options from our initial example.
-
-The effect on the MongoD is the same, but the organization and readability is vastly improved.
-
-Now how do we use a configuration file?
-
-We are going to have to use at least one command line option for this to work.
-
-Specify dash dash config or dash f along with a path to the configuration file.
-
-For many Linux distributions, when installing MongoDB through a package manager, you'll find a default configuration file in etc/mongod.conf.
-
-Feel free to modify this or point to your own configuration file.
-
-You just need to ensure that the MongoD process can access the file location and read the file.
-
-You can find the complete list of configuration file options and how to use them on our online documentation.
+Feel free to modify this or point to your own *configuration file*. You just need to ensure that the MongoD process can access the file location and read the file. You can find the complete list of configuration file options and how to use them on our online documentation.
 
 The documentation also includes structural examples, as well as a description of how the options work and what the expected values are.
 
