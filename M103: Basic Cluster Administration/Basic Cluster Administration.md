@@ -223,7 +223,7 @@ Sometimes a *configuration file* option will have one or more required chained o
 
 I've even added a comment to improve readability and comprehension. The *configuration file* options have the same effect as the *command line* options, but as you can see, the *YAML* format provides significant advantages. These are all of the options from our initial example. The effect on the *MongoD* is the same, but the organization and readability is vastly improved.
 
-Now how do we use a *configuration file*? Well, we're going to have to use at least one *command line* option for this to work.
+Now how do we use a *configuration file*? Well, we're going to have to use at least one *command line* option for this to work. Specify *--config* or *-f* along with a path to the *configuration file*. For many Linux distributions, when installing *MongoDB* through a *package manager*, you'll find a default *configuration file in etc/mongod.conf*.
 
 ```javascript
 mongod --config "/etc/mongod.conf"
@@ -235,12 +235,6 @@ or
 mongod -f "/etc/mongod.conf"
 ```
 
-Specify *--config* or *-f* along with a path to the *configuration file*. For many Linux distributions, when installing *MongoDB* through a *package manager*, you'll find a default *configuration file in etc/mongod.conf*.
+Feel free to modify this or point to your own *configuration file*. You just need to ensure that the *MongoD* process can access the file location and read the file. You can find the complete list of *configuration file* options and how to use them on our online documentation. The documentation also includes structural examples, as well as a description of how the options work and what the expected values are.
 
-Feel free to modify this or point to your own *configuration file*. You just need to ensure that the MongoD process can access the file location and read the file. You can find the complete list of configuration file options and how to use them on our online documentation.
-
-The documentation also includes structural examples, as well as a description of how the options work and what the expected values are.
-
-To recap, configuration file options provide the same functionality as our command line options.
-
-They improve the readability of our configuration settings, and you can use the documentation to facilitate mapping a command line option to a configuration file option.
+To recap, configuration file options provide the same functionality as our command line options. They improve the readability of our configuration settings, and you can use the documentation to facilitate mapping a command line option to a configuration file option.
