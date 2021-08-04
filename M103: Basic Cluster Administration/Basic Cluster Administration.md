@@ -235,7 +235,7 @@ or
 mongod -f "/etc/mongod.conf"
 ```
 
-Specify dash dash config or dash f along with a path to the configuration file. For many Linux distributions, when installing *MongoDB* through a package manager, you'll find a default *configuration file in etc/mongod.conf*.
+Specify *--config* or *-f* along with a path to the *configuration file*. For many Linux distributions, when installing *MongoDB* through a *package manager*, you'll find a default *configuration file in etc/mongod.conf*.
 
 Feel free to modify this or point to your own *configuration file*. You just need to ensure that the MongoD process can access the file location and read the file. You can find the complete list of configuration file options and how to use them on our online documentation.
 
