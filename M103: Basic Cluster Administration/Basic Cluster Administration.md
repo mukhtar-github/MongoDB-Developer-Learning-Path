@@ -201,7 +201,8 @@ systemLog:
   path: "/data/log/mongod.log"
   destination: "file"
 replication:
-  replSetName: M103
+# This is the name of the replica set for M103
+  replSetName: "M103"
 net:
   bindIp : "127.0.0.1,192.168.103.100"
 tls:
