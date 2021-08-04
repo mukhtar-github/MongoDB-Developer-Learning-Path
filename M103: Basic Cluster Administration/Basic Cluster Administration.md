@@ -214,7 +214,7 @@ processManagement:
   fork: true
 ```
 
-You have your *key value* pairs. The *top level key and a MongoDB configuration file* represents a logical grouping of options. Each nested element under a top level key represents an option related to that top level key. So here we see that *dbPath* is a storage option. Remember, previously this was listed as *storage.dbPath*.
+You have your *key value* pairs. The *top level key and a MongoDB configuration file* represents a logical grouping of options. Each *nested element* under a *top level key* represents an option related to that *top level key*. So here we see that *dbPath* is a *storage* option. Remember, previously this was listed as *storage.dbPath*.
 
 The command line option was *--dbPath*. A key can have multiple embedded key pair values, each representing an option related to the top level key. So here we have our system log family of options where I am specifying the path to the log file and the file type. You'll notice that our one option, log path, became two.
 
