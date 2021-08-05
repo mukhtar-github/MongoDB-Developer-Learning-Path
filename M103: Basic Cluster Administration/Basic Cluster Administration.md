@@ -309,3 +309,22 @@ mongo admin --host localhost:27000 --eval '
   })
 '
 ```
+
+#### Answer
+
+```javascript
+systemLog:
+   destination: file
+   path: "/var/log/mongodb/mongod.log"
+   logAppend: true
+storage:
+   journal:
+      enabled: true
+processManagement:
+   fork: true
+net:
+   bindIp: 127.0.0.1
+   port: 27000
+security:
+    authorization: enabled
+```
