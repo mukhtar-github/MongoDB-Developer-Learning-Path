@@ -401,7 +401,12 @@ metrics.interim
 This data contains *diagnostic data* captured for specific use by *MongoDB* support. To be very clear, we are not capturing any of your actual private data. The *diagnostic data* is captured by a *Full Time Data Capture, or FTDC module*. *FTDC* collects data from the following commands.
 
 ```javascript
+# FTDC periodically collects statistics produced by the following commands:
 
+* serverStatus
+* replSetGetStatus (mongod only)
+* collStats for the local.oplog.rs collection (mongod only)
+* connPoolStats (mongos only)
 ```
 
 If you try to take a look at the data produced by the *FTDC module* using something like Strings, you'll find that it's not human readable. This data is only used for diagnostic purposes by *MongoDB support engineers*. And they can only look at that data if you explicitly provide it.
