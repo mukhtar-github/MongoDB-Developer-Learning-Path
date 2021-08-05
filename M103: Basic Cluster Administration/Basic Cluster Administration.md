@@ -401,7 +401,7 @@ metrics.interim
 This data contains *diagnostic data* captured for specific use by *MongoDB* support. To be very clear, we are not capturing any of your actual private data. The *diagnostic data* is captured by a *Full Time Data Capture, or FTDC module*. *FTDC* collects data from the following commands.
 
 ```javascript
-# FTDC periodically collects statistics produced by the following commands:
+FTDC periodically collects statistics produced by the following commands:
 
 serverStatus
 replSetGetStatus (mongod only)
@@ -413,25 +413,11 @@ If you try to take a look at the data produced by the *FTDC module* using someth
 
 Moving forward, let's take a look at our journal files. Each of these journal files are part of the WiredTiger journaling system. Let's talk about that just briefly. With *MongoDB WiredTiger*, write operations are buffered in memory and are flushed every 60 seconds, creating a checkpoint of data.
 
-WiredTiger also uses a write ahead logging system to an on disk journal file.
+*WiredTiger* also uses a write ahead logging system to an on disk journal file. Journal entries are first buffered in memory, and then on *WiredTiger*, the default journal commit interval is 100 milliseconds. Each journal file is limited to 100 megabytes of size. *WiredTiger* uses a file rotation method for syncing data to disk.
 
-Journal entries are first buffered in memory, and then WiredTiger syncs the journal to disk every 50 milliseconds.
+In the event of a failure, *WiredTiger* can use the journal to recover data that occurred between checkpoints. For example, during normal operations, *WiredTiger* flushes data to disk every 60 seconds, or when the journal file has 2 gigabytes of data. These flushes again create a durable checkpoint.
 
-Each journal file is limited to 100 megabytes of size.
-
-WiredTiger uses a file rotation method for syncing data to disk.
-
-In the event of a failure, WiredTiger can use the journal to recover data that occurred between checkpoints.
-
-For example, during normal operations, WiredTiger flushes data to disk every 60 seconds, or when the journal file has 2 gigabytes of data.
-
-These flushes again create a durable checkpoint.
-
-If the MongoD crashes between checkpoints, there is a possibility that data was not safely and fully written.
-
-When the MongoDB gets back online, WiredTiger can check if there is any recovery to be made.
-
-In case that there are some incomplete writes, WiredTiger looks at the existing data files to find the identifier of the last checkpoint.
+If the *MongoD* crashes between checkpoints, there is a possibility that data was not safely and fully written. When the *MongoDB* gets back online, WiredTiger can check if there is any recovery to be made. In case that there are some incomplete writes, *WiredTiger* looks at the existing data files to find the identifier of the last checkpoint.
 
 It then searches the journal files for the record that matches the identifier of the last checkpoint.
 
