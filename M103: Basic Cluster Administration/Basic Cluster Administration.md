@@ -417,66 +417,21 @@ Moving forward, let's take a look at our journal files. Each of these journal fi
 
 In the event of a failure, *WiredTiger* can use the journal to recover data that occurred between checkpoints. For example, during normal operations, *WiredTiger* flushes data to disk every 60 seconds, or when the journal file has 2 gigabytes of data. These flushes again create a durable checkpoint.
 
-If the *MongoD* crashes between checkpoints, there is a possibility that data was not safely and fully written. When the *MongoDB* gets back online, WiredTiger can check if there is any recovery to be made. In case that there are some incomplete writes, *WiredTiger* looks at the existing data files to find the identifier of the last checkpoint.
+If the *MongoD* crashes between checkpoints, there is a possibility that data was not safely and fully written. When the *MongoDB* gets back online, WiredTiger can check if there is any recovery to be made. In case that there are some incomplete writes, *WiredTiger* looks at the existing data files to find the identifier of the last checkpoint. It then searches the journal files for the record that matches the identifier of the last checkpoint.
 
-It then searches the journal files for the record that matches the identifier of the last checkpoint.
+Finally, it applies operations in the journal files since the last checkpoint. At the end, the *MongoDB* server can resume normal execution. Let's take a look at the last group of files. The *mongod.lock* file has a similar function to the WiredTiger.lock file. If this file is not empty, it means that a MongoDB process is currently active in this directory. Any other *MongoDB* process attempting to access this directory will fail to startup in that event.
 
-Finally, it applies operations in the journal files since the last checkpoint.
-
-At the end, the MongoDB server can resume normal execution.
-
-Let's take a look at the last group of files.
-
-The mongod.lock file has a similar function to the WiredTiger.lock file.
-
-If this file is not empty, it means that a MongoDB process is currently active in this directory.
-
-Any other MongoDB process attempting to access this directory will fail to startup in that event.
-
-If this file is empty, then everything is clear.
-
-In some unusual situations, like an unclean shutdown, the mongod.lock file won't be empty, even though the MongoD is no longer running.
-
-You may need to delete the mongod.lock file if directed to by support or our documentation.
-
-These remaining two files are more support and metadata files for WiredTiger.
+If this file is empty, then everything is clear. In some unusual situations, like an unclean shutdown, the mongod.lock file won't be empty, even though the *MongoD* is no longer running. You may need to delete the mongod.lock file if directed to by support or our documentation. These remaining two files are more support and metadata files for WiredTiger.
 
 Remember, you should never need to interact with any of these files and modifying them may result in crashes or data loss.
+In addition to the files held here in the data directory, there is also the log file. We're going to be going over logging in more detail in the later lesson. But just to give you a quick look, you can see in my log, there's not a whole lot of information in here right now.
 
-In addition to the files held here in the data directory, there is also the log file.
+That's because I'm not really doing anything with my server. As you use your MongoDB server, the log file will fill with additional information. These log files are vital for post failure diagnostics and should be treated with care as well.
+It's up to you if you want to place your log files in the same directory as your data files. It's not a bad idea to keep them separate though.
 
-We're going to be going over logging in more detail in the later lesson.
+There's one more file that we should talk about, but it's in neither of the two directories we've talked about so far. This *mongodb-27017.sock* file is a socket file used by *MongoDB* to create a socket connection at the specified port.
+*MongoDB* needs to use sockets for interprocess communications. Without this file, the *MongoDB* cannot function.
 
-But just to give you a quick look, you can see in my log, there's not a whole lot of information in here right now.
+This file is created at startup and lets the *MongoDB server* own this port. If there is a crash or other unclean shutdown, you might find an error on startup related to this file. You can safely delete it if directed to by support or our documentation in that event.
 
-That's because I'm not really doing anything with my server.
-
-As you use your MongoDB server, the log file will fill with additional information.
-
-These log files are vital for post failure diagnostics and should be treated with care as well.
-
-It's up to you if you want to place your log files in the same directory as your data files.
-
-It's not a bad idea to keep them separate though.
-
-There's one more file that we should talk about, but it's in neither of the two directories we've talked about so far.
-
-This mongodb-27017.sock file is a socket file used by MongoDB to create a socket connection at the specified port.
-
-MongoDB needs to use sockets for interprocess communications.
-
-Without this file, the MongoDB cannot function.
-
-This file is created at startup and lets the MongoDB server own this port.
-
-If there is a crash or other unclean shutdown, you might find an error on startup related to this file.
-
-You can safely delete it if directed to by support or our documentation in that event.
-
-Let's recap.
-
-Some files, such as diagnostic.data and your log files, are used by MongoDB support for helping you resolve problems with your database.
-
-The rest are exclusively used by the MongoDB server process for normal operations and should not be modified without specific direction from MongoDB support.
-
-Defer to the MongoDB support or our documentation for instructions on interacting with any of these files.
+Let's recap. Some files, such as *diagnostic.data* and your log files, are used by MongoDB support for helping you resolve problems with your database. The rest are exclusively used by the MongoDB server process for normal operations and should not be modified without specific direction from *MongoDB* support. Defer to the *MongoDB* support or our documentation for instructions on interacting with any of these files.
