@@ -353,6 +353,34 @@ You typically never need to interact with the files in this data folder unless d
 
 Let's take a look at a real *MongoDB* deployment. This group of files here is related to how the *WiredTiger* storage engine keeps track of information like *cluster metadata* and *WiredTiger-specific configuration* options. The *WiredTiger.lock* file acts as a safety.
 
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ ls -1 /var/lib/mongodb/
+collection-0-2220429308737549451.wt
+collection-0--2342126649730374789.wt
+collection-2-2220429308737549451.wt
+collection-2-6521560288725605282.wt
+collection-4-2220429308737549451.wt
+collection-4-6521560288725605282.wt
+diagnostic.data
+index-1-2220429308737549451.wt
+index-1--2342126649730374789.wt
+index-3-2220429308737549451.wt
+index-3-6521560288725605282.wt
+index-5-2220429308737549451.wt
+index-6-2220429308737549451.wt
+index-6-6521560288725605282.wt
+journal
+_mdb_catalog.wt
+mongod.lock
+sizeStorer.wt
+storage.bson
+WiredTiger
+WiredTigerHS.wt
+WiredTiger.lock
+WiredTiger.turtle
+WiredTiger.wt
+```
+
 If you ran a second simultaneous *MongoDB* process and pointed at this folder, the lock file helps prevent that second *MongoDB* process from starting up. If you experience an unclean shutdown such, as the host machine losing power or a crash of some sort, you may find that you cannot start up the *MongoD* due to this lock file.
 
 You may be instructed to delete lock files before restarting the *MongoD*. Remember that if you are not guided by *MongoDB* support or a documented procedure, do not interact with any of these files. This next group of files ending in *.wt* are related to collection and index the data itself.
