@@ -398,21 +398,15 @@ metrics.2021-08-05T11-58-27Z-00000
 metrics.interim
 ```
 
-This data contains *diagnostic data* captured for specific use by *MongoDB* support. To be very clear, we are not capturing any of your actual private data. The *diagnostic data* is captured by our *Full Time Data Capture, or FTDC module*. *FTDC* collects data from the following commands.
+This data contains *diagnostic data* captured for specific use by *MongoDB* support. To be very clear, we are not capturing any of your actual private data. The *diagnostic data* is captured by a *Full Time Data Capture, or FTDC module*. *FTDC* collects data from the following commands.
 
-If you try to take a look at the data produced by the FTDC module using something like Strings, you'll find that it's not human readable.
+```javascript
 
-This data is only used for diagnostic purposes by MongoDB support engineers.
+```
 
-And they can only look at that data if you explicitly provide it.
+If you try to take a look at the data produced by the *FTDC module* using something like Strings, you'll find that it's not human readable. This data is only used for diagnostic purposes by *MongoDB support engineers*. And they can only look at that data if you explicitly provide it.
 
-Moving forward, let's take a look at our journal files.
-
-Each of these journal files are part of the WiredTiger journaling system.
-
-Let's talk about that just briefly.
-
-With MongoDB WiredTiger, write operations are buffered in memory and are flushed every 60 seconds, creating a checkpoint of data.
+Moving forward, let's take a look at our journal files. Each of these journal files are part of the WiredTiger journaling system. Let's talk about that just briefly. With *MongoDB WiredTiger*, write operations are buffered in memory and are flushed every 60 seconds, creating a checkpoint of data.
 
 WiredTiger also uses a write ahead logging system to an on disk journal file.
 
