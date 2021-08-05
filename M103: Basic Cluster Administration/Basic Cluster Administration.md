@@ -237,3 +237,18 @@ mongod -f "/etc/mongod.conf"
 
 Feel free to modify this or point to your own *configuration file*. You just need to ensure that the *MongoD* process can access the file location and read the file. You can find the complete list of *configuration file* options and how to use them on our online documentation. The documentation also includes structural examples, as well as a description of how the options work and what the expected values are.
 > To recap, *configuration file* options provide the same functionality as our *command line* options. They improve the readability of our *configuration settings*, and you can use the documentation to facilitate mapping a *command line option to a configuration file* option.
+
+#### Lab: Configuration File
+
+##### Problem
+
+1. Launch a mongod instance in the IDE terminal with a configuration file:
+
+Write the configuration file. There should be an empty configuration file in your IDE File Editor, where you can specify options in *YAML*.
+
+As a reminder, here are the requirements of your *mongod* instance:
+
+* run on port 27000
+* authentication is enabled
+
+2. When your config file is complete, launch mongod with the --config command line option:
