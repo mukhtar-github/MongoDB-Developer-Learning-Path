@@ -387,13 +387,18 @@ The next group of files ending in *.wt* are related to *collection and index* da
 
 You can try to introspect these data files using a program like Strings, but there's not much human readable data here. These files are designed to be interacted with through the *MongoDB server process*, rather than a third party tool. Modifying these tools can lead to data loss and crashes. Now this *diagnostic.data* folder looks pretty interesting. Let's take a quick look.
 
-This data contains diagnostic data captured for specific use by MongoDB support.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ sudo ls -1 /var/lib/mongodb/diagnostic.data/
+[sudo] password for mukhtar: 
+metrics.2021-04-14T10-16-25Z-00000
+metrics.2021-04-16T10-28-53Z-00000
+metrics.2021-04-16T13-17-09Z-00000
+metrics.2021-04-16T14-15-49Z-00000
+metrics.2021-08-05T11-58-27Z-00000
+metrics.interim
+```
 
-To be very clear, we are not capturing any of your actual private data.
-
-The diagnostic data is captured by our Full Time Data Capture, or FTDC module.
-
-FTDC collects data from the following commands.
+This data contains *diagnostic data* captured for specific use by *MongoDB* support. To be very clear, we are not capturing any of your actual private data. The *diagnostic data* is captured by our *Full Time Data Capture, or FTDC module*. *FTDC* collects data from the following commands.
 
 If you try to take a look at the data produced by the FTDC module using something like Strings, you'll find that it's not human readable.
 
