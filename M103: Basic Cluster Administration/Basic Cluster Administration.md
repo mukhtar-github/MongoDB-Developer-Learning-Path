@@ -213,6 +213,39 @@ security:
   keyFile: "/data/keyfile"
 processManagement:
   fork: true
+
+# Basic configuration file
+processManagement:
+   fork: true
+net:
+   bindIp: localhost
+   port: 27017
+storage:
+   dbPath: /var/lib/mongo
+systemLog:
+   destination: file
+   path: "/var/log/mongodb/mongod.log"
+   logAppend: true
+storage:
+   journal:
+      enabled: true
+
+# Sample configuration file
+systemLog:
+   destination: file
+   path: "/var/log/mongodb/mongod.log"
+   logAppend: true
+storage:
+   journal:
+      enabled: true
+processManagement:
+   fork: true
+net:
+   bindIp: 127.0.0.1
+   port: 27017
+setParameter:
+   enableLocalhostAuthBypass: false
+...
 ```
 
 You have your *key value* pairs. The *top level key and a MongoDB configuration file* represents a logical grouping of options. Each *nested element* under a *top level key* represents an option related to that *top level key*. So here we see that *dbPath* is a *storage* option. Remember, previously this was listed as *storage.dbPath*. The command line option was *--dbPath*.
