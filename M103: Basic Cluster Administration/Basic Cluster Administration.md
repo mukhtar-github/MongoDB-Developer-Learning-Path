@@ -242,13 +242,37 @@ Feel free to modify this or point to your own *configuration file*. You just nee
 
 ##### Problem
 
-1. Launch a mongod instance in the IDE terminal with a configuration file:
+1. Launch a *mongod* instance in the IDE terminal with a configuration file:
 
 Write the configuration file. There should be an empty configuration file in your IDE File Editor, where you can specify options in *YAML*.
 
 As a reminder, here are the requirements of your *mongod* instance:
 
-* run on port 27000
+* run on port **27000**
 * authentication is enabled
 
-2. When your config file is complete, launch mongod with the --config command line option:
+2. When your config file is complete, launch mongod with the *--config* command line option:
+
+```javascript
+mongod --config "/etc/mongod.conf"
+```
+
+or
+
+```javascript
+mongod -f "/etc/mongod.conf"
+```
+
+3. Once *mongod* is running, open a new Terminal window and use the following command to create an admin user. **You will need to create this user in order to validate your work**.
+
+```javascript
+mongo admin --host localhost:27000 --eval '
+  db.createUser({
+    user: "m103-admin",
+    pwd: "m103-pass",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+'
+```
