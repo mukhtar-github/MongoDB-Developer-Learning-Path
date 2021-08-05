@@ -333,6 +333,22 @@ security:
 
 In this lesson, we will cover the file structure of a *MongoDB standalone server*. This is a list of the files you can expect to find in a data directory of a *MongoDB server or standalone process*.
 
+```javascript
+/data/db
+  WiredTiger
+  WiredTiger.wt
+  WiredTiger.lock
+  WiredTiger.turtle
+  WiredTigerLAS.wt
+  _mdb_catalog.wt
+  mongod.lock
+  sizeStorer.wt
+  collection-n.wt
+  index-n.wt
+  diagonostic.data
+  storage.bson
+```
+
 You typically never need to interact with the files in this data folder unless directed to by *MongoDB support personnel* or through a procedure detailed in our documentation. None of these files are designed for user access or modification, and modifying them can cause crashes or data loss. If you want to explore, please take time to make sure you are performing read functions only.
 
 Let's take a look at a real *MongoDB* deployment. This group of files here is related to how the *WiredTiger* storage engine keeps track of information like *cluster metadata* and *WiredTiger-specific configuration* options. The *WiredTiger.lock* file acts as a safety.
