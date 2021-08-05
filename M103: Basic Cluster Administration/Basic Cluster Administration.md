@@ -385,15 +385,7 @@ If you experience an unclean shutdown such, as the host machine losing power or 
 
 The next group of files ending in *.wt* are related to *collection and index* data itself. There are your *collection data* and your *index data*. *MongoDB WiredTiger* stores *index data* as a separate structure from *collection data*. Each *collection and index* gets its own file. Even in a brand new *MongoDB* deployment, you typically have a few databases and collections by default, so you should always see some *collection and index.wt* files.
 
-You can try to introspect these data files using a program like Strings, but there's not much human readable data here.
-
-These files are designed to be interacted with through the MongoDB server process, rather than a third party tool.
-
-Modifying these tools can lead to data loss and crashes.
-
-Now this diagnostic.data folder looks pretty interesting.
-
-Let's take a quick look.
+You can try to introspect these data files using a program like Strings, but there's not much human readable data here. These files are designed to be interacted with through the *MongoDB server process*, rather than a third party tool. Modifying these tools can lead to data loss and crashes. Now this *diagnostic.data* folder looks pretty interesting. Let's take a quick look.
 
 This data contains diagnostic data captured for specific use by MongoDB support.
 
