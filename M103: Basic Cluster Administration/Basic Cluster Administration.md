@@ -420,13 +420,13 @@ WiredTigerPreplog.0000000001
 WiredTigerPreplog.0000000002
 ```
 
-*WiredTiger* also uses a write ahead logging system turning on the *journal file*. *Journal* entries are first buffered in memory, and then *WiredTiger*, syncs the *journal* to *disk* every 100 milliseconds. Each *journal file* is limited to 100 megabytes of size. *WiredTiger* uses a *file rotation method* for syncing data to disk.
+*WiredTiger* also uses a write ahead logging system turning on the *journal file*. *Journal* entries are first buffered in memory, and then *WiredTiger*, syncs the *journal* to *disk* every 100 milliseconds. Each *journal file* is limited to 100 megabytes of size. *WiredTiger* uses a *file rotation method* for syncing data to disk. In the event of a failure, *WiredTiger* can use the *journal* to recover data that occurred between checkpoints.
 
-In the event of a failure, *WiredTiger* can use the journal to recover data that occurred between checkpoints. For example, during normal operations, *WiredTiger* flushes data to disk every 60 seconds, or when the journal file has 2 gigabytes of data. These flushes again create a durable checkpoint.
+For example, during normal operations, *WiredTiger* flushes data to disk every 60 seconds, or when the *journal file* has 2 gigabytes of data. These flushes again create a durable checkpoint. If the *MongoD* crashes between checkpoints, there is a possibility that data was not safely and fully written. When the *MongoDB* gets back online, *WiredTiger* can check if there is any recovery to be made.
 
-If the *MongoD* crashes between checkpoints, there is a possibility that data was not safely and fully written. When the *MongoDB* gets back online, WiredTiger can check if there is any recovery to be made. In case that there are some incomplete writes, *WiredTiger* looks at the existing data files to find the identifier of the last checkpoint. It then searches the journal files for the record that matches the identifier of the last checkpoint.
+In case that there are some incomplete writes, *WiredTiger* looks at the existing data files to find the identifier of the last checkpoint. It then searches the *journal files* for the record that matches the identifier of the last checkpoint. Finally, it applies operations in the *journal files* since the last checkpoint. At the end, the *MongoDB server* can resume normal execution. Let's take a look at the last group of files.
 
-Finally, it applies operations in the journal files since the last checkpoint. At the end, the *MongoDB* server can resume normal execution. Let's take a look at the last group of files. The *mongod.lock* file has a similar function to the WiredTiger.lock file. If this file is not empty, it means that a MongoDB process is currently active in this directory. Any other *MongoDB* process attempting to access this directory will fail to startup in that event.
+The *mongod.lock* file has a similar function to the WiredTiger.lock file. If this file is not empty, it means that a MongoDB process is currently active in this directory. Any other *MongoDB* process attempting to access this directory will fail to startup in that event.
 
 If this file is empty, then everything is clear. In some unusual situations, like an unclean shutdown, the mongod.lock file won't be empty, even though the *MongoD* is no longer running. You may need to delete the mongod.lock file if directed to by support or our documentation. These remaining two files are more support and metadata files for WiredTiger.
 
