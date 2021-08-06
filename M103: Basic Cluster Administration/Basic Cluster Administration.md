@@ -454,7 +454,7 @@ Let's recap. Some files, such as *diagnostic.data* and your *log files*, are use
 
 Use a *configuration file* to store database files in a new directory:
 
-1. Create a new folder /var/mongodb/db/:
+1.Create a new folder /var/mongodb/db/:
 
 ```javascript
 mkdir -p /var/mongodb/db
