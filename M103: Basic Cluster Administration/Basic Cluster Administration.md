@@ -411,7 +411,7 @@ connPoolStats (mongos only)
 
 If you try to take a look at the data produced by the *FTDC module* using something like Strings, you'll find that it's not human readable. This data is only used for diagnostic purposes by *MongoDB support engineers*. And they can only look at that data if you explicitly provide it.
 
-Moving forward, let's take a look at our *journal files*. Each of these *journal files* are part of the *WiredTiger journaling system*. Let's talk about that just briefly. With *MongoDB WiredTiger*, write operations are buffered in memory and are flushed every 60 seconds, creating a checkpoint of data.
+Moving forward, let's take a look at our *journal files*. Each of these *journal files* are part of the *WiredTiger journaling system*. Let's talk about that just briefly. With *MongoDB WiredTiger*, **write operations** are buffered in memory and are flushed every 60 seconds, creating a checkpoint of data.
 
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ sudo ls -1 /var/lib/mongodb/journal/
@@ -420,7 +420,7 @@ WiredTigerPreplog.0000000001
 WiredTigerPreplog.0000000002
 ```
 
-*WiredTiger* also uses a write ahead logging system turning on this *journal file*. Journal entries are first buffered in memory, and then on *WiredTiger*, the default journal commit interval is 100 milliseconds. Each journal file is limited to 100 megabytes of size. *WiredTiger* uses a file rotation method for syncing data to disk.
+*WiredTiger* also uses a write ahead logging system turning on the *journal file*. *Journal* entries are first buffered in memory, and then *WiredTiger*, syncs the *journal* to *disk* every 100 milliseconds. Each *journal file* is limited to 100 megabytes of size. *WiredTiger* uses a *file rotation method* for syncing data to disk.
 
 In the event of a failure, *WiredTiger* can use the journal to recover data that occurred between checkpoints. For example, during normal operations, *WiredTiger* flushes data to disk every 60 seconds, or when the journal file has 2 gigabytes of data. These flushes again create a durable checkpoint.
 
