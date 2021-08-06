@@ -460,16 +460,16 @@ Use a *configuration file* to store database files in a new directory:
 mkdir -p /var/mongodb/db
 ```
 
-2. Edit your config file to use this new directory as the dbpath.
+2. Edit your config file to use this new directory as the *dbpath*.
 
 Here are the updated requirements for your mongod instance:
 
-* runs on port 27000
-* stores its data files in /var/mongodb/db/
-* listens to connections from localhost
+* runs on port **27000**
+* stores its data files in **/var/mongodb/db/**
+* listens to connections from **localhost**
 * uses authentication
 
-3. Launch mongod with the new configuration.
+3. Launch *mongod* with the new configuration.
 
 4. Use the following command to connect to the Mongo shell and create the following user. **You will need to create this user in order to validate your work**.
 
@@ -484,3 +484,5 @@ mongo admin --host localhost:27000 --eval '
   })
 '
 ```
+
+5. Click "Run Tests" to run a test that will check the updated *dbpath*.
