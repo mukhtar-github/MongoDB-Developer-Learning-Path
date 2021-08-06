@@ -432,8 +432,7 @@ You may need to delete the *mongod.lock file* if directed to by support or our d
 
 But just to give you a quick look, you can see in my *log*, there's not a whole lot of information in here right now. That's because I'm not really doing anything with my server. As you use your *MongoDB server*, the *log file* will fill with additional information. These *log files* are vital for post failure diagnostics and should be treated with care as well. It's up to you if you want to place your *log files* in the same directory as your *data files*.
 
-It's not a bad idea to keep them separate though. There's one more file that we should talk about, but it's in neither of the two directories we've talked about so far. This *mongodb-27017.sock* file is a socket file used by *MongoDB* to create a socket connection at the specified port.
-*MongoDB* needs to use sockets for interprocess communications. Without this file, the *MongoDB* cannot function.
+It's not a bad idea to keep them separate though. There's one more file that we should talk about, but it's in neither of the two directories we've talked about so far. This *mongodb-27017.sock* file is a socket file used by *MongoDB* to create a socket connection at the specified port. *MongoDB* needs to use sockets for interprocess communications. Without this file, the *MongoDB* cannot function.
 
 This file is created at startup and lets the *MongoDB server* own this port. If there is a crash or other unclean shutdown, you might find an error on startup related to this file. You can safely delete it if directed to by support or our documentation in that event.
 
