@@ -446,4 +446,25 @@ This *mongodb-27017.sock file* is a socket file used by *MongoDB* to create a *s
 
 This file is created at startup and lets the *MongoDB server* own this port. If there is a crash or other unclean shutdown, you might find an error on startup related to this file. You can safely delete it if directed to by support or our documentation in that event.
 
-Let's recap. Some files, such as *diagnostic.data* and your *log files*, are used by *MongoDB support* for helping you resolve problems with your database. The rest are exclusively used by the *MongoDB server process* for normal operations and should not be modified without specific direction from *MongoDB support*. Refer to the *MongoDB support* or our documentation for instructions on interacting with any of these files.
+Let's recap. Some files, such as *diagnostic.data* and your *log files*, are used by *MongoDB support* for helping you resolve problems with your database. The rest are exclusively used by the *MongoDB server process* for normal operations and should not be modified without specific direction from *MongoDB support*. Defer to the *MongoDB support* or our documentation for instructions on interacting with any of these files.
+
+### Lab: Change the Default DB Path
+
+#### Problem
+
+Use a *configuration file* to store database files in a new directory:
+
+1. Create a new folder /var/mongodb/db/:
+
+```javascript
+mkdir -p /var/mongodb/db
+```
+
+2. Edit your config file to use this new directory as the dbpath.
+
+Here are the updated requirements for your mongod instance:
+
+* runs on port 27000
+* stores its data files in /var/mongodb/db/
+* listens to connections from localhost
+* uses authentication
