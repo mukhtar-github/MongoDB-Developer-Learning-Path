@@ -454,7 +454,7 @@ Let's recap. Some files, such as *diagnostic.data* and your *log files*, are use
 
 Use a *configuration file* to store database files in a new directory:
 
-1.Create a new folder /var/mongodb/db/:
+1. Create a new folder /var/mongodb/db/:
 
 ```javascript
 mkdir -p /var/mongodb/db
@@ -468,3 +468,19 @@ Here are the updated requirements for your mongod instance:
 * stores its data files in /var/mongodb/db/
 * listens to connections from localhost
 * uses authentication
+
+3. Launch mongod with the new configuration.
+
+4. Use the following command to connect to the Mongo shell and create the following user. **You will need to create this user in order to validate your work**.
+
+```javascript
+mongo admin --host localhost:27000 --eval '
+  db.createUser({
+    user: "m103-admin",
+    pwd: "m103-pass",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+'
+```
