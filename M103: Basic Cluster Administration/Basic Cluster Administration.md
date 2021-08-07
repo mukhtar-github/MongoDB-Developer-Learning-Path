@@ -516,6 +516,8 @@ db.createUser({
 
 In this lesson, we'll cover a few of the basic commands necessary to interact with the *MongoDB cluster*. This won't be an exhaustive list. For that, take a look at the reference documentation included in the lecture notes. We're actually going to focus on the *shell helpers* first. These are methods available in the *MongoDB shell* that wrap underlying database commands. The majority of your interactions in this course and likely in general will use *shell helpers*.
 
+### Useful Shell Helpers
+
 #### Basic Helper Groups
 
 * db.*method()*
@@ -526,24 +528,24 @@ In this lesson, we'll cover a few of the basic commands necessary to interact wi
 
 First you have your **DB shell helpers**. These are methods that wrap commands that interact with the database. You've already used a few of these in previous lessons, like *db.createuser*. Next you have your **rs helper** methods. These methods wrap commands that control *replica set* deployment and management. We're going to talk about *replication* in the next chapter. Finally, you have your **sh helper** methods. These methods wrap commands to control *sharded cluster* deployment and management. We will get to *sharding* in the third chapter.
 
-Now the *database shell helper* has one additional extension. Remember that each database can have one or more *collections* in it. And *collections* are where your data are stored. So *Mongo shell* provides *shell helpers for collection level* operations.
+Now the *database shell helper* has one additional extension. Remember that each database can have one or more *collections* in it. And *collections* are where your data are stored. So *Mongo shell* provides *shell helpers for collection level* operations. You specify the name of the *collection*, essentially providing a path to the *collection* you want to interact with. Let's go over some of the most basic *shell helpers* that you may find useful during this course.
 
 #### Command groups
 
 * db.*method()*
   * db.*collection.method()*
 
-You specify the name of the *collection*, essentially providing a path to the *collection* you want to interact with. Let's go over some of the most basic *shell helpers* that you may find useful during this course. For *user management*, you've got *create user and drop user*. You've already used *create user* in an earlier lesson. Note that both of these are acting on the *database object*. That's because users are created at the *database level*.
+For *User Management*, you've got *create user and drop user*. You've already used *create user* in an earlier lesson. Note that both of these are acting on the *database object*. That's because users are created at the *database level*.
 
-#### Basic command
-
-User Management
+#### User Management
 
 * db.*createUser()*
 
 * db.*dropUser()*
 
-Collection Management
+For *Collection management*, you can use *rename collection* to change the name of an existing *collection*. You also have *collection.createindex and collection.drop*. Both of these methods act on the *collection object*, which is why we have *db.collection.* In the shell, you'd want to change the *collection* to the *name of the collection*. This is just a placeholder.
+
+#### Collection Management
 
 * db.*rename Collection()*
 
@@ -551,7 +553,7 @@ Collection Management
 
 * db.*collection.drop()*
 
-For *Collection management*, you can use *rename collection* to change the name of an existing *collection*. You also have *collection.createindex and collection.drop*. Both of these methods act on the *collection object*, which is why we have *db.collection.* In the shell, you'd want to change the *collection* to the *name of the collection*. This is just a placeholder. For database management, you can always use *drop database to drop the entire database*.
+For *database management*, you can always use *drop database to drop the entire database*.
 
 This will destroy all collections, indexes, and users created on that database, so use this with caution. *db.createcollection* lets you create a collection on your own.
 
