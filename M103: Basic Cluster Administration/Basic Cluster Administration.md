@@ -592,9 +592,15 @@ db.<collection>.createIndex(
 )
 ```
 
-While they look sort of similar, the database command is a lot more verbose in defining the same level of work. That's part of why MongoDB provides helper methods for wrapping these database commands. Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
+While they look sort of similar, the *database command* is a lot more verbose in defining the same level of work. That's part of why *MongoDB* provides *helper methods* for wrapping these *database commands*. Depending on whether you're using the *MongoDB shell or MongoDB driver*, the exact name and format of these *helper methods* might differ, but their purpose is to provide a shortcut for methods like this.
 
-Running a database command itself is pretty straightforward. The Mongo shell provides the run command method on the database object. You pass in the command as a parameter to this method. DB here refers to the active database. Do you remember the use keyword? We've used it a few times already. The run command always works against the active database. So make sure you set the right database to active before you use run command.
+Running a *database command* itself is pretty straightforward. The *Mongo shell* provides the *run command* method on the *database object*. You pass in the command as a parameter to this method. *DB* here refers to the *active database*. Do you remember the *use keyword*? We've used it a few times already. The *run command* always works against the *active database*. So make sure you set the right *database* to active before you use *run command*.
+
+#### Database Commands
+
+* db.runCommand( { "COMMAND" } )
+
+* db.commandHelp( "command" )
 
 If you want information on how a particular command works, you can use the db.commandhelp method to retrieve any available help information. Now you might wonder, why would I ever want to use the underlying database command? Well, we've been talking about the shell helpers. They're only in the shell. If you want to run a database command from a driver, then you're going to need to execute the underlying database command instead, assuming that the driver doesn't have some other existing helper method.
 
