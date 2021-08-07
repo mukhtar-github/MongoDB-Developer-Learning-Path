@@ -511,3 +511,119 @@ db.createUser({
   ]
 })
 ```
+
+### Basic Commands
+
+In this lesson, we'll cover a few of the basic commands necessary to interact with the *MongoDB cluster*. This won't be an exhaustive list. For that, take a look at the reference documentation included in the lecture notes. We're actually going to focus on the *shell helpers* first. These are methods available in the *MongoDB shell* that wrap underlying database commands. The majority of your interactions in this course and likely in general will use *shell helpers*.
+
+First you have your *DB shell helpers*. These are methods that wrap commands that interact with the database.
+
+You've already used a few of these in previous lessons, like db.createuser.
+
+Next you have your rs helper methods.
+
+These methods wrap commands that control replica set deployment and management.
+
+We're going to talk about replication in week two.
+
+Finally, you have your sh helper methods.
+
+These methods wrap commands to control sharded cluster deployment and management.
+
+We will get to sharding in week three.
+
+Now the database shell helper has one additional extension.
+
+Remember that each database can have one or more collections in it.
+
+And collections are where your data is stored.
+
+So Mongo shell provides shell helpers for collection level operations.
+
+You specify the name of the collection here, essentially providing a path to the collection you want to interact with.
+
+Let's go over some of the most basic shell helpers that you may find useful during this course.
+
+For user management, you've got create user and drop user.
+
+You've already used create user in an earlier lesson.
+
+Note that both of these are acting on the database object.
+
+That's because users are created at the database level.
+
+For collection management, you can use rename collection to change the name of an existing collection.
+
+You also have collection.createindex and collection.drop.
+
+Both of these methods act on the collection object, which is why we have db.collection.
+
+In the shell, you'd want to change the collection to the name of the collection.
+
+This is just a placeholder.
+
+For database management, you can always use drop database to drop the entire database.
+
+This will destroy all collections, indexes, and users created on that database, so use this with caution.
+
+db.createcollection lets you create a collection on your own.
+
+In a previous lesson, we noted that MongoDB creates databases and collections implicitly on a write operation, but you may want to create your collections first.
+
+There are some additional configuration options you have when you use this method, such as creating a capped collection or setting language collation support, both of which are out of scope for this lesson.
+
+So look at the documentation if you're curious.
+
+Finally, when you want to see how your database is doing, you've got db.serverstatus, which returns statistics on the database, like the amount of storage space you are using.
+
+We're going to talk more about replication and sharding in later lessons.
+
+And you'll see examples of the rs and sh shell helpers then I mentioned earlier that shell helpers wrap an underlying database command.
+
+Let's look at the db.collection.createindex method, compared against the underlying create indexes command.
+
+While they look sort of similar, the database command is a lot more verbose in defining the same level of work.
+
+That's part of why MongoDB provides helper methods for wrapping these database commands.
+
+Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
+
+Running a database command itself is pretty straightforward.
+
+The Mongo shell provides the run command method on the database object.
+
+You pass in the command as a parameter to this method.
+
+DB here refers to the active database.
+
+Do you remember the use keyword?
+
+We've used it a few times already.
+
+The run command always works against the active database.
+
+So make sure you set the right database to active before you use run command.
+
+If you want information on how a particular command works, you can use the db.commandhelp method to retrieve any available help information.
+
+Now you might wonder, why would I ever want to use the underlying database command?
+
+Well, we've been talking about the shell helpers.
+
+They're only in the shell.
+
+If you want to run a database command from a driver, then you're going to need to execute the underlying database command instead, assuming that the driver doesn't have some other existing helper method.
+
+You can actually introspect a shell helper from the shell by not including the open and closing parentheses.
+
+The shell helper will produce the underlying code run.
+
+In this case, we can see that create index method runs the create indexes command.
+
+To recap, the database commands provide the foundation for interacting with MongoDB.
+
+You can use db.run command to run any given database command.
+
+The Mongo shell provides helper methods for wrapping database commands and simplifying usage.
+
+For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
