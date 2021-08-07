@@ -594,7 +594,7 @@ db.<collection>.createIndex(
 
 While they look sort of similar, the *database command* is a lot more verbose in defining the same level of work. That's part of why *MongoDB* provides *helper methods* for wrapping these *database commands*. Depending on whether you're using the *MongoDB shell or MongoDB driver*, the exact name and format of these *helper methods* might differ, but their purpose is to provide a shortcut for methods like this.
 
-Running a *database command* itself is pretty straightforward. The *Mongo shell* provides the *run command* method on the *database object*. You pass in the command as a parameter to this method. *DB* here refers to the *active database*. Do you remember the *use keyword*? We've used it a few times already. The *run command* always works against the *active database*. So make sure you set the right *database* to active before you use *run command*.
+Running a *database command* itself is pretty straightforward. The *Mongo shell* provides the *run command* method on the *database object*. You pass in the command as a *parameter* to this method. *DB* here refers to the *active database*. Do you remember the *use keyword*? We've used it a few times already. The *run command* always works against the *active database*. So make sure you set the right *database* to active before you use *run command*. If you want information on how a particular command works, you can use the *db.commandhelp* method to retrieve any available help information.
 
 #### Database Commands
 
@@ -602,6 +602,21 @@ Running a *database command* itself is pretty straightforward. The *Mongo shell*
 
 * db.commandHelp( "command" )
 
-If you want information on how a particular command works, you can use the db.commandhelp method to retrieve any available help information. Now you might wonder, why would I ever want to use the underlying database command? Well, we've been talking about the shell helpers. They're only in the shell. If you want to run a database command from a driver, then you're going to need to execute the underlying database command instead, assuming that the driver doesn't have some other existing helper method.
+Now you might wonder, why would I ever want to use the *underlying database command*? Well, we've been talking about the *shell helpers*. They're only in the *shell*. If you want to run a *database command* from a driver, then you're going to need to execute the *underlying database command* instead, assuming that the driver doesn't have some other existing helper method.
 
-You can actually introspect a shell helper from the shell by not including the open and closing parentheses. The shell helper will produce the underlying code run. In this case, we can see that create index method runs the create indexes command. To recap, the database commands provide the foundation for interacting with MongoDB. You can use db.run command to run any given database command. The Mongo shell provides helper methods for wrapping database commands and simplifying usage. For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
+You can actually introspect a *shell helper from the shell* by not including the open and closing parentheses. The *shell helper* will produce the underlying code run. In this case, we can see that *create index* method runs the *create indexes command*.
+
+#### Introspect a Shell Helper
+
+```javascript
+> db.products.createIndex
+
+function (keys, options) {
+  
+  return this.createIndexs([keys],
+  options);
+
+}
+```
+
+To recap, the database commands provide the foundation for interacting with MongoDB. You can use db.run command to run any given database command. The Mongo shell provides helper methods for wrapping database commands and simplifying usage. For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
