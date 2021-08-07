@@ -553,7 +553,7 @@ For *Collection management*, you can use *rename collection* to change the name 
 
 * db.*collection.drop()*
 
-For *database management*, you can always use *drop database to drop the entire database*. This will destroy all *collections, indexes, and users* created on that database, so use this with caution. *db.createcollection* lets you create a *collection* on your own.
+For *database management*, you can always use *drop database to drop the entire database*. This will destroy all *collections, indexes, and users* created on that database, so use this with caution. *db.createcollection* lets you create a *collection* on your own. In a previous lesson, we noted that *MongoDB* creates *databases and collections* implicitly on a write operation, but you may want to create your *collections* first. There are some conditional configuration options you have when you use this method, such as creating a *capped collection or setting language collation support*, both of which are out of scope for this lesson. So look at the documentation if you're curious.
 
 #### Database Management
 
@@ -561,9 +561,11 @@ For *database management*, you can always use *drop database to drop the entire 
 
 * db.*createCollection()*
 
-In a previous lesson, we noted that *MongoDB* creates *databases and collections* implicitly on a write operation, but you may want to create your *collections* first. There are some additional configuration options you have when you use this method, such as creating a *capped collection or setting language collation support*, both of which are out of scope for this lesson. So look at the documentation if you're curious.
+Finally, when you want to see how your *database* is doing, you've got *db.serverstatus*, which returns statistics on the database, like the amount of storage space you are using. We're going to talk more about *replication and sharding* in later lessons. And you'll see examples of the *rs and sh shell helpers* then. I mentioned earlier that *shell helpers* wrap an underlying database command.
 
-Finally, when you want to see how your database is doing, you've got db.serverstatus, which returns statistics on the database, like the amount of storage space you are using. We're going to talk more about replication and sharding in later lessons. And you'll see examples of the rs and sh shell helpers then I mentioned earlier that shell helpers wrap an underlying database command.
+#### Database Status
+
+* db.*serverStatus()*
 
 Let's look at the db.collection.createindex method, compared against the underlying create indexes command. While they look sort of similar, the database command is a lot more verbose in defining the same level of work. That's part of why MongoDB provides helper methods for wrapping these database commands. Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
 
