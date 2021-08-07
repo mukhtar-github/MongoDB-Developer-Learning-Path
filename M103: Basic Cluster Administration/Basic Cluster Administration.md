@@ -486,3 +486,28 @@ mongo admin --host localhost:27000 --eval '
 ```
 
 5. Click "Run Tests" to run a test that will check the updated *dbpath*.
+
+#### Answer
+
+```javascript
+storage:
+  dbPath: /var/mongodb/db/
+net:
+  bindIp: localhost
+  port: 27000
+security:
+  authorization: enabled
+
+#Start the mongod process with:
+user@M103# mongod --config mongod.conf
+
+#The process of creating this user is identical to the previous labs, but we have to repeat it for our new DB path:
+use admin
+db.createUser({
+  user: "m103-admin",
+  pwd: "m103-pass",
+  roles: [
+    {role: "root", db: "admin"}
+  ]
+})
+```
