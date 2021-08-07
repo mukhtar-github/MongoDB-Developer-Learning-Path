@@ -524,11 +524,18 @@ In this lesson, we'll cover a few of the basic commands necessary to interact wi
 
 * sh.*method()*
 
-First you have your *DB shell helpers*. These are methods that wrap commands that interact with the database. You've already used a few of these in previous lessons, like *db.createuser*. Next you have your *rs helper* methods. These methods wrap commands that control *replica set* deployment and management. We're going to talk about *replication* in next chapter. Finally, you have your *sh helper* methods. These methods wrap commands to control *sharded cluster* deployment and management. We will get to *sharding* in the third chapter.
+First you have your **DB shell helpers**. These are methods that wrap commands that interact with the database. You've already used a few of these in previous lessons, like *db.createuser*. Next you have your **rs helper** methods. These methods wrap commands that control *replica set* deployment and management. We're going to talk about *replication* in the next chapter. Finally, you have your **sh helper** methods. These methods wrap commands to control *sharded cluster* deployment and management. We will get to *sharding* in the third chapter.
 
-Now the database shell helper has one additional extension. Remember that each database can have one or more collections in it. And collections are where your data is stored. So *Mongo shell* provides *shell helpers* for collection level operations.
+Now the *database shell helper* has one additional extension. Remember that each database can have one or more *collections* in it. And *collections* are where your data is stored. So *Mongo shell* provides *shell helpers for collection level* operations.
 
-You specify the name of the collection here, essentially providing a path to the collection you want to interact with.  Let's go over some of the most basic shell helpers that you may find useful during this course. For user management, you've got create user and drop user. You've already used create user in an earlier lesson. Note that both of these are acting on the database object. That's because users are created at the database level.
+#### Command Groups
+
+* db.*method()*
+  * db.*collection.method()*
+
+You specify the name of the collection here, essentially providing a path to the collection you want to interact with. Let's go over some of the most basic shell helpers that you may find useful during this course.
+
+For user management, you've got create user and drop user. You've already used create user in an earlier lesson. Note that both of these are acting on the database object. That's because users are created at the database level.
 
 For collection management, you can use rename collection to change the name of an existing collection. You also have collection.createindex and collection.drop. Both of these methods act on the collection object, which is why we have db.collection. In the shell, you'd want to change the collection to the name of the collection. This is just a placeholder.
 For database management, you can always use drop database to drop the entire database.
