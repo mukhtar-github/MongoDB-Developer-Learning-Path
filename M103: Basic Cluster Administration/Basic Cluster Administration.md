@@ -619,4 +619,4 @@ function (keys, options) {
 }
 ```
 
-To recap, the database commands provide the foundation for interacting with MongoDB. You can use db.run command to run any given database command. The Mongo shell provides helper methods for wrapping database commands and simplifying usage. For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
+To recap, the *database commands* provide the foundation for interacting with *MongoDB*. You can use *db.run* command to run any given *database command*. The *Mongo shell* provides *helper methods* for wrapping *database commands* and simplifying usage. For this course, you're going to be using the *helper methods*, but if you want to know more about the *underlying database commands*, check out our documentation.
