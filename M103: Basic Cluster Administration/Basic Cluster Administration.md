@@ -543,7 +543,7 @@ For *User Management*, you've got *create user and drop user*. You've already us
 
 * db.*dropUser()*
 
-For *Collection management*, you can use *rename collection* to change the name of an existing *collection*. You also have *collection.createindex and collection.drop*. Both of these methods act on the *collection object*, which is why we have *db.collection.* In the shell, you'd want to change the *collection* to the *name of the collection*. This is just a placeholder.
+For *Collection management*, you can use *rename collection* to change the name of an existing *collection*. You also have *collection.createindex and collection.drop*. Both of these methods act on the *collection object*, which is why we have *db.collection.* In the shell, you'd want to change the *collection* to the *name of the collection*. The *collection* here is just a placeholder.
 
 #### Collection Management
 
