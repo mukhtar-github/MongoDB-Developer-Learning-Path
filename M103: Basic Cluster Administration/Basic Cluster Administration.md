@@ -543,9 +543,9 @@ User Management
 
 * db.*dropUser()*
 
-For user management, you've got create user and drop user. You've already used create user in an earlier lesson. Note that both of these are acting on the database object. That's because users are created at the database level.
+For user management, you've got *create user and drop user*. You've already used *create user* in an earlier lesson. Note that both of these are acting on the database object. That's because users are created at the database level. For *collection management*, you can use rename *collection* to change the name of an existing *collection*. You also have *collection.createindex and collection.drop*.
 
-For collection management, you can use rename collection to change the name of an existing collection. You also have collection.createindex and collection.drop. Both of these methods act on the collection object, which is why we have db.collection. In the shell, you'd want to change the collection to the name of the collection. This is just a placeholder.
+Both of these methods act on the collection object, which is why we have db.collection. In the shell, you'd want to change the collection to the name of the collection. This is just a placeholder.
 For database management, you can always use drop database to drop the entire database.
 
 This will destroy all collections, indexes, and users created on that database, so use this with caution. *db.createcollection* lets you create a collection on your own. In a previous lesson, we noted that MongoDB creates databases and collections implicitly on a write operation, but you may want to create your collections first. There are some additional configuration options you have when you use this method, such as creating a capped collection or setting language collation support, both of which are out of scope for this lesson. So look at the documentation if you're curious.
