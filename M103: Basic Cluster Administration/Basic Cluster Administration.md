@@ -520,7 +520,7 @@ First you have your *DB shell helpers*. These are methods that wrap commands tha
 
 #### Basic Helper Grouped
 
-* db.<method>()
+* db.*method*()
 
 These methods wrap commands to control *sharded cluster* deployment and management. We will get to *sharding* in week three. Now the database shell helper has one additional extension. Remember that each database can have one or more collections in it. And collections are where your data is stored. So *Mongo shell* provides *shell helpers* for collection level operations.
 
