@@ -535,16 +535,4 @@ Running a database command itself is pretty straightforward. The Mongo shell pro
 
 If you want information on how a particular command works, you can use the db.commandhelp method to retrieve any available help information. Now you might wonder, why would I ever want to use the underlying database command? Well, we've been talking about the shell helpers. They're only in the shell. If you want to run a database command from a driver, then you're going to need to execute the underlying database command instead, assuming that the driver doesn't have some other existing helper method.
 
-You can actually introspect a shell helper from the shell by not including the open and closing parentheses.
-
-The shell helper will produce the underlying code run.
-
-In this case, we can see that create index method runs the create indexes command.
-
-To recap, the database commands provide the foundation for interacting with MongoDB.
-
-You can use db.run command to run any given database command.
-
-The Mongo shell provides helper methods for wrapping database commands and simplifying usage.
-
-For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
+You can actually introspect a shell helper from the shell by not including the open and closing parentheses. The shell helper will produce the underlying code run. In this case, we can see that create index method runs the create indexes command. To recap, the database commands provide the foundation for interacting with MongoDB. You can use db.run command to run any given database command. The Mongo shell provides helper methods for wrapping database commands and simplifying usage. For this course, you're going to be using the helper methods, but if you want to know more about the underlying database commands, check out our documentation.
