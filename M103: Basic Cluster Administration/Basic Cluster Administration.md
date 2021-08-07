@@ -516,17 +516,7 @@ db.createUser({
 
 In this lesson, we'll cover a few of the basic commands necessary to interact with the *MongoDB cluster*. This won't be an exhaustive list. For that, take a look at the reference documentation included in the lecture notes. We're actually going to focus on the *shell helpers* first. These are methods available in the *MongoDB shell* that wrap underlying database commands. The majority of your interactions in this course and likely in general will use *shell helpers*.
 
-First you have your *DB shell helpers*. These are methods that wrap commands that interact with the database.
-
-You've already used a few of these in previous lessons, like db.createuser.
-
-Next you have your rs helper methods.
-
-These methods wrap commands that control replica set deployment and management.
-
-We're going to talk about replication in week two.
-
-Finally, you have your sh helper methods.
+First you have your *DB shell helpers*. These are methods that wrap commands that interact with the database. You've already used a few of these in previous lessons, like *db.createuser*. Next you have your *rs helper* methods. These methods wrap commands that control replica set deployment and management. We're going to talk about *replication* in week two. Finally, you have your *sh helper* methods.
 
 These methods wrap commands to control sharded cluster deployment and management.
 
