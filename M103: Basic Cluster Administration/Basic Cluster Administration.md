@@ -561,13 +561,19 @@ For *database management*, you can always use *drop database to drop the entire 
 
 * db.*createCollection()*
 
-Finally, when you want to see how your *database* is doing, you've got *db.serverstatus*, which returns statistics on the database, like the amount of storage space you are using. We're going to talk more about *replication and sharding* in later lessons. And you'll see examples of the *rs and sh shell helpers* then. I mentioned earlier that *shell helpers* wrap an underlying database command.
+Finally, when you want to see how your *database* is doing, you've got *db.serverstatus*, which returns statistics on the database, like the amount of storage space you are using. We're going to talk more about *replication and sharding* in later lessons. And you'll see examples of the *rs and sh shell helpers* then.
 
 #### Database Status
 
 * db.*serverStatus()*
 
-Let's look at the db.collection.createindex method, compared against the underlying create indexes command. While they look sort of similar, the database command is a lot more verbose in defining the same level of work. That's part of why MongoDB provides helper methods for wrapping these database commands. Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
+I mentioned earlier that *shell helpers* wrap an underlying *database command*. Let's look at the *db.collection.createindex* method, compared against the underlying *create indexes* command.
+
+#### Database Command vs Shell Helper
+
+* db.*serverStatus()*
+
+While they look sort of similar, the database command is a lot more verbose in defining the same level of work. That's part of why MongoDB provides helper methods for wrapping these database commands. Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
 
 Running a database command itself is pretty straightforward. The Mongo shell provides the run command method on the database object. You pass in the command as a parameter to this method. DB here refers to the active database. Do you remember the use keyword? We've used it a few times already. The run command always works against the active database. So make sure you set the right database to active before you use run command.
 
