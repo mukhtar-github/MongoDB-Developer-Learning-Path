@@ -571,7 +571,26 @@ I mentioned earlier that *shell helpers* wrap an underlying *database command*. 
 
 #### Database Command vs Shell Helper
 
-* db.*serverStatus()*
+```javascript
+Database Command
+db.runCommand(
+  {
+    "createIndexes" : "<collection>",
+    "indexes" : [
+      {
+        key : { "product" : 1 }
+      },
+      "name" : "name_index"
+    ]
+  }
+)
+
+Shell Helper
+db.<collection>.createIndex(
+  { "product" : 1 },
+  { "name" : "name_index" }
+)
+```
 
 While they look sort of similar, the database command is a lot more verbose in defining the same level of work. That's part of why MongoDB provides helper methods for wrapping these database commands. Depending on whether you're using the MongoDB shell or MongoDB driver, the exact name and format of these helper methods might differ, but their purpose is to provide a shortcut for methods like this.
 
