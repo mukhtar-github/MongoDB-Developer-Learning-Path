@@ -786,7 +786,7 @@ The output here is what the *log level configuration* was. I can rerun *db.getLo
 }
 ```
 
-Let's take another look at the *log*, this time using *tail dash f*. I'm specifying the path to my *log file to the tail utility*, and I'm specifying the *dash f flag* to direct tail to follow this log.
+Let's take another look at the *log*, this time using *tail -f*. I'm specifying the path to my *log file to the tail utility*, and I'm specifying the *-f flag* to direct tail to follow this log.
 
 ```javascript
 tail -f /data/db/mongod.log
