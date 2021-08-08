@@ -623,7 +623,7 @@ To recap, the *database commands* provide the foundation for interacting with *M
 
 ### Logging Basics
 
-*MongoDB* provides two logging facilities for tracking activities on your database. The *Process log* displays activity on the *MongoDB* instance. The *Process log* collects activity into one of the following components. Each of these components has an associated verbosity level. You can use *db.getLogComponents in the mongo shell* -- to review the currently configured log component verbosity. Let's take a look. I'm connected to the *MongoDB server using the mongo shell*. I can run *db.getLogComponents* to retrieve the log components from my current database.
+*MongoDB* provides two logging facilities for tracking activities on your database. The *Process log* displays activity on the *MongoDB* instance. The *Process log* collects activity into one of the following components. Each of these components has an associated verbosity level. You can use *db.getLogComponents in the mongo shell* -- to review the currently configured log component verbosity. Let's take a look. I'm connected to the *MongoDB server using the mongo shell*. I can run *db.getLogComponents* to retrieve the *log components* from my current database.
 
 ```javascript
 >   db.getLogComponents()
@@ -634,24 +634,28 @@ To recap, the *database commands* provide the foundation for interacting with *M
  "executor" : {"verbosity" : -1},
  "geo" : {"verbosity" : -1},
  "index" : {"verbosity" : -1},
- "network" : {"verbosity" : -1,
+ "network" : {
+  "verbosity" : -1,
   "asio" : {"verbosity" : -1},
   "bridge" : {"verbosity" : -1},
   "connectionPool" : {"verbosity" : -1}
  },
  "query" : {"verbosity" : -1},
- "replication" : {"verbosity" : -1,
+ "replication" : {
+  "verbosity" : -1,
   "election" : {"verbosity" : -1},
   "heartbeats" : {"verbosity" : -1},
   "initialSync" : {"verbosity" : -1},
   "rollback" : {"verbosity" : -1}
  },
- "sharding" : {"verbosity" : -1,
+ "sharding" : {
+  "verbosity" : -1,
   "rangeDeleter" : {"verbosity" : -1},
   "shardingCatalogRefresh" : {"verbosity" : -1},
   "migration" : {"verbosity" : -1}
  },
- "storage" : {"verbosity" : -1,
+ "storage" : {
+  "verbosity" : -1,
   "recovery" : {"verbosity" : -1},
   "journal" : {"verbosity" : -1}
  },
