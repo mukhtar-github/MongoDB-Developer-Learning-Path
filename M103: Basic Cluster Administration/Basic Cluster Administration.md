@@ -623,9 +623,9 @@ To recap, the *database commands* provide the foundation for interacting with *M
 
 ### Logging Basics
 
-*MongoDB* provides two logging facilities for tracking activities on your database. The process log displays activity on the MongoDB instance. The process log collects activity into one of the following components. Each of these components has an associated verbosity level. You can use db.getLogComponents the mongo shell-- to review the currently configured log component verbosity. Let's take a look.
+*MongoDB* provides two logging facilities for tracking activities on your database. The *Process log* displays activity on the *MongoDB* instance. The *Process log* collects activity into one of the following components. Each of these components has an associated verbosity level. You can use *db.getLogComponents* in the mongo shell-- to review the currently configured log component verbosity. Let's take a look.
 
-I'm connected to the MongoDB server using the mongo shell. I can run db.getLogComponents to retrieve the log components from my current database. So what does all of this mean? Starting at the top, the verbosity field is the default verbosity level for the MondoDB server. Any of the other components can inherit from this field. See how all of these other components have negative 1 as their verbosity?
+I'm connected to the *MongoDB server using the mongo shell*. I can run *db.getLogComponents* to retrieve the log components from my current database. So what does all of this mean? Starting at the top, the verbosity field is the default verbosity level for the MondoDB server. Any of the other components can inherit from this field. See how all of these other components have negative 1 as their verbosity?
 
 Negative 1 means, inherit from parent. You can see I have a verbosity of 1, so all of my components are inheriting from that. Log levels 1 through 5. Just increase the verbosity level to include debug messages. The higher the number, the more verbose your debug messages are. Let's just recap that very briefly. Negative 1 means that the log component inherits its verbosity level from its parent.
 
