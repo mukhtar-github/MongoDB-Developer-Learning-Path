@@ -786,9 +786,31 @@ The output here is what the *log level configuration* was. I can rerun *db.getLo
 }
 ```
 
-We can see here that I've successfully set the *verbosity level of the index logging component to 0*. Let's take another look at the *log*, this time using *tail dash f*. I'm specifying the path to my log file to the tail utility, and I'm specifying the *dash f flag* to direct tail to follow this log. That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this command logging event.
+We can see here that I've successfully set the *verbosity level of the index logging component to 0*. Let's take another look at the *log*, this time using *tail dash f*. I'm specifying the path to my *log file to the tail utility*, and I'm specifying the *dash f flag* to direct tail to follow this log.
 
-So this is the command that I just identified in the log file. Let's start with the timestamp. This lets us know when the event occurred. Next, I have the severity level of the message. Briefly, there are five types of severity levels. You have fatal, error, warning, informational, which is related to verbosity level 0, and debug, which is related to verbosity level 1 through 5. This component has a verbosity level of I, which means that this is an informational message.
+```javascript
+tail -f /data/db/mongod.log
+```
+
+That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this *command logging event*.
+
+```javascript
+{
+  "t": {
+    "$date": "2020-05-01T15:16:17.180+00:00"
+  },
+  "s": "I",
+  "c": "COMMAND",
+  "id": 12345,
+  "ctx": "listener",
+  "msg": "Listening on",
+  "attr": {
+    "address": "127.0.0.1"
+  }
+}
+```
+
+So this is the command that I just identified in the *log file*. Let's start with the timestamp. This lets us know when the event occurred. Next, I have the severity level of the message. Briefly, there are five types of severity levels. You have fatal, error, warning, informational, which is related to verbosity level 0, and debug, which is related to verbosity level 1 through 5. This component has a verbosity level of I, which means that this is an informational message.
 
 Next, we have the actual log component that the operation falls under. In this case, the operation is a command. We can also see the connection that the event occurred on. Connections are incremented and unique, so any events initiated by a specific connection are likely from the same client. We have more specific information on the event. We have a command action that was executed on the admin database. The $cmd indicates that this was a database command.
 
