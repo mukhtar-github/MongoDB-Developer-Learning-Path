@@ -674,9 +674,25 @@ Just increase the verbosity level to include debug messages. The higher the numb
 
 If you're not trying to actively identify and resolve an issue, you can leave the *verbosity at 0* for a base level of monitoring. You'll notice that, for some of these *log components*, there are actually *subcomponents* as well. Remember, there were three different *components for replication*. You had your *standard replication component*, and then you had a *heartbeats and a rollback component*. You can see all three of them here under the *replication parent*. Each one is inheriting.
 
-*Heartbeats and rollback* both inherit from *replication*, which, itself, inherits from my top level verbosity field. Now, how does all this work? There are two ways that we can look at the logs. The first is by using the *get logs database command here in the mongo shell*. The other is to use a utility, like *tail dash f* to follow the end of the log. Let's start with the *get logs command*. I'm using *db.adminCommand*, because *getLog* has to be run against the *admin database*.
+*Heartbeats and rollback* both inherit from *replication*, which, itself, inherits from my top level verbosity field. Now, how does all this work? There are two ways that we can look at the logs. The first is by using the *get logs database command here in the mongo shell*. The other is to use a utility, like *tail dash f* to follow the end of the log. Let's start with the *get logs command*. I'm using *db.adminCommand*, because *getLog* has to be run against the *admin database*. I'm specifying *global* to tell *getLog* to give me all of the log activity. This is going to return the entire log up to the point we ran this command.
 
-I'm specifying global to tell *getLog* to give me all of the log activity. This is going to return the entire log up to the point we ran this command. You can see that I have a lot of index activity. There are several commands in here, including the command I ran when I ran db.getLog. Looking at this, I actually have a little bit too much index activity. I don't really need this level of detail. Let's change the log verbosity for the index component back down to 0.
+```javascript
+> db.adminCommand({ "getLog": "global" })
+{
+	"totalLinesWritten" : 98,
+	"log" : [
+		"{\"t\":{\"$date\":\"2021-08-08T03:03:24.201+01:00\"},\"s\":\"I\",  \"c\":\"CONTROL\",  \"id\":20698,   \"ctx\":\"main\",\"msg\":\"***** SERVER RESTARTED *****\"}",
+		"{\"t\":{\"$date\":\"2021-08-08T03:03:24.624+01:00\"},\"s\":\"I\",  \"c\":\"CONTROL\",  \"id\":23285,   \"ctx\":\"main\",\"msg\":\"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'\"}",
+		"{\"t\":{\"$date\":\"2021-08-08T03:03:28.320+01:00\"},\"s\":\"W\",  \"c\":\"ASIO\",     \"id\":22601,   \"ctx\":\"main\",\"msg\":\"No TransportLayer configured during NetworkInterface startup\"}",
+		"{\"t\":{\"$date\":\"2021-08-08T03:03:28.320+01:00\"},\"s\":\"I\",  \"c\":\"NETWORK\",  \"id\":4648601, \"ctx\":\"main\",\"msg\":\"Implicit TCP FastOpen unavailable. If TCP FastOpen is required, set tcpFastOpenServer, tcpFastOpenClient, and tcpFastOpenQueueSize.\"}",
+		"{\"t\":{\"$date\":\"2021-08-08T03:03:28.321+01:00\"},\"s\":\"I\",  \"c\":\"STORAGE\",  \"id\":4615611, \"ctx\":\"initandlisten\",\"msg\":\"MongoDB starting\",\"attr\":{\"pid\":1224,\"port\":27017,\"dbPath\":\"/var/lib/mongodb\",\"architecture\":\"64-bit\",\"host\":\"mukhtar-Aspire-ES1-431\"}}",
+    "{\"t\":{\"$date\":\"2021-08-08T04:07:45.042+01:00\"},\"s\":\"I\",  \"c\":\"STORAGE\",  \"id\":22430,   \"ctx\":\"WTCheckpointThread\",\"msg\":\"WiredTiger message\",\"attr\":{\"message\":\"[1628392065:42316][1224:0x7ff78527f700], WT_SESSION.checkpoint: [WT_VERB_CHECKPOINT_PROGRESS] saving checkpoint snapshot min: 73, snapshot max: 73 snapshot count: 0, oldest timestamp: (0, 0) , meta checkpoint timestamp: (0, 0)\"}}",
+		"{\"t\":{\"$date\":\"2021-08-08T04:08:45.233+01:00\"},\"s\":\"I\",  \"c\":\"STORAGE\",  \"id\":22430,   \"ctx\":\"WTCheckpointThread\",\"msg\":\"WiredTiger message\",\"attr\":{\"message\":\"[1628392125:233367][1224:0x7ff78527f700], WT_SESSION.checkpoint: [WT_VERB_CHECKPOINT_PROGRESS] saving checkpoint snapshot min: 74, snapshot max: 74 snapshot count: 0, oldest timestamp: (0, 0) , meta checkpoint timestamp: (0, 0)\"}}"
+	],
+	"ok" : 1
+```
+
+You can see that I have a lot of index activity. There are several commands in here, including the command I ran when I ran *db.getLog*. Looking at this, I actually have a little bit too much index activity. I don't really need this level of detail. Let's change the log verbosity for the index component back down to 0.
 
 I'm specifying the verbosity level that I want to change the component to with db.setLogLevel. The output here is what the log level configuration was. I can rerun db.getLogComponents to see my updated value of index. We can see here that I've successfully set the verbosity level of the index logging component to 0. Let's take another look at the log, this time using tail dash f.
 
