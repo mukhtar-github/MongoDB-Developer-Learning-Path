@@ -628,7 +628,8 @@ To recap, the *database commands* provide the foundation for interacting with *M
 ```javascript
 >   db.getLogComponents()
 {
- "verbosity" : 0, "accessControl" : {"verbosity" : -1},
+ "verbosity" : 0, 
+ "accessControl" : {"verbosity" : -1},
  "command" : {"verbosity" : -1},
  "control" : {"verbosity" : -1},
  "executor" : {"verbosity" : -1},
@@ -667,11 +668,11 @@ To recap, the *database commands* provide the foundation for interacting with *M
 }
 ```
 
-So what does all of this mean? Starting at the top, the verbosity field is the default verbosity level for the MondoDB server. Any of the other components can inherit from this field. See how all of these other components have negative 1 as their verbosity?
+So what does all of this mean? Starting at the top, the *verbosity field* is the default *verbosity level for the MondoDB server*. Any of the other components can inherit from this field. See how all of these other components have *negative 1* as their verbosity? *Negative 1* means, inherit from parent. You can see I have a *verbosity of 1*, so all of my components are inheriting from that. *Log levels 1 through 5*.
 
-Negative 1 means, inherit from parent. You can see I have a verbosity of 1, so all of my components are inheriting from that. Log levels 1 through 5. Just increase the verbosity level to include debug messages. The higher the number, the more verbose your debug messages are. Let's just recap that very briefly. Negative 1 means that the log component inherits its verbosity level from its parent.
+Just increase the verbosity level to include debug messages. The higher the number, the more verbose your debug messages are. Let's just recap that very briefly. *Negative 1* means that the *log component* inherits its verbosity level from its parent. By default, your *verbosity is typically 0*. That means informational messages only. I had set my *verbosity level to 1* so I could see more debug messages. A higher verbosity level means more detailed and more frequent debug messages.
 
-By default, your verbosity is typically 0. That means informational messages only. I had set my verbosity level to 1 so I could see more debug messages. A higher verbosity level means more detailed and more frequent debug messages. If you're not trying to actively identify and resolve an issue, you can leave the verbosity at 0 for a base level of monitoring. You'll notice that, for some of these log components, there are actually subcomponents as well.
+If you're not trying to actively identify and resolve an issue, you can leave the verbosity at 0 for a base level of monitoring. You'll notice that, for some of these log components, there are actually subcomponents as well.
 
 Remember, there were three different components for replication. You had your standard replication component, and then you had a heartbeats and a rollback component. You can see all three of them here under the replication parent. Each one is inheriting. Heartbeats and rollback both inherit from replication, which, itself, inherits from my top level verbosity field. Now, how does all this work?
 
