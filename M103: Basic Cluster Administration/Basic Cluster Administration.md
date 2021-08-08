@@ -786,9 +786,7 @@ The output here is what the *log level configuration* was. I can rerun *db.getLo
 }
 ```
 
-We can see here that I've successfully set the *verbosity level of the index logging component to 0*. Let's take another look at the log, this time using *tail dash f*.
-
-I'm specifying the path to my log file to the tail utility, and I'm specifying the dash f flag to direct tail to follow this log. That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this command logging event.
+We can see here that I've successfully set the *verbosity level of the index logging component to 0*. Let's take another look at the *log*, this time using *tail dash f*. I'm specifying the path to my log file to the tail utility, and I'm specifying the *dash f flag* to direct tail to follow this log. That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this command logging event.
 
 So this is the command that I just identified in the log file. Let's start with the timestamp. This lets us know when the event occurred. Next, I have the severity level of the message. Briefly, there are five types of severity levels. You have fatal, error, warning, informational, which is related to verbosity level 0, and debug, which is related to verbosity level 1 through 5. This component has a verbosity level of I, which means that this is an informational message.
 
