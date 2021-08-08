@@ -786,13 +786,13 @@ The output here is what the *log level configuration* was. I can rerun *db.getLo
 }
 ```
 
-Let's take another look at the *log*, this time using *tail -f*. I'm specifying the path to my *log file to the tail utility*, and I'm specifying the *-f flag* to direct tail to follow this log.
+Let's take another look at the *log*, this time using *tail -f*. I'm specifying the path to my *log file to the tail utility*, and I'm specifying the *-f flag* to direct *tail* to follow this log.
 
 ```javascript
 tail -f /data/db/mongod.log
 ```
 
-That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this *command logging event*.
+That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from *tail* available to you that perform the same basic function. Let's specifically take a look at this *command logging event*.
 
 ```javascript
 {
@@ -810,12 +810,10 @@ That means that I will constantly get updates as there is new activity posted to
 }
 ```
 
-So this is the *command* that I just identified in the *log file*. Let's start with the **timestamp** -- *t*. This lets us know when the event occurred. Next, *I* have the **severity level** of the message. Briefly, there are five types of *severity levels*.
-> You have *fatal, error, warning, informational, which is related to verbosity level 0, and debug, which is related to verbosity level 1 through 5*.
+So this is the *command* that I just identified in the *log file*. Let's start with the **Timestamp** -- *t*. This lets us know when the event occurred. Next, *I* have the **Severity level** of the message. Briefly, there are five types of *severity levels*.
+> You have *F-fatal, E-error, W-warning, I-informational, which is related to verbosity level 0, and D-debug, which is related to (verbosity level 1 - 5)*.
 
-This component has a verbosity level of *I*, which means that this is an *informational message*.
-
-Next, we have the actual log component that the operation falls under. In this case, the operation is a command. We can also see the connection that the event occurred on. Connections are incremented and unique, so any events initiated by a specific connection are likely from the same client. We have more specific information on the event. We have a command action that was executed on the admin database. The $cmd indicates that this was a database command.
+This component has a verbosity level of *I*, which means that this is an *informational message*. Next, we have the actual log component that the operation falls under. In this case, the operation is a command. We can also see the connection that the event occurred on. Connections are incremented and unique, so any events initiated by a specific connection are likely from the same client. We have more specific information on the event. We have a command action that was executed on the admin database. The $cmd indicates that this was a database command.
 
 The full list of possible events and descriptors are out of scope. But in general, you can expect that what immediately follows the connection to be the operation that triggered the event. appName indicates what client initiated the operation -- in this case, the mongo shell. Now we can dig into the command itself. The entire document is the skeleton of the command executed. Under the hood, we have a set parameter command that sets the log component verbosity of the index log component on the admin database.
 
