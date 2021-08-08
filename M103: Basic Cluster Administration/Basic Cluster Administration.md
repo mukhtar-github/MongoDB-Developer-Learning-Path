@@ -797,23 +797,39 @@ That means that I will constantly get updates as there is new activity posted to
 ```javascript
 {
   "t": {
-    "$date": "2020-05-01T15:16:17.180+00:00"
+    "$date": "2020-05-20T19:18:40.604+00:00"
   },
   "s": "I",
   "c": "COMMAND",
-  "id": 12345,
-  "ctx": "listener",
-  "msg": "Listening on",
+  "id": 51800,
+  "ctx": "conn281",
+  "msg": "client metadata",
   "attr": {
-    "address": "127.0.0.1"
+    "remote": "192.168.14.15:37666",
+    "client": "conn281",
+    "doc": {
+      "application": {
+        "name": "MongoDB Shell"
+      },
+      "driver": {
+        "name": "MongoDB Internal Client",
+        "version": "4.4.0"
+      },
+      "os": {
+        "type": "Linux",
+        "name": "CentOS Linux release 8.0.1905 (Core) ",
+        "architecture": "x86_64",
+        "version": "Kernel 4.18.0-80.11.2.el8_0.x86_64"
+      }
+    }
   }
 }
 ```
 
 So this is the *command* that I just identified in the *log file*. Let's start with the **Timestamp** -- *t*. This lets us know when the event occurred. Next, *I* have the **Severity level** of the message. Briefly, there are five types of *severity levels*.
-> You have *F-fatal, E-error, W-warning, I-informational, which is related to verbosity level 0, and D-debug, which is related to (verbosity level 1 - 5)*.
+> You have *F-fatal, E-error, W-warning, I-informational, which is related to verbosity level 0, and D-debug, which is related to (verbosity level 1 - 5)*. This component has a *verbosity level of I*, which means that this is an *informational message*.
 
-This component has a verbosity level of *I*, which means that this is an *informational message*. Next, we have the actual log component that the operation falls under. In this case, the operation is a command. We can also see the connection that the event occurred on. Connections are incremented and unique, so any events initiated by a specific connection are likely from the same client. We have more specific information on the event. We have a command action that was executed on the admin database. The $cmd indicates that this was a database command.
+Next, we have the actual log **Components** -- c, that the operation falls under. In this case, the operation is a *COMMAND*. We can also see the connection that the event occurred on. Connections are incremented and unique, so any events initiated by a specific connection are likely from the same client. We have more specific information on the event. We have a command action that was executed on the admin database. The $cmd indicates that this was a database command.
 
 The full list of possible events and descriptors are out of scope. But in general, you can expect that what immediately follows the connection to be the operation that triggered the event. appName indicates what client initiated the operation -- in this case, the mongo shell. Now we can dig into the command itself. The entire document is the skeleton of the command executed. Under the hood, we have a set parameter command that sets the log component verbosity of the index log component on the admin database.
 
