@@ -692,7 +692,56 @@ If you're not trying to actively identify and resolve an issue, you can leave th
  "ok" : 1
 ```
 
-You can see that I have a lot of *index activity*. There are several commands in here, including the command I ran when I ran *db.getLog*. Looking at this, I actually have a little bit too much *index activity*. I don't really need this level of detail. Let's change the *log verbosity for the index component back down to 0*. I'm specifying the *verbosity level* that I want to change the component to with *db.setLogLevel*. The output here is what the *log level configuration* was. I can rerun *db.getLogComponents* to see my updated value of index.
+You can see that I have a lot of *index activity*. There are several commands in here, including the command I ran when I ran *db.getLog*. Looking at this, I actually have a little bit too much *index activity*. I don't really need this level of detail. Let's change the *log verbosity for the index component back down to 0*. I'm specifying the *verbosity level* that I want to change the component to with *db.setLogLevel*.
+
+```javascript
+> db.setLogLevel(0, "index")
+
+{ 
+  "was" : {
+    "verbosity" : 0, 
+    "accessControl" : {"verbosity" : -1},
+    "command" : {"verbosity" : -1},
+    "control" : {"verbosity" : -1},
+    "executor" : {"verbosity" : -1},
+    "geo" : {"verbosity" : -1},
+    "index" : {"verbosity" : -1},
+    "network" : {
+      "verbosity" : -1,
+      "asio" : {"verbosity" : -1},
+      "bridge" : {"verbosity" : -1},
+      "connectionPool" : {"verbosity" : -1}
+    },
+    "query" : {"verbosity" : -1},
+    "replication" : {
+      "verbosity" : -1,
+      "election" : {"verbosity" : -1},
+      "heartbeats" : {"verbosity" : -1},
+      "initialSync" : {"verbosity" : -1},
+      "rollback" : {"verbosity" : -1}
+    },
+    "sharding" : {
+      "verbosity" : -1,
+      "rangeDeleter" : {"verbosity" : -1},
+      "shardingCatalogRefresh" : {"verbosity" : -1},
+      "migration" : {"verbosity" : -1}
+    },
+    "storage" : {
+      "verbosity" : -1,
+      "recovery" : {"verbosity" : -1},
+      "journal" : {"verbosity" : -1}
+    },
+    "write" : {"verbosity" : -1},
+    "ftdc" : {"verbosity" : -1},
+    "tracking" : {"verbosity" : -1},
+    "transaction" : {"verbosity" : -1},
+    "test" : {"verbosity" : -1}
+    },
+    "ok" : 1
+}
+```
+
+The output here is what the *log level configuration* was. I can rerun *db.getLogComponents* to see my updated value of index.
 
 We can see here that I've successfully set the verbosity level of the index logging component to 0. Let's take another look at the log, this time using tail dash f.
 
