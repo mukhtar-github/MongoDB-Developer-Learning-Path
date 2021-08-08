@@ -626,7 +626,7 @@ To recap, the *database commands* provide the foundation for interacting with *M
 *MongoDB* provides two logging facilities for tracking activities on your database. The *Process log* displays activity on the *MongoDB* instance. The *Process log* collects activity into one of the following components. Each of these components has an associated verbosity level. You can use *db.getLogComponents in the mongo shell* -- to review the currently configured log component verbosity. Let's take a look. I'm connected to the *MongoDB server using the mongo shell*. I can run *db.getLogComponents* to retrieve the *log components* from my current database.
 
 ```javascript
->   db.getLogComponents()
+>  db.getLogComponents()
 {
  "verbosity" : 0, 
  "accessControl" : {"verbosity" : -1},
@@ -743,7 +743,50 @@ You can see that I have a lot of *index activity*. There are several commands in
 
 The output here is what the *log level configuration* was. I can rerun *db.getLogComponents* to see my updated value of index.
 
-We can see here that I've successfully set the verbosity level of the index logging component to 0. Let's take another look at the log, this time using tail dash f.
+```javascript
+>  db.getLogComponents()
+{
+ "verbosity" : 0, 
+ "accessControl" : {"verbosity" : -1},
+ "command" : {"verbosity" : -1},
+ "control" : {"verbosity" : -1},
+ "executor" : {"verbosity" : -1},
+ "geo" : {"verbosity" : -1},
+ "index" : {"verbosity" : 0},
+ "network" : {
+  "verbosity" : -1,
+  "asio" : {"verbosity" : -1},
+  "bridge" : {"verbosity" : -1},
+  "connectionPool" : {"verbosity" : -1}
+ },
+ "query" : {"verbosity" : -1},
+ "replication" : {
+  "verbosity" : -1,
+  "election" : {"verbosity" : -1},
+  "heartbeats" : {"verbosity" : -1},
+  "initialSync" : {"verbosity" : -1},
+  "rollback" : {"verbosity" : -1}
+ },
+ "sharding" : {
+  "verbosity" : -1,
+  "rangeDeleter" : {"verbosity" : -1},
+  "shardingCatalogRefresh" : {"verbosity" : -1},
+  "migration" : {"verbosity" : -1}
+ },
+ "storage" : {
+  "verbosity" : 0,
+  "recovery" : {"verbosity" : -1},
+  "journal" : {"verbosity" : -1}
+ },
+ "write" : {"verbosity" : -1},
+ "ftdc" : {"verbosity" : -1},
+ "tracking" : {"verbosity" : -1},
+ "transaction" : {"verbosity" : -1},
+ "test" : {"verbosity" : -1}
+}
+```
+
+We can see here that I've successfully set the *verbosity level of the index logging component to 0*. Let's take another look at the log, this time using *tail dash f*.
 
 I'm specifying the path to my log file to the tail utility, and I'm specifying the dash f flag to direct tail to follow this log. That means that I will constantly get updates as there is new activity posted to this file. Depending on your operating system, there may be different utilities from tail available to you that perform the same basic function. Let's specifically take a look at this command logging event.
 
