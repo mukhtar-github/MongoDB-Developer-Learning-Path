@@ -856,16 +856,30 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ mongo --quiet
 switched to db newDB
 ```
 
-All right, so now let's take a look at the *profiler*. This database doesn't actually exist yet, so the *profiler by default is set to level 0*. And we can verify that by running *db.getProfilingLevel()*.
+All right, so now let's take a look at the *profiler*. This database doesn't actually exist yet, so the *profiler by default is set to level 0*. And we can verify that by running *db.getProfilingLevel()*. And as you can see, it gives us a *zero*.
 
 ```javascript
 > db.getProfilingLevel()
 0
 ```
 
-And as you can see, it gives us a zero. We can change that to a one with db.setprofilinglevel. So this statement turned on the profiler, profiling level 1. If we run this command, we can see that MongoDB created a new collection called system dot profile.
+We can change that to a *one* with *db.setProfilingLevel(1)*. So this statement turned on the *profiler, profiling level 1*.
 
-But there's nothing in it right now. And because we haven't specified a slow MS, the profiler will only store data on queries that take longer than 100 milliseconds. All right so here, just to get a sense of how the profiler works and what the profiling data looks like, I'm just going to set slow MS to zero, so that everything gets profiled in this database. So I'm just going to insert a small document here into this new collection, called new collection.
+```javascript
+> db.setProfilingLevel(1)
+{ "was" : 0, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }
+```
+
+If we run *show collections* command, we can see that *MongoDB* created a *new collection called system dot profile*.
+
+```javascript
+> show collections
+system.profile
+```
+
+But there's nothing in it right now. And because we haven't specified a *slow MS*, the *profiler* will only store data on queries that take longer than *100 milliseconds*.
+
+All right so here, just to get a sense of how the profiler works and what the profiling data looks like, I'm just going to set slow MS to zero, so that everything gets profiled in this database. So I'm just going to insert a small document here into this new collection, called new collection.
 
 So now I'm just going to look at what's in the system dot profile collection right now, after we'd run that query, and I'm going to make the output a little prettier so it's more readable. All right, so we can see our rights statement is recorded in the profiler. It gives us the number of documents inserted, and inserted, and the number of index keys inserted by the operation, keys inserted, as well as how long the operation took in milliseconds.
 
