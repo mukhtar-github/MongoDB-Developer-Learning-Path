@@ -846,7 +846,7 @@ The lines won't contain any execution stats, the direction of an index used by a
 
 So for that, we rely on the *database profiler*. We enable profilers at the database level. So the operations on each database are profiled separately. When it's enabled, the profile will restore data for all operations on a given database, and a new collection called *system dot profile*. This collection will hold profiling data on *CRUD operations, as well as administrative and configuration options*.
 
-It has three settings. The default value is zero, which just means that the profiler's turned off. One means the profiler is on, but it's only going to profile operations that are considered slow. By default, MongoDB will consider any operation that takes longer than 100 milliseconds to be slow. But we can also define what a slow query is by setting the slow MS value, as we'll see in a minute.
+It has three settings. The default value is *zero*, which just means that the profiler's *turned off*. *One* means the profiler is *on*, but it's only going to profile operations that are considered *slow*. By default, *MongoDB* will consider any operation that takes longer than *100 milliseconds to be slow*. But we can also define what a *slow query* is by setting the *slow MS value*, as we'll see in a minute.
 
 Two means that the profiler's on, and will profile all operations on a database, regardless of how long they take. This is a bit dangerous because it can result in a lot of rights to the system dot profile collection, and generate a lot of load on the system. This doesn't mean small operations can't be blocking other ones, but getting data on those operations requires more granularity.
 
