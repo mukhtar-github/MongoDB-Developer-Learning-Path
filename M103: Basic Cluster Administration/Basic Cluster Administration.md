@@ -966,6 +966,236 @@ So now I'm just going to look at what's in the *system dot profile collection* r
 
 All right, so we can see our rights statement is recorded in the *profiler*. It gives us the number of documents *inserted -- ninserted*, and the number of *index keys inserted by the operation -- keysInserted*, as well as *how long the operation took in milliseconds*.
 
-So we can also profile read operations. Here, we have a really simple query predicate, where we're only looking for documents where A is one. And we can see the profiler recorded a little more information about this query. It tells us that we exhausted the cursor that we were using to retrieve this data, and it also has some execution stats, like the status that we went through to get here. In this case, it was just a collection scan.
+So we can also *profile read operations*. Here, we have a really simple *query predicate*, where we're only looking for documents where *a is one*.
 
-All right, so just to recap, we've covered the difference between log data and profile data, how to configure the profiler on your database, and how to interpret the output from the profiler depending on the operation.
+```javascript
+> db.new_collection.find( { "a": 1 } )
+{ "_id" : ObjectId("6110bbfe274fa4bc4823b4c9"), "a" : 1 }
+> db.system.profile.find().pretty()
+{
+    "op" : "insert",
+    "ns" : "newDB.new_collection",
+    "command" : {
+      "insert" : "new_collection",
+      "ordered" : true,
+      "lsid" : {
+        "id" : UUID("5d506a80-0091-47f6-9f04-5ae47502afb4")
+      },
+      "$db" : "newDB"
+    },
+    "ninserted" : 1,
+    "keysInserted" : 1,
+    "numYield" : 0,
+    "locks" : {
+      "ParallelBatchWriterMode" : {
+        "acquireCount" : {
+          "r" : NumberLong(5)
+        }
+      },
+      "ReplicationStateTransition" : {
+        "acquireCount" : {
+          "w" : NumberLong(6)
+        }
+      },
+      "Global" : {
+        "acquireCount" : {
+          "r" : NumberLong(3),
+          "w" : NumberLong(3)
+        }
+      },
+      "Database" : {
+        "acquireCount" : {
+          "r" : NumberLong(2),
+          "w" : NumberLong(3)
+        }
+      },
+      "Collection" : {
+        "acquireCount" : {
+          "r" : NumberLong(1),
+          "w" : NumberLong(3)
+        }
+      },
+      "Mutex" : {
+        "acquireCount" : {
+          "r" : NumberLong(5)
+        }
+      }
+    },
+    "flowControl" : {
+      "acquireCount" : NumberLong(3),
+      "timeAcquiringMicros" : NumberLong(5)
+    },
+    "storage" : {
+      
+    },
+    "responseLength" : 45,
+    "protocol" : "op_msg",
+    "millis" : 307,
+    "ts" : ISODate("2021-08-09T05:24:14.898Z"),
+    "client" : "127.0.0.1",
+    "appName" : "MongoDB Shell",
+    "allUsers" : [ ],
+    "user" : ""
+  }
+  {
+    "op" : "query",
+    "ns" : "newDB.system.profile",
+    "command" : {
+      "find" : "system.profile",
+      "filter" : {
+        
+      },
+      "lsid" : {
+        "id" : UUID("5d506a80-0091-47f6-9f04-5ae47502afb4")
+      },
+      "$db" : "newDB"
+    },
+    "keysExamined" : 0,
+    "docsExamined" : 1,
+    "cursorExhausted" : true,
+    "numYield" : 0,
+    "nreturned" : 1,
+    "locks" : {
+      "ReplicationStateTransition" : {
+        "acquireCount" : {
+          "w" : NumberLong(2)
+        }
+      },
+      "Global" : {
+        "acquireCount" : {
+          "r" : NumberLong(2)
+        }
+      },
+      "Database" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      },
+      "Collection" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      },
+      "Mutex" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      }
+    },
+    "flowControl" : {
+      
+    },
+    "storage" : {
+      
+    },
+    "responseLength" : 878,
+    "protocol" : "op_msg",
+    "millis" : 27,
+    "planSummary" : "COLLSCAN",
+    "execStats" : {
+      "stage" : "COLLSCAN",
+      "nReturned" : 1,
+      "executionTimeMillisEstimate" : 0,
+      "works" : 3,
+      "advanced" : 1,
+      "needTime" : 1,
+      "needYield" : 0,
+      "saveState" : 0,
+      "restoreState" : 0,
+      "isEOF" : 1,
+      "direction" : "forward",
+      "docsExamined" : 1
+    },
+    "ts" : ISODate("2021-08-09T05:32:32.506Z"),
+    "client" : "127.0.0.1",
+    "appName" : "MongoDB Shell",
+    "allUsers" : [ ],
+    "user" : ""
+  }
+  {
+    "op" : "query",
+    "ns" : "newDB.new_collection",
+    "command" : {
+      "find" : "new_collection",
+      "filter" : {
+        "a" : 1
+      },
+      "lsid" : {
+        "id" : UUID("5d506a80-0091-47f6-9f04-5ae47502afb4")
+      },
+      "$db" : "newDB"
+    },
+    "keysExamined" : 0,
+    "docsExamined" : 1,
+    "cursorExhausted" : true,
+    "numYield" : 0,
+    "nreturned" : 1,
+    "queryHash" : "4B53BE76",
+    "planCacheKey" : "4B53BE76",
+    "locks" : {
+      "ReplicationStateTransition" : {
+        "acquireCount" : {
+          "w" : NumberLong(2)
+        }
+      },
+      "Global" : {
+        "acquireCount" : {
+          "r" : NumberLong(2)
+        }
+      },
+      "Database" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      },
+      "Collection" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      },
+      "Mutex" : {
+        "acquireCount" : {
+          "r" : NumberLong(1)
+        }
+      }
+    },
+    "flowControl" : {
+      
+    },
+    "storage" : {
+      
+    },
+    "responseLength" : 145,
+    "protocol" : "op_msg",
+    "millis" : 46,
+    "planSummary" : "COLLSCAN",
+    "execStats" : {
+      "stage" : "COLLSCAN",
+      "filter" : {
+        "a" : {
+          "$eq" : 1
+        }
+      },
+      "nReturned" : 1,
+      "executionTimeMillisEstimate" : 10,
+      "works" : 3,
+      "advanced" : 1,
+      "needTime" : 1,
+      "needYield" : 0,
+      "saveState" : 0,
+      "restoreState" : 0,
+      "isEOF" : 1,
+      "direction" : "forward",
+      "docsExamined" : 1
+    },
+    "ts" : ISODate("2021-08-09T05:57:28.384Z"),
+    "client" : "127.0.0.1",
+    "appName" : "MongoDB Shell",
+    "allUsers" : [ ],
+    "user" : ""
+}
+```
+
+And we can see the *profiler* recorded a little more information about this query. It tells us that we exhausted the cursor that we were using to retrieve this data, and it also has some *execution stats*, like the status that we went through to get here. In this case, it was just a *collection scan*.
+
+All right, so just to recap, we've covered the difference between *log data and profile data*, how to configure the *profiler on your database*, and how to interpret the output from the *profiler* depending on the operation.
