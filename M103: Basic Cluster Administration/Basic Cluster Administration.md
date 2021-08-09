@@ -1196,6 +1196,6 @@ So we can also *profile read operations*. Here, we have a really simple *query p
 }
 ```
 
-And we can see the *profiler* recorded a little more information about this query. It tells us that we exhausted the cursor that we were using to retrieve this data, and it also has some *execution stats*, like the status that we went through to get here. In this case, it was just a *collection scan*.
+And we can see the *profiler* recorded a little more information about this query. It tells us that we *exhausted the cursor -- cursorExhausted* that we were using to retrieve this data, and it also has some *execution stats -- execStats*, like the status that we went through to get here. In this case, it was just a *collection scan -- COLLSCAN*.
 
 All right, so just to recap, we've covered the difference between *log data and profile data*, how to configure the *profiler on your database*, and how to interpret the output from the *profiler* depending on the operation.
