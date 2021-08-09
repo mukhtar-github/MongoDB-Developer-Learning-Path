@@ -844,7 +844,7 @@ All right so in this lesson, we're going to discuss the *database profiler*, and
 
 The lines won't contain any execution stats, the direction of an index used by a query, rejected plans, or anything. And even if we could place that information in the logs, we really shouldn't. The log files are meant to give administrators operational information about an instance or process, so they can flag any errors, warnings, or interesting informational messages. For debugging slow operations, we need to be a bit more precise in the information we capture.
 
-So for that, we rely on the database profiler. We enable profilers at the database level. So the operations on each database are profiled separately. When it's enabled, the profile will restore data for all operations on a given database, and a new collection called system dot profile. This collection will hold profiling data on CRUD operations, as well as administrative and configuration options.
+So for that, we rely on the *database profiler*. We enable profilers at the database level. So the operations on each database are profiled separately. When it's enabled, the profile will restore data for all operations on a given database, and a new collection called *system dot profile*. This collection will hold profiling data on *CRUD operations, as well as administrative and configuration options*.
 
 It has three settings. The default value is zero, which just means that the profiler's turned off. One means the profiler is on, but it's only going to profile operations that are considered slow. By default, MongoDB will consider any operation that takes longer than 100 milliseconds to be slow. But we can also define what a slow query is by setting the slow MS value, as we'll see in a minute.
 
