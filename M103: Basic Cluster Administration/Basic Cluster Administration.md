@@ -879,7 +879,19 @@ system.profile
 
 But there's nothing in it right now. And because we haven't specified a *slow MS*, the *profiler* will only store data on queries that take longer than *100 milliseconds*.
 
-All right so here, just to get a sense of how the profiler works and what the profiling data looks like, I'm just going to set slow MS to zero, so that everything gets profiled in this database. So I'm just going to insert a small document here into this new collection, called new collection.
+All right so here, just to get a sense of how the *profiler* works and what the *profiling data* looks like, I'm just going to *set slow MS to zero*, so that everything gets *profiled in this database*.
+
+```javascript
+> db.setProfilingLevel( 1, { slowms: 0 } )
+{ "was" : 1, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }
+```
+
+So I'm just going to insert a small document here into this *new collection*, called *new_collection*.
+
+```javascript
+> db.new_collection.insert( { "a": 1 } )
+WriteResult({ "nInserted" : 1 })
+```
 
 So now I'm just going to look at what's in the system dot profile collection right now, after we'd run that query, and I'm going to make the output a little prettier so it's more readable. All right, so we can see our rights statement is recorded in the profiler. It gives us the number of documents inserted, and inserted, and the number of index keys inserted by the operation, keys inserted, as well as how long the operation took in milliseconds.
 
