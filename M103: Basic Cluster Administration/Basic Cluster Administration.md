@@ -964,7 +964,7 @@ So now I'm just going to look at what's in the *system dot profile collection* r
 }
 ```
 
-All right, so we can see our rights statement is recorded in the profiler. It gives us the number of documents inserted, and inserted, and the number of index keys inserted by the operation, keys inserted, as well as how long the operation took in milliseconds.
+All right, so we can see our rights statement is recorded in the *profiler*. It gives us the number of documents *inserted -- ninserted*, and the number of *index keys inserted by the operation -- keysInserted*, as well as *how long the operation took in milliseconds*.
 
 So we can also profile read operations. Here, we have a really simple query predicate, where we're only looking for documents where A is one. And we can see the profiler recorded a little more information about this query. It tells us that we exhausted the cursor that we were using to retrieve this data, and it also has some execution stats, like the status that we went through to get here. In this case, it was just a collection scan.
 
