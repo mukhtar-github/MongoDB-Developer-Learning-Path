@@ -886,14 +886,85 @@ All right so here, just to get a sense of how the *profiler* works and what the 
 { "was" : 1, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }
 ```
 
-So I'm just going to insert a small document here into this *new collection*, called *new_collection*.
+So I'm just going to *insert* a small document here into this *new collection*, called *new_collection*.
 
 ```javascript
 > db.new_collection.insert( { "a": 1 } )
 WriteResult({ "nInserted" : 1 })
 ```
 
-So now I'm just going to look at what's in the system dot profile collection right now, after we'd run that query, and I'm going to make the output a little prettier so it's more readable. All right, so we can see our rights statement is recorded in the profiler. It gives us the number of documents inserted, and inserted, and the number of index keys inserted by the operation, keys inserted, as well as how long the operation took in milliseconds.
+So now I'm just going to look at what's in the *system dot profile collection* right now, after we'd run that query, and I'm going to make the output a little prettier so it's more readable.
+
+```javascript
+> db.system.profile.find().pretty()
+{
+    "op" : "insert",
+    "ns" : "newDB.new_collection",
+    "command" : {
+      "insert" : "new_collection",
+      "ordered" : true,
+      "lsid" : {
+        "id" : UUID("5d506a80-0091-47f6-9f04-5ae47502afb4")
+      },
+      "$db" : "newDB"
+    },
+    "ninserted" : 1,
+    "keysInserted" : 1,
+    "numYield" : 0,
+    "locks" : {
+      "ParallelBatchWriterMode" : {
+        "acquireCount" : {
+          "r" : NumberLong(5)
+        }
+      },
+      "ReplicationStateTransition" : {
+        "acquireCount" : {
+          "w" : NumberLong(6)
+        }
+      },
+      "Global" : {
+        "acquireCount" : {
+          "r" : NumberLong(3),
+          "w" : NumberLong(3)
+        }
+      },
+      "Database" : {
+        "acquireCount" : {
+          "r" : NumberLong(2),
+          "w" : NumberLong(3)
+        }
+      },
+      "Collection" : {
+        "acquireCount" : {
+          "r" : NumberLong(1),
+          "w" : NumberLong(3)
+        }
+      },
+      "Mutex" : {
+        "acquireCount" : {
+          "r" : NumberLong(5)
+        }
+      }
+    },
+    "flowControl" : {
+      "acquireCount" : NumberLong(3),
+      "timeAcquiringMicros" : NumberLong(5)
+    },
+    "storage" : {
+      
+    },
+    "responseLength" : 45,
+    "protocol" : "op_msg",
+    "millis" : 307,
+    "ts" : ISODate("2021-08-09T05:24:14.898Z"),
+    "client" : "127.0.0.1",
+    "appName" : "MongoDB Shell",
+    "allUsers" : [ ],
+    "user" : ""
+}
+```
+
+All right, so we can see our rights statement is recorded in the profiler. It gives us the number of documents inserted, and inserted, and the number of index keys inserted by the operation, keys inserted, as well as how long the operation took in milliseconds.
 
 So we can also profile read operations. Here, we have a really simple query predicate, where we're only looking for documents where A is one. And we can see the profiler recorded a little more information about this query. It tells us that we exhausted the cursor that we were using to retrieve this data, and it also has some execution stats, like the status that we went through to get here. In this case, it was just a collection scan.
 
