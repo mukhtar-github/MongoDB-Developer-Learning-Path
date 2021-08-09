@@ -846,11 +846,17 @@ The lines won't contain any execution stats, the direction of an index used by a
 
 So for that, we rely on the *database profiler*. We enable profilers at the database level. So the operations on each database are profiled separately. When it's enabled, the profile will restore data for all operations on a given database, and a new collection called *system dot profile*. This collection will hold profiling data on *CRUD operations, as well as administrative and configuration options*.
 
-It has three settings. The default value is *zero*, which just means that the profiler's *turned off*. *One* means the profiler is *on*, but it's only going to profile operations that are considered *slow*. By default, *MongoDB* will consider any operation that takes longer than *100 milliseconds to be slow*. But we can also define what a *slow query* is by setting the *slow MS value*, as we'll see in a minute.
+It has three settings. The default value is *zero*, which just means that the profiler's *turned off*. *One* means the profiler is *on*, but it's only going to profile operations that are considered *slow*. By default, *MongoDB* will consider any operation that takes longer than *100 milliseconds to be slow*. But we can also define what a *slow query* is by setting the *slow MS value*, as we'll see in a minute. *Two means that the profiler's on*, and will profile all operations on a database, regardless of how long they take.
 
-Two means that the profiler's on, and will profile all operations on a database, regardless of how long they take. This is a bit dangerous because it can result in a lot of rights to the system dot profile collection, and generate a lot of load on the system. This doesn't mean small operations can't be blocking other ones, but getting data on those operations requires more granularity.
+> This is a bit dangerous because it can result in a lot of rights to the *system dot profile collection*, and generate a lot of load on the system. This doesn't mean small operations can't be blocking other ones, but getting data on those operations requires more granularity.
 
-All right, so now let's take a look at the profiler. This database doesn't actually exist yet, so the profiler by default is set to level 0. And we can verify that by running db.getprofilinglevel. And as you can see, it gives us a zero. We can change that to a one with db.setprofilinglevel. So this statement turned on the profiler, profiling level 1. If we run this command, we can see that MongoDB created a new collection called system dot profile.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongo --quiet
+> use newDB
+switched to db newDB
+```
+
+All right, so now let's take a look at the *profiler*. This database doesn't actually exist yet, so the profiler by default is set to level 0. And we can verify that by running db.getprofilinglevel. And as you can see, it gives us a zero. We can change that to a one with db.setprofilinglevel. So this statement turned on the profiler, profiling level 1. If we run this command, we can see that MongoDB created a new collection called system dot profile.
 
 But there's nothing in it right now. And because we haven't specified a slow MS, the profiler will only store data on queries that take longer than 100 milliseconds. All right so here, just to get a sense of how the profiler works and what the profiling data looks like, I'm just going to set slow MS to zero, so that everything gets profiled in this database. So I'm just going to insert a small document here into this new collection, called new collection.
 
