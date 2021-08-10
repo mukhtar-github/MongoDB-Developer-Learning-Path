@@ -1248,3 +1248,27 @@ net:
 security:
   authorization: enabled
 ```
+
+### Basic Security: Part 1
+
+Have you ever thought about the process required for you to withdraw cash from an ATM? How does the ATM figure out who you are, and what accounts you have access to, and what you can do? The ATM starts with a challenge. Who are you? Depending on your response, the ATM can validate you as who you say you are and grant access to the system. This process of challenge, response, and validation is authentication.
+
+Now, there is a second step that takes place. We know who you are, but how do we know what you can do? The ATM first asks a question. What does this user have access to? The answer here are the resources you have access to and the privileges or actions you can execute on these resources. The process of verifying the privileges and resource access of an authenticated user is authorization.
+
+In this case, the ATM authorizes you to only access your own accounts. Now, you're logged in and you can withdraw cash because you authenticated, using your debit card and pin, and were authorized to only access your own accounts. MongoDB Security is built around the process of authentication and authorization. When you enable authentication on a MongoDB cluster, every client must provide valid credentials for authentication.
+
+MongoDB then authorizes the user with certain resources and privilege access. Let's start with authentication. MongoDB supports four different client authentication mechanisms. SCRAM is the default and most basic form of client authentication MongoDB provides when you deploy in MongoD or MongoS with security enabled. The SCRAM prefix stands for Salted Challenge Response Authentication Mechanism.
+
+The key here is challenge response. Basically the MongoDB server presents a question or challenge to the client who must provide a valid answer or response for authentication. This is basically password security. You don't need to know the exact workings of the SCRAM authentication mechanism. Just remember that scram is basic security for your MongoDB cluster. Every MongoDB cluster should have authentication enabled and at least SCRAM in place.
+
+With the community version of MongoDB, you also have the option of configuring X.509 security. This form of security uses an X.509 certificate for authentication. This is a more secure, albeit more complex, authentication mechanism that is also available to you. MongoDB Enterprise includes two additional authentication mechanisms designed for enterprise environments. The first is the Lightweight Directory Access Protocol, or LDAP for short.
+
+If you haven't heard of LDAP, you might have heard of Microsoft Active Directory, which is built on the LDAP protocol. MongoDB you can use an Active Directory or other LDAP service as the authority on authentication or authorization of users. Finally, we have Kerberos authentication. The bright folks at the Massachusetts Institute of Technology designed Kerberos as a powerful authentication mechanism. Since this is a basic security course, we're sticking to SCRAM.
+
+Now, we're not quite done with authentication yet. We've only talked about client authentication. MongoDB also supports intra cluster authentication, the mechanism by which nodes in a cluster authenticate to each other. Think of this like a secret handshake. If you don't know the handshake, you can't join the cluster. We'll talk more about intra cluster auth in a later lesson. For now, just remember that MongoDB provides both cluster and client authentication for complete security.
+
+To recap MongoDB provides four client authentication mechanisms, in addition to cluster authentication. All editions of MongoDB get SCRAM and X.509 for client authentication. Enterprise editions of MongoDB also get LDAP and Kerberos authentication. At the very minimum, you should always configure your MongoDB deployments with SCRAM where there is a single administrative user protected by a very strong password. We'll be sticking to the basics in this course.
+
+Take a look at M310 or our MongoDB documentation for guidance on implementing other available authentication mechanisms. Now, we've covered the who are you. What about the what are you allowed to do? MongoDB uses role based access control for authorizing an authenticated user. Each MongoDB user has one or more roles associated to it. Each role has one or more privileges. These privileges represent a group of actions and the resources that those actions apply to.
+
+Role based access control allows you to ensure a high level of responsibility isolation among individual users. That means a user can be granted the exact roles required for that user to execute its expected workload. Users exist per database, so you can isolate user privilege down to the database or even the collection that the user should have access to. For the most basic security possible, create a user on the Admin database with one of our built in administrative super user roles, such as root. We're going to cover roles in detail later on.
