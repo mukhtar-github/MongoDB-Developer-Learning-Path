@@ -1251,7 +1251,7 @@ security:
 
 ### Basic Security: Part 1
 
-Have you ever thought about the process required for you to withdraw cash from an ATM? How does the ATM figure out who you are, and what accounts you have access to, and what you can do? The ATM starts with a challenge. Who are you? Depending on your response, the ATM can validate you as who you say you are and grant access to the system. This process of challenge, response, and validation is authentication.
+Have you ever thought about the process required for you to withdraw cash from an *ATM*? How does the *ATM* figure out who you are, and what accounts you have access to, and what you can do? The *ATM* starts with a challenge. Who are you? Depending on your response, the *ATM* can validate you as who you say you are and grant access to the system. This process of *challenge, response, and validation* is **authentication**.
 
 Now, there is a second step that takes place. We know who you are, but how do we know what you can do? The ATM first asks a question. What does this user have access to? The answer here are the resources you have access to and the privileges or actions you can execute on these resources. The process of verifying the privileges and resource access of an authenticated user is authorization.
 
