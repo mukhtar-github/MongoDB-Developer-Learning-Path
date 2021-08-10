@@ -1255,7 +1255,7 @@ Have you ever thought about the process required for you to withdraw cash from a
 
 Now, there is a second step that takes place. We know who you are, but how do we know what you can do? The *ATM* first asks a question. What does this user have access to? The answer here are the resources you have access to and the privileges or actions you can execute on these resources. The process of *verifying the privileges and resource access of an authenticated user* is **authorization**.
 
-In this case, the ATM authorizes you to only access your own accounts. Now, you're logged in and you can withdraw cash because you authenticated, using your debit card and pin, and were authorized to only access your own accounts. MongoDB Security is built around the process of authentication and authorization. When you enable authentication on a MongoDB cluster, every client must provide valid credentials for authentication.
+In this case, the *ATM* authorizes you to only access your own accounts. Now, you're logged in and you can withdraw cash because you *authenticated*, using your debit card and pin, and were *authorized* to only access your own accounts. *MongoDB Security* is built around the process of *authentication and authorization*. When you enable *authentication on a MongoDB cluster*, every client must provide valid credentials for *authentication*.
 
 MongoDB then authorizes the user with certain resources and privilege access. Let's start with authentication. MongoDB supports four different client authentication mechanisms. SCRAM is the default and most basic form of client authentication MongoDB provides when you deploy in MongoD or MongoS with security enabled. The SCRAM prefix stands for Salted Challenge Response Authentication Mechanism.
 
