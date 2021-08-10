@@ -1228,3 +1228,23 @@ mongo admin --host localhost:27000 --eval '
 ```
 
 3. Click "Run Tests" to run a test that will check the updated *logpath*.
+
+#### Answer:
+
+```javascript
+user@M103# mongod --config mongod.conf
+
+processManagement:
+   fork: true
+systemLog:
+   destination: file
+   path: "/var/mongodb/logs/mongod.log"
+   logAppend: true
+storage:
+  dbPath: /var/mongodb/db
+net:
+  bindIp: localhost
+  port: 27000
+security:
+  authorization: enabled
+```
