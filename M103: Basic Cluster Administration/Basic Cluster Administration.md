@@ -1210,3 +1210,21 @@ Use a configuration file to store log files in a new location:
 
 * *mongod* sends logs to */var/mongodb/logs/mongod.log*
 * *mongod* is forked and run as a daemon (this will not work without specifying *logpath*)
+
+You will still have access to the terminal window after launching mongod with these options. For help on forking the mongod process, please refer to the docs on *Managing Mongod Processes*.
+
+2. Use the following command to connect to the Mongo shell and create the following user. *You will need this user in order to validate your work*.
+
+```javascript
+mongo admin --host localhost:27000 --eval '
+  db.createUser({
+    user: "m103-admin",
+    pwd: "m103-pass",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+'
+```
+
+3. Click "Run Tests" to run a test that will check the updated *logpath*.
