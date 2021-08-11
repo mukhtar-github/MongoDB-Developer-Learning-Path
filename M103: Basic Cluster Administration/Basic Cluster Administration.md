@@ -1295,13 +1295,7 @@ The *username and password* are used for the *authentication steps*, and this ar
 
 It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on *db.createUser or the Create User command*. We can see here that I've successfully added my *new user*. Now I have to *authenticate as my root user to continue*. The *localhost exception* at this point in time is exhausted, and I cannot create any additional users without *authenticating first*.
 
-Remember, I'm currently using an unauthenticated session that I was only able to open because of the localhost exception.
-
-Now, there is a shell command, db.auth, that lets me authenticate from this particular session, but let's do this via the Mongo shell to simulate how a client would normally connect.
-
-I've specified my username root and password root.
-
-Remember using SCRAM, so there is a challenge response mechanism here.
+Remember, I'm currently using an *unauthenticated session* that I was only able to open because of the *localhost exception*. Now, there is a *shell command, db.auth*, that lets me *authenticate from this particular session*, but let's do this via the *Mongo shell* to simulate how a client would normally connect. I've specified my *username root and password root*. Remember using *SCRAM*, so there is a challenge response mechanism here.
 
 The authentication database parameter tells the MongoDB server which database contains my user credentials.
 
