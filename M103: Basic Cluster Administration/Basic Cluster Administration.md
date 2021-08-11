@@ -1277,3 +1277,123 @@ We'll be sticking to the basics in this course. Take a look at *M310 or our Mong
 *MongoDB* uses *role based access control for authorizing an authenticated user*. Each *MongoDB* user has *one or more roles associated to it*. Each role has *one or more privileges*. These privileges represent a *group of actions and the resources that those actions apply to*. *Role based access control* allows you to ensure a high level of responsibility isolation among individual users.
 
 That means a user can be granted the exact roles required for that user to execute its expected workload. *Users exist per database*, so you can *isolate user privilege down to the database* or even the *collection that the user should have access to*. For the most basic security possible, create a user on the *Admin database* with one of our built in *administrative super user roles, such as root*. We're going to cover roles in detail later on.
+
+### Basic Security: Part 2
+
+Right now, we're actually going to create our first MongoDB super user.
+
+First, let's take a look at our MongoDB server.
+
+Let's look at the configuration file for my MongoD.
+
+Notice this line here.
+
+This configuration file option does two things.
+
+First, it enables role-based access control or authorization on my cluster.
+
+Second, it implicitly enables authentication, as well.
+
+You cannot have one without the other.
+
+Now, I need to connect to my cluster.
+
+But this cluster has no existing users configured, even though auth is enabled.
+
+Since by default, MongoDB doesn't give you any users, you have to create them yourself.
+
+Since my server does not yet have any configured users, there's no way for me to authenticate myself to the server nor can I be authorized to do any work.
+
+Instead I must use the localhost exception to connect to the server, meaning I must connect to the Mongo shell from the same host that is running the MongoDB server process.
+
+Remember, once you have created your first user, the localhost exception closes.
+
+So always create a user with the administrative role first so you can create other users after the localhost exception has closed.
+
+So here I am, running my Mongo shell, and I'm going to connect to the server from the same host.
+
+Notice here that I'm using the localhost address.
+
+This is also a way for you to just double check that you are specifically connecting over the localhost interface.
+
+Now I'm connected.
+
+I'm going to try to run a few commands here.
+
+Well, I am connected, but I'm not authenticated nor authorized to do anything on the MongoDB server.
+
+When using the localhost exceptions, your privileges on the system are very restricted.
+
+Now, I do have access.
+
+So I can create my first user.
+
+I'm going to create this user on the admin database, because this is going to be an administrative super user, and I'm going to use the route built-in role.
+
+I'm using the db.createUser method to create a user on the admin database.
+
+I've specified the user name and the password, as well as the role I want to be associated to this user.
+
+The username and password are used for the authentication steps, and this array of roles is used for authorization.
+
+I've specified the built-in role route, which provides the highest level of privilege action across all database resources.
+
+I do want to note, MongoDB3.6 adds some additional user authentication restrictions in the form of an IP whitelist, meaning that the roles granted to a user depend on what IP they connect from.
+
+It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on db.createUser or the Create User command.
+
+We can see here that I've successfully added my new user.
+
+Now I have to authenticate as my root user to continue.
+
+The localhost exception at this point in time is exhausted, and I cannot create any additional users without authenticating first.
+
+Remember, I'm currently using an unauthenticated session that I was only able to open because of the localhost exception.
+
+Now, there is a shell command, db.auth, that lets me authenticate from this particular session, but let's do this via the Mongo shell to simulate how a client would normally connect.
+
+I've specified my username root and password root.
+
+Remember using SCRAM, so there is a challenge response mechanism here.
+
+The authentication database parameter tells the MongoDB server which database contains my user credentials.
+
+Remember, users are per database.
+
+That means if I have two users, Bob at inventory and Bob at sales, those are two different users.
+
+The authentication database dictates which user I authenticate as and what privileges I get.
+
+I created this user on the admin database, so that's where I'm connecting.
+
+So, now I'm connected, and I have the privileges associated with root.
+
+Remember, earlier I could not run this command.
+
+Now I am authenticated and authorized as a user who has access to this.
+
+So now I'm connected, and I have the privileges associated with root.
+
+Again, this is the most basic implementation of security.
+
+You will have to create additional users as necessary to fulfill specific operational tasks.
+
+You don't want everyone using the system to have root access.
+
+This is a lot of information, so read through carefully.
+
+Let's recap.
+
+MongoDB user security is an authentication and authorization model, so users must provide who they are to the server, which decides what they can do based on the user they authenticated as.
+
+MongoDB supports multiple authentication mechanisms.
+
+SCRAM and X.509 are the community authentication mechanisms.
+
+These are also available on the enterprise versions of MongoDB.
+
+LDAP and KERBEROS are enterprise-only authentication mechanisms.
+
+Each user that you create has one or more roles that define their authorized access.
+
+And, at the very minimum, you should always configure SCRAM-SHA-1 with a single administrative user protected by a strong password.
