@@ -1299,34 +1299,10 @@ Remember, I'm currently using an *unauthenticated session* that I was only able 
 
 The *authentication database parameter* tells the *MongoDB server* which database contains my *user credentials*. Remember, *users are per database*. That means if I have *two users, Bob at inventory and Bob at sales*, those are two different users. The *authentication database* dictates which user I *authenticate as and what privileges I get*. I created this user on the *admin database*, so that's where I'm connecting.
 
-So, now I'm connected, and I have the privileges associated with root.
+So, now I'm connected, and I have the privileges associated with root. Remember, earlier I could not run this command. Now I am *authenticated and authorized* as a user who has access to this. So now I'm connected, and I have the privileges associated with root. Again, this is the most basic implementation of security. You will have to create additional users as necessary to fulfill specific operational tasks.
 
-Remember, earlier I could not run this command.
+You don't want everyone using the system to have root access. This is a lot of information, so read through carefully.
 
-Now I am authenticated and authorized as a user who has access to this.
+Let's recap. *MongoDB user security is an authentication and authorization model*, so users must provide who they are to the server, which decides what they can do based on the user they *authenticated as*. *MongoDB supports multiple authentication mechanisms*.
 
-So now I'm connected, and I have the privileges associated with root.
-
-Again, this is the most basic implementation of security.
-
-You will have to create additional users as necessary to fulfill specific operational tasks.
-
-You don't want everyone using the system to have root access.
-
-This is a lot of information, so read through carefully.
-
-Let's recap.
-
-MongoDB user security is an authentication and authorization model, so users must provide who they are to the server, which decides what they can do based on the user they authenticated as.
-
-MongoDB supports multiple authentication mechanisms.
-
-SCRAM and X.509 are the community authentication mechanisms.
-
-These are also available on the enterprise versions of MongoDB.
-
-LDAP and KERBEROS are enterprise-only authentication mechanisms.
-
-Each user that you create has one or more roles that define their authorized access.
-
-And, at the very minimum, you should always configure SCRAM-SHA-1 with a single administrative user protected by a strong password.
+*SCRAM and X.509 are the community authentication mechanisms*. These are also available on the *enterprise versions of MongoDB*. *LDAP and KERBEROS are enterprise-only authentication mechanisms*. Each user that you create has one or more roles that define their *authorized access*. And, at the very minimum, you should always configure *SCRAM-SHA-1 with a single administrative user protected by a strong password*.
