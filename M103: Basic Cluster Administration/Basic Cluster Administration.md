@@ -1280,7 +1280,56 @@ That means a user can be granted the exact roles required for that user to execu
 
 ### Basic Security: Part 2
 
-Right now, we're actually going to create our first *MongoDB super user*. First, let's take a look at our MongoDB server. Let's look at the *configuration file for my MongoD*. Notice this line here. This *configuration file* option does two things. First, it enables *role-based access control or authorization on my cluster*. Second, it implicitly *enables authentication*, as well.
+Right now, we're actually going to create our first *MongoDB super user*. First, let's take a look at our *MongoDB server*. Let's look at the *configuration file for my MongoD*.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ cat /etc/mongod.conf
+# mongod.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# Where and how to store data.
+storage:
+  dbPath: /var/lib/mongodb
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+# network interfaces
+net:
+  port: 27017
+  bindIp: 127.0.0.1
+
+
+# how the process runs
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+
+#security:
+
+#operationProfiling:
+
+#replication:
+
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:
+```
+
+Notice this line here. This *configuration file* option does two things. First, it enables *role-based access control or authorization on my cluster*. Second, it implicitly *enables authentication*, as well.
 
 You cannot have one without the other. Now, I need to connect to my *cluster*. But this *cluster has no existing users configured*, even though *auth is enabled*. Since by default, *MongoDB* doesn't give you any users, you have to create them yourself. Since my server does not yet have any configured users, there's no way for me to *authenticate myself to the server nor can I be authorized to do any work*.
 
