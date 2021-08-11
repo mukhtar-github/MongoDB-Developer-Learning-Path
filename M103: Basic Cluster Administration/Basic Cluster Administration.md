@@ -1263,9 +1263,10 @@ The key here is challenge response. Basically the *MongoDB server* presents a qu
 
 With the community version of *MongoDB*, you also have the option of configuring *X.509 security*. This form of security uses an *X.509 certificate for authentication*. This is a more secure, albeit more complex, *authentication* mechanism that is also available to you.
 
-*MongoDB Enterprise* includes two additional authentication mechanisms designed for *enterprise environments*. The first is the *Lightweight Directory Access Protocol*, or *LDAP* for short. If you haven't heard of *LDAP*, you might have heard of *Microsoft Active Directory*, which is built on the *LDAP protocol*. *MongoDB* you can use an Active Directory or other *LDAP* service as the authority on *authentication or authorization* of users.
+*MongoDB Enterprise* includes two additional authentication mechanisms designed for *enterprise environments*. The first is the *Lightweight Directory Access Protocol*, or *LDAP* for short. If you haven't heard of *LDAP*, you might have heard of *Microsoft Active Directory*, which is built on the *LDAP protocol*.
+> *MongoDB* can use an *Active Directory* or other *LDAP* service as the authority on *authentication or authorization* of users.
 
-Finally, we have Kerberos authentication. The bright folks at the Massachusetts Institute of Technology designed Kerberos as a powerful authentication mechanism. Since this is a basic security course, we're sticking to SCRAM.
+Finally, we have *Kerberos authentication*. The bright folks at the *Massachusetts Institute of Technology* designed *Kerberos* as a powerful *authentication mechanism*. Since this is a basic security course, we're sticking to *SCRAM*.
 
 Now, we're not quite done with authentication yet. We've only talked about client authentication. MongoDB also supports intra cluster authentication, the mechanism by which nodes in a cluster authenticate to each other. Think of this like a secret handshake. If you don't know the handshake, you can't join the cluster. We'll talk more about intra cluster auth in a later lesson. For now, just remember that MongoDB provides both cluster and client authentication for complete security.
 
