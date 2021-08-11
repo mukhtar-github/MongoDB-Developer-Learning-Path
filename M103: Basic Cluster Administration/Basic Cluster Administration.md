@@ -1293,13 +1293,7 @@ When using the *localhost exceptions*, your privileges on the system are very re
 
 The *username and password* are used for the *authentication steps*, and this array of roles is used for *authorization*. I've specified the *built-in role route*, which provides the highest level of privilege action across all database resources. I do want to note, *MongoDB 3.6* adds some additional *user authentication restrictions* in the form of an *IP whitelist*, meaning that the roles granted to a user depend on what *IP they connect from*.
 
-It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on db.createUser or the Create User command.
-
-We can see here that I've successfully added my new user.
-
-Now I have to authenticate as my root user to continue.
-
-The localhost exception at this point in time is exhausted, and I cannot create any additional users without authenticating first.
+It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on *db.createUser or the Create User command*. We can see here that I've successfully added my *new user*. Now I have to *authenticate as my root user to continue*. The *localhost exception* at this point in time is exhausted, and I cannot create any additional users without *authenticating first*.
 
 Remember, I'm currently using an unauthenticated session that I was only able to open because of the localhost exception.
 
