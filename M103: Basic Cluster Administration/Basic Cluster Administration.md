@@ -1297,15 +1297,7 @@ It's a little advanced for this course, but if you want to learn more, make sure
 
 Remember, I'm currently using an *unauthenticated session* that I was only able to open because of the *localhost exception*. Now, there is a *shell command, db.auth*, that lets me *authenticate from this particular session*, but let's do this via the *Mongo shell* to simulate how a client would normally connect. I've specified my *username root and password root*. Remember using *SCRAM*, so there is a challenge response mechanism here.
 
-The authentication database parameter tells the MongoDB server which database contains my user credentials.
-
-Remember, users are per database.
-
-That means if I have two users, Bob at inventory and Bob at sales, those are two different users.
-
-The authentication database dictates which user I authenticate as and what privileges I get.
-
-I created this user on the admin database, so that's where I'm connecting.
+The *authentication database parameter* tells the *MongoDB server* which database contains my *user credentials*. Remember, *users are per database*. That means if I have *two users, Bob at inventory and Bob at sales*, those are two different users. The *authentication database* dictates which user I *authenticate as and what privileges I get*. I created this user on the *admin database*, so that's where I'm connecting.
 
 So, now I'm connected, and I have the privileges associated with root.
 
