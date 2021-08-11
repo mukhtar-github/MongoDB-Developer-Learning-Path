@@ -1282,15 +1282,7 @@ That means a user can be granted the exact roles required for that user to execu
 
 Right now, we're actually going to create our first *MongoDB super user*. First, let's take a look at our MongoDB server. Let's look at the *configuration file for my MongoD*. Notice this line here. This *configuration file* option does two things. First, it enables *role-based access control or authorization on my cluster*. Second, it implicitly *enables authentication*, as well.
 
-You cannot have one without the other.
-
-Now, I need to connect to my cluster.
-
-But this cluster has no existing users configured, even though auth is enabled.
-
-Since by default, MongoDB doesn't give you any users, you have to create them yourself.
-
-Since my server does not yet have any configured users, there's no way for me to authenticate myself to the server nor can I be authorized to do any work.
+You cannot have one without the other. Now, I need to connect to my *cluster*. But this *cluster has no existing users configured*, even though *auth is enabled*. Since by default, *MongoDB* doesn't give you any users, you have to create them yourself. Since my server does not yet have any configured users, there's no way for me to *authenticate myself to the server nor can I be authorized to do any work*.
 
 Instead I must use the localhost exception to connect to the server, meaning I must connect to the Mongo shell from the same host that is running the MongoDB server process.
 
