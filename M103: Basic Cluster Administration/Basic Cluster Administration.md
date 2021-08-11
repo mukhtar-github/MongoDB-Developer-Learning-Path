@@ -1287,17 +1287,7 @@ You cannot have one without the other. Now, I need to connect to my *cluster*. B
 Instead I must use the *localhost exception to connect to the server*, meaning I must connect to the *Mongo shell from the same host that is running the MongoDB server process*. Remember, once you have created your *first user, the localhost exception closes*.
 > So always create *a user with the administrative role first* so you can create other users after the localhost exception has closed.
 
-So here I am, running my Mongo shell, and I'm going to connect to the server from the same host.
-
-Notice here that I'm using the localhost address.
-
-This is also a way for you to just double check that you are specifically connecting over the localhost interface.
-
-Now I'm connected.
-
-I'm going to try to run a few commands here.
-
-Well, I am connected, but I'm not authenticated nor authorized to do anything on the MongoDB server.
+So here I am, running my *Mongo shell*, and I'm going to connect to the *server from the same host*. Notice here that I'm using the *localhost address*. This is also a way for you to just double check that you are specifically connecting over the *localhost interface*. Now I'm connected. I'm going to try to run a few commands here. Well, I am connected, but I'm not *authenticated nor authorized to do anything on the MongoDB server*.
 
 When using the localhost exceptions, your privileges on the system are very restricted.
 
