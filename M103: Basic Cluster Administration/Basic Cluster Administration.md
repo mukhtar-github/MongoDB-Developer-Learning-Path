@@ -1289,17 +1289,7 @@ Instead I must use the *localhost exception to connect to the server*, meaning I
 
 So here I am, running my *Mongo shell*, and I'm going to connect to the *server from the same host*. Notice here that I'm using the *localhost address*. This is also a way for you to just double check that you are specifically connecting over the *localhost interface*. Now I'm connected. I'm going to try to run a few commands here. Well, I am connected, but I'm not *authenticated nor authorized to do anything on the MongoDB server*.
 
-When using the localhost exceptions, your privileges on the system are very restricted.
-
-Now, I do have access.
-
-So I can create my first user.
-
-I'm going to create this user on the admin database, because this is going to be an administrative super user, and I'm going to use the route built-in role.
-
-I'm using the db.createUser method to create a user on the admin database.
-
-I've specified the user name and the password, as well as the role I want to be associated to this user.
+When using the *localhost exceptions*, your privileges on the system are very restricted. Now, I do have access. So I can create my *first user*. I'm going to create this user on the *admin database*, because this is going to be an *administrative super user*, and I'm going to use the *route built-in role*. I'm using the *db.createUser* method to create a user on the *admin database*. I've specified the *user name and the password*, as well as the *role I want to be associated to this user*.
 
 The username and password are used for the authentication steps, and this array of roles is used for authorization.
 
