@@ -83,7 +83,7 @@ The default dbpath is */data/db*. This is where the data files representing your
 
 This means that the only database clients that can connect with *mongod* are ones local to the machine where *mongod* is running. We'll learn in later lessons how to bind to other IP addresses and hosts to allow remote clients to connect. Authentication is turned off by default. This means that unless we enable off, database clients are not required to authenticate before accessing the database.
 
-Understanding the default values should make it easier to read the *mongod* output. On the line with *STORAGE* component, we can see the dbpath and the port. A little further down we also have two warnings, that access control is not enabled -- that is, we have not turned on authentication -- and that *mongod* is only bound to localhost.
+Understanding the default values should make it easier to read the *mongod* output. On the line with *STORAGE* component, we can see the *dbpath and the port*. A little further down we also have two warnings, that access control is not enabled -- that is, we have not turned on authentication -- and that *mongod* is only bound to localhost.
 
 > As we said before, we don't communicate with *mongod* directly when we issue commands to our database. Instead, we issue commands through a *database client*.
 
