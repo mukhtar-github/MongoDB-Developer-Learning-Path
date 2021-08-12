@@ -53,13 +53,28 @@ In this lesson, we'll discuss *mongod*, the *daemon* process for *MongoDB*. You'
 A *daemon* is a program or process that's meant to be run but not interacted with directly. *Daemons* usually have a *D* appended to their name, which gives us the name *mongod*.
 > *mongod* is the main *daemon* process for *MongoDB*.
 
-It is the core server of the database, handling connections, requests, and most importantly, persisting your data. *mongod* contains all of the configuration options we can use to make our database secure, distributed, and consistent. Our *MongoDB* deployment may consist of more than one server.
+It is the core server of the database, handling *connections, requests, and most importantly, persisting your data*. *mongod* contains all of the configuration options we can use to make our database *secure, distributed, and consistent*. Our *MongoDB* deployment may consist of more than one server.
 
 For example, our data may be distributed in a *replica set* or across a *sharded cluster*. In this case, we run a separate *mongod* process for each server in our cluster. When we launch *mongod*, we're essentially starting up a new *database*. But we don't interact with the *mongod* process directly. Instead, we use a *database* client that is programmed to communicate with *mongod*.
 
 We issue *database* commands, like document *inserts* or *updates*, to the client, and the client takes care of communicating with *mongod* to execute those commands. If our deployment has multiple servers, we can configure our client to communicate with each of these *mongod* processes as needed. So we don't need to figure out which server to connect to ourselves.
 
-Now that we have an idea of what *mongod* is used for, let's talk about how to use it. The easiest way to start up a *mongod* process is to run the command *sudo systemctl start mongod* in the terminal. Notice that we no longer have a command prompt in our terminal. If we try to type a command, such as ls, we'll just get a new line. If we want to continue using the terminal, we need to open a new window (*old way*).
+Now that we have an idea of what *mongod* is used for, let's talk about how to use it. The easiest way to start up a *mongod* process is to run the command *mongod* in the terminal.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongod
+{"t":{"$date":"2021-08-12T04:00:05.285+01:00"},"s":"I",  "c":"CONTROL",  "id":23285,   "ctx":"main","msg":"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'"}
+{"t":{"$date":"2021-08-12T04:00:05.302+01:00"},"s":"W",  "c":"ASIO",     "id":22601,   "ctx":"main","msg":"No TransportLayer configured during NetworkInterface startup"}
+{"t":{"$date":"2021-08-12T04:00:05.303+01:00"},"s":"I",  "c":"NETWORK",  "id":4648601, "ctx":"main","msg":"Implicit TCP FastOpen unavailable. If TCP FastOpen is required, set tcpFastOpenServer, tcpFastOpenClient, and tcpFastOpenQueueSize."}
+{"t":{"$date":"2021-08-12T04:00:05.322+01:00"},"s":"I",  "c":"STORAGE",  "id":4615611, "ctx":"initandlisten","msg":"MongoDB starting","attr":{"pid":4716,"port":27017,"dbPath":"/data/db","architecture":"64-bit","host":"mukhtar-Aspire-ES1-431"}}
+{"t":{"$date":"2021-08-12T04:00:05.322+01:00"},"s":"I",  "c":"CONTROL",  "id":23403,   "ctx":"initandlisten","msg":"Build Info","attr":{"buildInfo":{"version":"4.4.7","gitVersion":"abb6b9c2bf675e9e2aeaecba05f0f8359d99e203","openSSLVersion":"OpenSSL 1.1.1f  31 Mar 2020","modules":[],"allocator":"tcmalloc","environment":{"distmod":"ubuntu2004","distarch":"x86_64","target_arch":"x86_64"}}}}
+{"t":{"$date":"2021-08-12T04:00:05.322+01:00"},"s":"I",  "c":"CONTROL",  "id":51765,   "ctx":"initandlisten","msg":"Operating System","attr":{"os":{"name":"Ubuntu","version":"20.04"}}}
+{"t":{"$date":"2021-08-12T04:00:05.322+01:00"},"s":"I",  "c":"CONTROL",  "id":21951,   "ctx":"initandlisten","msg":"Options set by command line","attr":{"options":{}}}...
+{"t":{"$date":"2021-08-12T04:00:05.383+01:00"},"s":"I",  "c":"CONTROL",  "id":20565,   "ctx":"initandlisten","msg":"Now exiting"}
+{"t":{"$date":"2021-08-12T04:00:05.383+01:00"},"s":"I",  "c":"CONTROL",  "id":23138,   "ctx":"initandlisten","msg":"Shutting down","attr":{"exitCode":100}}
+```
+
+Notice that we no longer have a command prompt in our terminal. If we try to type a command, such as ls, we'll just get a new line. If we want to continue using the terminal, we need to open a new window (*old way*).
 
 As we'll see in later lessons, we can configure *mongod* by providing a configuration file or specifying flags. But there are some default values to be aware of when launching *mongod* without any options. The port *mongod* listens on will default to *27017*. Clients that want to access *mongod* should specify the same port.
 
@@ -68,7 +83,7 @@ The default dbpath is */data/db*. This is where the data files representing your
 
 This means that the only database clients that can connect with *mongod* are ones local to the machine where *mongod* is running. We'll learn in later lessons how to bind to other IP addresses and hosts to allow remote clients to connect. Authentication is turned off by default. This means that unless we enable off, database clients are not required to authenticate before accessing the database.
 
-Understanding the default values should make it easier to read the *mongod* output. On the first line, we can see the dbpath and the port. A little further down we also have two warnings, that access control is not enabled -- that is, we have not turned on authentication -- and that *mongod* is only bound to localhost.
+Understanding the default values should make it easier to read the *mongod* output. On the line with *STORAGE* component, we can see the dbpath and the port. A little further down we also have two warnings, that access control is not enabled -- that is, we have not turned on authentication -- and that *mongod* is only bound to localhost.
 
 > As we said before, we don't communicate with *mongod* directly when we issue commands to our database. Instead, we issue commands through a *database client*.
 
@@ -1329,9 +1344,9 @@ processManagement:
 #snmp:
 ```
 
-Notice this line here. This *configuration file* option does two things. First, it enables *role-based access control or authorization on my cluster*. Second, it implicitly *enables authentication*, as well.
+Notice this line here *#security:*. This *configuration file* option does two things. First, it enables *role-based access control or authorization on my cluster*. Second, it implicitly *enables authentication*, as well. You cannot have one without the other.
 
-You cannot have one without the other. Now, I need to connect to my *cluster*. But this *cluster has no existing users configured*, even though *auth is enabled*. Since by default, *MongoDB* doesn't give you any users, you have to create them yourself. Since my server does not yet have any configured users, there's no way for me to *authenticate myself to the server nor can I be authorized to do any work*.
+Now, I need to connect to my *cluster*. But this *cluster has no existing users configured*, even though *auth is enabled*. Since by default, *MongoDB* doesn't give you any users, you have to create them yourself. Since my server does not yet have any *configured users*, there's no way for me to *authenticate myself to the server nor can I be authorized to do any work*.
 
 Instead I must use the *localhost exception to connect to the server*, meaning I must connect to the *Mongo shell from the same host that is running the MongoDB server process*. Remember, once you have created your *first user, the localhost exception closes*.
 > So always create *a user with the administrative role first* so you can create other users after the localhost exception has closed.
