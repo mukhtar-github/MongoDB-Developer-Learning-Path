@@ -13,3 +13,8 @@ mongo "mongodb+srv://cluster0.dkemg.mongodb.net/admin" --username m001-student
 ** m001-mongodb-basics
 
 mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test
+
+
+$ sudo rm -rf /tmp/mongodb-27017.sock
+
+$ sudo service mongod start
