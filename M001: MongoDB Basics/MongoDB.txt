@@ -14,7 +14,13 @@ mongo "mongodb+srv://cluster0.dkemg.mongodb.net/admin" --username m001-student
 
 mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test
 
+# Just do those two commands for temporary solution:
 
 $ sudo rm -rf /tmp/mongodb-27017.sock
 
 $ sudo service mongod start
+
+# That shall be fault due to user permissions in .sock file, You may have to change the owner to monogdb user.
+
+chown -R mongodb:mongodb /var/lib/mongodb
+chown mongodb:mongodb /tmp/mongodb-27017.sock
