@@ -1446,19 +1446,10 @@ Time for us to talk a little bit about *roles*, in particular, about *built-in r
 
 So I do recommend you to take that, if you want to learn a lot more about *custom roles* in other security aspects of *MongoDB*. But before we go into the list of *built-in roles, the MongoDB packages*, let's talk about the *role structure*, how can we define *roles, or how roles are defined internally*. A role is composed by the following. There is a set of privileges that the role enables.
 
-If a new user is granted a given role, all privileges that that role defines will be made available to the user.
+If a new user is granted a given role, all privileges that that role defines will be made available to the user. And a privilege defines the action, or actions, that can be performed over a *resource*.
+> A *resource* on its own can be defined by either being a set of specific database and specific collection, any database in any collection, any database in a set of collections, or a specific database in all collections within that database.
 
-And a privilege defines the action, or actions, that can be performed over a resource.
-
-A resource on its own can be defined by either being a set of specific database and specific collection, any database in any collection, any database in a set of collections, or a specific database in all collections within that database.
-
-And finally, we also have the cluster level resource that applies to operations regarding the replica sets or shard clusters.
-
-A privilege is defined by a resource and the actions allowed over that same resource.
-
-So for example, here, we would have the system allowing the shut down of a full cluster.
-
-By that, we define the resource cluster equals true, and the action to be shutdown.
+And finally, we also have the *cluster level resource* that applies to operations regarding the *replica sets or shard clusters*. A privilege is defined by a *resource* and the actions allowed over that same *resource*. So for example, here, we would have the system allowing the *shut down of a full cluster*. By that, we define the *resource cluster equals true, and the action to be shutdown*.
 
 A role with such a privilege will be allowed to shut down any member of the cluster.
 
