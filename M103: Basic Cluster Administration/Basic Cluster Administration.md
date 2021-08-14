@@ -1437,3 +1437,87 @@ Remember, earlier I could not run this command. Now I am *authenticated and auth
 Let's recap. *MongoDB user security is an authentication and authorization model*, so users must provide who they are to the server, which decides what they can do based on the user they *authenticated as*. *MongoDB supports multiple authentication mechanisms*.
 
 *SCRAM and X.509 are the community authentication mechanisms*. These are also available on the *enterprise versions of MongoDB*. *LDAP and KERBEROS are enterprise-only authentication mechanisms*. Each user that you create has one or more roles that define their *authorized access*. And, at the very minimum, you should always configure *SCRAM-SHA-1 with a single administrative user protected by a strong password*.
+
+### Built-In Roles: Part 1
+
+Time for us to talk a little bit about roles, in particular, about built-in roles in MongoDB, and how the role-based access control system works.
+
+Now, there is a fair amount to say about roles.
+
+But by now, you should be aware that MongoDB role-based access control system is in place, and that database users will be granted roles to perform operations of MongoDB.
+
+So we're not going to cover that in this lesson.
+
+Roles can be of two types.
+
+It can be either custom roles, which are tailored roles to attend specific needs of specific users, which we are also not going to cover in this lecture, and built-in roles, which are prepackaged MongoDB roles.
+
+Now, saying that we are not going to cover custom roles, doesn't mean you cannot learn about them.
+
+And we have a specific course, MongoDB Security, for you to learn everything related with security, including the custom roles.
+
+So I do recommend you to take that, if you want to learn a lot more about custom roles in other security aspects of MongoDB.
+
+But before we go into the list of built-in roles, the MongoDB packages, let's talk about the role structure, how can we define roles, or how roles are defined internally.
+
+A role is composed by the following.
+
+There is a set of privileges that the role enables.
+
+If a new user is granted a given role, all privileges that that role defines will be made available to the user.
+
+And a privilege defines the action, or actions, that can be performed over a resource.
+
+A resource on its own can be defined by either being a set of specific database and specific collection, any database in any collection, any database in a set of collections, or a specific database in all collections within that database.
+
+And finally, we also have the cluster level resource that applies to operations regarding the replica sets or shard clusters.
+
+A privilege is defined by a resource and the actions allowed over that same resource.
+
+So for example, here, we would have the system allowing the shut down of a full cluster.
+
+By that, we define the resource cluster equals true, and the action to be shutdown.
+
+A role with such a privilege will be allowed to shut down any member of the cluster.
+
+But apart of having a list of privileges, a role can also inherit from other roles, either one or several of them, making this a potentially quite elaborate architecture of permission and privileges across several different roles.
+
+And finally, we can also define network authentication restrictions at the role level.
+
+This basically allows us to define that a given role is allowed to connect from a clientSource, or to a serverAddress, by specifying the set of list of clientSource and serverAddress in the network restrictions.
+
+OK.
+
+So now that we've seen how the roles are organized, or defined, let's look into this set of different built-in roles that MongoDB provides.
+
+So the built-in roles are organized by four different sets of groups, plus this super user role type.
+
+We have database level users, which can either be read and readWrite.
+
+These are the application users that should be allowed to read or read and write.
+
+We have database administration roles, like userAdmin, dbAdmin, and dbOwner.
+
+We have cluster level administration roles, which are clusterAdmin, clusterManager, clusterMonitor, and hostManager.
+
+We have specific roles for backup and restore.
+
+And obviously, we also have our super user root role that should be granted only in specific situations.
+
+All the roles defined here are purely database level for each user.
+
+That means that I can grant different roles, to different users, on different databases.
+
+But there are also built-in roles that are all database level.
+
+That means they apply to any database in the system.
+
+For the database users, we have readAnyDatabase or read and write any database.
+
+For database administration, we have dbAdminAnyDatabase, or userAdminAnyDatabase.
+
+And obviously, this super user nature of root is, in fact, a whole database level role, as well.
+
+But these are a lot of them.
+
+So I want to focus your attention on the ones that we're going to need throughout this course-- userAdmin, dbOwner, and dbAdmin.
