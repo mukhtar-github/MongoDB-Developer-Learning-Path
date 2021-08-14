@@ -1440,21 +1440,9 @@ Let's recap. *MongoDB user security is an authentication and authorization model
 
 ### Built-In Roles: Part 1
 
-Time for us to talk a little bit about roles, in particular, about built-in roles in MongoDB, and how the role-based access control system works.
+Time for us to talk a little bit about *roles*, in particular, about *built-in roles in MongoDB*, and how the *role-based access control system* works. Now, there is a fair amount to say about *roles*. But by now, you should be aware that *MongoDB role-based access control system* is in place, and that database users will be granted roles to perform operations of *MongoDB*. So we're not going to cover that in this lesson.
 
-Now, there is a fair amount to say about roles.
-
-But by now, you should be aware that MongoDB role-based access control system is in place, and that database users will be granted roles to perform operations of MongoDB.
-
-So we're not going to cover that in this lesson.
-
-Roles can be of two types.
-
-It can be either custom roles, which are tailored roles to attend specific needs of specific users, which we are also not going to cover in this lecture, and built-in roles, which are prepackaged MongoDB roles.
-
-Now, saying that we are not going to cover custom roles, doesn't mean you cannot learn about them.
-
-And we have a specific course, MongoDB Security, for you to learn everything related with security, including the custom roles.
+*Roles* can be of two types. It can be either *custom roles*, which are tailored roles to attend specific needs of specific users, which we are also not going to cover in this lecture, and *built-in roles*, which are prepackaged *MongoDB roles*. Now, saying that we are not going to cover *custom roles*, doesn't mean you cannot learn about them. And we have a specific course, *MongoDB Security*, for you to learn everything related with security, including the *custom roles*.
 
 So I do recommend you to take that, if you want to learn a lot more about custom roles in other security aspects of MongoDB.
 
