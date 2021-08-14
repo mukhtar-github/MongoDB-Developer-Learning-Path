@@ -1371,9 +1371,37 @@ Now I'm connected. I'm going to try to run a few commands here. Well, I am conne
 
 When using the *localhost exceptions*, your privileges on the system are very restricted. Now, I do have access. So I can create my *first user*. I'm going to create this user on the *admin database*, because this is going to be an *administrative super user*, and I'm going to use the *route built-in role*. I'm using the *db.createUser* method to create a user on the *admin database*. I've specified the *user name and the password*, as well as the *role I want to be associated to this user*.
 
-The *username and password* are used for the *authentication steps*, and this array of roles is used for *authorization*. I've specified the *built-in role route*, which provides the highest level of privilege action across all database resources. I do want to note, *MongoDB 3.6* adds some additional *user authentication restrictions* in the form of an *IP whitelist*, meaning that the roles granted to a user depend on what *IP they connect from*.
+The *username and password* are used for the *authentication steps*, and this array of roles is used for *authorization*. I've specified the *built-in role route*, which provides the highest level of privilege action across all database resources. I do want to note, *MongoDB 3.6* adds some additional *user authentication restrictions* in the form of an *IP whitelist*, meaning that the roles granted to a user depend on what *IP they connect from*. It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on *db.createUser or the Create User command*.
 
-It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on *db.createUser or the Create User command*. We can see here that I've successfully added my *new user*. Now I have to *authenticate as my root user to continue*. The *localhost exception* at this point in time is exhausted, and I cannot create any additional users without *authenticating first*.
+```javascript
+use admin
+switched to db admin
+> db.stats()
+{
+    "db" : "admin",
+    "collections" : 1,
+    "views" : 0,
+    "objects" : 2,
+    "avgObjSize" : 382,
+    "dataSize" : 764,
+    "storageSize" : 36864,
+    "indexes" : 1,
+    "indexSize" : 36864,
+    "totalSize" : 73728,
+    "scaleFactor" : 1,
+    "fsUsedSize" : 17135935488,
+    "fsTotalSize" : 29394636800,
+    "ok" : 1
+}
+> db.createUser({
+...   user: "root",
+...   pwd: "root123",
+...   roles : [ "root" ]
+... })
+Successfully added user: { "user" : "root", "roles" : [ "root" ] }
+```
+
+We can see here that I've successfully added my *new user*. Now I have to *authenticate as my root user to continue*. The *localhost exception* at this point in time is exhausted, and I cannot create any additional users without *authenticating first*.
 
 Remember, I'm currently using an *unauthenticated session* that I was only able to open because of the *localhost exception*. Now, there is a *shell command, db.auth*, that lets me *authenticate from this particular session*, but let's do this via the *Mongo shell* to simulate how a client would normally connect. I've specified my *username root and password root*. Remember using *SCRAM*, so there is a challenge response mechanism here.
 
