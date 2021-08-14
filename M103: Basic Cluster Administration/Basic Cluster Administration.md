@@ -1451,27 +1451,11 @@ If a new user is granted a given role, all privileges that that role defines wil
 
 And finally, we also have the *cluster level resource* that applies to operations regarding the *replica sets or shard clusters*. A privilege is defined by a *resource* and the actions allowed over that same *resource*. So for example, here, we would have the system allowing the *shut down of a full cluster*. By that, we define the *resource cluster equals true, and the action to be shutdown*.
 
-A role with such a privilege will be allowed to shut down any member of the cluster.
+A role with such a privilege will be allowed to shut down any member of the cluster. But apart of having a list of privileges, a role can also inherit from other roles, either one or several of them, making this a potentially quite elaborate architecture of permission and privileges across several different roles. And finally, we can also define *network authentication restrictions at the role level*.
 
-But apart of having a list of privileges, a role can also inherit from other roles, either one or several of them, making this a potentially quite elaborate architecture of permission and privileges across several different roles.
+This basically allows us to define that a given role is allowed to connect from a *clientSource, or to a serverAddress*, by specifying the set of list of *clientSource and serverAddress* in the network restrictions. OK. So now that we've seen how the roles are organized, or defined, let's look into this set of different *built-in roles that MongoDB* provides.
 
-And finally, we can also define network authentication restrictions at the role level.
-
-This basically allows us to define that a given role is allowed to connect from a clientSource, or to a serverAddress, by specifying the set of list of clientSource and serverAddress in the network restrictions.
-
-OK.
-
-So now that we've seen how the roles are organized, or defined, let's look into this set of different built-in roles that MongoDB provides.
-
-So the built-in roles are organized by four different sets of groups, plus this super user role type.
-
-We have database level users, which can either be read and readWrite.
-
-These are the application users that should be allowed to read or read and write.
-
-We have database administration roles, like userAdmin, dbAdmin, and dbOwner.
-
-We have cluster level administration roles, which are clusterAdmin, clusterManager, clusterMonitor, and hostManager.
+So the *built-in roles* are organized by four different sets of groups, plus this *super user role* type. We have *database level users*, which can either be read and readWrite. These are the application users that should be allowed to read or read and write. We have *database administration roles*, like *userAdmin, dbAdmin, and dbOwner*. We have *cluster level administration roles*, which are *clusterAdmin, clusterManager, clusterMonitor, and hostManager*.
 
 We have specific roles for backup and restore.
 
