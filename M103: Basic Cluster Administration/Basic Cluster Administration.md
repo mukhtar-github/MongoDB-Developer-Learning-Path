@@ -1457,24 +1457,6 @@ This basically allows us to define that a given role is allowed to connect from 
 
 So the *built-in roles* are organized by four different sets of groups, plus this *super user role* type. We have *database level users*, which can either be read and readWrite. These are the application users that should be allowed to read or read and write. We have *database administration roles*, like *userAdmin, dbAdmin, and dbOwner*. We have *cluster level administration roles*, which are *clusterAdmin, clusterManager, clusterMonitor, and hostManager*.
 
-We have specific roles for backup and restore.
+We have specific roles for *backup and restore*. And obviously, we also have our *super user root* role that should be granted only in specific situations. All the roles defined here are purely *database level* for each user. That means that I can grant different roles, to different users, on different databases. But there are also *built-in roles that are all database level*. That means they apply to any database in the system.
 
-And obviously, we also have our super user root role that should be granted only in specific situations.
-
-All the roles defined here are purely database level for each user.
-
-That means that I can grant different roles, to different users, on different databases.
-
-But there are also built-in roles that are all database level.
-
-That means they apply to any database in the system.
-
-For the database users, we have readAnyDatabase or read and write any database.
-
-For database administration, we have dbAdminAnyDatabase, or userAdminAnyDatabase.
-
-And obviously, this super user nature of root is, in fact, a whole database level role, as well.
-
-But these are a lot of them.
-
-So I want to focus your attention on the ones that we're going to need throughout this course-- userAdmin, dbOwner, and dbAdmin.
+For the database users, we have *readAnyDatabase or read and write any database*. For database administration, we have *dbAdminAnyDatabase, or userAdminAnyDatabase*. And obviously, this super user nature of root is, in fact, a whole database level role, as well. But these are a lot of them. So I want to focus your attention on the ones that we're going to need throughout this course -- *userAdmin, dbOwner, and dbAdmin*.
