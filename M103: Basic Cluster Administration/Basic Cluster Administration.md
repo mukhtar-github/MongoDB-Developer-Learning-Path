@@ -1351,7 +1351,23 @@ Now, I need to connect to my *cluster*. But this *cluster has no existing users 
 Instead I must use the *localhost exception to connect to the server*, meaning I must connect to the *Mongo shell from the same host that is running the MongoDB server process*. Remember, once you have created your *first user, the localhost exception closes*.
 > So always create *a user with the administrative role first* so you can create other users after the localhost exception has closed.
 
-So here I am, running my *Mongo shell*, and I'm going to connect to the *server from the same host*. Notice here that I'm using the *localhost address*. This is also a way for you to just double check that you are specifically connecting over the *localhost interface*. Now I'm connected. I'm going to try to run a few commands here. Well, I am connected, but I'm not *authenticated nor authorized to do anything on the MongoDB server*.
+So here I am, running my *Mongo shell*, and I'm going to connect to the *server from the same host*. Notice here that I'm using the *localhost address*. This is also a way for you to just double check that you are specifically connecting over the *localhost interface*.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongo --host 127.0.0.1:27017
+MongoDB shell version v4.4.8
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("c9e72548-84a7-4797-beee-3a3e7e8fbb71") }
+MongoDB server version: 4.4.8
+---
+The server generated these startup warnings when booting: 
+        2021-08-14T09:05:08.419+01:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+        2021-08-14T09:05:12.308+01:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+> 
+```
+
+Now I'm connected. I'm going to try to run a few commands here. Well, I am connected, but I'm not *authenticated nor authorized to do anything on the MongoDB server*.
 
 When using the *localhost exceptions*, your privileges on the system are very restricted. Now, I do have access. So I can create my *first user*. I'm going to create this user on the *admin database*, because this is going to be an *administrative super user*, and I'm going to use the *route built-in role*. I'm using the *db.createUser* method to create a user on the *admin database*. I've specified the *user name and the password*, as well as the *role I want to be associated to this user*.
 
