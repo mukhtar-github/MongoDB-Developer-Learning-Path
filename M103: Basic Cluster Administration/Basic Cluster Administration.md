@@ -1449,9 +1449,15 @@ So I do recommend you to take that, if you want to learn a lot more about *custo
 If a new user is granted a given role, all privileges that that role defines will be made available to the user. And a privilege defines the action, or actions, that can be performed over a *resource*.
 > A *resource* on its own can be defined by either being a set of specific database and specific collection, any database in any collection, any database in a set of collections, or a specific database in all collections within that database.
 
-And finally, we also have the *cluster level resource* that applies to operations regarding the *replica sets or shard clusters*. A *privilege* is defined by a *resource and the actions allowed over that same resource*. So for example, here, we would have the system allowing the *shut down of a full cluster*. By that, we define the *resource cluster equals true, and the action to be shutdown*.
+And finally, we also have the *cluster level resource* that applies to operations regarding the *replica sets or shard clusters*. A *privilege* is defined by a *resource and the actions allowed over that same resource*. So for example, here, we would have the system allowing the *shut down of a full cluster*. By that, we define the *resource cluster equals true, and the action to be shutdown*. A role with such a privilege will be allowed to *shut down any member of the cluster*.
 
-A role with such a privilege will be allowed to shut down any member of the cluster. But apart of having a list of privileges, a role can also inherit from other roles, either one or several of them, making this a potentially quite elaborate architecture of permission and privileges across several different roles. And finally, we can also define *network authentication restrictions at the role level*.
+```javascript
+// Allow to shutdown over the cluster
+
+{ resource: { cluster: true }, actions: [ "shutdown" ] }
+```
+
+But apart of having a list of privileges, a role can also inherit from other roles, either one or several of them, making this a potentially quite elaborate architecture of permission and privileges across several different roles. And finally, we can also define *network authentication restrictions at the role level*.
 
 This basically allows us to define that a given role is allowed to connect from a *clientSource, or to a serverAddress*, by specifying the set of list of *clientSource and serverAddress* in the network restrictions. OK. So now that we've seen how the roles are organized, or defined, let's look into this set of different *built-in roles that MongoDB* provides.
 
