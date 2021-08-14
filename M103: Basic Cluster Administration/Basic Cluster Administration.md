@@ -1444,13 +1444,7 @@ Time for us to talk a little bit about *roles*, in particular, about *built-in r
 
 *Roles* can be of two types. It can be either *custom roles*, which are tailored roles to attend specific needs of specific users, which we are also not going to cover in this lecture, and *built-in roles*, which are prepackaged *MongoDB roles*. Now, saying that we are not going to cover *custom roles*, doesn't mean you cannot learn about them. And we have a specific course, *MongoDB Security*, for you to learn everything related with security, including the *custom roles*.
 
-So I do recommend you to take that, if you want to learn a lot more about custom roles in other security aspects of MongoDB.
-
-But before we go into the list of built-in roles, the MongoDB packages, let's talk about the role structure, how can we define roles, or how roles are defined internally.
-
-A role is composed by the following.
-
-There is a set of privileges that the role enables.
+So I do recommend you to take that, if you want to learn a lot more about *custom roles* in other security aspects of *MongoDB*. But before we go into the list of *built-in roles, the MongoDB packages*, let's talk about the *role structure*, how can we define *roles, or how roles are defined internally*. A role is composed by the following. There is a set of privileges that the role enables.
 
 If a new user is granted a given role, all privileges that that role defines will be made available to the user.
 
