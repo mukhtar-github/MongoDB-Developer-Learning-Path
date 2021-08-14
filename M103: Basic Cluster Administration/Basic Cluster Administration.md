@@ -1399,6 +1399,31 @@ switched to db admin
 ...   roles : [ "root" ]
 ... })
 Successfully added user: { "user" : "root", "roles" : [ "root" ] }
+
+db.createUser({
+... ...   user: "Mukhtar",
+... ...   pwd: "Mukhtar123",
+... ...   roles : [ "readWrite" ]
+... ... })
+Successfully added user: { "user" : "Mukhtar", "roles" : [ "readWrite" ] }
+> db.stats()
+{
+    "db" : "admin",
+    "collections" : 2,
+    "views" : 0,
+    "objects" : 5,
+    "avgObjSize" : 372.8,
+    "dataSize" : 1864,
+    "storageSize" : 73728,
+    "indexes" : 3,
+    "indexSize" : 110592,
+    "totalSize" : 184320,
+    "scaleFactor" : 1,
+    "fsUsedSize" : 17146085376,
+    "fsTotalSize" : 29394636800,
+    "ok" : 1
+}
+
 ```
 
 We can see here that I've successfully added my *new user*. Now I have to *authenticate as my root user to continue*. The *localhost exception* at this point in time is exhausted, and I cannot create any additional users without *authenticating first*.
