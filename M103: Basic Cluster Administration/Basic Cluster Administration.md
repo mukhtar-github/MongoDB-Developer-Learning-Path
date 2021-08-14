@@ -1464,3 +1464,111 @@ OK. So now that we've seen how the roles are organized, or defined, let's look i
 We have *cluster level administration roles, which are clusterAdmin, clusterManager, clusterMonitor, and hostManager*. We have specific roles for *backup and restore*. And obviously, we also have our *super user root role* that should be granted only in specific situations. All the roles defined here are purely *database level* for each user. That means that I can grant different roles, to different users, on different databases.
 
 But there are also *built-in roles that are all database level*. That means they apply to any database in the system. For the *database users, we have readAnyDatabase or read and write any database*. For *database administration, we have dbAdminAnyDatabase, or userAdminAnyDatabase*. And obviously, the *super user nature of root is, in fact, a whole database level role, as well*. But these are a lot of them. So I want to focus your attention on the ones that we're going to need throughout this course -- *userAdmin, dbOwner, and dbAdmin*.
+
+### Built-In Roles: Part 2
+
+Now the first thing I'm going to do is basically connect with an existing user that we've previously created-- our root level user.
+
+Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role.
+
+In this case, I'm creating it on the admin database.
+
+Now, this is the first user you should always create.
+
+And why is that?
+
+Well the main reason for this is that this particular role allows the user to do all operations around user management.
+
+But in themself is not able to do anything related with data management or data modifications.
+
+Cannot create or write, cannot list databases, cannot do anything around database administration aside from creating and updating or reviewing database users.
+
+This is quite important if you want to ensure that there are specific users in your organization that are not allowed to do anything with data in your system-- just managing other users that themselves can create the data.
+
+So the command for doing that is the create user, as always.
+
+We'll create a user we are calling here security officer, passing a password, the roles where it's going to be created.
+
+And the command gets successfully created.
+
+Now next, I'm going to create a user that is allowed to actually administer the database.
+
+Yep, you got it.
+
+It's our dbAdmin role-- a user that is created using this role.
+
+Now the list of privileges that this particular role enables is quite long.
+
+But it can get a feeling of what it can actually do.
+
+All the statistical data, kill cursors, lists indexes, list databases and collections, get collect statistics on the collections, do collection modifications, convert to capped.
+
+There's a variety of different operations that this built in role allows the user to operate.
+
+But again, similar to the user admin role, this role does not have the ability to read any user data at all or write data for that fact.
+
+Everything that is related with DDL, data definition language, this user will be able to perform.
+
+Everything that is related with the DML, data modification language operations, he will not be able to do.
+
+This is to prevent the dba to go in and modify data inadvertently.
+
+Does not stop him from dropping collections though because that's a DDL operation.
+
+But it cannot remove specific fields from a document or even create new documents in a collection.
+
+Let's go ahead and do that.
+
+So here I have my dba user with some password and the role that I've given him on the database m103 is role dbAdmin.
+
+Now if you look closely to this operation, I'm doing something quite tricky.
+
+I'm using the database admin to create a user on admin, but granting a role of dbAdmin on M103 database.
+
+Although this might sound a little bit strange, this is actually a recommended approach.
+
+All users should be created on the database admin for simplicity reasons.
+
+That means that the database admin will be used to authenticate the users that we create.
+
+That said, it might not be needing to access the database admin at all for doing what it's supposed to do.
+
+So if he wants to be administrator on M103, the roles of dbAdmin should only be granted to M103.
+
+Roles can also vary between databases.
+
+I can have a given user with different roles on a per database basis.
+
+So let's go ahead and do that.
+
+Let's do that to this database user.
+
+Now to do that, I can just simply use this grant roles to user, when I select the user, which is my dba that I recently created.
+
+I'm going to give it a database playground where this particular user will be the dbOwner.
+
+Once I do this, the role dbOwner is the database owner.
+
+And therefore, it can do any administrative action on the database.
+
+That also means that this role combines all privileges of read write, dbAdmin, and user admin roles.
+
+That said, any user which is granted dbOwner over a database can actually do pretty much anything he wants.
+
+You can read write, it can dbAdmin, and it can even user admin on that same database.
+
+So you can interpret this dbOwner role as a meta role-- one that combines several other built in roles that MongoDB provides.
+
+And we can see that by running this command-- rolesInfo where you want to know what dbOwner is on the db playground.
+
+We can also say to show the privileges of this particular role.
+
+Once we do that, we can have the list of all different actions and resources, meaning the privileges, of each role that this particular role inherits for himself.
+
+Let's recap.
+
+We've looked into the structure of the roles and how they are defined.
+
+We've seen the list of built in roles and how they are logically grouped together.
+
+And finally, we've seen how to create and grant roles to users using the built in roles.
