@@ -1374,7 +1374,7 @@ When using the *localhost exceptions*, your privileges on the system are very re
 The *username and password* are used for the *authentication steps*, and this array of roles is used for *authorization*. I've specified the *built-in role route*, which provides the highest level of privilege action across all database resources. I do want to note, *MongoDB 3.6* adds some additional *user authentication restrictions* in the form of an *IP whitelist*, meaning that the roles granted to a user depend on what *IP they connect from*. It's a little advanced for this course, but if you want to learn more, make sure to check our documentation on *db.createUser or the Create User command*.
 
 ```javascript
-use admin
+> use admin
 switched to db admin
 > db.stats()
 {
@@ -1405,11 +1405,9 @@ We can see here that I've successfully added my *new user*. Now I have to *authe
 
 Remember, I'm currently using an *unauthenticated session* that I was only able to open because of the *localhost exception*. Now, there is a *shell command, db.auth*, that lets me *authenticate from this particular session*, but let's do this via the *Mongo shell* to simulate how a client would normally connect. I've specified my *username root and password root*. Remember using *SCRAM*, so there is a challenge response mechanism here.
 
-The *authentication database parameter* tells the *MongoDB server* which database contains my *user credentials*. Remember, *users are per database*. That means if I have *two users, Bob at inventory and Bob at sales*, those are two different users. The *authentication database* dictates which user I *authenticate as and what privileges I get*. I created this user on the *admin database*, so that's where I'm connecting.
+The *authentication database parameter* tells the *MongoDB server* which database contains my *user credentials*. Remember, *users are per database*. That means if I have *two users, Bob at inventory and Bob at sales*, those are two different users. The *authentication database* dictates which user I *authenticate as and what privileges I get*. I created this user on the *admin database*, so that's where I'm connecting. So, now I'm connected, and I have the privileges associated with root.
 
-So, now I'm connected, and I have the privileges associated with root. Remember, earlier I could not run this command. Now I am *authenticated and authorized* as a user who has access to this. So now I'm connected, and I have the privileges associated with root. Again, this is the most basic implementation of security. You will have to create additional users as necessary to fulfill specific operational tasks.
-
-You don't want everyone using the system to have root access. This is a lot of information, so read through carefully.
+Remember, earlier I could not run this command. Now I am *authenticated and authorized* as a user who has access to this. So now I'm connected, and I have the privileges associated with root. Again, this is the most basic implementation of security. You will have to create additional users as necessary to fulfill specific operational tasks. You don't want everyone using the system to have root access. This is a lot of information, so read through carefully.
 
 Let's recap. *MongoDB user security is an authentication and authorization model*, so users must provide who they are to the server, which decides what they can do based on the user they *authenticated as*. *MongoDB supports multiple authentication mechanisms*.
 
