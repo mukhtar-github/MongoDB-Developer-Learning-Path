@@ -1838,9 +1838,41 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ find /usr/bin/ -name "mongo*"
 /usr/bin/mongod
 ```
 
-So this is a lot of stuff. Specifically in this lesson, we're going to cover *mongostat, mongodump, mongorestore, mongoexport, and mongoimport*. *mongostat* is a utility designed to give quick statistics on a running *mongod or mongos* process. All right, so I'm just going to launch an example *mongod*, here, on *port 30000*, and I'm going to *fork* the process so I can still use this terminal window.
+So this is a lot of stuff. Specifically in this lesson, we're going to cover *mongostat, mongodump, mongorestore, mongoexport, and mongoimport*. *mongostat* is a utility designed to give quick statistics on a running *mongod or mongos* process. All right, so I'm just going to launch an example *mongod*, here, on *port 30000*, and I'm going to *fork* the process so I can still use the terminal window.
 
-In order to connect to this *mongod and get Mongo stats* from it, I have to specify the *port in the mongostat call*. And here I've specified my *port*. And if I enter this command, it's going to return *Mongo stats* to me every second-- indefinitely, because I haven't specified when I want it to stop or how often to report. So I'm just going to cancel this so we can take a look at the output.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mkdir -p ~/first_mongod
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongod --port 30000 --dbpath ~/first_mongod --logpath ~/first_mongod/mongodb.log --fork
+about to fork child process, waiting until server is ready for connections.
+forked process: 29864
+child process started successfully, parent exiting
+```
+
+In order to connect to this *mongod and get Mongo stats* from it, I have to specify the *port in the mongostat call*. And here I've specified my *port*. And if I enter this command, it's going to return *Mongo stats* to me every second -- indefinitely, because I haven't specified when I want it to stop or how often to report. So I'm just going to cancel this so we can take a look at the output.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongostat --port 30000
+insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn                time
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.8k    3 Aug 15 10:43:57.907
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   43.0k    3 Aug 15 10:43:58.908
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.8k    3 Aug 15 10:43:59.913
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.3k    3 Aug 15 10:44:00.907
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.9k    3 Aug 15 10:44:01.909
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.1k    3 Aug 15 10:44:02.907
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.3k    3 Aug 15 10:44:03.900
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.7k    3 Aug 15 10:44:04.906
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.2k    3 Aug 15 10:44:05.903
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   166b   43.2k    3 Aug 15 10:44:06.906
+insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn                time
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   252b   43.2k    3 Aug 15 10:44:07.909
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.2k    3 Aug 15 10:44:08.904
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   43.0k    3 Aug 15 10:44:09.904
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.2k    3 Aug 15 10:44:10.899
+    *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.7k    3 Aug 15 10:44:11.907
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.0k    3 Aug 15 10:44:12.906
+    *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.1k    3 Aug 15 10:44:13.903
+^C2021-08-15T10:44:14.368+0100	signal 'interrupt' received; forcefully terminating
+```
 
 These first six fields represent the number of specific operations per second-- such as inserts, deletes, and just overall commands.
 
