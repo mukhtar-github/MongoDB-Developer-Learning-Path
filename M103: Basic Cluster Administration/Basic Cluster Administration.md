@@ -1482,7 +1482,27 @@ The server generated these startup warnings when booting:
 ---
 ```
 
-Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role. In this case, I'm creating it on the admin database. Now, this is the first user you should always create. And why is that?
+Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role. In this case, I'm creating it on the admin database.
+
+```javascript
+db.createUser(
+...   { user: "security_officer",
+...     pwd: "h3ll0th3r3",
+...     roles: [ { db: "admin", role: "userAdmin" } ]
+...   }
+... )
+Successfully added user: {
+    "user" : "security_officer",
+    "roles" : [
+      {
+        "db" : "admin",
+        "role" : "userAdmin"
+      }
+    ]
+}
+```
+
+Now, this is the first user you should always create. And why is that?
 
 Well the main reason for this is that this particular role allows the user to do all operations around user management. But in themself is not able to do anything related with data management or data modifications. Cannot create or write, cannot list databases, cannot do anything around database administration aside from creating and updating or reviewing database users.
 
