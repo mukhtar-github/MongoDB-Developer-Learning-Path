@@ -1511,7 +1511,29 @@ Now next, I'm going to create a user that is allowed to actually administer the 
 
 There's a variety of different operations that this built in role allows the user to operate. But again, similar to the *user admin role*, this role does not have the ability to read any user data at all or write data for that fact. Everything that is related with *DDL, data definition language*, this user will be able to perform. Everything that is related with the *DML, data modification language* operations, he will not be able to do.
 
-This is to prevent the dba to go in and modify data inadvertently. Does not stop him from dropping collections though because that's a DDL operation. But it cannot remove specific fields from a document or even create new documents in a collection. Let's go ahead and do that. So here I have my dba user with some password and the role that I've given him on the database m103 is role dbAdmin. Now if you look closely to this operation, I'm doing something quite tricky.
+This is to prevent the *dba* to go in and modify data inadvertently. Does not stop him from dropping collections though because that's a *DDL* operation. But it cannot remove specific fields from a document or even create new documents in a collection. Let's go ahead and do that.
+
+```javascript
+> use admin
+switched to db admin
+> db.createUser(
+...   { user: "dba",
+...     pwd: "c1lynd3rs",
+...     roles: [ { db: "admin", role: "dbAdmin" } ]
+...   }
+... )
+Successfully added user: {
+    "user" : "dba",
+    "roles" : [
+      {
+        "db" : "admin",
+        "role" : "dbAdmin"
+      }
+    ]
+}
+```
+
+So here I have my *dba user* with some password and the role that I've given him on the database m103 is role dbAdmin. Now if you look closely to this operation, I'm doing something quite tricky.
 
 I'm using the database admin to create a user on admin, but granting a role of dbAdmin on M103 database. Although this might sound a little bit strange, this is actually a recommended approach. All users should be created on the database admin for simplicity reasons. That means that the database admin will be used to authenticate the users that we create. That said, it might not be needing to access the database admin at all for doing what it's supposed to do.
 
