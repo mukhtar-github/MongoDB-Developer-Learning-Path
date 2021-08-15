@@ -1480,12 +1480,13 @@ The server generated these startup warnings when booting:
         2021-08-14T09:05:08.419+01:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
         2021-08-14T09:05:12.308+01:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
 ---
+> 
 ```
 
 Once I'm connected and authenticated, the first thing I'm going to do is create my *security officer, which enables user admin role*. In this case, I'm creating it on the *admin database*.
 
 ```javascript
-db.createUser(
+> db.createUser(
 ...   { user: "security_officer",
 ...     pwd: "h3ll0th3r3",
 ...     roles: [ { db: "admin", role: "userAdmin" } ]
@@ -1504,11 +1505,11 @@ Successfully added user: {
 
 Now, this is the first user you should always create. And why is that? Well the main reason for this is that this particular role allows the user to do all operations around *user management*. But in themself is not able to do anything related with *data management or data modifications*. Cannot *create or write, cannot list databases*, cannot do anything around *database administration* aside from *creating and updating or reviewing database users*.
 
-This is quite important if you want to ensure that there are specific users in your organization that are not allowed to do anything with data in your system -- just managing other users that themselves can create the data. So the command for doing that is the create user, as always. We'll create a user we are calling here security officer, passing a password, the roles where it's going to be created. And the command gets successfully created.
+This is quite important if you want to ensure that there are specific users in your organization that are not allowed to do anything with data in your system -- just managing other users that themselves can create the data. So the command for doing that is the *create user*, as always. We create a user we are calling here *security officer*, passing a password, the roles where it's going to be created. And the command gets successfully created.
 
-Now next, I'm going to create a user that is allowed to actually administer the database. Yep, you got it. It's our dbAdmin role -- a user that is created using this role. Now the list of privileges that this particular role enables is quite long. But it can get a feeling of what it can actually do. All the statistical data, kill cursors, lists indexes, list databases and collections, get collect statistics on the collections, do collection modifications, convert to capped.
+Now next, I'm going to create a user that is allowed to actually administer the database. Yep, you got it. It's our *dbAdmin role* -- a user that is created using this role. Now the list of privileges that this particular role enables is quite long. But it can get a feeling of what it can actually do. All the *statistical data, kill cursors, lists indexes, list databases and collections, get collect statistics on the collections, do collection modifications, convert to capped*.
 
-There's a variety of different operations that this built in role allows the user to operate. But again, similar to the user admin role, this role does not have the ability to read any user data at all or write data for that fact. Everything that is related with DDL, data definition language, this user will be able to perform. Everything that is related with the DML, data modification language operations, he will not be able to do.
+There's a variety of different operations that this built in role allows the user to operate. But again, similar to the *user admin role*, this role does not have the ability to read any user data at all or write data for that fact. Everything that is related with *DDL, data definition language*, this user will be able to perform. Everything that is related with the *DML, data modification language* operations, he will not be able to do.
 
 This is to prevent the dba to go in and modify data inadvertently. Does not stop him from dropping collections though because that's a DDL operation. But it cannot remove specific fields from a document or even create new documents in a collection. Let's go ahead and do that. So here I have my dba user with some password and the role that I've given him on the database m103 is role dbAdmin. Now if you look closely to this operation, I'm doing something quite tricky.
 
