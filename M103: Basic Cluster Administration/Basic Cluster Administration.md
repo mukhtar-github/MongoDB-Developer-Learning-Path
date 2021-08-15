@@ -1818,15 +1818,9 @@ Successfully added user: {
 
 ### Server Tools Overview
 
-All right, so in this lesson, we're going to take a look at the tools you get when you download the MongoDB package.
+All right, so in this lesson, we're going to take a look at the tools you get when you download the *MongoDB package*. You should already be familiar with a couple of them, such as *mongod*, the core database process, and *Mongo*, which is the interactive *MongoDB shell* that you use to connect to *mongod*.
 
-You should already be familiar with a couple of them, such as mongod, the core database process, and Mongo, which is the interactive MongoDB shell that you use to connect to mongod.
-
-In this lesson, we're going to cover some of the other important tools you get when you download MongoDB.
-
-So in order to get a full list of the Mongo tools that we get when we download MongoDB, we can use a find command in Unix.
-
-To the find command, we pass a search term-- in this case, mongo*-- which just looks for anything that begins with the word "mongo" in this directory-- /usr/bin/.
+In this lesson, we're going to cover some of the other important tools you get when you download *MongoDB*. So in order to get a full list of the *Mongo tools* that we get when we download *MongoDB*, we can use a *find* command in Unix. To the *find* command, we pass a search term -- in this case, *mongo** -- which just looks for anything that begins with the word *"mongo"* in this directory -- */usr/bin/*.
 
 So this is a lot of stuff.
 
