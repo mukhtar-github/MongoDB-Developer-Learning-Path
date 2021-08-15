@@ -1783,3 +1783,35 @@ The requirements for this new user are:
 * Authentication source: *admin*
 * Username: *m103-application-user*
 * Password: *m103-application-pass*
+
+3. Click "Run Tests" to run a suite of tests that will check the configuration of *m103-application-user*. The results of these tests will let you know which steps you've yet to complete.
+
+#### Answer:
+
+```javascript
+db.createUser(
+  { user: "m103-application-user",
+  pwd: "m103-application-pass",
+  roles: [ { db: "applicationData", role: "readWrite" } ]
+})
+
+user@M103# mongo admin --port 27000 -u m103-admin -p m103-pass
+
+> use admin
+switched to db admin
+> db.createUser(
+...   { user: "m103-application-user",
+
+...   pwd: "m103-application-pass",
+...   roles: [ { db: "applicationData", role: "readWrite" } ]
+... })
+Successfully added user: {
+        "user" : "m103-application-user",
+        "roles" : [
+                {
+                  "db" : "applicationData",
+                  "role" : "readWrite"
+                }
+        ]
+}
+```
