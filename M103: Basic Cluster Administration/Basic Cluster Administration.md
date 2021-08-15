@@ -1822,6 +1822,22 @@ All right, so in this lesson, we're going to take a look at the tools you get wh
 
 In this lesson, we're going to cover some of the other important tools you get when you download *MongoDB*. So in order to get a full list of the *Mongo tools* that we get when we download *MongoDB*, we can use a *find* command in Unix. To the *find* command, we pass a search term -- in this case, *mongo** -- which just looks for anything that begins with the word *"mongo"* in this directory -- */usr/bin/*.
 
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ find /usr/bin/ -name "mongo*"
+/usr/bin/mongoexport
+/usr/bin/mongoimport
+/usr/bin/mongorestore
+/usr/bin/mongostat
+/usr/bin/mongosh
+/usr/bin/mongofiles
+/usr/bin/mongotop
+/usr/bin/mongodump
+/usr/bin/mongodb-compass
+/usr/bin/mongos
+/usr/bin/mongo
+/usr/bin/mongod
+```
+
 So this is a lot of stuff.
 
 Specifically in this lesson, we're going to cover mongostat, mongodump, mongorestore, mongoexport, and mongoimport.
