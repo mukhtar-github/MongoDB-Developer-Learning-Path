@@ -1763,4 +1763,23 @@ So you can interpret this *dbOwner role as a meta role* -- one that combines sev
 }
 ```
 
-Once we do that, we can have the list of all different *actions and resources*, meaning the privileges, of each role that this particular role inherits for himself. Let's recap. We've looked into the structure of the roles and how they are defined. We've seen the list of built in roles and how they are logically grouped together. And finally, we've seen how to create and grant roles to users using the *built in roles*.
+Once we do that, we can have the list of all different *actions and resources*, meaning the privileges, of each role that this particular role inherits for himself. Let's recap. We've looked into the structure of the roles and how they are defined. We've seen the list of *built in roles* and how they are logically grouped together. And finally, we've seen how to create and grant roles to users using the *built in roles*.
+
+### Lab: Creating First Application User
+
+#### Problem:
+
+Create a new user for an application that has the *readWrite* role:
+
+1. Connect to a *mongod* instance that is *already running in the background on port 27000*. You can find the options used to launch *mongod* in the configuration file in your file editor.
+
+The *m103-admin* user has also already been created for you with password *m103-pass*.
+
+2. Use the *db.createUser()* command to create a user for a CRUD application.
+
+The requirements for this new user are:
+
+* Role: *readWrite* on *applicationData* database
+* Authentication source: *admin*
+* Username: *m103-application-user*
+* Password: *m103-application-pass*
