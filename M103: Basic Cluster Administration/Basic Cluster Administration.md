@@ -1467,7 +1467,22 @@ But there are also *built-in roles that are all database level*. That means they
 
 ### Built-In Roles: Part 2
 
-Now the first thing I'm going to do is basically connect with an existing user that we've previously created -- our root level user. Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role. In this case, I'm creating it on the admin database. Now, this is the first user you should always create. And why is that?
+Now the first thing I'm going to do is basically connect with an existing user that we've previously created -- our root level user.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongo admin -u root -p root123
+MongoDB shell version v4.4.8
+connecting to: mongodb://127.0.0.1:27017/admin?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("8bfabf1a-0c08-41bf-86c6-39d032ee1695") }
+MongoDB server version: 4.4.8
+---
+The server generated these startup warnings when booting: 
+        2021-08-14T09:05:08.419+01:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+        2021-08-14T09:05:12.308+01:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+```
+
+Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role. In this case, I'm creating it on the admin database. Now, this is the first user you should always create. And why is that?
 
 Well the main reason for this is that this particular role allows the user to do all operations around user management. But in themself is not able to do anything related with data management or data modifications. Cannot create or write, cannot list databases, cannot do anything around database administration aside from creating and updating or reviewing database users.
 
