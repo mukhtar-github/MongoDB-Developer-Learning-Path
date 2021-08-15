@@ -1815,3 +1815,123 @@ Successfully added user: {
         ]
 }
 ```
+
+### Server Tools Overview
+
+All right, so in this lesson, we're going to take a look at the tools you get when you download the MongoDB package.
+
+You should already be familiar with a couple of them, such as mongod, the core database process, and Mongo, which is the interactive MongoDB shell that you use to connect to mongod.
+
+In this lesson, we're going to cover some of the other important tools you get when you download MongoDB.
+
+So in order to get a full list of the Mongo tools that we get when we download MongoDB, we can use a find command in Unix.
+
+To the find command, we pass a search term-- in this case, mongo*-- which just looks for anything that begins with the word "mongo" in this directory-- /usr/bin/.
+
+So this is a lot of stuff.
+
+Specifically in this lesson, we're going to cover mongostat, mongodump, mongorestore, mongoexport, and mongoimport.
+
+mongostat is a utility designed to give quick statistics on a running mongod or mongos process.
+
+All right, so I'm just going to launch an example mongod, here, on port 30000, and I'm going to fork the process so I can still use this terminal window.
+
+In order to connect to this mongod and get Mongo stats from it, I have to specify the port in the mongostat call.
+
+And here I've specified my port.
+
+And if I enter this command, it's going to return Mongo stats to me every second-- indefinitely, because I haven't specified when I want it to stop or how often to report.
+
+So I'm just going to cancel this so we can take a look at the output.
+
+These first six fields represent the number of specific operations per second-- such as inserts, deletes, and just overall commands.
+
+The next seven fields represent lower-level memory statistics, such as dirty, which is the percentage of dirty bytes in the cache, used, which is the percentage of currently-used bytes in the cache, vsize, which is the total amount of virtual memory used by the process, and res, which is the total amount of resonant memory used by the process.
+
+Net_in and net_out are used to measure the amount of network traffic that's being received and sent out by the mongod or mongos process.
+
+All right, so we're going to discuss the next four Mongo server tools and pairs.
+
+The first pair is mongorestore and mongodump, which are used to import and export dump files from MongoDB collections.
+
+These dump files are in BSON, or Binary JSON format.
+
+These tools are very quick, because the data in MongoDB is already in BSON format, and mongodump simply needs to make a copy to export.
+
+So we can see the full options that we can pass to Mongo, now, by passing the help flag here.
+
+The only one we're going to use right now is port.
+
+All right, so in order to use mongodump with access control enabled, you must authenticate through the mongodump command.
+
+So in addition to specifying a port here, we also specify a username, password, and authentication database-- in this case, admin.
+
+All right, so running this command without specifying a directory creates a folder called dump.
+
+We take a look inside dump and then take a look inside the database that we dump from, we can see two files.
+
+One of them is a BSON file.
+
+This file is the actual data from the collection, but it's not very readable, because it's a BSON.
+
+The JSON file here is metadata about the collection that was dumped, and we can take a look at it with cat and see it's very short.
+
+It has a list of the indexes, which right now is just the one on _id that comes by default, and then the namespace of the collection that we dumped-- exampleDB.students.
+
+So this is a mongorestore command, which is the inverse of the mongodump command.
+
+It takes a BSON dump file and creates a MongoDB collection from it.
+
+This drop flag will drop the current collection-- exampleDB.students-- and then replace it with what's in the dump file.
+
+And now we're done.
+
+All we needed to pass was the dump directory, because that had the metadata in JSON format, which told it about any indexes-- in this case, there were no indexes-- and the namespace-- exampleDB.students.
+
+So mongodump and mongorestore output and input BSON, which are binary files.
+
+The next couple commands we're going to go over-- mongoexport and mongoimport-- deal with JSON instead.
+
+We can see the full list of options for mongoexport by passing the help flag, here.
+
+And we see there are a lot of them.
+
+The ones we're going to use are the authentication options-- username, password, and authenticationDatabase-- and port.
+
+All right, so now we get to see mongoexport in action.
+
+We still have to authenticate and specify a port, but notice that this time, we didn't specify a file name for our output.
+
+And unlike mongodump, mongoexport will not create a directory for us.
+
+Instead, it'll send the output to standard out.
+
+This is a lot of information, and it's not so useful when it's just printed in the terminal.
+
+So this is the same exact command as before, except this time we've passed this -o flag, which is for the output.
+
+We specified a new file called students.json to store all that output that was printed at the terminal before.
+
+All right, so now we have a new file called students.json, and I'm just going to tail the file so we can take a look at what's in it.
+
+So as we can see, this is a JSON representation of the MongoDB collection.
+
+These are just documents and arrays.
+
+All right, so this is a mongoimport statement, which is the inverse operation of mongoexport.
+
+This is pretty similar to its BSON counterpart, mongorestore.
+
+In this command, I'm going to use mongoimport to import the data set that we just exported.
+
+So as we can see here, we didn't specify a database or a collection for this mongoimport statement.
+
+Because there's no metadata in the JSON export, mongoimport has to figure out a place to put all this data.
+
+It defaults to use test as the database, and the name of the JSON files-- students-- as the name of the collection.
+
+So just to recap, in this lesson we covered mongostat, which gives quick statistics on a running mongod or mongos process.
+
+We covered mongodump, which outputs BSON representations of MongoDB, and mongorestore, which restores BSON representation in MongoDB into MongoDB collections.
+
+We covered mongoexport, which outputs JSON or CSV representations of MongoDB collections, and mongoimport, which takes the JSON or the CSV representations and creates a MongoDB collection from it.
