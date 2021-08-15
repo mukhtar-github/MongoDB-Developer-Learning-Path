@@ -1543,6 +1543,227 @@ db.grantRolesToUser( "dba",  [ { db: "playground", role: "dbOwner"  } ] )
 
 I'm going to give it a *database playground* where this particular user will be the *dbOwner*. Once I do this, the role *dbOwner is the database owner*. And therefore, it can do any *administrative action on the database*. That also means that this role combines all privileges of *read write, dbAdmin, and user admin roles*. That said, any user which is granted *dbOwner* over a database can actually do pretty much anything he wants. He can *read write, he can dbAdmin, and he can even user admin on that same database*.
 
-So you can interpret this dbOwner role as a meta role -- one that combines several other built in roles that MongoDB provides. And we can see that by running this command -- rolesInfo where you want to know what dbOwner is on the db playground. We can also say to show the privileges of this particular role. Once we do that, we can have the list of all different actions and resources, meaning the privileges, of each role that this particular role inherits for himself.
+So you can interpret this *dbOwner role as a meta role* -- one that combines several other built in roles that *MongoDB* provides. And we can see that by running this command -- *rolesInfo* where you want to know what *dbOwner is on the db playground*. We can also say to show the privileges of this particular role.
+
+```javascript
+> db.runCommand( { rolesInfo: { role: "dbOwner", db: "playground" }, showPrivileges: true} )
+  {
+    "roles" : [
+      {
+        "role" : "dbOwner",
+        "db" : "playground",
+        "isBuiltin" : true,
+        "roles" : [ ],
+        "inheritedRoles" : [ ],
+        "privileges" : [
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : ""
+            },
+            "actions" : [
+              "bypassDocumentValidation",
+              "changeCustomData",
+              "changePassword",
+              "changeStream",
+              "collMod",
+              "collStats",
+              "compact",
+              "convertToCapped",
+              "createCollection",
+              "createIndex",
+              "createRole",
+              "createUser",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "dropDatabase",
+              "dropIndex",
+              "dropRole",
+              "dropUser",
+              "emptycapped",
+              "enableProfiler",
+              "find",
+              "grantRole",
+              "insert",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheIndexFilter",
+              "planCacheRead",
+              "planCacheWrite",
+              "reIndex",
+              "remove",
+              "renameCollectionSameDB",
+              "revokeRole",
+              "setAuthenticationRestriction",
+              "storageDetails",
+              "update",
+              "validate",
+              "viewRole",
+              "viewUser"
+            ]
+          },
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : "system.js"
+            },
+            "actions" : [
+              "changeStream",
+              "collStats",
+              "convertToCapped",
+              "createCollection",
+              "createIndex",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "dropIndex",
+              "emptycapped",
+              "find",
+              "insert",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheRead",
+              "remove",
+              "renameCollectionSameDB",
+              "update"
+            ]
+          },
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : "system.profile"
+            },
+            "actions" : [
+              "changeStream",
+              "collStats",
+              "convertToCapped",
+              "createCollection",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "find",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheRead"
+            ]
+          }
+        ],
+        "inheritedPrivileges" : [
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : ""
+            },
+            "actions" : [
+              "bypassDocumentValidation",
+              "changeStream",
+              "collMod",
+              "collStats",
+              "compact",
+              "convertToCapped",
+              "createCollection",
+              "createIndex",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "dropDatabase",
+              "dropIndex",
+              "emptycapped",
+              "enableProfiler",
+              "find",
+              "insert",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheIndexFilter",
+              "planCacheRead",
+              "planCacheWrite",
+              "reIndex",
+              "remove",
+              "renameCollectionSameDB",
+              "storageDetails",
+              "update",
+              "validate"
+            ]
+          },
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : "system.js"
+            },
+            "actions" : [
+              "changeStream",
+              "collStats",
+              "convertToCapped",
+              "createCollection",
+              "createIndex",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "dropIndex",
+              "emptycapped",
+              "find",
+              "insert",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheRead",
+              "remove",
+              "renameCollectionSameDB",
+              "update"
+            ]
+          },
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : "system.profile"
+            },
+            "actions" : [
+              "changeStream",
+              "collStats",
+              "convertToCapped",
+              "createCollection",
+              "dbHash",
+              "dbStats",
+              "dropCollection",
+              "find",
+              "killCursors",
+              "listCollections",
+              "listIndexes",
+              "planCacheRead"
+            ]
+          },
+          {
+            "resource" : {
+              "db" : "playground",
+              "collection" : ""
+            },
+            "actions" : [
+              "changeCustomData",
+              "changePassword",
+              "createRole",
+              "createUser",
+              "dropRole",
+              "dropUser",
+              "grantRole",
+              "revokeRole",
+              "setAuthenticationRestriction",
+              "viewRole",
+              "viewUser"
+            ]
+          }
+        ]
+      }
+    ],
+    "ok" : 1
+}
+```
+
+
+Once we do that, we can have the list of all different actions and resources, meaning the privileges, of each role that this particular role inherits for himself.
 
 Let's recap. We've looked into the structure of the roles and how they are defined. We've seen the list of built in roles and how they are logically grouped together. And finally, we've seen how to create and grant roles to users using the built in roles.
