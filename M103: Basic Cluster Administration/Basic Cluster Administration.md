@@ -1467,7 +1467,7 @@ But there are also *built-in roles that are all database level*. That means they
 
 ### Built-In Roles: Part 2
 
-Now the first thing I'm going to do is basically connect with an existing user that we've previously created -- our root level user.
+Now the first thing I'm going to do is basically connect with an existing user that we've previously created -- our *root level user*.
 
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ mongo admin -u root -p root123
@@ -1482,7 +1482,7 @@ The server generated these startup warnings when booting:
 ---
 ```
 
-Once I'm connected and authenticated, the first thing I'm going to do is create my security officer, which enables user admin role. In this case, I'm creating it on the admin database.
+Once I'm connected and authenticated, the first thing I'm going to do is create my *security officer, which enables user admin role*. In this case, I'm creating it on the *admin database*.
 
 ```javascript
 db.createUser(
@@ -1502,9 +1502,7 @@ Successfully added user: {
 }
 ```
 
-Now, this is the first user you should always create. And why is that?
-
-Well the main reason for this is that this particular role allows the user to do all operations around user management. But in themself is not able to do anything related with data management or data modifications. Cannot create or write, cannot list databases, cannot do anything around database administration aside from creating and updating or reviewing database users.
+Now, this is the first user you should always create. And why is that? Well the main reason for this is that this particular role allows the user to do all operations around *user management*. But in themself is not able to do anything related with *data management or data modifications*. Cannot *create or write, cannot list databases*, cannot do anything around *database administration* aside from *creating and updating or reviewing database users*.
 
 This is quite important if you want to ensure that there are specific users in your organization that are not allowed to do anything with data in your system -- just managing other users that themselves can create the data. So the command for doing that is the create user, as always. We'll create a user we are calling here security officer, passing a password, the roles where it's going to be created. And the command gets successfully created.
 
