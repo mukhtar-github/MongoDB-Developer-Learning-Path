@@ -1763,7 +1763,4 @@ So you can interpret this *dbOwner role as a meta role* -- one that combines sev
 }
 ```
 
-
-Once we do that, we can have the list of all different actions and resources, meaning the privileges, of each role that this particular role inherits for himself.
-
-Let's recap. We've looked into the structure of the roles and how they are defined. We've seen the list of built in roles and how they are logically grouped together. And finally, we've seen how to create and grant roles to users using the built in roles.
+Once we do that, we can have the list of all different *actions and resources*, meaning the privileges, of each role that this particular role inherits for himself. Let's recap. We've looked into the structure of the roles and how they are defined. We've seen the list of built in roles and how they are logically grouped together. And finally, we've seen how to create and grant roles to users using the *built in roles*.
