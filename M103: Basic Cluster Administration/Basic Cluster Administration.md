@@ -1838,21 +1838,9 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ find /usr/bin/ -name "mongo*"
 /usr/bin/mongod
 ```
 
-So this is a lot of stuff.
+So this is a lot of stuff. Specifically in this lesson, we're going to cover *mongostat, mongodump, mongorestore, mongoexport, and mongoimport*. *mongostat* is a utility designed to give quick statistics on a running *mongod or mongos* process. All right, so I'm just going to launch an example *mongod*, here, on *port 30000*, and I'm going to *fork* the process so I can still use this terminal window.
 
-Specifically in this lesson, we're going to cover mongostat, mongodump, mongorestore, mongoexport, and mongoimport.
-
-mongostat is a utility designed to give quick statistics on a running mongod or mongos process.
-
-All right, so I'm just going to launch an example mongod, here, on port 30000, and I'm going to fork the process so I can still use this terminal window.
-
-In order to connect to this mongod and get Mongo stats from it, I have to specify the port in the mongostat call.
-
-And here I've specified my port.
-
-And if I enter this command, it's going to return Mongo stats to me every second-- indefinitely, because I haven't specified when I want it to stop or how often to report.
-
-So I'm just going to cancel this so we can take a look at the output.
+In order to connect to this *mongod and get Mongo stats* from it, I have to specify the *port in the mongostat call*. And here I've specified my *port*. And if I enter this command, it's going to return *Mongo stats* to me every second-- indefinitely, because I haven't specified when I want it to stop or how often to report. So I'm just going to cancel this so we can take a look at the output.
 
 These first six fields represent the number of specific operations per second-- such as inserts, deletes, and just overall commands.
 
