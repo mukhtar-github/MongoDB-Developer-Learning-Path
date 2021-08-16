@@ -1823,6 +1823,7 @@ All right, so in this lesson, we're going to take a look at the tools you get wh
 In this lesson, we're going to cover some of the other important tools you get when you download *MongoDB*. So in order to get a full list of the *Mongo tools* that we get when we download *MongoDB*, we can use a *find* command in Unix. To the *find* command, we pass a search term -- in this case, *mongo** -- which just looks for anything that begins with the word *"mongo"* in this directory -- */usr/bin/*.
 
 ```javascript
+// List mongodb binaries:
 mukhtar@mukhtar-Aspire-ES1-431:~$ find /usr/bin/ -name "mongo*"
 /usr/bin/mongoexport
 /usr/bin/mongoimport
@@ -1869,7 +1870,7 @@ verbosity options:
 
 connection options:
   -h, --host=<hostname>                           mongodb host(s) to connect to (use commas to delimit hosts)
-      --port=<port>                               server port (can also use --host hostname:port)
+      --port=<port>                               server port (can also use --host hostname:port)...
 ```
 
 In order to connect to this *mongod and get Mongo stats* from it, I have to specify the *port in the mongostat call*. And here I've specified my *port*. And if I enter this command, it's going to return *Mongo stats* to me every second -- indefinitely, because I haven't specified when I want it to stop or how often to report. So I'm just going to cancel this so we can take a look at the output.
@@ -1926,18 +1927,16 @@ verbosity options:
 
 connection options:
   -h, --host=<hostname>                                     mongodb host to connect to (setname/host1,host2 for replica sets)
-      --port=<port>                                         server port (can also use --host hostname:port)
+      --port=<port>                                         server port (can also use --host hostname:port)...
 ```
 
-The only one we're going to use right now is port.
+The only one we're going to use right now is *port*. All right, so in order to use *mongodump* with access control enabled, you must authenticate through the *mongodump* command. So in addition to specifying a *port*, we also specify a *username, password, and authentication database* -- in this case, *admin*. All right, so running this command without specifying a directory creates a folder called *dump*.
 
-All right, so in order to use mongodump with access control enabled, you must authenticate through the mongodump command.
+```javascript
+mongodump --port 30000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db exampleDB --collection students
+```
 
-So in addition to specifying a port here, we also specify a username, password, and authentication database-- in this case, admin.
-
-All right, so running this command without specifying a directory creates a folder called dump.
-
-We take a look inside dump and then take a look inside the database that we dump from, we can see two files.
+We take a look inside *dump* and then take a look inside the database that we dump from, we can see two files.
 
 One of them is a BSON file.
 
