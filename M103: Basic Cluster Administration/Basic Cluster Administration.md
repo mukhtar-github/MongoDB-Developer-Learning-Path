@@ -1930,7 +1930,7 @@ connection options:
       --port=<port>                                         server port (can also use --host hostname:port)...
 ```
 
-The only one we're going to use right now is *port*. All right, so in order to use *mongodump* with access control enabled, you must authenticate through the *mongodump* command. So in addition to specifying a *port*, we also specify a *username, password, and authentication database* -- in this case, *admin*. All right, so running this command without specifying a directory creates a folder called *dump*.
+The only one we're going to use right now is *port*. All right, so in order to use *mongodump* with access control enabled, you must authenticate through the *mongodump* command. So in addition to specifying a *port*, we also specify a *username, password, and authentication database* -- in this case, *admin*. All right, so running this command without specifying a directory creates a folder called *dump*. (*Old way*).
 
 ```javascript
 // To connect to a local MongoDB instance running on port 27017 and use the default settings to export the content, run mongodump without any command-line options:
@@ -1954,15 +1954,20 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ mongodump --port=30000
 2021-08-16T07:41:03.580+0100 done dumping admin.system.version (1 document)
 ```
 
-We take a look inside *dump* and then take a look inside the database that we dump from, we can see two files.
+We take a look inside *dump* and then take a look inside the *database that we dump* from, we can see two files. One of them is a *BSON* file. This file is the actual data from the *collection*, but it's not very readable, because it's a *BSON*. The *JSON* file here is *metadata about the collection that was dumped*, and we can take a look at it with *cat* and see it's very short.
 
-One of them is a BSON file.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ cd dump
+mukhtar@mukhtar-Aspire-ES1-431:~/dump$ ls
+admin  mongo-exercises  newDB  playground  sample_supplies  test
+mukhtar@mukhtar-Aspire-ES1-431:~/dump$ cd admin
+mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$ ls
+system.users.bson  system.users.metadata.json  system.version.bson  system.version.metadata.json
+mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$ cat system.users.metadata.json
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"unique":true,"key":{"user":{"$numberInt":"1"},"db":{"$numberInt":"1"}},"name":"user_1_db_1"}],"uuid":"3c5d36bc8e494988a1f3cdf98e6ec734","collectionName":"system.users","type":"collection"}mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$
+```
 
-This file is the actual data from the collection, but it's not very readable, because it's a BSON.
-
-The JSON file here is metadata about the collection that was dumped, and we can take a look at it with cat and see it's very short.
-
-It has a list of the indexes, which right now is just the one on _id that comes by default, and then the namespace of the collection that we dumped-- exampleDB.students.
+It has a list of the *indexes*, which right now is just the one on *_id* that comes by default, and then the namespace of the *collection* that we dumped -- *system.users*.
 
 So this is a mongorestore command, which is the inverse of the mongodump command.
 
