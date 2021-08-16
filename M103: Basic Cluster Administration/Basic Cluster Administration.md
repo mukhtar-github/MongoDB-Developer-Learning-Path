@@ -1846,6 +1846,30 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ mongod --port 30000 --dbpath ~/first_mongod --
 about to fork child process, waiting until server is ready for connections.
 forked process: 29864
 child process started successfully, parent exiting
+
+// Help Info
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongostat --help
+Usage:
+  mongostat <options> <connection-string> <polling interval in seconds>
+
+Monitor basic MongoDB server statistics.
+
+Connection strings must begin with mongodb:// or mongodb+srv://.
+
+See http://docs.mongodb.com/database-tools/mongostat/ for more information.
+
+general options:
+      --help                                      print usage
+      --version                                   print the tool version and exit
+      --config=                                   path to a configuration file
+
+verbosity options:
+  -v, --verbose=<level>                        more detailed log output (include multiple times for more verbosity, e. g. -vvvvv, or specify a numeric value, e.g. --verbose=N)
+      --quiet                                     hide all log output
+
+connection options:
+  -h, --host=<hostname>                           mongodb host(s) to connect to (use commas to delimit hosts)
+      --port=<port>                               server port (can also use --host hostname:port)
 ```
 
 In order to connect to this *mongod and get Mongo stats* from it, I have to specify the *port in the mongostat call*. And here I've specified my *port*. And if I enter this command, it's going to return *Mongo stats* to me every second -- indefinitely, because I haven't specified when I want it to stop or how often to report. So I'm just going to cancel this so we can take a look at the output.
@@ -1874,19 +1898,36 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
 ^C2021-08-15T10:44:14.368+0100 signal 'interrupt' received; forcefully terminating
 ```
 
-These first six fields represent the number of specific operations per second -- such as *inserts, deletes, and just overall commands*. The next seven fields represent lower-level memory statistics, such as *dirty*, which is the percentage of dirty bytes in the cache, *used*, which is the percentage of currently-used bytes in the cache, *vsize*, which is the total amount of virtual memory used by the process, and *res*, which is the total amount of resonant memory used by the process.
+These first six fields represent the number of specific operations per second -- such as *inserts, deletes, and just overall commands*. The next seven fields represent lower-level memory statistics, such as *dirty*, which is the percentage of dirty bytes in the cache, *used*, which is the percentage of currently-used bytes in the cache, *vsize*, which is the total amount of virtual memory used by the process, and *res*, which is the total amount of resonant memory used by the process. *Net_in and net_out* are used to measure the amount of network traffic that's being received and sent out by the *mongod or mongos* process.
 
-Net_in and net_out are used to measure the amount of network traffic that's being received and sent out by the mongod or mongos process.
+All right, so we're going to discuss the next four *Mongo server* tools and pairs. The first pair is *mongorestore and mongodump*, which are used to *import and export* dump files from *MongoDB collections*. These dump files are in *BSON, or Binary JSON* format. These tools are very quick, because the data in *MongoDB* is already in *BSON* format, and *mongodump* simply needs to make a copy to export. So we can see the full options that we can pass to *mongodump*, by passing the *help flag*.
 
-All right, so we're going to discuss the next four Mongo server tools and pairs.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongodump --help
+Usage:
+  mongodump <options> <connection-string>
 
-The first pair is mongorestore and mongodump, which are used to import and export dump files from MongoDB collections.
+Export the content of a running server into .bson files.
 
-These dump files are in BSON, or Binary JSON format.
+Specify a database with -d and a collection with -c to only dump that database or collection.
 
-These tools are very quick, because the data in MongoDB is already in BSON format, and mongodump simply needs to make a copy to export.
+Connection strings must begin with mongodb:// or mongodb+srv://.
 
-So we can see the full options that we can pass to Mongo, now, by passing the help flag here.
+See http://docs.mongodb.com/database-tools/mongodump/ for more information.
+
+general options:
+      --help                                                print usage
+      --version                                             print the tool version and exit
+      --config=                                             path to a configuration file
+
+verbosity options:
+  -v, --verbose=<level>                                     more detailed log output (include multiple times for more verbosity, e.g. -vvvvv, or specify a numeric value, e.g. --verbose=N)
+      --quiet                                               hide all log output
+
+connection options:
+  -h, --host=<hostname>                                     mongodb host to connect to (setname/host1,host2 for replica sets)
+      --port=<port>                                         server port (can also use --host hostname:port)
+```
 
 The only one we're going to use right now is port.
 
