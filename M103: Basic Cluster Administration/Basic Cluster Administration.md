@@ -1871,12 +1871,10 @@ insert query update delete getmore command dirty used flushes vsize   res qrw ar
     *0    *0     *0     *0       0     0|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   111b   42.7k    3 Aug 15 10:44:11.907
     *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.0k    3 Aug 15 10:44:12.906
     *0    *0     *0     *0       0     1|0  0.0% 0.0%       0 1.44G 82.0M 0|0 1|0   112b   43.1k    3 Aug 15 10:44:13.903
-^C2021-08-15T10:44:14.368+0100	signal 'interrupt' received; forcefully terminating
+^C2021-08-15T10:44:14.368+0100 signal 'interrupt' received; forcefully terminating
 ```
 
-These first six fields represent the number of specific operations per second-- such as inserts, deletes, and just overall commands.
-
-The next seven fields represent lower-level memory statistics, such as dirty, which is the percentage of dirty bytes in the cache, used, which is the percentage of currently-used bytes in the cache, vsize, which is the total amount of virtual memory used by the process, and res, which is the total amount of resonant memory used by the process.
+These first six fields represent the number of specific operations per second -- such as *inserts, deletes, and just overall commands*. The next seven fields represent lower-level memory statistics, such as *dirty*, which is the percentage of dirty bytes in the cache, *used*, which is the percentage of currently-used bytes in the cache, *vsize*, which is the total amount of virtual memory used by the process, and *res*, which is the total amount of resonant memory used by the process.
 
 Net_in and net_out are used to measure the amount of network traffic that's being received and sent out by the mongod or mongos process.
 
