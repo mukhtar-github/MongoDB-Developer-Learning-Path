@@ -1933,7 +1933,25 @@ connection options:
 The only one we're going to use right now is *port*. All right, so in order to use *mongodump* with access control enabled, you must authenticate through the *mongodump* command. So in addition to specifying a *port*, we also specify a *username, password, and authentication database* -- in this case, *admin*. All right, so running this command without specifying a directory creates a folder called *dump*.
 
 ```javascript
-mongodump --port 30000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db exampleDB --collection students
+// To connect to a local MongoDB instance running on port 27017 and use the default settings to export the content, run mongodump without any command-line options:
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongodump
+2021-08-16T07:34:47.420+0100 writing admin.system.users to dump/admin/system.users.bson
+2021-08-16T07:34:47.456+0100 done dumping admin.system.users (4 documents)
+2021-08-16T07:34:47.457+0100 writing admin.system.version to dump/admin/system.version.bson
+2021-08-16T07:34:47.459+0100 done dumping admin.system.version (3 documents)
+2021-08-16T07:34:47.461+0100 writing newDB.new_collection to dump/newDB/new_collection.bson
+2021-08-16T07:34:47.466+0100 writing mongo-exercises.courses to dump/mongo-exercises/courses.bson
+2021-08-16T07:34:47.468+0100 writing playground.courses to dump/playground/courses.bson
+2021-08-16T07:34:47.469+0100 writing test.employees to dump/test/employees.bson
+2021-08-16T07:34:47.493+0100 done dumping newDB.new_collection (1 document)
+2021-08-16T07:34:47.520+0100 done dumping mongo-exercises.courses (7 documents)
+2021-08-16T07:34:47.547+0100 done dumping playground.courses (2 documents)
+2021-08-16T07:34:47.556+0100 done dumping test.employees (0 documents)
+
+// Specify the port in the --port:
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongodump --port=30000
+2021-08-16T07:41:03.578+0100 writing admin.system.version to dump/admin/system.version.bson
+2021-08-16T07:41:03.580+0100 done dumping admin.system.version (1 document)
 ```
 
 We take a look inside *dump* and then take a look inside the database that we dump from, we can see two files.
