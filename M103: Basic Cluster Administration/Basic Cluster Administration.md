@@ -2003,25 +2003,11 @@ The next couple commands we're going to go over -- *mongoexport and mongoimport*
 
 All right, so now we get to see *mongoexport* in action. We still have to *authenticate and specify a port*, but notice that this time, we didn't specify a file name for our output. And unlike *mongodump, mongoexport* will not create a directory for us. Instead, it'll send the *output to standard out*.
 
-This is a lot of information, and it's not so useful when it's just printed in the terminal.
+This is a lot of information, and it's not so useful when it's just printed in the terminal. So this is the same exact command as before, except this time we've passed this *-o flag*, which is for the *output*. We specified a new file called *students.json* to store all that output that was printed at the terminal before.
 
-So this is the same exact command as before, except this time we've passed this -o flag, which is for the output.
+All right, so now we have a new file called *students.json*, and I'm just going to *tail the file* so we can take a look at what's in it. So as we can see, this is a *JSON* representation of the *MongoDB collection*. These are just documents and arrays.
 
-We specified a new file called students.json to store all that output that was printed at the terminal before.
-
-All right, so now we have a new file called students.json, and I'm just going to tail the file so we can take a look at what's in it.
-
-So as we can see, this is a JSON representation of the MongoDB collection.
-
-These are just documents and arrays.
-
-All right, so this is a mongoimport statement, which is the inverse operation of mongoexport.
-
-This is pretty similar to its BSON counterpart, mongorestore.
-
-In this command, I'm going to use mongoimport to import the data set that we just exported.
-
-So as we can see here, we didn't specify a database or a collection for this mongoimport statement.
+All right, so this is a *mongoimport* statement, which is the inverse operation of *mongoexport*. This is pretty similar to its *BSON counterpart, mongorestore*. In this command, I'm going to use *mongoimport* to import the data set that we just exported. So as we can see here, we didn't specify a database or a collection for this *mongoimport* statement.
 
 Because there's no metadata in the JSON export, mongoimport has to figure out a place to put all this data.
 
