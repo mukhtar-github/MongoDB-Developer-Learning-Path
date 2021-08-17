@@ -1954,7 +1954,7 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ mongodump --port=30000
 2021-08-16T07:41:03.580+0100 done dumping admin.system.version (1 document)
 ```
 
-We take a look inside *dump* and then take a look inside the *database that we dump* from, we can see two files. One of them is a *BSON* file. This file is the actual data from the *collection*, but it's not very readable, because it's a *BSON*. The *JSON* file here is *metadata about the collection that was dumped*, and we can take a look at it with *cat* and see it's very short.
+We take a look inside *dump* and then take a look inside the *database that we dump* from, we can see two files. One of them is a *BSON* file. This file is the actual data from the *collection*, but it's not very readable, because it's a *BSON*. The *JSON* file here is *metadata about the collection that was dumped*, and we can take a look at it with *cat* and see it's very short. It has a list of the *indexes*, which right now is just the one on *_id* that comes by default, and then the namespace of the *collection* that we dumped -- *system.users*.
 
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ cd dump
@@ -1967,17 +1967,37 @@ mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$ cat system.users.metadata.json
 {"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"unique":true,"key":{"user":{"$numberInt":"1"},"db":{"$numberInt":"1"}},"name":"user_1_db_1"}],"uuid":"3c5d36bc8e494988a1f3cdf98e6ec734","collectionName":"system.users","type":"collection"}mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$
 ```
 
-It has a list of the *indexes*, which right now is just the one on *_id* that comes by default, and then the namespace of the *collection* that we dumped -- *system.users*.
+So the *mongorestore* command, which is the inverse of the *mongodump* command. It takes a *BSON dump file* and creates a *MongoDB collection* from it. This drop flag will drop the current collection -- *exampleDB.students* -- and then replace it with what's in the dump file.
 
-So this is a mongorestore command, which is the inverse of the mongodump command.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongorestore --help
+Usage:
+  mongorestore <options> <connection-string> <directory or file to restore>
 
-It takes a BSON dump file and creates a MongoDB collection from it.
+Restore backups generated with mongodump to a running server.
 
-This drop flag will drop the current collection-- exampleDB.students-- and then replace it with what's in the dump file.
+Specify a database with -d to restore a single database from the target directory,
+or use -d and -c to restore a single collection from a single .bson file.
 
-And now we're done.
+Connection strings must begin with mongodb:// or mongodb+srv://.
 
-All we needed to pass was the dump directory, because that had the metadata in JSON format, which told it about any indexes-- in this case, there were no indexes-- and the namespace-- exampleDB.students.
+See http://docs.mongodb.com/database-tools/mongorestore/ for more information.
+
+general options:
+      --help                                                print usage
+      --version                                             print the tool version and exit
+      --config=                                             path to a configuration file
+
+verbosity options:
+  -v, --verbose=<level>                                     more detailed log output (include multiple times for more verbosity, e.g. -vvvvv, or specify a numeric value, e.g. --verbose=N)
+      --quiet                                               hide all log output
+
+connection options:
+  -h, --host=<hostname>                                  mongodb host to connect to (setname/host1,host2 for replica sets)
+      --port=<port>                                         server port (can also use --host hostname:port)...
+```
+
+And now we're done. All we needed to pass was the dump directory, because that had the metadata in JSON format, which told it about any indexes-- in this case, there were no indexes -- and the namespace -- exampleDB.students.
 
 So mongodump and mongorestore output and input BSON, which are binary files.
 
