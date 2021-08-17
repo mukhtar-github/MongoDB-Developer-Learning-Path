@@ -1967,7 +1967,7 @@ mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$ cat system.users.metadata.json
 {"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"unique":true,"key":{"user":{"$numberInt":"1"},"db":{"$numberInt":"1"}},"name":"user_1_db_1"}],"uuid":"3c5d36bc8e494988a1f3cdf98e6ec734","collectionName":"system.users","type":"collection"}mukhtar@mukhtar-Aspire-ES1-431:~/dump/admin$
 ```
 
-So the *mongorestore* command, which is the inverse of the *mongodump* command. It takes a *BSON dump file* and creates a *MongoDB collection* from it. This drop flag will drop the current collection -- *exampleDB.students* -- and then replace it with what's in the dump file.
+So the *mongorestore* command, which is the inverse of the *mongodump* command. It takes a *BSON dump file* and creates a *MongoDB collection* from it. The *drop flag* will drop the current collection -- *system.users* -- and then replace it with what's in the *dump file*.
 
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ mongorestore --help
@@ -1997,13 +1997,9 @@ connection options:
       --port=<port>                                         server port (can also use --host hostname:port)...
 ```
 
-And now we're done. All we needed to pass was the dump directory, because that had the metadata in JSON format, which told it about any indexes-- in this case, there were no indexes -- and the namespace -- exampleDB.students.
+And now we're done. All we needed to pass was the *dump* directory, because that had the *metadata in JSON format*, which told it about any *indexes* -- in this case, there were no *indexes* -- and the *namespace -- system.users*. So *mongodump and mongorestore* output and input *BSON*, which are binary files.
 
-So mongodump and mongorestore output and input BSON, which are binary files.
-
-The next couple commands we're going to go over-- mongoexport and mongoimport-- deal with JSON instead.
-
-We can see the full list of options for mongoexport by passing the help flag, here.
+The next couple commands we're going to go over -- *mongoexport and mongoimport* -- deal with *JSON* instead. We can see the full list of options for *mongoexport* by passing the *help flag*.
 
 And we see there are a lot of them.
 
