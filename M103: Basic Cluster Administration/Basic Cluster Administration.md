@@ -1999,7 +1999,7 @@ connection options:
 
 And now we're done. All we needed to pass was the *dump* directory, because that had the *metadata in JSON format*, which told it about any *indexes* -- in this case, there were no *indexes* -- and the *namespace -- system.users*. So *mongodump and mongorestore* output and input *BSON*, which are binary files.
 
-The next couple commands we're going to go over -- *mongoexport and mongoimport* -- deal with *JSON* instead. We can see the full list of options for *mongoexport* by passing the *help flag*. And we see there are a lot of them. The ones we're going to use are the *authentication options -- username, password, and authenticationDatabase -- and port*.
+The next couple of commands we're going to go over -- *mongoexport and mongoimport* -- deal with *JSON* instead. We can see the full list of options for *mongoexport* by passing the *help flag*. And we see there are a lot of them. The ones we're going to use are the *authentication options -- username, password, and authenticationDatabase -- and port*.
 
 All right, so now we get to see *mongoexport* in action. We still have to *authenticate and specify a port*, but notice that this time, we didn't specify a file name for our output. And unlike *mongodump, mongoexport* will not create a directory for us. Instead, it'll send the *output to standard out*.
 
