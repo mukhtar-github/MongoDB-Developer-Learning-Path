@@ -2001,6 +2001,48 @@ And now we're done. All we needed to pass was the *dump* directory, because that
 
 The next couple of commands we're going to go over -- *mongoexport and mongoimport* -- deal with *JSON* instead. We can see the full list of options for *mongoexport* by passing the *help flag*. And we see there are a lot of them. The ones we're going to use are the *authentication options -- username, password, and authenticationDatabase -- and port*.
 
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ mongoexport --help
+Usage:
+  mongoexport <options> <connection-string>
+
+Export data from MongoDB in CSV or JSON format.
+
+Connection strings must begin with mongodb:// or mongodb+srv://.
+
+See http://docs.mongodb.com/database-tools/mongoexport/ for more information.
+
+general options:
+      --help                                      print usage
+      --version                                   print the tool version and exit
+      --config=                                   path to a configuration file
+
+verbosity options:
+  -v, --verbose=<level>                           more detailed log output (include multiple times for more verbosity, e.g. -vvvvv, or
+                                                  specify a numeric value, e.g. --verbose=N)
+      --quiet                                     hide all log output
+
+connection options:
+  -h, --host=<hostname>                           mongodb host to connect to (setname/host1,host2 for replica sets)
+      --port=<port>                               server port (can also use --host hostname:port)
+
+ssl options:
+      --ssl                                       connect to a mongod or mongos that has ssl enabled
+      --sslCAFile=<filename>                      the .pem file containing the root certificate chain from the certificate authority
+      --sslPEMKeyFile=<filename>                  the .pem file containing the certificate and key
+      --sslPEMKeyPassword=<password>              the password to decrypt the sslPEMKeyFile, if necessary
+      --sslCRLFile=<filename>                     the .pem file containing the certificate revocation list
+      --sslFIPSMode                               use FIPS mode of the installed openssl library
+      --tlsInsecure                               bypass the validation for server's certificate chain and host name
+
+authentication options:
+  -u, --username=<username>                       username for authentication
+  -p, --password=<password>                       password for authentication
+      --authenticationDatabase=<database-name>    database that holds the user's credentials
+      --authenticationMechanism=<mechanism>       authentication mechanism to use
+      --awsSessionToken=<aws-session-token>       session token to authenticate via AWS IAM...
+```
+
 All right, so now we get to see *mongoexport* in action. We still have to *authenticate and specify a port*, but notice that this time, we didn't specify a file name for our output. And unlike *mongodump, mongoexport* will not create a directory for us. Instead, it'll send the *output to standard out*.
 
 This is a lot of information, and it's not so useful when it's just printed in the terminal. So this is the same exact command as before, except this time we've passed this *-o flag*, which is for the *output*. We specified a new file called *students.json* to store all that output that was printed at the terminal before. All right, so now we have a new file called *students.json*, and I'm just going to *tail the file* so we can take a look at what's in it. So as we can see, this is a *JSON* representation of the *MongoDB collection*. These are just documents and arrays.
