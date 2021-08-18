@@ -2050,3 +2050,20 @@ This is a lot of information, and it's not so useful when it's just printed in t
 All right, so this is a *mongoimport* statement, which is the inverse operation of *mongoexport*. This is pretty similar to its *BSON counterpart, mongorestore*. In this command, I'm going to use *mongoimport* to import the data set that we just exported. So as we can see here, we didn't specify a database or a collection for this *mongoimport* statement. Because there's no *metadata in the JSON export, mongoimport* has to figure out a place to put all this data. It defaults to use test as the database, and the name of the *JSON files -- students* -- as the name of the collection.
 
 So just to recap, in this lesson we covered *mongostat*, which gives quick statistics on a running *mongod or mongos* process. We covered *mongodump, which outputs BSON representations of MongoDB, and mongorestore, which restores BSON representation in MongoDB into MongoDB collections*. We covered *mongoexport, which outputs JSON or CSV representations of MongoDB collections, and mongoimport, which takes the JSON or the CSV representations and creates a MongoDB collection from it*.
+
+### Lab: Importing a Dataset
+
+#### Problem:
+
+Import a dataset into MongoDB using mongoimport:
+
+1. Run a mongoimport command on a MongoDB instance running in the background.
+  The requirements for this command are:
+
+* connect to a *mongod* process running on port *27000*
+* import the data from */dataset/products.json*
+* import the data to *applicationData.products*
+* use *m103-application-user* to authenticate to the database - this user has already been created
+for you on the *admin* database with password *m103-application-pass*
+
+2. Click "Run Tests" to run a test that will check *applicationData.products* for the new data. The results of these tests will let you know which steps you've yet to complete.
