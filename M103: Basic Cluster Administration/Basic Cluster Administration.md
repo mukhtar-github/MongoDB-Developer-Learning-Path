@@ -2089,3 +2089,5 @@ Now, in a *replicated* solution, we have a couple extra *nodes* on hand and they
 The *node* where data is sent is called the *Primary node*, and all the other *nodes* are referred to as *Secondary nodes*. The goal here is for all *nodes* to stay consistent with each other. So, if our application is using the database, and the *primary node* goes down, one of the *secondary nodes* can take it's place as *primary* in a process known as *Failover*.
 
 The *nodes* decide specifically which *secondary* will become the *primary* through an *election*. And this name is not a coincidence. The *secondary nodes* actually vote for one another to decide which *secondary* will become the *primary*. In a durable *replica set*, *failover* can take place quickly, so that no data is lost. And the application using the data will continue communicating with the *replica set* as if nothing had ever happened.
+
+And once the *node* comes back up and ensure that it can catch up and sync on the latest copy of the data, it will rejoin the *replica set* automatically.
