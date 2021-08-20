@@ -2080,4 +2080,8 @@ mongoimport --port 27000 -u m103-application-user -p m103-application-pass --aut
 
 In this lesson, we're going to cover *replication* and how it makes your data more durable. *MongoDB* uses *asynchronous statement based replication* because it's plateform independent and allows more flexibility within a *replica set*. But first, let's just talk about where *replication* is. *Replication* is the concept of maintaining multiple copies of your data. This is really important concept in *mongoDB*, but really in any database system.
 
-The main reason why *replication* is necessary, is because you can never assume that all of your servers will always be available, whether you have to perform maintenance on a data center or a disaster wipes out your data entirely. Your servers will experience downtime at some point. The point of *replication* is to make sure that in the event your server goes down, you can still access your data.
+The main reason why *replication* is necessary, is because you can never assume that all of your servers will always be available, whether you have to perform maintenance on a data center or a disaster wipes out your data entirely. Your servers will experience downtime at some point. The point of *replication* is to make sure that in the event your server goes down, you can still access your data. This concept is called *availability*.
+
+A database that does not use *replication* only has a single database server, and we refer to this as a *standalone nodes*. In a *standalone* setup, databases can service *reads and writes* only while that *single node* is up and running, but if the *node* goes down we lose all access to that data. Our *reads and writes* won't reach the server.
+
+Now, in a *replicated* solution
