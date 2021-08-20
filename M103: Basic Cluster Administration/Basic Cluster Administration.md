@@ -2091,3 +2091,155 @@ The *node* where data is sent is called the *Primary node*, and all the other *n
 The *nodes* decide specifically which *secondary* will become the *primary* through an *election*. And this name is not a coincidence. The *secondary nodes* actually vote for one another to decide which *secondary* will become the *primary*. In a durable *replica set*, *failover* can take place quickly, so that no data is lost. And the application using the data will continue communicating with the *replica set* as if nothing had ever happened.
 
 And once the *node* comes back up and ensure that it can catch up and sync on the latest copy of the data, it will rejoin the *replica set* automatically.
+
+### MongoDB Replica Set
+
+Now that we've seen why replication is important, let's do a quick dive into the details of replica sets. Replica sets or groups of mongods that share copies of the same information between them. Replica set members can have one of two different roles. The either can be primary node where all reads and all writes are served by this node.
+
+Or secondary node where the responsibility of this node is to replicate all of the information, and then serve as a high availability to node in case of failure of the primary.
+
+The secondaries will get the data from the primary through an asynchronous replication mechanism.
+
+Every time an application writes some data to the replica set, that right is handled by the primary node.
+
+And then data gets replicated to the secondary nodes.
+
+Now this replication mechanism is based out of a protocol that manages the way that the secondaries should read data from the primary.
+
+In MongoDB this is synchronous replication protocol might have different versions.
+
+We have PV1 and PV0.
+
+The different versions of the replication protocol will vary slightly on the way durability and availability will be forced throughout the set.
+
+Currently Protocol Version 1, or PV1, is the default version.
+
+This protocol is based out of the RAFT protocol.
+
+If you are not familiar with the RAFT protocol, in the lecture notes of this lesson, you will find detailed information about RAFT.
+
+Just keep in mind for now that prior versions of MongoDB used the previous protocol version PV0, and that there might be some configuration details in between both protocols.
+
+For now, we'll just focus on PV1.
+
+At the heart of this replication mechanism there's our operations log, or oplog for short.
+
+The oplog is a segment based lock that keeps track of all write operations acknowledged by the replica sets.
+
+Every time a write is successfully applied to the primary node, it will get recorded in the oplog in its idempotent form.
+
+We'll looking into the idempotentcy details later.
+
+But keep in mind that an idempotent operation can be applied multiple times.
+
+And the end result of that operation will always results in the same end result.
+
+More on this up ahead.
+
+Apart from a primary or secondary role, a replica set member can also be configured as an arbiter.
+
+An arbiter is a member that holds no data.
+
+It's mere existence is to serve as a tiebreaker between secondaries in an election.
+
+And obviously if it has no data, it can never become primary.
+
+Replica sets are failure resilient.
+
+That means that they have a failover mechanism that requires a majority of nodes in a replica set to be available for a primary to be elected.
+
+In this particular case, let's assume that we lose access to our primary.
+
+If we don't have a primary we will not be able to write, and that's not good.
+
+So we need to clear between the remaining nodes of the set, which one could become the new primary?
+
+That is through an election, which is embedded on the details of the political version.
+
+How a primary gets elected or why this-- a particular node becomes primary instead of another.
+
+It's out of scope for now, but keep in mind the details of these will be related with the protocol version that your system may be having.
+
+For now just keep in mind that there is a failover mechanism in place.
+
+Important thing to note is that you should always have at least an odd number of nodes in your replica set.
+
+In case of even number of nodes, do make sure that the majority is consistently available.
+
+In this form of a replica set, you will need to have at least three nodes to be available.
+
+The list the replica set members in their configuration options defines the replica set topology.
+
+Any topology change will trigger an election.
+
+Adding members to the set, failing members, or changing any of the replica set configuration aspects will be perceived as it's topology change.
+
+The topology of a replica set is defined in the replica set configuration.
+
+The replica set configuration is defined in one of the nodes and then shared between all members through the replication mechanism.
+
+We will look into the replication configuration documents in detail later.
+
+In this case, we have four members and I need to raise your attention to a specific situation.
+
+This topology offers exactly the same number of failures as a three node replica sets.
+
+can only afford to lose one member.
+
+In case of losing two of them, we will have no majority available out of the sets.
+
+Why?
+
+Well the majority of 4 is 3.
+
+Therefore the two remaining nodes will not be able to be electing a primary in-between them.
+
+Having that extra node will not provide extra availability of the service.
+
+Just another redundant copy of our data, which is good, but not necessarily for availability reasons.
+
+Now, replica sets can go up to 50 members.
+
+And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy.
+
+But only a maximum of seven of those members can be voting members.
+
+More than seven members may cause election rounds to take too much time, with little to none benefit for availability and consistency purposes.
+
+So between those seven nodes, one of them will become the primary and the remaining ones will be electable as primaries if in case its policy changes, or in case a new election gets triggered.
+
+Now if for some reason we can't or don't want to have a data bearing node, but still be able to failover between nodes, we can add a replica set member as an arbiter.
+
+That said, arbiters do cause significant consistency issues in distributed data systems.
+
+So we advise you use them with care.
+
+In my personal view, the usage of arbiters is a very sensitive and potentially harmful option in many deployments.
+
+So I idly discourage the usage of arbiters.
+
+Withing secondary nodes, these can also be set to have specific or special properties defined.
+
+We can define hidden nodes, for example.
+
+The purpose of a hidden node is to provide specific read-only workloads, or have copies over your data which are hidden from the application.
+
+Hidden nodes can also be set with a delay in their replication process.
+
+We call these delayed nodes.
+
+The purpose of having delayed nodes is to allow resilience to application level corruption, without relying on cold backup files to recover from such an event.
+
+If we have a node delayed, let's say one hour, and if your DBA accidentally drops a collection, we have one hour to recover all the data from the delayed node without needing to go back to back up file to recover to whatever the time that backup was created.
+
+Enabling us to have hot backups.
+
+Let's recap what we just learned in this lecture.
+
+Replica sets are groups of mongod processes that share the same data between all the members of the set.
+
+They provide a high availability and failover mechanism to our application, making the service in case of failure.
+
+The failover is supported by a majority of nodes that elect between them who should be the new primary node at each point in time.
+
+Replica sets are a dynamic system, means that members may have different roles at different times, and can be set to address specific functional purpose like addressing read on workloads, or set to be delayed in time to allow hot back-ups.
