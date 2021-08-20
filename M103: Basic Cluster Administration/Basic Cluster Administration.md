@@ -2100,21 +2100,9 @@ The *secondaries* will get the data from the *primary* through an *asynchronous 
 
 In *MongoDB* this is *synchronous replication protocol* might have different versions. We have *PV1 and PV0*. The different versions of the *replication protocol* will vary slightly on the way *durability and availability* will be forced throughout the set. Currently *Protocol Version 1, or PV1*, is the default version. This protocol is based out of the *RAFT protocol*. If you are not familiar with the *RAFT protocol*, in the lecture notes of this lesson, you will find detailed information about *RAFT*.
 
-Just keep in mind for now that prior versions of *MongoDB* used the previous *protocol version PV0*, and that there might be some configuration details in between both protocols. For now, we'll just focus on *PV1*. At the heart of this *replication mechanism* there's our *operations log, or oplog* for short. The *oplog* is a segment based lock that keeps track of all write operations acknowledged by the *replica sets*. Every time a *write* is successfully applied to the *primary node*, it will get recorded in the *oplog* in its idempotent form.
+Just keep in mind for now that prior versions of *MongoDB* used the previous *protocol version PV0*, and that there might be some configuration details in between both protocols. For now, we'll just focus on *PV1*. At the heart of this *replication mechanism* there's our *operations log, or oplog* for short. The *oplog* is a segment based lock that keeps track of all *write operations* acknowledged by the *replica sets*. Every time a *write* is successfully applied to the *primary node*, it will get recorded in the *oplog* in its *idempotent form*.
 
-We'll looking into the idempotentcy details later.
-
-But keep in mind that an idempotent operation can be applied multiple times.
-
-And the end result of that operation will always results in the same end result.
-
-More on this up ahead.
-
-Apart from a primary or secondary role, a replica set member can also be configured as an arbiter.
-
-An arbiter is a member that holds no data.
-
-It's mere existence is to serve as a tiebreaker between secondaries in an election.
+We'll looking into the *idempotentcy* details later. But keep in mind that an *idempotent operation* can be applied multiple times. And the end result of that operation will always results in the same end result. More on this up ahead. Apart from a *primary or secondary* role, a *replica set* member can also be configured as an *arbiter*. An *arbiter* is a member that *holds no data*. It's mere existence is to serve as a *tiebreaker between secondaries in an election*.
 
 And obviously if it has no data, it can never become primary.
 
