@@ -2098,17 +2098,7 @@ Now that we've seen why *replication* is important, let's do a quick dive into t
 
 The *secondaries* will get the data from the *primary* through an *asynchronous replication mechanism*. Every time an application writes some data to the *replica set*, that right is handled by the *primary node*. And then data gets *replicated to the secondary nodes*. Now this *replication mechanism* is based out of a protocol that manages the way that the *secondaries should read data from the primary*.
 
-In MongoDB this is synchronous replication protocol might have different versions.
-
-We have PV1 and PV0.
-
-The different versions of the replication protocol will vary slightly on the way durability and availability will be forced throughout the set.
-
-Currently Protocol Version 1, or PV1, is the default version.
-
-This protocol is based out of the RAFT protocol.
-
-If you are not familiar with the RAFT protocol, in the lecture notes of this lesson, you will find detailed information about RAFT.
+In *MongoDB* this is *synchronous replication protocol* might have different versions. We have *PV1 and PV0*. The different versions of the *replication protocol* will vary slightly on the way *durability and availability* will be forced throughout the set. Currently *Protocol Version 1, or PV1*, is the default version. This protocol is based out of the *RAFT protocol*. If you are not familiar with the RAFT protocol, in the lecture notes of this lesson, you will find detailed information about RAFT.
 
 Just keep in mind for now that prior versions of MongoDB used the previous protocol version PV0, and that there might be some configuration details in between both protocols.
 
