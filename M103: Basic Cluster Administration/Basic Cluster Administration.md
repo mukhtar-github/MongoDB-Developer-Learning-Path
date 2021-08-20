@@ -2094,9 +2094,7 @@ And once the *node* comes back up and ensure that it can catch up and sync on th
 
 ### MongoDB Replica Set
 
-Now that we've seen why replication is important, let's do a quick dive into the details of replica sets. Replica sets or groups of mongods that share copies of the same information between them. Replica set members can have one of two different roles. The either can be primary node where all reads and all writes are served by this node.
-
-Or secondary node where the responsibility of this node is to replicate all of the information, and then serve as a high availability to node in case of failure of the primary.
+Now that we've seen why *replication* is important, let's do a quick dive into the details of *replica sets*. *Replica sets* are groups of *mongods* that share copies of the same information between them. *Replica set* members can have one of two different roles. The either can be *primary node where all reads and all writes* are served by this node. Or *secondary node* where the responsibility of this node is to replicate all of the information, and then serve as a high availability to node in case of failure of the primary.
 
 The secondaries will get the data from the primary through an asynchronous replication mechanism.
 
