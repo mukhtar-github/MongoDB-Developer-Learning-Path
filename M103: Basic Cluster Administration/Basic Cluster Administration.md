@@ -2100,33 +2100,13 @@ The *secondaries* will get the data from the *primary* through an *asynchronous 
 
 In *MongoDB* this is *synchronous replication protocol* might have different versions. We have *PV1 and PV0*. The different versions of the *replication protocol* will vary slightly on the way *durability and availability* will be forced throughout the set. Currently *Protocol Version 1, or PV1*, is the default version. This protocol is based out of the *RAFT protocol*. If you are not familiar with the *RAFT protocol*, in the lecture notes of this lesson, you will find detailed information about *RAFT*.
 
-Just keep in mind for now that prior versions of *MongoDB* used the previous *protocol version PV0*, and that there might be some configuration details in between both protocols. For now, we'll just focus on *PV1*. At the heart of this *replication mechanism* there's our *operations log, or oplog* for short. The *oplog* is a segment based lock that keeps track of all *write operations* acknowledged by the *replica sets*. Every time a *write* is successfully applied to the *primary node*, it will get recorded in the *oplog* in its *idempotent form*.
+Just keep in mind for now that prior versions of *MongoDB* used the previous *protocol version PV0*, and that there might be some configuration details in between both protocols. For now, we'll just focus on *PV1*. At the heart of this *replication mechanism* there's our *operations log, or oplog* for short. The *oplog* is a segment based lock that keeps track of all *write operations* acknowledged by the *replica sets*. Every time a *write* is successfully applied to the *primary node*, it will get recorded in the *oplog* in its *idempotent form*. We'll looking into the *idempotentcy* details later.
 
-We'll looking into the *idempotentcy* details later. But keep in mind that an *idempotent operation* can be applied multiple times. And the end result of that operation will always results in the same end result. More on this up ahead. Apart from a *primary or secondary* role, a *replica set* member can also be configured as an *arbiter*. An *arbiter* is a member that *holds no data*. It's mere existence is to serve as a *tiebreaker between secondaries in an election*.
+But keep in mind that an *idempotent operation* can be applied multiple times. And the end result of that operation will always results in the same end result. More on this up ahead. Apart from a *primary or secondary* role, a *replica set* member can also be configured as an *arbiter*. An *arbiter* is a member that *holds no data*. It's mere existence is to serve as a *tiebreaker between secondaries in an election*. And obviously if it has no data, it can never become primary.
 
-And obviously if it has no data, it can never become primary.
+*Replica sets are failure resilient*. That means that they have a *failover mechanism* that requires a majority of nodes in a *replica set* to be available for a *primary* to be elected. In this particular case, let's assume that we lose access to our *primary*. If we don't have a *primary we will not be able to write*, and that's not good. So we need to clear between the remaining nodes of the set, which one could become the *new primary*? That is through an election, which is embedded on the details of the *protocol version*.
 
-Replica sets are failure resilient.
-
-That means that they have a failover mechanism that requires a majority of nodes in a replica set to be available for a primary to be elected.
-
-In this particular case, let's assume that we lose access to our primary.
-
-If we don't have a primary we will not be able to write, and that's not good.
-
-So we need to clear between the remaining nodes of the set, which one could become the new primary?
-
-That is through an election, which is embedded on the details of the political version.
-
-How a primary gets elected or why this-- a particular node becomes primary instead of another.
-
-It's out of scope for now, but keep in mind the details of these will be related with the protocol version that your system may be having.
-
-For now just keep in mind that there is a failover mechanism in place.
-
-Important thing to note is that you should always have at least an odd number of nodes in your replica set.
-
-In case of even number of nodes, do make sure that the majority is consistently available.
+How a primary gets elected or why this -- a particular node becomes primary instead of another. It's out of scope for now, but keep in mind the details of these will be related with the protocol version that your system may be having. For now just keep in mind that there is a failover mechanism in place. Important thing to note is that you should always have at least an odd number of nodes in your replica set. In case of even number of nodes, do make sure that the majority is consistently available.
 
 In this form of a replica set, you will need to have at least three nodes to be available.
 
