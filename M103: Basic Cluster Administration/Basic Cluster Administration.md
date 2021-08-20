@@ -2073,3 +2073,9 @@ for you on the *admin* database with password *m103-application-pass*
 ```javascript
 mongoimport --port 27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin -d applicationData -c applicationData.products --file "/dataset/products.json"
 ```
+
+## Chapter 2: Replication
+
+### What is Replication?
+
+In this lesson, we're going to cover *replication* and how it makes your data more durable. *MongoDB* uses *asynchronous statement based replication* because it's plateform independent and allows more flexibility within 
