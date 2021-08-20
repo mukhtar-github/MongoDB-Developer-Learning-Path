@@ -2096,13 +2096,7 @@ And once the *node* comes back up and ensure that it can catch up and sync on th
 
 Now that we've seen why *replication* is important, let's do a quick dive into the details of *replica sets*. *Replica sets* are groups of *mongods* that share copies of the same information between them. *Replica set* members can have one of two different roles. The either can be *primary node where all reads and all writes* are served by this node. Or *secondary node* where the responsibility of this node is to replicate all of the information, and then serve as a high availability to node in case of failure of the primary.
 
-The secondaries will get the data from the primary through an asynchronous replication mechanism.
-
-Every time an application writes some data to the replica set, that right is handled by the primary node.
-
-And then data gets replicated to the secondary nodes.
-
-Now this replication mechanism is based out of a protocol that manages the way that the secondaries should read data from the primary.
+The *secondaries* will get the data from the *primary* through an *asynchronous replication mechanism*. Every time an application writes some data to the *replica set*, that right is handled by the *primary node*. And then data gets *replicated to the secondary nodes*. Now this *replication mechanism* is based out of a protocol that manages the way that the *secondaries should read data from the primary*.
 
 In MongoDB this is synchronous replication protocol might have different versions.
 
