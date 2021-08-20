@@ -2084,4 +2084,4 @@ The main reason why *replication* is necessary, is because you can never assume 
 
 A database that does not use *replication* only has a single database server, and we refer to this as a *standalone nodes*. In a *standalone* setup, databases can service *reads and writes* only while that *single node* is up and running, but if the *node* goes down we lose all access to that data. Our *reads and writes* won't reach the server.
 
-Now, in a *replicated* solution
+Now, in a *replicated* solution, we have a couple extra *nodes* on hand and they hold copies of our data. In *mongoDB*, a group of *nodes* that each have copies of the same data is called a *replica set*, and at a *replica set*, all data is handled by default in one of the *nodes*, and it's up to the remaining *nodes* in the set to sync up with it to *replicate* any new data that's been written through asynchronous mechanism.
