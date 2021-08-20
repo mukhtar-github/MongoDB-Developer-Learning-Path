@@ -2067,3 +2067,9 @@ Import a dataset into MongoDB using mongoimport:
 for you on the *admin* database with password *m103-application-pass*
 
 2. Click "Run Tests" to run a test that will check *applicationData.products* for the new data. The results of these tests will let you know which steps you've yet to complete.
+
+#### Answer:
+
+```javascript
+mongoimport --port 27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin -d applicationData -c applicationData.products --file "/dataset/products.json"
+```
