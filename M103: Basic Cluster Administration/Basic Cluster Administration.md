@@ -2143,7 +2143,7 @@ replication:
   replSetName: m103-example
 ```
 
-We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So this line enables key file authentication on our cluster, which mandates that all members of the replica set have to authenticate to each other using a key file that we create here. And we'll create this one in a minute. This is in addition to the client authentication that we enabled in the previous line.
+We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So the *keyFile* line enables *key file authentication* on our cluster, which mandates that all members of the *replica set* have to *authenticate* to each other using a *key file* that we create here. And we'll create this one in a minute. This is in addition to the *client authentication* that we enabled in the previous line.
 
 So we create this key file using OpenSSL, and we place it in the directory that we specified in our configuration file.
 
