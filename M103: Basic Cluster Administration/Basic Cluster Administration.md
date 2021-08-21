@@ -2106,19 +2106,9 @@ But keep in mind that an *idempotent operation* can be applied multiple times. A
 
 *Replica sets are failure resilient*. That means that they have a *failover mechanism* that requires a majority of nodes in a *replica set* to be available for a *primary* to be elected. In this particular case, let's assume that we lose access to our *primary*. If we don't have a *primary we will not be able to write*, and that's not good. So we need to clear between the remaining nodes of the set, which one could become the *new primary*? That is through an election, which is embedded on the details of the *protocol version*.
 
-How a *primary* gets elected or why -- a particular node becomes *primary* instead of another. It's out of scope for now, but keep in mind the details of these will be related with the *protocol version* that your system may be having. For now just keep in mind that there is a *failover mechanism* in place. Important thing to note is that you should always have at least an odd number of *nodes* in your *replica set*. In case of even number of *nodes*, do make sure that the majority is consistently available.
+How a *primary* gets elected or why -- a particular node becomes *primary* instead of another. It's out of scope for now, but keep in mind the details of these will be related with the *protocol version* that your system may be having. For now just keep in mind that there is a *failover mechanism* in place. Important thing to note is that you should always have at least an odd number of *nodes* in your *replica set*. In case of even number of *nodes*, do make sure that the majority is consistently available. In this form of a *replica set*, you will need to have at least *three nodes* to be available.
 
-In this form of a replica set, you will need to have at least three nodes to be available.
-
-The list the replica set members in their configuration options defines the replica set topology.
-
-Any topology change will trigger an election.
-
-Adding members to the set, failing members, or changing any of the replica set configuration aspects will be perceived as it's topology change.
-
-The topology of a replica set is defined in the replica set configuration.
-
-The replica set configuration is defined in one of the nodes and then shared between all members through the replication mechanism.
+The list of replica set members in their configuration options defines the *replica set topology*. Any *topology change* will trigger an election. Adding members to the set, failing members, or changing any of the *replica set* configuration aspects will be perceived as it's *topology* change. The *topology of a replica set* is defined in the *replica set* configuration. The *replica set* configuration is defined in one of the nodes and then shared between all members through the *replication mechanism*.
 
 We will look into the replication configuration documents in detail later.
 
