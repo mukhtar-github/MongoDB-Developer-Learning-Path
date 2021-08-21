@@ -2114,27 +2114,9 @@ In this case, we have four members and I need to raise your attention to a speci
 
 Now, *replica sets* can go up to *50 members*. And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy. But only a maximum of *seven of those members can be voting members*. More than *seven members* may cause election rounds to take too much time, with little to none benefit for availability and consistency purposes. So between those *seven nodes*, one of them will become the *primary* and the remaining ones will be *electable as primaries* if in case its policy changes, or in case a new election gets triggered.
 
-Now if for some reason we can't or don't want to have a data bearing node, but still be able to failover between nodes, we can add a replica set member as an arbiter.
+Now if for some reason we can't or don't want to have a *data bearing node*, but still be able to *failover between nodes*, we can add a *replica set member as an arbiter*. That said, *arbiters* do cause significant consistency issues in *distributed data systems*. So we advise you use them with care. In my personal view, the usage of *arbiters* is a very sensitive and potentially harmful option in many deployments. So I idly discourage the usage of *arbiters*. Withing *secondary nodes*, these can also be set to have specific or special properties defined.
 
-That said, arbiters do cause significant consistency issues in distributed data systems.
-
-So we advise you use them with care.
-
-In my personal view, the usage of arbiters is a very sensitive and potentially harmful option in many deployments.
-
-So I idly discourage the usage of arbiters.
-
-Withing secondary nodes, these can also be set to have specific or special properties defined.
-
-We can define hidden nodes, for example.
-
-The purpose of a hidden node is to provide specific read-only workloads, or have copies over your data which are hidden from the application.
-
-Hidden nodes can also be set with a delay in their replication process.
-
-We call these delayed nodes.
-
-The purpose of having delayed nodes is to allow resilience to application level corruption, without relying on cold backup files to recover from such an event.
+We can define hidden nodes, for example. The purpose of a hidden node is to provide specific read-only workloads, or have copies over your data which are hidden from the application. Hidden nodes can also be set with a delay in their replication process. We call these delayed nodes. The purpose of having delayed nodes is to allow resilience to application level corruption, without relying on cold backup files to recover from such an event.
 
 If we have a node delayed, let's say one hour, and if your DBA accidentally drops a collection, we have one hour to recover all the data from the delayed node without needing to go back to back up file to recover to whatever the time that backup was created.
 
