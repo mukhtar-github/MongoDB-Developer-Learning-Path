@@ -2119,3 +2119,145 @@ Now if for some reason we can't or don't want to have a *data bearing node*, but
 We can define *hidden nodes*, for example. The purpose of a *hidden node* is to provide specific *read-only workloads*, or have copies of your data which are *hidden* from their application. *Hidden nodes* can also be set with a *delay* in their *replication process*. We call these *delayed nodes*. The purpose of having *delayed nodes* is to allow resilience to application level corruption, without relying on cold backup files to recover from such an event. If we have a *node delayed*, let's say *one hour*, and if your *DBA* accidentally drops a collection, we have *one hour* to recover all the data from the *delayed node* without needing to go back to back up file to recover to whatever the time that backup was created. Enabling us to have hot backups.
 
 Let's recap what we just learned in this lecture. *Replica sets are groups of mongod processes* that share the same data between all the members of the set. They provide a *high availability and failover mechanism* to our application, making the service in case of failure. The *failover* is supported by a majority of *nodes* that elect between them who should be the *new primary node* at each point in time. *Replica sets* are a dynamic system, means that members may have different roles at different times, and can be set to address specific functional purpose like addressing *read only workloads*, or set to be *delayed in time to allow hot back-ups*.
+
+### Setting Up a Replica Set
+
+All right, so in this lesson, we're going to initiate a *local replica set*. We're going to start by independently launching *three mongod processes* and they won't actually be able to communicate with each other until we connect them, at which point they'll be able to actually *replicate data* for us. So this is the *configuration file for standalone node*. We've called it *node 1*. And these settings should look fairly familiar to you if you've been following the previous lessons.
+
+We don't actually need to change any of these settings in order to enable replication, we just need to add a few lines.
+
+So this line enables key file authentication on our cluster, which mandates that all members of the replica set have to authenticate to each other using a key file that we create here.
+
+And we'll create this one in a minute.
+
+This is in addition to the client authentication that we enabled in the previous line.
+
+So we create this key file using OpenSSL, and we place it in the directory that we specified in our configuration file.
+
+But right now, our mongod processes can't actually use this key file because they don't have the permissions to read from it.
+
+So what we're going to do is we going actually change the permissions using chmod in order to allow them to read from the file.
+
+600 here just specifies re-permissions.
+
+So actually enabling key file authentication here implicitly enables the client authentication that we enabled in the previous line, but I'm going to leave both here for the time being just for clarity.
+
+This is a reminder that in addition to authenticating with the client, our nodes are also authenticating to each other.
+
+So this is the last line that we have to add to our configuration file in order to enable replication on this node.
+
+And all it does is specify the name of the replica set that this node is going to be a part of.
+
+Now all we need to do is create the DB path that we named up here.
+
+And we can actually use this file to start a mongod.
+
+So here I'm just creating my DB path, and now I can start the mongod using our configuration file.
+
+And we have successfully started our first node.
+
+So right now we have one node and we just have two more to go.
+
+So this command is just copying the file that we just made into a new file called node2.conf because the other two nodes are going to have very similar configurations.
+
+We can basically copy this one, change three lines, and launch a brand new node.
+
+Never underestimate the power of copy and paste.
+
+I'm just going to do the same thing for our third node here, and then edit our second one.
+
+So the three things that we need to change in this file are the DB path, the port number, and the log path.
+
+Once we do that, we're actually good to start a new node.
+
+So here I've just created the path for node 2 and I'm starting it up with mongod.
+
+And we now have two nodes in our set.
+
+I'm just going to do the same thing for our third config file, and notice that all three nodes in the replica set reference the same key file.
+
+Typically these mongod instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same key file and use the same one to authenticate with one another.
+
+Typically this key file would be copied on to each machine where each mongod was running.
+
+So at this point we started three mongod processes that will eventually make up a replica set.
+
+But right now, they can't replicate data.
+
+And in fact, they have no knowledge that other nodes are out there.
+
+They're blind to the world around them.
+
+We need to enable communication between the nodes so they can stay in sync.
+
+So I'm just going to connect to node one here.
+
+So I use this command rs.initiate to initiate the replica set.
+
+And we actually need to run it on one of the nodes.
+
+Because we ran it here, we just have to add the other two nodes from this node.
+
+However, we have client authentication enabled, so we can't actually add other nodes to the set until we create a user and then connect as that user.
+
+All right, so this command created our m103 super user, called m103-admin, that has root access and authenticates against the admin database.
+
+Now I'm just going to exit out of this mongod and then log back in as that user.
+
+So this is the command that we're going to use to connect to the replica set.
+
+And in addition to authenticating here with a username password, we have to specify the name of the replica set in the host name.
+
+This will tell the mongo shell to connect directly to the replica set, instead of just this one node that we specify.
+
+What the shell is going to do is it's going to use this node to discover what the current primary is of the replica set and then connect to that node instead.
+
+In this case, obviously there's only one node in the set and that node is the primary.
+
+So that's the one that the shell connected us to.
+
+So this command, rs.status is a useful way to get a status report on our replica set.
+
+See, it gives us the name of the set.
+
+It gives us how long the intervals are between heartbeats.
+
+By default, it's 2000 milliseconds, which means the nodes are talking to each other every two seconds.
+
+We can scroll down to get a list of the members in the set.
+
+In this case, it's just one member, which is the one that we're connected to, the current primary.
+
+So this is the command we use to add new nodes to our replica set, rs.add, and all we have to specify here is the host name, which is just the host name of the vagrant box and the port that that node is running on.
+
+Now that worked.
+
+I'm just going to do the same for our third node.
+
+I'm just going to check rs.isMaster.
+
+And we can see that our replica set now has three nodes in it.
+
+So now that we've added those two nodes to our replica set and connected them, they can replicate data from one another.
+
+One thing I want to point out right now is that the current primary is running on port 27011.
+
+And we could verify that from the output of rs.isMaster, where it says primary is in fact the node running on 27011.
+
+However, we can force an election so that a different note becomes primary.
+
+And the command we use to do that is called rs.stepDown.
+
+Now the step down command is what we use to safely step down the current primary to a secondary and force an election to take place.
+
+The error that we're getting here is because the shell is trying to connect us to the primary, but the secondaries are still in the process of electing a primary, so there is no primary right now.
+
+As soon as one is elected, the shell will connect us to it, which it just did.
+
+If we run rs.isMaster again, we can verify that now this node is the current primary, as opposed to 27011, which was the primary before.
+
+So just to recap, we've covered how to initiate a replica set, how you can add nodes to the replica set, and how to check the status of the replica set.
+
+We used rs.status and rs.isMaster in this lesson, and those commands have different outputs for different use cases.
+
+And I would urge you to explore those to figure out which one fits your use case.
