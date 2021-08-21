@@ -2108,33 +2108,11 @@ But keep in mind that an *idempotent operation* can be applied multiple times. A
 
 How a *primary* gets elected or why -- a particular node becomes *primary* instead of another. It's out of scope for now, but keep in mind the details of these will be related with the *protocol version* that your system may be having. For now just keep in mind that there is a *failover mechanism* in place. Important thing to note is that you should always have at least an odd number of *nodes* in your *replica set*. In case of even number of *nodes*, do make sure that the majority is consistently available. In this form of a *replica set*, you will need to have at least *three nodes* to be available.
 
-The list of replica set members in their configuration options defines the *replica set topology*. Any *topology change* will trigger an election. Adding members to the set, failing members, or changing any of the *replica set* configuration aspects will be perceived as it's *topology* change. The *topology of a replica set* is defined in the *replica set* configuration. The *replica set* configuration is defined in one of the nodes and then shared between all members through the *replication mechanism*.
+The list of replica set members in their configuration options defines the *replica set topology*. Any *topology change* will trigger an election. Adding members to the *set, failing members*, or changing any of the *replica set* configuration aspects will be perceived as it's *topology* change. The *topology of a replica set* is defined in the *replica set* configuration. The *replica set* configuration is defined in one of the *nodes* and then shared between all members through the *replication mechanism*. We will look into the replication configuration documents in detail later.
 
-We will look into the replication configuration documents in detail later.
+In this case, we have four members and I need to raise your attention to a specific situation. This *topology* offers exactly the same number of failures as a *three node replica sets* can only afford to lose *one member*. In case of losing *two of them*, we will have no majority available out of the sets. Why? Well the majority of 4 is 3. Therefore the *two remaining nodes* will not be able to be *electing a primary* in-between them. Having that *extra node* will not provide extra availability of the service.
 
-In this case, we have four members and I need to raise your attention to a specific situation.
-
-This topology offers exactly the same number of failures as a three node replica sets.
-
-can only afford to lose one member.
-
-In case of losing two of them, we will have no majority available out of the sets.
-
-Why?
-
-Well the majority of 4 is 3.
-
-Therefore the two remaining nodes will not be able to be electing a primary in-between them.
-
-Having that extra node will not provide extra availability of the service.
-
-Just another redundant copy of our data, which is good, but not necessarily for availability reasons.
-
-Now, replica sets can go up to 50 members.
-
-And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy.
-
-But only a maximum of seven of those members can be voting members.
+Just another redundant copy of our data, which is good, but not necessarily for availability reasons. Now, replica sets can go up to 50 members. And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy. But only a maximum of seven of those members can be voting members.
 
 More than seven members may cause election rounds to take too much time, with little to none benefit for availability and consistency purposes.
 
