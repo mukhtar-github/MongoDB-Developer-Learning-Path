@@ -2112,9 +2112,7 @@ The list of replica set members in their configuration options defines the *repl
 
 In this case, we have four members and I need to raise your attention to a specific situation. This *topology* offers exactly the same number of failures as a *three node replica sets* can only afford to lose *one member*. In case of losing *two of them*, we will have no majority available out of the sets. Why? Well the majority of 4 is 3. Therefore the *two remaining nodes* will not be able to be *electing a primary* in-between them. Having that *extra node* will not provide extra availability of the service.
 
-Just another redundant copy of our data, which is good, but not necessarily for availability reasons. Now, replica sets can go up to 50 members. And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy. But only a maximum of seven of those members can be voting members.
-
-More than seven members may cause election rounds to take too much time, with little to none benefit for availability and consistency purposes.
+Just another redundant copy of our data, which is good, but not necessarily for availability reasons. Now, *replica sets* can go up to *50 members*. And this might be useful, especially for geographical distribution of our data where we want copies of our data closer to our users and applications, or just multiple locations for redundancy. But only a maximum of *seven of those members can be voting members*. More than *seven members* may cause election rounds to take too much time, with little to none benefit for availability and consistency purposes.
 
 So between those seven nodes, one of them will become the primary and the remaining ones will be electable as primaries if in case its policy changes, or in case a new election gets triggered.
 
