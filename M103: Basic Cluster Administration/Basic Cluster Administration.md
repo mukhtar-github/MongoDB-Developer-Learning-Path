@@ -2122,15 +2122,28 @@ Let's recap what we just learned in this lecture. *Replica sets are groups of mo
 
 ### Setting Up a Replica Set
 
-All right, so in this lesson, we're going to initiate a *local replica set*. We're going to start by independently launching *three mongod processes* and they won't actually be able to communicate with each other until we connect them, at which point they'll be able to actually *replicate data* for us. So this is the *configuration file for standalone node*. We've called it *node 1*. And these settings should look fairly familiar to you if you've been following the previous lessons.
+All right, so in this lesson, we're going to initiate a *local replica set*. We're going to start by independently launching *three mongod processes* and they won't actually be able to communicate with each other until we connect them, at which point they'll be able to actually *replicate data* for us. So this is the *configuration file for standalone node*. We've called it *node1.conf*. And these settings should look fairly familiar to you if you've been following the previous lessons.
 
-We don't actually need to change any of these settings in order to enable replication, we just need to add a few lines.
+```javascript
+storage:
+  dbPath: /var/mongodb/db/node1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27011
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/node1/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-example
+```
 
-So this line enables key file authentication on our cluster, which mandates that all members of the replica set have to authenticate to each other using a key file that we create here.
-
-And we'll create this one in a minute.
-
-This is in addition to the client authentication that we enabled in the previous line.
+We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So this line enables key file authentication on our cluster, which mandates that all members of the replica set have to authenticate to each other using a key file that we create here. And we'll create this one in a minute. This is in addition to the client authentication that we enabled in the previous line.
 
 So we create this key file using OpenSSL, and we place it in the directory that we specified in our configuration file.
 
