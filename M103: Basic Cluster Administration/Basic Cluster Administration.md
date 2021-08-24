@@ -2141,6 +2141,21 @@ processManagement:
   fork: true
 replication:
   replSetName: m103-example
+
+  vagrant@vagrant:~$ sudo rm -r /var/mongodb
+rm: cannot remove '/var/mongodb': No such file or directory
+vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/pki/
+vagrant@vagrant:~$ sudo chown vagrant:vagrant -R /var/mongodb/pki/
+vagrant@vagrant:~$ openssl rand -base64 741 > /var/mongodb/pki/m103-keyfile
+vagrant@vagrant:~$ chmod 400 /var/mongodb/pki/m103-keyfile
+vagrant@vagrant:~$ ls -l /var/mongodb/pki
+total 4
+-r-------- 1 vagrant vagrant 1004 Aug 24 10:59 m103-keyfile
+vagrant@vagrant:~$ ls -l /var/mongodb
+total 4
+drwxr-xr-x 2 vagrant vagrant 4096 Aug 24 10:59 pki
+vagrant@vagrant:~$ cat /var/mongodb/pki/m103-keyfile
+x2XpPnCkAClX0unHGBztVGJ.....
 ```
 
 We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So the *keyFile* line enables *key file authentication* on our cluster, which mandates that all members of the *replica set* have to *authenticate* to each other using a *key file* that we create here. And we'll create this one in a minute. This is in addition to the *client authentication* that we enabled in the previous line.

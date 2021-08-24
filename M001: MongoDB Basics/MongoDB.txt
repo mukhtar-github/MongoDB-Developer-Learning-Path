@@ -4,6 +4,8 @@ sudo systemctl status mongod
 
 sudo systemctl stop mongod
 
+
+
 mongoimport --db mongo-exercises --collection courses --drop --file exercise-data.json --jsonArray
 
 ** dkemg
@@ -13,6 +15,8 @@ mongo "mongodb+srv://cluster0.dkemg.mongodb.net/admin" --username m001-student
 ** m001-mongodb-basics
 
 mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test
+
+
 
 # Just do those two commands for temporary solution:
 
@@ -24,3 +28,14 @@ $ sudo service mongod start
 
 chown -R mongodb:mongodb /var/lib/mongodb
 chown mongodb:mongodb /tmp/mongodb-27017.sock
+
+
+sudo rm -r /var/mongodb
+sudo mkdir -p /var/mongodb/pki/
+sudo chown vagrant:vagrant -R /var/mongodb/pki/
+openssl rand -base64 741 > /var/mongodb/pki/m103-keyfile
+chmod 400 /var/mongodb/pki/m103-keyfile
+ls -l /var/mongodb/pki
+ls -l /var/mongodb
+
+cat /var/mongodb/pki/m103-keyfile
