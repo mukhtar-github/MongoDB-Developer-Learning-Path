@@ -2160,13 +2160,7 @@ x2XpPnCkAClX0unHGBztVGJ.....
 
 We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So the *keyFile* line enables *key file authentication* on our cluster, which mandates that all members of the *replica set* have to *authenticate* to each other using a *key file* that we create here. And we'll create this one in a minute. This is in addition to the *client authentication* that we enabled in the previous line.
 
-So we create this key file using OpenSSL, and we place it in the directory that we specified in our configuration file.
-
-But right now, our mongod processes can't actually use this key file because they don't have the permissions to read from it.
-
-So what we're going to do is we going actually change the permissions using chmod in order to allow them to read from the file.
-
-600 here just specifies re-permissions.
+So we create this key file using OpenSSL, and we place it in the directory that we specified in our configuration file. But right now, our mongod processes can't actually use this key file because they don't have the permissions to read from it. So what we're going to do is we going actually change the permissions using chmod in order to allow them to read from the file. 400 here just specifies re-permissions.
 
 So actually enabling key file authentication here implicitly enables the client authentication that we enabled in the previous line, but I'm going to leave both here for the time being just for clarity.
 
