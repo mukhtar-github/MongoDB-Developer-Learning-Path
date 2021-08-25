@@ -39,3 +39,9 @@ ls -l /var/mongodb/pki
 ls -l /var/mongodb
 
 cat /var/mongodb/pki/m103-keyfile
+
+sudo mkdir -p /var/mongodb/db/node1
+
+chown -R mongodb.mongodb ~/var/mongodb/db/node1
+
+mongod -f /shared/node1.conf
