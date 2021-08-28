@@ -2160,19 +2160,13 @@ x2XpPnCkAClX0unHGBztVGJ.....
 
 We don't actually need to change any of these settings in order to enable *replication*, we just need to add a few lines. So the *keyFile* line enables *key file authentication* on our cluster, which mandates that all members of the *replica set* have to *authenticate* to each other using a *key file* that we create here. And we'll create this one in a minute. This is in addition to the *client authentication* that we enabled in the previous line.
 
-So we create this *key file using OpenSSL*, and we place it in the directory that we specified in our *configuration file*. But right now, our *mongod processes* can't actually use this *key file* because they don't have the permissions to read from it. So what we're going to do is we going actually change the permissions using *chmod* in order to allow them to read from the file. *400 here just specifies re-permissions*.
+So we create this *key file using OpenSSL*, and we place it in the directory that we specified c But right now, our *mongod processes* can't actually use this *key file* because they don't have the permissions to read from it. So what we're going to do is we going actually change the permissions using *chmod* in order to allow them to read from the file. *400 here just specifies re-permissions*.
 
 So actually enabling *key file authentication* here implicitly enables the *client authentication* that we enabled in the previous line, but I'm going to leave both here for the time being just for clarity. This is a reminder that in addition to *authenticating with the client, our nodes are also authenticating to each other*. So this is the last line that we have to add to our *configuration file* in order to enable *replication* on this node. And all it does is specify the name of the *replica set* that this *node* is going to be a part of.
 
-Now all we need to do is create the *DB path* that we named up here. And we can actually use this file to start a *mongod*. So here I'm just creating my *DB path*, and now I can start the *mongod* using our *configuration file*. And we have successfully started our *first node*. So right now we have one *node* and we just have two more to go.
+Now all we need to do is create the *DB path* that we named up in our *configuration file*. And we can actually use this file to start a *mongod*. So here I'm just creating my *DB path*, and now I can start the *mongod* using our *configuration file*. And we have successfully started our *first node*. So right now we have one *node* and we just have two more to go.
 
-So this command is just copying the file that we just made into a new file called node2.conf because the other two nodes are going to have very similar configurations.
-
-We can basically copy this one, change three lines, and launch a brand new node.
-
-Never underestimate the power of copy and paste.
-
-I'm just going to do the same thing for our third node here, and then edit our second one.
+So this command is just copying the file that we just made into a new file called *node2.conf* because the other *two nodes* are going to have very similar configurations. We can basically copy this one, change three lines, and launch a brand new node. Never underestimate the power of copy and paste. I'm just going to do the same thing for our third node here, and then edit our second one.
 
 So the three things that we need to change in this file are the DB path, the port number, and the log path.
 
