@@ -2219,7 +2219,7 @@ Questions? Try the support group
  http://groups.google.com/group/mongodb-user
 ```
 
-So I use this command *rs.initiate()* to initiate the *replica set*. And we actually need to run it on one of the *nodes*. Because we ran it here, we just have to add the other *two nodes from this node*. However, we have *client authentication* enabled, so we can't actually add other nodes to the set until we create a *user and then connect as that user*.
+So I use this command *rs.initiate()* to initiate the *replica set*. And we actually need to run it on one of the *nodes*. Because we ran it on the *first node*, we just have to add the other *two nodes from the first node*. However, we have *client authentication* enabled, so we can't actually add other *nodes* to the set until we create a *user and then connect as that user*.
 
 ```javascript
 > rs.initiate()
@@ -2231,7 +2231,28 @@ So I use this command *rs.initiate()* to initiate the *replica set*. And we actu
 m103-example:SECONDARY>
 ```
 
-All right, so this command created our *m103 super user, called m103-admin*, that has *root access and authenticates against the admin database*. Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
+All right, so the below command created our *m103 super user, called m103-admin*, that has *root access and authenticates against the admin database*. Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
+
+```javascript
+m103-example:SECONDARY> use admin
+switched to db admin
+m103-example:PRIMARY> db.createUser({
+...   user: "m103-admin",
+...   pwd: "m103-pass",
+...   roles: [
+...     {role: "root", db: "admin"}
+...   ]
+... })
+Successfully added user: {
+ "user" : "m103-admin",
+ "roles" : [
+  {
+   "role" : "root",
+   "db" : "admin"
+  }
+ ]
+}
+```
 
 What the shell is going to do is it's going to use this node to discover what the current primary is of the replica set and then connect to that node instead.
 
