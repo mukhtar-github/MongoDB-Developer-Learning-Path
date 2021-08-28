@@ -2168,6 +2168,8 @@ Now all we need to do is create the *DB path* that we named up in our *configura
 
 ```javascript
 sudo mkdir -p /var/mongodb/db/node1
+
+mongod -f node1.conf
 ```
 
 So here I'm just creating my *DB path*, and now I can start the *mongod* using our *configuration file*. And we have successfully started our *first node*. So right now we have one *node* and we just have two more to go. So this command is just copying the file that we just made into a new file called *node2.conf* because the other *two nodes* are going to have very similar configurations. We can basically copy this one, change three lines, and launch a brand new node. Never underestimate the power of copy and paste. I'm just going to do the same thing for our third node here, and then edit our second one.
