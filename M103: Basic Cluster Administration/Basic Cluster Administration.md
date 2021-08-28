@@ -2254,7 +2254,7 @@ Successfully added user: {
 }
 ```
 
-Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
+Now I'm just going to exit out of this *mongod* and then *log back in as that user*. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
 
 ```javascript
 m103-example:PRIMARY> exit
