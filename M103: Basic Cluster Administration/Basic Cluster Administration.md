@@ -2231,7 +2231,7 @@ So I use this command *rs.initiate()* to initiate the *replica set*. And we actu
 m103-example:SECONDARY>
 ```
 
-All right, so the below command created our *m103 super user, called m103-admin*, that has *root access and authenticates against the admin database*. Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
+All right, so the below command created our *m103 super user, called m103-admin*, that has *root access and authenticates against the admin database*.
 
 ```javascript
 m103-example:SECONDARY> use admin
@@ -2253,6 +2253,8 @@ Successfully added user: {
  ]
 }
 ```
+
+Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
 
 What the shell is going to do is it's going to use this node to discover what the current primary is of the replica set and then connect to that node instead.
 
