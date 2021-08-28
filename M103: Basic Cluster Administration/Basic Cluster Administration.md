@@ -2272,15 +2272,74 @@ Server has startup warnings:
 2021-08-28T10:47:24.504+0000 I STORAGE  [initandlisten] ** See http://dochub.mongodb.org/core/prodnotes-filesystem
 ```
 
-What the shell is going to do is it's going to use this node to discover what the current primary is of the replica set and then connect to that node instead.
+What the *shell* is going to do is it's going to use this *node* to discover what the *current primary* is of the *replica set* and then connect to that *node* instead. In this case, obviously there's only one *node in the set and that node is the primary*. So that's the one that the *shell* connected us to.
 
-In this case, obviously there's only one node in the set and that node is the primary.
+```javascript
+m103-example:PRIMARY> rs.status()
+{
+  "set" : "m103-example",
+  "date" : ISODate("2021-08-28T18:57:17.927Z"),
+  "myState" : 1,
+  "term" : NumberLong(1),
+  "syncingTo" : "",
+  "syncSourceHost" : "",
+  "syncSourceId" : -1,
+  "heartbeatIntervalMillis" : NumberLong(2000),
+  "optimes" : {
+    "lastCommittedOpTime" : {
+      "ts" : Timestamp(1630177027, 1),
+      "t" : NumberLong(1)
+    },
+    "readConcernMajorityOpTime" : {
+      "ts" : Timestamp(1630177027, 1),
+      "t" : NumberLong(1)
+    },
+    "appliedOpTime" : {
+      "ts" : Timestamp(1630177037, 1),
+      "t" : NumberLong(1)
+    },
+    "durableOpTime" : {
+      "ts" : Timestamp(1630177027, 1),
+      "t" : NumberLong(1)
+    }
+  },
+  "members" : [
+    {
+      "_id" : 0,
+      "name" : "localhost:27011",
+      "health" : 1,
+      "state" : 1,
+      "stateStr" : "PRIMARY",
+      "uptime" : 29393,
+      "optime" : {
+        "ts" : Timestamp(1630177037, 1),
+        "t" : NumberLong(1)
+      },
+      "optimeDate" : ISODate("2021-08-28T18:57:17Z"),
+      "syncingTo" : "",
+      "syncSourceHost" : "",
+      "syncSourceId" : -1,
+      "infoMessage" : "",
+      "electionTime" : Timestamp(1630156064, 2),
+      "electionDate" : ISODate("2021-08-28T13:07:44Z"),
+      "configVersion" : 1,
+      "self" : true,
+      "lastHeartbeatMessage" : ""
+    }
+  ],
+  "ok" : 1,
+  "operationTime" : Timestamp(1630177037, 1),
+  "$clusterTime" : {
+    "clusterTime" : Timestamp(1630177037, 1),
+    "signature" : {
+      "hash" : BinData(0,"TrqELvb5UNkcnMBnC2niXX8MPo0="),
+      "keyId" : NumberLong("7001466986551050241")
+    }
+  }
+}
+```
 
-So that's the one that the shell connected us to.
-
-So this command, rs.status is a useful way to get a status report on our replica set.
-
-See, it gives us the name of the set.
+So this command, rs.status is a useful way to get a statu report on our replica set. See, it gives us the name of the set.
 
 It gives us how long the intervals are between heartbeats.
 
