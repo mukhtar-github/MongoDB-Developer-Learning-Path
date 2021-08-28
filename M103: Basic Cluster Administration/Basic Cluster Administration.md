@@ -2203,21 +2203,7 @@ So the three things that we need to change in these files are the *DB path, the 
 
 Typically these *mongod* instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same *key file* and use the same one to *authenticate with one another*. Typically this *key file* would be copied on to each machine where each *mongod* was running. So at this point we started *three mongod processes* that will eventually make up a *replica set*.
 
-But right now, they can't replicate data.
-
-And in fact, they have no knowledge that other nodes are out there.
-
-They're blind to the world around them.
-
-We need to enable communication between the nodes so they can stay in sync.
-
-So I'm just going to connect to node one here.
-
-So I use this command rs.initiate to initiate the replica set.
-
-And we actually need to run it on one of the nodes.
-
-Because we ran it here, we just have to add the other two nodes from this node.
+But right now, they can't *replicate data*. And in fact, they have no knowledge that other *nodes* are out there. They're blind to the world around them. We need to enable communication between the *nodes* so they can stay in sync. So I'm just going to *connect to node one here*. So I use this command *rs.initiate to initiate the replica set*. And we actually need to run it on one of the *nodes*. Because we ran it here, we just have to add the other *two nodes from this node*.
 
 However, we have client authentication enabled, so we can't actually add other nodes to the set until we create a user and then connect as that user.
 
