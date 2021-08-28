@@ -2176,7 +2176,12 @@ forked process: 14360
 child process started successfully, parent exiting
 ```
 
-So this command is just copying the file that we just made into a new file called *node2.conf* because the other *two nodes* are going to have very similar configurations. We can basically copy this one, change three lines, and launch a brand new node. Never underestimate the power of copy and paste. I'm just going to do the same thing for our third node here, and then edit our second one.
+So these below commands are just copying the file that we just made into a new file called *node2.conf and node3.conf* because the other *two nodes* are going to have very similar configurations. We can basically copy the first one, change three lines, and launch a brand new node. Never underestimate the power of copy and paste. I'm just going to do the same thing for our third node here, and then edit our second one.
+
+```javascript
+vagrant@vagrant:~$ cp node1.conf node2.conf
+vagrant@vagrant:~$ cp node1.conf node2.conf
+```
 
 So the three things that we need to change in this file are the DB path, the port number, and the log path.
 
