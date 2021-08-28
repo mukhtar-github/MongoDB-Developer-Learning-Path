@@ -2182,11 +2182,24 @@ So these below commands are just copying the file that we just made into a new f
 vagrant@vagrant:~$ cp node1.conf node2.conf
 vagrant@vagrant:~$ cp node2.conf node3.conf
 
+//Open files to edit
 vagrant@vagrant:~$ vim node2.conf
 vagrant@vagrant:~$ vim node3.conf
+
+vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/db/node2
+vagrant@vagrant:~$ sudo mongod -f node2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 14418
+child process started successfully, parent exiting
+
+vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/db/node3
+vagrant@vagrant:~$ sudo mongod -f node3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 14451
+child process started successfully, parent exiting
 ```
 
-So the three things that we need to change in this file are the *DB path, the port number, and the log path*. Once we do that, we're actually good to start a *new node*. So here I've just created the path for *node 2* and I'm starting it up with *mongod*. And we now have *two nodes* in our set. I'm just going to do the same thing for our *third config file*, and notice that all *three nodes in the replica set* reference the same key file.
+So the three things that we need to change in these files are the *DB path, the port number, and the log path*. Once we do that, we're actually good to start a *new node*. So here I've just created the path for *node 2* and I'm starting it up with *mongod*. And we now have *two nodes* in our set. I'm just going to do the same thing for our *third config file*, and notice that all *three nodes in the replica set* reference the same key file.
 
 Typically these mongod instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same key file and use the same one to authenticate with one another.
 
