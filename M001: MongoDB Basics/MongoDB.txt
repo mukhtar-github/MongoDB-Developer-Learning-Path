@@ -57,8 +57,8 @@ sudo systemctl enable mongod.service
 storage:
   dbPath: /var/mongodb/db/node1
 net:
-  bindIp: 192.168.103.100,localhost
-  port: 27011
+  bindIp: localhost
+  port: 27017
 security:
   authorization: enabled
   keyFile: /var/mongodb/pki/m103-keyfile
