@@ -2203,10 +2203,10 @@ So the three things that we need to change in these files are the *DB path, the 
 
 Typically these *mongod* instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same *key file* and use the same one to *authenticate with one another*. Typically this *key file* would be copied on to each machine where each *mongod* was running. So at this point we started *three mongod processes* that will eventually make up a *replica set*.
 
-But right now, they can't *replicate data*. And in fact, they have no knowledge that other *nodes* are out there. They're blind to the world around them. We need to enable communication between the *nodes* so they can stay in sync. So I'm just going to *connect to node one here*.
+But right now, they can't *replicate data*. And in fact, they have no knowledge that other *nodes* are out there. They're blind to the world around them. We need to enable communication between the *nodes* so they can stay in sync. So I'm just going to connect to *node one* with **mongo --port 27011**.
 
 ```javascript
-vagrant@vagrant:~$ mongo --port 27011
+vagrant@vagrant:~$ 
 MongoDB shell version v3.6.23
 connecting to: mongodb://127.0.0.1:27011/?gssapiServiceName=mongodb
 Implicit session: session { "id" : UUID("a056f0e6-c4c3-4daa-aed7-4c01e5e58723") }
