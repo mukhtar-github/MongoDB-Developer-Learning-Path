@@ -2180,7 +2180,10 @@ So these below commands are just copying the file that we just made into a new f
 
 ```javascript
 vagrant@vagrant:~$ cp node1.conf node2.conf
-vagrant@vagrant:~$ cp node1.conf node2.conf
+vagrant@vagrant:~$ cp node2.conf node3.conf
+
+vagrant@vagrant:~$ vim node2.conf
+vagrant@vagrant:~$ vim node3.conf
 ```
 
 So the three things that we need to change in this file are the *DB path, the port number, and the log path*. Once we do that, we're actually good to start a *new node*. So here I've just created the path for *node 2* and I'm starting it up with *mongod*. And we now have *two nodes* in our set. I'm just going to do the same thing for our *third config file*, and notice that all *three nodes in the replica set* reference the same key file.
