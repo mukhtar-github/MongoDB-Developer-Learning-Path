@@ -2256,6 +2256,22 @@ Successfully added user: {
 
 Now I'm just going to exit out of this *mongod* and then log back in as that user. So this is the command that we're going to use to connect to the *replica set*. And in addition to *authenticating* here with a *username password*, we have to specify the name of the *replica set in the host name*. This will tell the *mongo shell* to connect directly to the *replica set*, instead of just this *one node* that we specify.
 
+```javascript
+m103-example:PRIMARY> exit
+bye
+vagrant@vagrant:~$ mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-example
+2021-08-28T18:27:00.192+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-example/localhost:27011
+2021-08-28T18:27:00.197+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+Implicit session: session { "id" : UUID("48151354-0e90-49a0-bf70-3e175b24d882") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-08-28T10:47:24.504+0000 I STORAGE  [initandlisten] 
+2021-08-28T10:47:24.504+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-08-28T10:47:24.504+0000 I STORAGE  [initandlisten] ** See http://dochub.mongodb.org/core/prodnotes-filesystem
+```
+
 What the shell is going to do is it's going to use this node to discover what the current primary is of the replica set and then connect to that node instead.
 
 In this case, obviously there's only one node in the set and that node is the primary.
