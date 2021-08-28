@@ -2201,11 +2201,7 @@ child process started successfully, parent exiting
 
 So the three things that we need to change in these files are the *DB path, the port number, and the log path*. Once we do that, we're actually good to start a *new node*. So here I've just created the path for *node 2* and I'm starting it up with *mongod*. And we now have *two nodes* in our set. I'm just going to do the same thing for our *third config file*, and notice that all *three nodes in the replica set* reference the same key file.
 
-Typically these mongod instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same key file and use the same one to authenticate with one another.
-
-Typically this key file would be copied on to each machine where each mongod was running.
-
-So at this point we started three mongod processes that will eventually make up a replica set.
+Typically these *mongod* instances would be running on different machines, but because they're running on the same machine, they're all just going to share the same *key file* and use the same one to *authenticate with one another*. Typically this *key file* would be copied on to each machine where each *mongod* was running. So at this point we started *three mongod processes* that will eventually make up a *replica set*.
 
 But right now, they can't replicate data.
 
