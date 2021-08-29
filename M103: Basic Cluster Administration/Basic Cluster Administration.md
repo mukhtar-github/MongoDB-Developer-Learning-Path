@@ -2443,10 +2443,51 @@ rs.stepDown@src/mongo/shell/utils.js:1413:12
 2021-08-29T08:07:52.707+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
 ```
 
-If we run rs.isMaster again, we can verify that now this node is the current primary, as opposed to 27011, which was the primary before.
+If we run *rs.isMaster()* again, we can verify that now this *"primary" : "localhost:27012"-node* is the current primary, as opposed to *27011*, which was the primary before. So just to recap, we've covered how to *initiate a replica set*, how you can *add nodes to the replica set*, and how to *check the status of the replica set*. We used *rs.status() and rs.isMaster()* in this lesson, and those commands have different outputs for different use cases. And I would urge you to explore those to figure out which one fits your use case.
 
-So just to recap, we've covered how to initiate a replica set, how you can add nodes to the replica set, and how to check the status of the replica set.
-
-We used rs.status and rs.isMaster in this lesson, and those commands have different outputs for different use cases.
-
-And I would urge you to explore those to figure out which one fits your use case.
+```javascript
+m103-example:PRIMARY> rs.isMaster()
+{
+ "hosts" : [
+  "localhost:27011",
+  "localhost:27012",
+  "localhost:27013"
+ ],
+ "setName" : "m103-example",
+ "setVersion" : 3,
+ "ismaster" : true,
+ "secondary" : false,
+ "primary" : "localhost:27012",
+ "me" : "localhost:27012",
+ "electionId" : ObjectId("7fffffff0000000000000002"),
+ "lastWrite" : {
+  "opTime" : {
+   "ts" : Timestamp(1630224882, 1),
+   "t" : NumberLong(2)
+  },
+  "lastWriteDate" : ISODate("2021-08-29T08:14:42Z"),
+  "majorityOpTime" : {
+   "ts" : Timestamp(1630224882, 1),
+   "t" : NumberLong(2)
+  },
+  "majorityWriteDate" : ISODate("2021-08-29T08:14:42Z")
+ },
+ "maxBsonObjectSize" : 16777216,
+ "maxMessageSizeBytes" : 48000000,
+ "maxWriteBatchSize" : 100000,
+ "localTime" : ISODate("2021-08-29T08:14:52.514Z"),
+ "logicalSessionTimeoutMinutes" : 30,
+ "minWireVersion" : 0,
+ "maxWireVersion" : 6,
+ "readOnly" : false,
+ "ok" : 1,
+ "operationTime" : Timestamp(1630224882, 1),
+ "$clusterTime" : {
+  "clusterTime" : Timestamp(1630224882, 1),
+  "signature" : {
+   "hash" : BinData(0,"Z2Gt3ezkS1vGyxaVlxtv5+UxDqk="),
+   "keyId" : NumberLong("7001466986551050241")
+  }
+ }
+}
+```
