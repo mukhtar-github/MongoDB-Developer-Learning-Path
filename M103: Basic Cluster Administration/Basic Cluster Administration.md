@@ -2424,7 +2424,24 @@ m103-example:PRIMARY> rs.isMaster()
 
 So now that we've added those *two nodes to our replica set and connected them*, they can *replicate data from one another*. One thing I want to point out right now is that *the current primary is running on port 27011*. And we could verify that from the output of *rs.isMaster*, where it says *primary is in fact the node running on 27011*. However, we can force an election so that a different note becomes *primary*. And the command we use to do that is called *rs.stepDown()*.
 
-Now the step down command is what we use to safely step down the current primary to a secondary and force an election to take place. The error that we're getting here is because the shell is trying to connect us to the primary, but the secondaries are still in the process of electing a primary, so there is no primary right now. As soon as one is elected, the shell will connect us to it, which it just did.
+Now the *step down command* is what we use to safely step down *the current primary to a secondary and force an election to take place*. The error that we're getting here is because the shell is trying to *connect us to the primary*, but the *secondaries are still in the process of electing a primary*, so there is *no primary right now*. As soon as one is elected, the shell will connect us to it, which it just did.
+
+```javascript
+m103-example:PRIMARY> rs.stepDown()
+2021-08-29T08:07:51.183+0000 E QUERY    [thread1] Error: error doing query: failed: network error while attempting to run command 'replSetStepDown' on host 'localhost:27011'  :
+DB.prototype.runCommand@src/mongo/shell/db.js:168:1
+DB.prototype.adminCommand@src/mongo/shell/db.js:186:16
+rs.stepDown@src/mongo/shell/utils.js:1413:12
+@(shell):1:1
+2021-08-29T08:07:51.188+0000 I NETWORK  [thread1] Marking host localhost:27011 as failed :: caused by :: Location40657: Last known master host cannot be reached
+2021-08-29T08:07:51.191+0000 I NETWORK  [thread1] Socket closed remotely, no longer connected (idle 29 secs, remote host 127.0.0.1:27011)
+2021-08-29T08:07:51.195+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+2021-08-29T08:07:51.196+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+2021-08-29T08:07:51.699+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+2021-08-29T08:07:52.171+0000 W NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Unable to reach primary for set m103-example
+2021-08-29T08:07:52.203+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+2021-08-29T08:07:52.707+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+```
 
 If we run rs.isMaster again, we can verify that now this node is the current primary, as opposed to 27011, which was the primary before.
 
