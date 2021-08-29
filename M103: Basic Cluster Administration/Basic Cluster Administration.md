@@ -2644,9 +2644,8 @@ rs.add("localhost:27002")
 }
 m103-repl:PRIMARY> 
 rs.add("localhost:270122021-08-29T14:17:10.244+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] changing hosts to m103-repl/localhost:27001,localhost:27002 from m103-repl/localhost:27001
-2021-08-29T14:17:10.245+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27002 (1 connections now open to localhost:27002 with a 5 seco
-rs.add("localhost:27012rs.add("localhost:27003")")
-2021-08-29T14:17:37.302+0000 E QUERY    [js] SyntaxError: missing ) after argument list @(shell):1:31
+2021-08-29T14:17:10.245+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27002 (1 connections now open to localhost:27002 with a 5 second timeout)
+
 m103-repl:PRIMARY> 
 rs.add("localhost:27003")
 {
