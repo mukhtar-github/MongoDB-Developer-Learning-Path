@@ -2344,10 +2344,82 @@ So this command, *rs.status* is a useful way to get a statu report on our *repli
 So this is the command we use to add *new nodes to our replica set, rs.add*, and all we have to specify here is the *host name*, which is just the *host name of the vagrant box and the port that node is running on*. Now that worked. I'm just going to do the same for our *third node*. I'm just going to check *rs.isMaster*. And we can see that our *replica set* now has *three nodes* in it.
 
 ```javascript
-rs.add("localhost:27012")
-rs.add("localhost:27013")
+m103-example:PRIMARY> rs.add("localhost:27012")
+{
+ "ok" : 1,
+ "operationTime" : Timestamp(1630221898, 1),
+ "$clusterTime" : {
+  "clusterTime" : Timestamp(1630221898, 1),
+  "signature" : {
+   "hash" : BinData(0,"imH7t3GIPeox2UfmG6gD4LWPg6Y="),
+   "keyId" : NumberLong("7001466986551050241")
+  }
+ }
+}
+m103-example:PRIMARY> 2021-08-29T07:25:21.886+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] changing hosts to m103-example/localhost:27011,localhost:27012 from m103-example/localhost:27011
+2021-08-29T07:25:21.893+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27012 (1 connections now open to localhost:27012 with a 5 second timeout)
 
-rs.isMaster()
+
+m103-example:PRIMARY> rs.add("localhost:27013")
+{
+ "ok" : 1,
+ "operationTime" : Timestamp(1630222100, 1),
+ "$clusterTime" : {
+  "clusterTime" : Timestamp(1630222100, 1),
+  "signature" : {
+   "hash" : BinData(0,"wFHA3m5e5OTlMieNvLcp6lm6VVg="),
+   "keyId" : NumberLong("7001466986551050241")
+  }
+ }
+}
+m103-example:PRIMARY> 2021-08-29T07:28:21.907+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013 from m103-example/localhost:27011,localhost:27012
+2021-08-29T07:28:21.912+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27013 (1 connections now open to localhost:27013 with a 5 second timeout)
+
+
+m103-example:PRIMARY> rs.isMaster()
+{
+ "hosts" : [
+  "localhost:27011",
+  "localhost:27012",
+  "localhost:27013"
+ ],
+ "setName" : "m103-example",
+ "setVersion" : 3,
+ "ismaster" : true,
+ "secondary" : false,
+ "primary" : "localhost:27011",
+ "me" : "localhost:27011",
+ "electionId" : ObjectId("7fffffff0000000000000001"),
+ "lastWrite" : {
+  "opTime" : {
+   "ts" : Timestamp(1630222268, 1),
+   "t" : NumberLong(1)
+  },
+  "lastWriteDate" : ISODate("2021-08-29T07:31:08Z"),
+  "majorityOpTime" : {
+   "ts" : Timestamp(1630222268, 1),
+   "t" : NumberLong(1)
+  },
+  "majorityWriteDate" : ISODate("2021-08-29T07:31:08Z")
+ },
+ "maxBsonObjectSize" : 16777216,
+ "maxMessageSizeBytes" : 48000000,
+ "maxWriteBatchSize" : 100000,
+ "localTime" : ISODate("2021-08-29T07:31:15.808Z"),
+ "logicalSessionTimeoutMinutes" : 30,
+ "minWireVersion" : 0,
+ "maxWireVersion" : 6,
+ "readOnly" : false,
+ "ok" : 1,
+ "operationTime" : Timestamp(1630222268, 1),
+ "$clusterTime" : {
+  "clusterTime" : Timestamp(1630222268, 1),
+  "signature" : {
+   "hash" : BinData(0,"7zHwHjPsFCWYM9IH/+H0q3gDUd4="),
+   "keyId" : NumberLong("7001466986551050241")
+  }
+ }
+}
 ```
 
 So now that we've added those two nodes to our replica set and connected them, they can replicate data from one another. One thing I want to point out right now is that the current primary is running on port 27011. And we could verify that from the output of rs.isMaster, where it says primary is in fact the node running on 27011. However, we can force an election so that a different note becomes primary. And the command we use to do that is called rs.stepDown.
