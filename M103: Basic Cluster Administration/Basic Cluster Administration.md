@@ -2141,8 +2141,10 @@ processManagement:
   fork: true
 replication:
   replSetName: m103-example
+
 ~~~
-  vagrant@vagrant:~$ sudo rm -r /var/mongodb
+
+vagrant@vagrant:~$ sudo rm -r /var/mongodb
 rm: cannot remove '/var/mongodb': No such file or directory
 vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/pki/
 vagrant@vagrant:~$ sudo chown vagrant:vagrant -R /var/mongodb/pki/
@@ -2151,6 +2153,7 @@ vagrant@vagrant:~$ chmod 400 /var/mongodb/pki/m103-keyfile
 vagrant@vagrant:~$ ls -l /var/mongodb/pki
 total 4
 -r-------- 1 vagrant vagrant 1004 Aug 24 10:59 m103-keyfile
+
 vagrant@vagrant:~$ ls -l /var/mongodb
 total 4
 drwxr-xr-x 2 vagrant vagrant 4096 Aug 24 10:59 pki
@@ -2182,7 +2185,7 @@ So these below commands are just copying the file that we just made into a new f
 vagrant@vagrant:~$ cp node1.conf node2.conf
 vagrant@vagrant:~$ cp node2.conf node3.conf
 
-//Open files to edit
+//Open files to edit via vim
 vagrant@vagrant:~$ vim node2.conf
 vagrant@vagrant:~$ vim node3.conf
 
