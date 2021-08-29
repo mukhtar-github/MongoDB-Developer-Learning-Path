@@ -2532,3 +2532,233 @@ db.createUser({
 7.Once your other two members have been successfully added, run *rs.status()* to check that the *members* array has three nodes - one labeled *PRIMARY* and two labeled *SECONDARY*.
 
 8.Click "Run Tests" to run a suite of tests that will check the configuration of your *replica set*. The results of these tests will let you know which steps you've yet to complete.
+
+#### Answer 1
+
+```javascript
+user@M103# mongod -f mongod_1.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 330
+child process started successfully, parent exiting
+user@M103# mongod -f mongod_2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 363
+child process started successfully, parent exiting
+user@M103# mongod -f mongod_3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 395
+child process started successfully, parent exiting
+user@M103# mongo --port 27001
+MongoDB shell version v4.0.5
+connecting to: mongodb://127.0.0.1:27001/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("62444f38-e911-488c-92ee-06aa85bb2d2c") }
+MongoDB server version: 4.0.5
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+> rs.initiate()
+{
+        "info2" : "no configuration specified. Using a default configuration for the set",
+        "me" : "localhost:27001",
+        "ok" : 1
+}
+m103-repl:OTHER> use admin
+switched to db admin
+m103-repl:PRIMARY> 
+db.createUser({
+...   user: "m103-admin",
+...   pwd: "m103-pass",
+...   roles: [
+...     {role: "root", db: "admin"}
+...   ]
+... })
+Successfully added user: {
+        "user" : "m103-admin",
+        "roles" : [
+                {
+                  "role" : "root",
+                  "db" : "admin"
+                }
+        ]
+}
+m103-repl:PRIMARY> 
+exit
+bye
+user@M103# mongo --host "m103-repl/localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v4.0.5
+connecting to: mongodb://localhost:27001/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-repl
+2021-08-29T14:15:10.125+0000 I NETWORK  [js] Starting new replica set monitor for m103-repl/localhost:27001
+2021-08-29T14:15:10.145+0000 I NETWORK  [js] Successfully connected to localhost:27001 (1 connections now open to localhost:27001 with a 5 second timeout)
+Implicit session: session { "id" : UUID("3a7e42d5-c7b0-4dc7-a11c-81a3697cbe5f") }
+MongoDB server version: 4.0.5
+Server has startup warnings: 
+2021-08-29T14:09:52.786+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-08-29T14:09:52.786+0000 I CONTROL  [initandlisten] 
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+m103-repl:PRIMARY> 
+rs.add("localhost:27002")
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1630246605, 1),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1630246605, 1),
+                "signature" : {
+                  "hash" : BinData(0,"2jYndDiU62dxs2+vcJpmR3XlNfQ="),
+                  "keyId" : NumberLong("7001854594464612354")
+                }
+        }
+}
+m103-repl:PRIMARY> 
+rs.add("localhost:270122021-08-29T14:17:10.244+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] changing hosts to m103-repl/localhost:27001,localhost:27002 from m103-repl/localhost:27001
+2021-08-29T14:17:10.245+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27002 (1 connections now open to localhost:27002 with a 5 seco
+rs.add("localhost:27012rs.add("localhost:27003")")
+2021-08-29T14:17:37.302+0000 E QUERY    [js] SyntaxError: missing ) after argument list @(shell):1:31
+m103-repl:PRIMARY> 
+rs.add("localhost:27003")
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1630246683, 2),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1630246683, 2),
+                "signature" : {
+                  "hash" : BinData(0,"pov/zMTcu+e9PzUdSJLEG+Jr5kU="),
+                  "keyId" : NumberLong("7001854594464612354")
+                }
+        }
+}
+m103-repl:PRIMARY> 
+2021-08-29T14:18:10.293+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] changing hosts to m103-repl/localhost:27001,localhost:27002,localhost:27003 from m103-repl/localhost:27001,localhost:27002
+2021-08-29T14:18:10.294+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27003 (1 connections now open to localhost:27003 with a 5 second timeout)
+rs.status()
+{
+        "set" : "m103-repl",
+        "date" : ISODate("2021-08-29T14:18:34.167Z"),
+        "myState" : 1,
+        "term" : NumberLong(1),
+        "syncingTo" : "",
+        "syncSourceHost" : "",
+        "syncSourceId" : -1,
+        "heartbeatIntervalMillis" : NumberLong(2000),
+        "optimes" : {
+                "lastCommittedOpTime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                },
+                "readConcernMajorityOpTime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                },
+                "appliedOpTime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                },
+                "durableOpTime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                }
+        },
+        "lastStableCheckpointTimestamp" : Timestamp(1630246673, 1),
+        "members" : [
+                {
+                  "_id" : 0,
+                  "name" : "localhost:27001",
+                  "health" : 1,
+                  "state" : 1,
+                  "stateStr" : "PRIMARY",
+                  "uptime" : 523,
+                  "optime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                  },
+                  "optimeDate" : ISODate("2021-08-29T14:18:33Z"),
+                  "syncingTo" : "",
+                  "syncSourceHost" : "",
+                  "syncSourceId" : -1,
+                  "infoMessage" : "",
+                  "electionTime" : Timestamp(1630246312, 1),
+                  "electionDate" : ISODate("2021-08-29T14:11:52Z"),
+                  "configVersion" : 3,
+                  "self" : true,
+                  "lastHeartbeatMessage" : ""
+                },
+                {
+                  "_id" : 1,
+                  "name" : "localhost:27002",
+                  "health" : 1,
+                  "state" : 2,
+                  "stateStr" : "SECONDARY",
+                  "uptime" : 108,
+                  "optime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                  },
+                  "optimeDurable" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                  },
+                  "optimeDate" : ISODate("2021-08-29T14:18:33Z"),
+                  "optimeDurableDate" : ISODate("2021-08-29T14:18:33Z"),
+                  "lastHeartbeat" : ISODate("2021-08-29T14:18:33.661Z"),
+                  "lastHeartbeatRecv" : ISODate("2021-08-29T14:18:32.711Z"),
+                  "pingMs" : NumberLong(0),
+                  "lastHeartbeatMessage" : "",
+                  "syncingTo" : "localhost:27001",
+                  "syncSourceHost" : "localhost:27001",
+                  "syncSourceId" : 0,
+                  "infoMessage" : "",
+                  "configVersion" : 3
+                },
+                {
+                  "_id" : 2,
+                  "name" : "localhost:27003",
+                  "health" : 1,
+                  "state" : 2,
+                  "stateStr" : "SECONDARY",
+                  "uptime" : 30,
+                  "optime" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                  },
+                  "optimeDurable" : {
+                  "ts" : Timestamp(1630246713, 1),
+                  "t" : NumberLong(1)
+                  },
+                  "optimeDate" : ISODate("2021-08-29T14:18:33Z"),
+                  "optimeDurableDate" : ISODate("2021-08-29T14:18:33Z"),
+                  "lastHeartbeat" : ISODate("2021-08-29T14:18:33.667Z"),
+                  "lastHeartbeatRecv" : ISODate("2021-08-29T14:18:32.941Z"),
+                  "pingMs" : NumberLong(0),
+                  "lastHeartbeatMessage" : "",
+                  "syncingTo" : "localhost:27001",
+                  "syncSourceHost" : "localhost:27001",
+                  "syncSourceId" : 0,
+                  "infoMessage" : "",
+                  "configVersion" : 3
+                }
+        ],
+        "ok" : 1,
+        "operationTime" : Timestamp(1630246713, 1),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1630246713, 1),
+                "signature" : {
+                  "hash" : BinData(0,"rs/FH+hBTZCoLM7rWZ+urmzOOm0="),
+                  "keyId" : NumberLong("7001854594464612354")
+                }
+        }
+}
+m103-repl:PRIMARY> 
+```
