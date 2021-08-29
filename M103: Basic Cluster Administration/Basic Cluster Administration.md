@@ -2341,7 +2341,7 @@ m103-example:PRIMARY> rs.status()
 
 So this command, *rs.status* is a useful way to get a statu report on our *replica set*. See, it gives us the name of the *set*. It gives us how long the intervals are between *heartbeats*. By default, it's *2000 milliseconds*, which means the *nodes are talking to each other every two seconds*. We can scroll down to get a list of the members in the set. In this case, it's just one member, which is the one that we're connected to, *the current primary*.
 
-So this is the command we use to add *new nodes to our replica set, rs.add*, and all we have to specify here is the *host name*, which is just the *host name of the vagrant box and the port that node is running on*. Now that worked. I'm just going to do the same for our *third node*. I'm just going to check *rs.isMaster*. And we can see that our *replica set* now has *three nodes* in it.
+So this is the command we use to add *new nodes to our replica set, rs.add*, and all we have to specify here is the *host name*, which is just the *host name of the vagrant box and the port that that node is running on*. Now that worked. I'm just going to do the same for our *third node*. I'm just going to check *rs.isMaster*. And we can see that our *replica set now has three nodes in it*.
 
 ```javascript
 m103-example:PRIMARY> rs.add("localhost:27012")
@@ -2422,13 +2422,9 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So now that we've added those two nodes to our replica set and connected them, they can replicate data from one another. One thing I want to point out right now is that the current primary is running on port 27011. And we could verify that from the output of rs.isMaster, where it says primary is in fact the node running on 27011. However, we can force an election so that a different note becomes primary. And the command we use to do that is called rs.stepDown.
+So now that we've added those *two nodes to our replica set and connected them*, they can *replicate data from one another*. One thing I want to point out right now is that *the current primary is running on port 27011*. And we could verify that from the output of *rs.isMaster*, where it says *primary is in fact the node running on 27011*. However, we can force an election so that a different note becomes *primary*. And the command we use to do that is called *rs.stepDown()*.
 
-Now the step down command is what we use to safely step down the current primary to a secondary and force an election to take place.
-
-The error that we're getting here is because the shell is trying to connect us to the primary, but the secondaries are still in the process of electing a primary, so there is no primary right now.
-
-As soon as one is elected, the shell will connect us to it, which it just did.
+Now the step down command is what we use to safely step down the current primary to a secondary and force an election to take place. The error that we're getting here is because the shell is trying to connect us to the primary, but the secondaries are still in the process of electing a primary, so there is no primary right now. As soon as one is elected, the shell will connect us to it, which it just did.
 
 If we run rs.isMaster again, we can verify that now this node is the current primary, as opposed to 27011, which was the primary before.
 
