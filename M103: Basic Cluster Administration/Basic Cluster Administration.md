@@ -2786,7 +2786,7 @@ m103-repl:PRIMARY>
 
 In this lesson, we are going to dissect the *replication configuration*. In particular, we will be looking to which *replica set configuration* options we have and how those options are reflected in the *configuration options document*. The *replica set configuration document* is a simple *BSON* document that we manage using a *JSON* representation where the *configuration or our replica sets* is defined and is shared across all the *nodes* that are configured in the sets.
 
-We can manually set changes to this document to configure a replica set according with the expected topology and overall replication options. Although we can do this by simply editing such documents using the mongo.db shell, we can also use a set of shell helpers like rs.add, initiate, remove, and so forth. that will help us facilitate the configuration and management of this same configuration.
+We can manually set changes to this document to *configure a replica set* according with the expected topology and overall replication options. Although we can do this by simply editing such documents using the *mongo.db shell*, we can also use a set of *shell helpers like rs.add, initiate, remove*, and so forth. that will help us facilitate the configuration and management of this same configuration.
 
 There is a fair amount of different configuration options at our disposal as you can see from the baseline configuration options document. This might sound a bit daunting, but in reality, it's a pretty straightforward set of options. And for this lesson, in particular, we are going to be looking only to a set of these configuration options-- the basic and fundamental ones and the ones that we are going to be using throughout the course.
 
