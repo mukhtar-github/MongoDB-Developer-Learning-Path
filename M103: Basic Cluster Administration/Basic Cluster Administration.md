@@ -2798,9 +2798,9 @@ The next field is *version*. Now, a *version* is just an integer that gets incre
 
 The next field in line is *members*. And *members* is where the *topology of our replica set* is defined. Each element of the *members array* is a sub-document that contains the *replica set node members*. Each has a host comprised of the *host name and port*. In this case, for example, we have *m103:27017*. Then we have a set of flags that determine the role of the *nodes within the replica set*.
 
-*arbiterOnly* is self-explanatory. This means that the *node* will not be holding any data, and its contribution to the set is to ensure quorum in elections. hidden -- it's another flag that sets the node in hidden role.
+*arbiterOnly* is self-explanatory. This means that the *node* will not be holding any data, and its contribution to the set is to ensure quorum in elections. *hidden* -- it's another flag that sets the *node in hidden role*. An *hidden node* is not visible to the application, which means that every time we emit something like an *rs isMaster()* command, this *node* will not be listed.
 
-An hidden node is not visible to the application, which means that every time we emit something like an RS is master command, this node will not be listed. Int nodes are useful for situations where we want a particular node to support specific operations. They are not related with the operational nature of your application. For example, having a node that handles all the reporting or BI reads.
+Int nodes are useful for situations where we want a particular node to support specific operations. They are not related with the operational nature of your application. For example, having a node that handles all the reporting or BI reads.
 
 Both of these flags are set to false by default. Then we have priority, and priority is an integer value that allows us to set a hierarchy within the replica set. We can set priorities between 0 and 1,000. Members with higher priority tend to be elected in primaries more often. A change in the priority of a node will trigger an election because it will be perceived as a topology change.
 
