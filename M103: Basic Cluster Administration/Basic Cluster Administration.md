@@ -2873,33 +2873,13 @@ In this lesson, we're going to cover some of the commands we use to gather infor
 
 The first one we're going to cover is rs.status. rs.status is used to report on the general health of each node in the set. The data it gets from the heartbeat sent in-between nodes in the set. Because it relies on heartbeats for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific node.
 
-We can see that for a given node we get the state of the node. In this case, it's the primary. We have the up time, which is the number of seconds this note has been running for. And we have the optime, which is the last time this node applied an operation from its oplog. There are heartbeat stats for each node as well but not for the node that we ran this command on.
+We can see that for a given node we get the state of the node. In this case, it's the primary. We have the up time, which is the number of seconds this note has been running for. And we have the optime, which is the last time this node applied an operation from its oplog. There are heartbeat stats for each node as well but not for the node that we ran this command on. That's because the heartbeat stats are all relative to where rs.status was run.
 
-That's because the heartbeat stats are all relative to where rs.status was run.
+We know that it was run from this because the self flag in this node is true. We can scroll down to one of the other nodes and see that we have some heartbeats stats down here. Because we know the primary was where this command was run from. We know that last heartbeat refers to the last time this node successfully received a heartbeat from the primary.
 
-We know that it was run from this because the self flag in this node is true.
+Conversely, last heartbeat received refers to the last time the primary successfully received a heartbeat from this note. We can see the actual frequency of heartbeats in this set through a heartbeat interval millis. In this case, this set is running with the default of 2,000 milliseconds, which means that the nodes are talking to each other about every two seconds.
 
-We can scroll down to one of the other nodes and see that we have some heartbeats stats down here.
-
-Because we know the primary was where this command was run from.
-
-We know that last heartbeat refers to the last time this node successfully received a heartbeat from the primary.
-
-Conversely, last heartbeat received refers to the last time the primary successfully received a heartbeat from this note.
-
-We can see the actual frequency of heartbeats in this set through a heartbeat interval millis.
-
-In this case, this set is running with the default of 2,000 milliseconds, which means that the nodes are talking to each other about every two seconds.
-
-The next command we're going to cover is rs.isMaster.
-
-This one describes the role of the node where we ran this command from.
-
-And it also gives us some information about the replica set itself.
-
-The output is a lot easier to read than rs.status just because its output is a lot shorter.
-
-So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
+The next command we're going to cover is rs.isMaster. This one describes the role of the node where we ran this command from. And it also gives us some information about the replica set itself. The output is a lot easier to read than rs.status just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
 
 In this case, it's not because secondary is false.
 
