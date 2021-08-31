@@ -2863,6 +2863,6 @@ Now again, there is a lot more that we can configure within the *replica set con
 }
 ```
 
-Let's recap. *Replication configuration document* is used to *configure our replica sets*. This is where the properties of our *replica sets are defined*, and the document is shared across all members of the set. The members field is where a bunch of our basic configuration is going to be determined-- which nodes are part of the set, what roles do they have, and what kind of topology we want to define is set on this field.
+Let's recap. *Replication configuration document* is used to *configure our replica sets*. This is where the properties of our *replica sets are defined*, and the document is shared across all members of the set. The *members* field is where a bunch of our *basic configuration* is going to be determined -- which *nodes are part of the set*, what roles do they have, and what kind of *topology* we want to define is set on this field.
 
-There is a vast amount of other configuration options that either deal with internal replication mechanisms or overall configurations of the sets. We are out of scope on those, but keep in mind that there's a lot more in the replication configuration document that you can set up.
+There is a vast amount of other configuration options that either deal with internal replication mechanisms or overall configurations of the sets. We are out of scope on those, but keep in mind that there's a lot more in the *replication configuration document* that you can set up.
