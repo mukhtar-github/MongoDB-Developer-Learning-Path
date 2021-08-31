@@ -2887,15 +2887,7 @@ But we can remove the parentheses to see what's actually being run in the backgr
 
 For more on that, you can follow the reference in the lecture notes. The next command is db.serverStatus. This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl. The output from this command is going to be very similar to the output of rs.isMaster. So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
 
-The rbid is not included in rs.isMaster.
-
-And all this does is count the number of rollbacks that have occurred on this node.
-
-The last command we're going to cover is rs.printReplicationInfo.
-
-This command only has data about the oplog and specifically only the oplog for the node we're currently connected to.
-
-It'll give us exact time stamps for the first and last events that occurred in the oplog for that node.
+The rbid is not included in rs.isMaster. And all this does is count the number of rollbacks that have occurred on this node. The last command we're going to cover is rs.printReplicationInfo. This command only has data about the oplog and specifically only the oplog for the node we're currently connected to. It'll give us exact time stamps for the first and last events that occurred in the oplog for that node.
 
 So this is a quick report on the current length of the oplog in time and in megabytes.
 
