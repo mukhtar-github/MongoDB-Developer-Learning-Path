@@ -2869,4 +2869,78 @@ There is a vast amount of other configuration options that either deal with inte
 
 ### Replication Commands
 
+In this lesson, we're going to cover some of the commands we use to gather information about a replica set. You've probably noticed that there are a lot of different ways to check the status of a replica set because each node emits a lot of information. Each replication command gives a different subset of this information.
 
+The first one we're going to cover is rs.status. rs.status is used to report on the general health of each node in the set. The data it gets from the heartbeat sent in-between nodes in the set. Because it relies on heartbeats for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific node.
+
+We can see that for a given node we get the state of the node. In this case, it's the primary. We have the up time, which is the number of seconds this note has been running for. And we have the optime, which is the last time this node applied an operation from its oplog. There are heartbeat stats for each node as well but not for the node that we ran this command on.
+
+That's because the heartbeat stats are all relative to where rs.status was run.
+
+We know that it was run from this because the self flag in this node is true.
+
+We can scroll down to one of the other nodes and see that we have some heartbeats stats down here.
+
+Because we know the primary was where this command was run from.
+
+We know that last heartbeat refers to the last time this node successfully received a heartbeat from the primary.
+
+Conversely, last heartbeat received refers to the last time the primary successfully received a heartbeat from this note.
+
+We can see the actual frequency of heartbeats in this set through a heartbeat interval millis.
+
+In this case, this set is running with the default of 2,000 milliseconds, which means that the nodes are talking to each other about every two seconds.
+
+The next command we're going to cover is rs.isMaster.
+
+This one describes the role of the node where we ran this command from.
+
+And it also gives us some information about the replica set itself.
+
+The output is a lot easier to read than rs.status just because its output is a lot shorter.
+
+So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
+
+In this case, it's not because secondary is false.
+
+Or if this is the primary-- and it's master is true in this case.
+
+It also gives us the name of the primary node in the set regardless of where we ran this command from.
+
+In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me.
+
+So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
+
+But we can remove the parentheses to see what's actually being run in the background.
+
+And we can see that rs.isMaster is actually just a wrapper around a function called db.isMaster.
+
+You're going to notice that a lot of the rs.commands in Mongo Shell are actually just wrappers around db commands.
+
+As a side note, this is the command that the drivers use to discover each node's role in the replica set.
+
+For more on that, you can follow the reference in the lecture notes.
+
+The next command is db.serverStatus.
+
+This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl.
+
+The output from this command is going to be very similar to the output of rs.isMaster.
+
+So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
+
+The rbid is not included in rs.isMaster.
+
+And all this does is count the number of rollbacks that have occurred on this node.
+
+The last command we're going to cover is rs.printReplicationInfo.
+
+This command only has data about the oplog and specifically only the oplog for the node we're currently connected to.
+
+It'll give us exact time stamps for the first and last events that occurred in the oplog for that node.
+
+So this is a quick report on the current length of the oplog in time and in megabytes.
+
+And remember that the earliest event in the oplog is subject to change because the oplog is capped collection, and it's periodically flush to make room for new data.
+
+In this lesson, we've learned that there are several different ways to check the status of a replica set, and each one is important in its own right.
