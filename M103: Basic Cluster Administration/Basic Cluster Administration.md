@@ -2885,15 +2885,7 @@ In this case, it's not because secondary is false. Or if this is the primary-- a
 
 But we can remove the parentheses to see what's actually being run in the background. And we can see that rs.isMaster is actually just a wrapper around a function called db.isMaster. You're going to notice that a lot of the rs.commands in Mongo Shell are actually just wrappers around db commands. As a side note, this is the command that the drivers use to discover each node's role in the replica set.
 
-For more on that, you can follow the reference in the lecture notes.
-
-The next command is db.serverStatus.
-
-This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl.
-
-The output from this command is going to be very similar to the output of rs.isMaster.
-
-So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
+For more on that, you can follow the reference in the lecture notes. The next command is db.serverStatus. This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl. The output from this command is going to be very similar to the output of rs.isMaster. So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
 
 The rbid is not included in rs.isMaster.
 
