@@ -2881,23 +2881,9 @@ Conversely, last heartbeat received refers to the last time the primary successf
 
 The next command we're going to cover is rs.isMaster. This one describes the role of the node where we ran this command from. And it also gives us some information about the replica set itself. The output is a lot easier to read than rs.status just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
 
-In this case, it's not because secondary is false.
+In this case, it's not because secondary is false. Or if this is the primary-- and it's master is true in this case. It also gives us the name of the primary node in the set regardless of where we ran this command from. In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me. So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
 
-Or if this is the primary-- and it's master is true in this case.
-
-It also gives us the name of the primary node in the set regardless of where we ran this command from.
-
-In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me.
-
-So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
-
-But we can remove the parentheses to see what's actually being run in the background.
-
-And we can see that rs.isMaster is actually just a wrapper around a function called db.isMaster.
-
-You're going to notice that a lot of the rs.commands in Mongo Shell are actually just wrappers around db commands.
-
-As a side note, this is the command that the drivers use to discover each node's role in the replica set.
+But we can remove the parentheses to see what's actually being run in the background. And we can see that rs.isMaster is actually just a wrapper around a function called db.isMaster. You're going to notice that a lot of the rs.commands in Mongo Shell are actually just wrappers around db commands. As a side note, this is the command that the drivers use to discover each node's role in the replica set.
 
 For more on that, you can follow the reference in the lecture notes.
 
