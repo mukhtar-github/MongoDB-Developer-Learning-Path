@@ -2788,7 +2788,7 @@ In this lesson, we are going to dissect the *replication configuration*. In part
 
 We can manually set changes to this document to *configure a replica set* according with the expected *topology and overall replication options*. Although we can do this by simply editing such documents using the *mongo.db shell*, we can also use a set of *shell helpers like rs.add, initiate, remove*, and so forth. That will help us facilitate the *configuration and management* of this same configuration.
 
-There is a fair amount of different *configuration options* at our disposal as you can see from the baseline *configuration options document*. This might sound a bit daunting, but in reality, it's a pretty straightforward set of options. And for this lesson, in particular, we are going to be looking only to a set of these *configuration options* -- the basic and fundamental ones and the ones that we are going to be using throughout the course. All the other options are out of scope for this course.
+There is a fair amount of different *configuration options* at our disposal as you can see from the baseline *configuration options document*. This might sound a bit daunting, but in reality, it's a pretty straightforward set of options. And for this lesson, in particular, we are going to be looking only to a set of these *configuration options* -- the *basic and fundamental* ones and the ones that we are going to be using throughout the course. All the other options are out of scope for this course.
 
 ```javascript
 {
@@ -2808,7 +2808,7 @@ There is a fair amount of different *configuration options* at our disposal as y
 }
 ```
 
-But let's start with the *_id field*. This field is sets with the name of the *replica set*. This is a string value that matches the server defined *replica set*. Whenever we start our *mongoD* and we provide a -- *replSet name to our mongoD*, meaning that this *mongoD* will belong to the set, or by setting that same name in the *configuration file* -- for example, our *etc/mongodb.conf* file, we are setting a specific value to be used as a *replica set* name.
+But let's start with the *_id* field. This field is sets with the name of the *replica set*. This is a string value that matches the server defined *replica set*. Whenever we start our *mongoD* and we provide a -- *replSet name to our mongoD*, meaning that this *mongoD* will belong to the set, or by setting that same name in the *configuration file* -- for example, our *etc/mongodb.conf* file, we are setting a specific value to be used as a *replica set* name.
 
 The same value must match the *_id field of our replica set configuration document*. In case we have different values from the *configuration_id* and the defined *replica set* name, we end up with an error message. We get an incorrect *replica set configuration*, stating that we are attempting to initiate the *replica set* with a different name from which it has been set as *--replSet or in the config file*. This is a safeguard against incorrect configurations or incorrect adding the server to the incorrect *replica sets*.
 
@@ -2824,10 +2824,45 @@ Setting *priority to 0* effectively excludes that member from ever becoming a *p
 
 And finally, we have *slaveDelay. slaveDelay* is an integer value that determines a *replication delay* interval in seconds. The *default is 0*. This option will enable *delayed nodes*. These *delayed members maintain a copy of data reflecting a state in some point in the past*, applying that *delay in seconds*. For example, if we have our *slaveDelay option to 3,600 seconds, which means 1 hour*, that will mean that such member will be *replicating data from the other nodes in the sets that occurred 1 hour ago*.
 
-By setting the *slaveDelay* the option, it also implies that your *node will be hidden, and the priority will be set to 0*. Oh yes, and I almost forgot. We also have the *_id field* within the members sub-document. This is just a unique identifier of each element in the array. It's a simple integer field that is set once we had a member to the *replica set*. Once set, this value cannot be changed.
+By setting the *slaveDelay* the option, it also implies that your *node will be hidden, and the priority will be set to 0*. Oh yes, and I almost forgot. We also have the *_id* field within the *members sub-document*. This is just a unique identifier of each element in the array. It's a simple integer field that is set once we had a member to the *replica set*. Once set, this value cannot be changed.
 
-Now again, there is a lot more that we can configure within the replica set configuration documents. It feels like settings where we can define several different replication protocol attributes or things like the protocol version and configsvr that will be seen later in this course. But the actual uses of these options for the basic administration course are out of scope.
+Now again, there is a lot more that we can configure within the *replica set configuration documents*. Field like *settings* where we can define several different *replication protocol attributes* or things like the *protocolVersion and configsvr* that will be seen later in this course. But the actual uses of these options for the basic administration course are out of scope.
 
-Let's recap. Replication configuration document is used to configure our replica sets. This is where the properties of our replica sets are defined, and the document is shared across all members of the set. The members field is where a bunch of our basic configuration is going to be determined-- which nodes are part of the set, what roles do they have, and what kind of topology we want to define is set on this field.
+```javascript
+{
+  _id: <string>,
+  version: <int>,
+  term: <int>,
+  protocolVersion: <number>,
+  writeConcernMajorityJournalDefault: <boolean>,
+  configsvr: <boolean>,
+  members: [
+    {
+      _id: <int>,
+      host: <string>,
+      arbiterOnly: <boolean>,
+      buildIndexes: <boolean>,
+      hidden: <boolean>,
+      priority: <number>,
+      tags: <document>,
+      secondaryDelaySecs: <int>,
+      votes: <number>
+    },
+    ...
+  ],
+  settings: {
+    chainingAllowed : <boolean>,
+    heartbeatIntervalMillis : <int>,
+    heartbeatTimeoutSecs: <int>,
+    electionTimeoutMillis : <int>,
+    catchUpTimeoutMillis : <int>,
+    getLastErrorModes : <document>,
+    getLastErrorDefaults : <document>,
+    replicaSetId: <ObjectId>
+  }
+}
+```
+
+Let's recap. *Replication configuration document* is used to *configure our replica sets*. This is where the properties of our *replica sets are defined*, and the document is shared across all members of the set. The members field is where a bunch of our basic configuration is going to be determined-- which nodes are part of the set, what roles do they have, and what kind of topology we want to define is set on this field.
 
 There is a vast amount of other configuration options that either deal with internal replication mechanisms or overall configurations of the sets. We are out of scope on those, but keep in mind that there's a lot more in the replication configuration document that you can set up.
