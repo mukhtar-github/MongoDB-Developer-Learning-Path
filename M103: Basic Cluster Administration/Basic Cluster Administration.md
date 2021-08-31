@@ -2792,7 +2792,7 @@ There is a fair amount of different *configuration options* at our disposal as y
 
 But let's start with the *_id field*. This field is sets with the name of the *replica set*. This is a string value that matches the server defined *replica set*. Whenever we start our *mongoD* and we provide a -- *replSet name to our mongoD*, meaning that this *mongoD* will belong to the set, or by setting that same name in the *configuration file* -- for example, our *etc/mongodb.conf* file, we are setting a specific value to be used as a *replica set* name.
 
-The same value must match the _id field of our replica set configuration document. In case we have different values from the configuration_id and the defined replica set name, we end up with an error message. We get an incorrect replica set configuration, stating that we are attempting to initiate the replica set with a different name from which it has been set as --replSet or in the config file.
+The same value must match the *_id field of our replica set configuration document*. In case we have different values from the *configuration_id* and the defined *replica set* name, we end up with an error message. We get an incorrect *replica set configuration*, stating that we are attempting to initiate the *replica set* with a different name from which it has been set as *--replSet or in the config file*.
 
 This is a safeguard against incorrect configurations or incorrect adding the server to the incorrect replica sets. The next field is version. Now, a version is just an integer that gets incremented every time the current configuration of our replica set changes. If, for example, we add a node to our replica set and if our version used to be number 1, we increment the value.
 
