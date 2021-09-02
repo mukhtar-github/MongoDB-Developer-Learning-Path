@@ -3047,9 +3047,16 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-In this case, it's not because secondary is false. Or if this is the primary-- and it's master is true in this case. It also gives us the name of the primary node in the set regardless of where we ran this command from. In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me. So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
+In this case, it's not, because *secondary is false*. Or if this is *the primary -- and ismaster is true* in this case. It also gives us the name of *the primary node in the set* regardless of where we ran this command from. In this case, obviously, we ran it from the *primary, so this primary flag is just going to say the same thing as me*. So I just want to point out here when we type *ismaster()* command with parentheses afterward, we're calling the *ismaster()* method. But we can remove the parentheses to see what's actually being run in the background.
 
-But we can remove the parentheses to see what's actually being run in the background. And we can see that rs.isMaster is actually just a wrapper around a function called db.isMaster. You're going to notice that a lot of the rs.commands in Mongo Shell are actually just wrappers around db commands. As a side note, this is the command that the drivers use to discover each node's role in the replica set.
+```javascript
+m103-example:PRIMARY> rs.isMaster
+function () {
+  return db.isMaster();
+}
+```
+
+And we can see that *rs.isMaster* is actually just a wrapper around a function called *db.isMaster()*. You're going to notice that a lot of the *rs.commands in Mongo Shell* are actually just wrappers around *db commands*. As a side note, this is the command that *the drivers use to discover each node's role in the replica set*.
 
 For more on that, you can follow the reference in the lecture notes. The next command is db.serverStatus. This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl. The output from this command is going to be very similar to the output of rs.isMaster. So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
 
