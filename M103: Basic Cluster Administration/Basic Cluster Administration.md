@@ -2871,7 +2871,7 @@ There is a vast amount of other configuration options that either deal with inte
 
 In this lesson, we're going to cover some of the commands we use to gather information about a *replica set*. You've probably noticed that there are a lot of different ways to check the status of a *replica set* because each *node* emits a lot of information. Each *replication command* gives a different subset of this information.
 
-The first one we're going to cover is *rs.status. rs.status* is used to report on the general health of each node in the set. *The data it gets from the heartbeat sent in-between nodes in the set*. Because it relies on *heartbeats* for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific *node*.
+The first one we're going to cover is *rs.status(). rs.status()* is used to report on the general health of each node in the set. *The data it gets from the heartbeat sent in-between nodes in the set*. Because it relies on *heartbeats* for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific *node*.
 
 ```javascript
 m103-example:PRIMARY> rs.status()
@@ -2998,7 +2998,7 @@ We know that it was run from the *first node because the self flag in this node 
 
 Conversely, *last heartbeat received refers to the last time the primary successfully received a heartbeat from this node*. We can see the *actual frequency of heartbeats in this set through a heartbeat interval millis*. In this case, this set is running with the default of *2,000 milliseconds, which means that the nodes are talking to each other about every two seconds*.
 
-The next command we're going to cover is rs.isMaster. This one describes the role of the node where we ran this command from. And it also gives us some information about the replica set itself. The output is a lot easier to read than rs.status just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
+The next command we're going to cover is *rs.isMaster()*. This one describes the *role of the node where we ran this command from*. And it also gives us some information about the *replica set itself*. The output is a lot easier to read than *rs.status()* just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
 
 In this case, it's not because secondary is false. Or if this is the primary-- and it's master is true in this case. It also gives us the name of the primary node in the set regardless of where we ran this command from. In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me. So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
 
