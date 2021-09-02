@@ -3254,9 +3254,27 @@ m103-example:PRIMARY> stats.size
 191842
 m103-example:PRIMARY> stats.maxSize
 NumberLong("2982878208")
+m103-example:PRIMARY> var stats = db.oplog.rs.stats(1024*1024)
+m103-example:PRIMARY> stats.maxSize
+2844
 ```
 
-You can see the size of this collection. We can also see the max size of the particular collection. Now if you want to see the stats into a megabyte unit, you can see that this collection in here holds up to almost 2 gigabytes of data-- 1.8 gigabytes. By default, the oplog.rs collection will take 5% of your free disk. In my case, I have nearly 36 gigabytes of available data.
+You can see the *size of this collection*. We can also see the *max size of the particular collection*. Now if you want to see the *stats into a megabyte unit*, you can see that this collection in here holds up to almost 3 gigabytes of data -- 2.8 gigabytes. By default, the *oplog.rs collection* will take *5% of your free disk*. In my case, I have nearly *56 gigabytes* of available data.
+
+```javascript
+m103-example:PRIMARY> exit
+bye
+vagrant@vagrant:~$ df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+udev                          463M     0  463M   0% /dev
+tmpfs                          99M  5.1M   94M   6% /run
+/dev/mapper/vagrant--vg-root   62G  3.1G   56G   6% /
+tmpfs                         493M     0  493M   0% /dev/shm
+tmpfs                         5.0M     0  5.0M   0% /run/lock
+tmpfs                         493M     0  493M   0% /sys/fs/cgroup
+vagrant                        23G   14G  9.3G  60% /vagrant
+tmpfs                          99M     0   99M   0% /run/user/1000
+```
 
 So 1.8 gigabytes gives me those 5%. The size of our oplog will determine our replication window-- the amount of time that it will take to fill in your oplog. Now, we can also see some of that information from the printReplicationInfo, where here, giving the current status of my oplog. We are configured for those 1,819 megabytes. The log length starts to end is around 362 seconds, 0.1 hours-- a very short one.
 
