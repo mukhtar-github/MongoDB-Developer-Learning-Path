@@ -3223,9 +3223,9 @@ system.replset
 system.rollback.id
 ```
 
-Now that I'm connected to a *replica set* -- and you can see here from the prompt that I'm connected ta *replica M103 and to its primary*. If I *use local and show the collections* -- so here we have a little bit more of information, or at least a bit more of *collections* in this scenario. Great, but what are these for anyway? Most of these *collections, like me, startup log, system replica set, system rollback ID, or replica set election, and min val are collections maintained internally by the server*.
+Now that I'm connected to a *replica set* -- and you can see here from the prompt that I'm connected ta *replica M103 and to its primary*. If I *use local and show the collections* -- so here we have a little bit more of information, or at least a bit more of *collections* in this scenario. Great, but what are these for anyway? Most of these *collections, like me, startup_log, system.replset, system.rollback.id, or replset.election, replset.minvalid, and replset.oplogTruncateAfterPoint are collections maintained internally by the server*.
 
-They don't really vary that much, and the information they hold are simple configuration data-- nothing too interesting there. But where things get really interesting is with one collection in particular-- oplog.rs. oplog.rs is the central point of our replication mechanism. This is the oplog collection that will keep track of all statements being replicated in our replica set.
+They don't really vary that much, and the information they hold are simple *configuration data* -- nothing too interesting there. But where things get really interesting is with *one collection* in particular -- *oplog.rs. oplog.rs* is *the central point of our replication mechanism*. This is the *oplog collection* that will keep track of all statements being *replicated in our replica set*.
 
 Every single piece of information and operations that need to be replicated will be logged in this collection. There are a few things about the oplog.rs collection that you should know about. First of all, it's a capped collection. Capped collection means that the size of this collection is limited to a specific size. If we collect the stats of our oplog.rs collection into this variable, there's a flag called .capped that will tell us that this collection is, indeed, capped.
 
