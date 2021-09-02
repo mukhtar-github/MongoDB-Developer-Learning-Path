@@ -2998,7 +2998,54 @@ We know that it was run from the *first node because the self flag in this node 
 
 Conversely, *last heartbeat received refers to the last time the primary successfully received a heartbeat from this node*. We can see the *actual frequency of heartbeats in this set through a heartbeat interval millis*. In this case, this set is running with the default of *2,000 milliseconds, which means that the nodes are talking to each other about every two seconds*.
 
-The next command we're going to cover is *rs.isMaster()*. This one describes the *role of the node where we ran this command from*. And it also gives us some information about the *replica set itself*. The output is a lot easier to read than *rs.status()* just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this node is a secondary.
+The next command we're going to cover is *rs.isMaster()*. This one describes the *role of the node where we ran this command from*. And it also gives us some information about the *replica set itself*. The output is a lot easier to read than *rs.status()* just because its output is a lot shorter. So as we can see, the list of hosts is a lot shorter in this command, and we can very easily verify if this *node is a secondary*.
+
+```javascript
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 3,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000003"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630558914, 1),
+        "t" : NumberLong(3)
+      },
+      "lastWriteDate" : ISODate("2021-09-02T05:01:54Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630558914, 1),
+        "t" : NumberLong(3)
+      },
+      "majorityWriteDate" : ISODate("2021-09-02T05:01:54Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-02T05:02:00.923Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630558914, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630558914, 1),
+      "signature" : {
+        "hash" : BinData(0,"0vqCofSFrnH4lt2UhuI8+SdCngI="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+```
 
 In this case, it's not because secondary is false. Or if this is the primary-- and it's master is true in this case. It also gives us the name of the primary node in the set regardless of where we ran this command from. In this case, obviously, we ran it from the primary, so this primary flag is just going to say the same thing as me. So I just want to point out here when we type this command with parentheses afterward, we're calling this method.
 
