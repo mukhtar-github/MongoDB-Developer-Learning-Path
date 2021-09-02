@@ -3091,6 +3091,6 @@ m103-example:PRIMARY> db.serverStatus()['repl']
 }
 ```
 
-The rbid is not included in rs.isMaster. And all this does is count the number of rollbacks that have occurred on this node. The last command we're going to cover is rs.printReplicationInfo. This command only has data about the oplog and specifically only the oplog for the node we're currently connected to. It'll give us exact time stamps for the first and last events that occurred in the oplog for that node.
+The *rbid is not included in rs.isMaster()*. And all this does is count the number of *rollbacks that have occurred on this node*. The last command we're going to cover is *rs.printReplicationInfo()*. This command only has data about the *oplog and specifically only the oplog for the node we're currently connected to*. It'll give us exact *time stamps for the first and last events that occurred in the oplog for that node*.
 
 So this is a quick report on the current length of the oplog in time and in megabytes. And remember that the earliest event in the oplog is subject to change because the oplog is capped collection, and it's periodically flush to make room for new data. In this lesson, we've learned that there are several different ways to check the status of a replica set, and each one is important in its own right.
