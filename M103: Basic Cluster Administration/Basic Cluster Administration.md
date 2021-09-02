@@ -3103,3 +3103,25 @@ now:                     Thu Sep 02 2021 05:27:54 GMT+0000 (UTC)
 ```
 
 So this is a quick report on the current length of the *oplog in time and in megabytes*. And remember that the earliest event in the *oplog* is subject to change because the *oplog* is capped collection, and it's periodically flush to make room for new data. In this lesson, we've learned that there are several different ways to check the status of a r*eplica set*, and each one is important in its own right.
+
+### Local DB: Part 1
+
+In this lesson, we are going to take a quick peek into a fundamental database and the old replication process-- our dear, sweet Local DB. The minute we start our MongoDB, like I'm doing right now, there's a standalone node. And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
+
+And we have local. So let's jump into local for a second. And we can see that, in this instance, a standalone, all by itself, node. The local DB has only one collection-- startup.log. Nothing extraordinary so far, in that this startup_log only holds the start up log of this particular node, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
+
+Now that I'm connected to a replica set-- and you can see here from the prompt that I'm connected ta replica M103 and to its primary. If I use local and show the collections-- so here we have a little bit more of information, or at least a bit more of collections in this scenario. Great, but what are these for anyway? Most of these collections, like me, startup log, system replica set, system rollback ID, or replica set election, and min val are collections maintained internally by the server.
+
+They don't really vary that much, and the information they hold are simple configuration data-- nothing too interesting there. But where things get really interesting is with one collection in particular-- oplog.rs. oplog.rs is the central point of our replication mechanism. This is the oplog collection that will keep track of all statements being replicated in our replica set.
+
+Every single piece of information and operations that need to be replicated will be logged in this collection. There are a few things about the oplog.rs collection that you should know about. First of all, it's a capped collection. Capped collection means that the size of this collection is limited to a specific size. If we collect the stats of our oplog.rs collection into this variable, there's a flag called .capped that will tell us that this collection is, indeed, capped.
+
+You can see the size of this collection. We can also see the max size of the particular collection. Now if you want to see the stats into a megabyte unit, you can see that this collection in here holds up to almost 2 gigabytes of data-- 1.8 gigabytes. By default, the oplog.rs collection will take 5% of your free disk. In my case, I have nearly 36 gigabytes of available data.
+
+So 1.8 gigabytes gives me those 5%. The size of our oplog will determine our replication window-- the amount of time that it will take to fill in your oplog. Now, we can also see some of that information from the printReplicationInfo, where here, giving the current status of my oplog. We are configured for those 1,819 megabytes. The log length starts to end is around 362 seconds, 0.1 hours-- a very short one.
+
+And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular replica set. So the calculated time to fill in the oplog is relatively low. But wait just a second. I thought that the oplog size was measured in size, therefore it's megabytes, but we are talking about hours?
+
+Fear not, young Padawan. What is happening here is that MongoDB will let you know how much time it will take-- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about 0.1 hours to fill the oplog, which is not really predictable at this point.
+
+We need more data to actually calculate correctly how much time does it take to fill up our oplog.
