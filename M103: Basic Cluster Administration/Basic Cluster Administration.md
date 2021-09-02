@@ -3191,9 +3191,39 @@ switched to db local
 startup_log
 ```
 
-And we can see that, in this instance, *a standalone, all by itself, node*. The *local DB has only one collection -- startup.log*. Nothing extraordinary so far, in that this *startup_log* only holds the *start up log of this particular node*, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
+And we can see that, in this instance, *a standalone, all by itself, node*. The *local DB has only one collection -- startup_log*. Nothing extraordinary so far, in that this *startup_log* only holds the *start up log of this particular node*, as the saying kind of leads to. So let's connect to our *replica set* instead and check out how these *local do once we are in the replica set land*.
 
-Now that I'm connected to a replica set-- and you can see here from the prompt that I'm connected ta replica M103 and to its primary. If I use local and show the collections-- so here we have a little bit more of information, or at least a bit more of collections in this scenario. Great, but what are these for anyway? Most of these collections, like me, startup log, system replica set, system rollback ID, or replica set election, and min val are collections maintained internally by the server.
+```javascript
+vagrant@vagrant:~$ mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-example
+2021-09-02T08:55:12.915+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-example/localhost:27011
+2021-09-02T08:55:12.920+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+2021-09-02T08:55:12.923+0000 I NETWORK  [thread1] Successfully connected to localhost:27013 (1 connections now open to localhost:27013 with a 5 second timeout)
+2021-09-02T08:55:12.925+0000 I NETWORK  [thread1] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013 from m103-example/localhost:27011
+2021-09-02T08:55:12.930+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27012 (1 connections now open to localhost:27012 with a 5 second timeout)
+Implicit session: session { "id" : UUID("ae8a5036-95b0-44d7-9d91-1e7289be45bb") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-02T03:37:30.754+0000 I STORAGE  [initandlisten] 
+2021-09-02T03:37:30.754+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-02T03:37:30.754+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-02T03:37:33.529+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-02T03:37:33.529+0000 I CONTROL  [initandlisten] 
+m103-example:PRIMARY> use local
+switched to db local
+m103-example:PRIMARY> show collections
+me
+oplog.rs
+replset.election
+replset.minvalid
+replset.oplogTruncateAfterPoint
+startup_log
+system.replset
+system.rollback.id
+```
+
+Now that I'm connected to a *replica set* -- and you can see here from the prompt that I'm connected ta *replica M103 and to its primary*. If I *use local and show the collections* -- so here we have a little bit more of information, or at least a bit more of *collections* in this scenario. Great, but what are these for anyway? Most of these *collections, like me, startup log, system replica set, system rollback ID, or replica set election, and min val are collections maintained internally by the server*.
 
 They don't really vary that much, and the information they hold are simple configuration data-- nothing too interesting there. But where things get really interesting is with one collection in particular-- oplog.rs. oplog.rs is the central point of our replication mechanism. This is the oplog collection that will keep track of all statements being replicated in our replica set.
 
