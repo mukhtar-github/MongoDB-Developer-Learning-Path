@@ -2873,6 +2873,125 @@ In this lesson, we're going to cover some of the commands we use to gather infor
 
 The first one we're going to cover is *rs.status. rs.status* is used to report on the general health of each node in the set. *The data it gets from the heartbeat sent in-between nodes in the set*. Because it relies on *heartbeats* for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific *node*.
 
+```javascript
+m103-example:PRIMARY> rs.status()
+{
+    "set" : "m103-example",
+    "date" : ISODate("2021-09-02T03:41:20.920Z"),
+    "myState" : 1,
+    "term" : NumberLong(3),
+    "syncingTo" : "",
+    "syncSourceHost" : "",
+    "syncSourceId" : -1,
+    "heartbeatIntervalMillis" : NumberLong(2000),
+    "optimes" : {
+      "lastCommittedOpTime" : {
+        "ts" : Timestamp(1630554074, 1),
+        "t" : NumberLong(3)
+      },
+      "readConcernMajorityOpTime" : {
+        "ts" : Timestamp(1630554074, 1),
+        "t" : NumberLong(3)
+      },
+      "appliedOpTime" : {
+        "ts" : Timestamp(1630554074, 1),
+        "t" : NumberLong(3)
+      },
+      "durableOpTime" : {
+        "ts" : Timestamp(1630554074, 1),
+        "t" : NumberLong(3)
+      }
+    },
+    "members" : [
+      {
+        "_id" : 0,
+        "name" : "localhost:27011",
+        "health" : 1,
+        "state" : 1,
+        "stateStr" : "PRIMARY",
+        "uptime" : 323,
+        "optime" : {
+          "ts" : Timestamp(1630554074, 1),
+          "t" : NumberLong(3)
+        },
+        "optimeDate" : ISODate("2021-09-02T03:41:14Z"),
+        "syncingTo" : "",
+        "syncSourceHost" : "",
+        "syncSourceId" : -1,
+        "infoMessage" : "",
+        "electionTime" : Timestamp(1630553803, 1),
+        "electionDate" : ISODate("2021-09-02T03:36:43Z"),
+        "configVersion" : 3,
+        "self" : true,
+        "lastHeartbeatMessage" : ""
+      },
+      {
+        "_id" : 1,
+        "name" : "localhost:27012",
+        "health" : 1,
+        "state" : 2,
+        "stateStr" : "SECONDARY",
+        "uptime" : 287,
+        "optime" : {
+          "ts" : Timestamp(1630554074, 1),
+          "t" : NumberLong(3)
+        },
+        "optimeDurable" : {
+          "ts" : Timestamp(1630554074, 1),
+          "t" : NumberLong(3)
+        },
+        "optimeDate" : ISODate("2021-09-02T03:41:14Z"),
+        "optimeDurableDate" : ISODate("2021-09-02T03:41:14Z"),
+        "lastHeartbeat" : ISODate("2021-09-02T03:41:19.377Z"),
+        "lastHeartbeatRecv" : ISODate("2021-09-02T03:41:19.429Z"),
+        "pingMs" : NumberLong(0),
+        "lastHeartbeatMessage" : "",
+        "syncingTo" : "localhost:27011",
+        "syncSourceHost" : "localhost:27011",
+        "syncSourceId" : 0,
+        "infoMessage" : "",
+        "configVersion" : 3
+      },
+      {
+        "_id" : 2,
+        "name" : "localhost:27013",
+        "health" : 1,
+        "state" : 2,
+        "stateStr" : "SECONDARY",
+        "uptime" : 225,
+        "optime" : {
+          "ts" : Timestamp(1630554074, 1),
+          "t" : NumberLong(3)
+        },
+        "optimeDurable" : {
+          "ts" : Timestamp(1630554074, 1),
+          "t" : NumberLong(3)
+        },
+        "optimeDate" : ISODate("2021-09-02T03:41:14Z"),
+        "optimeDurableDate" : ISODate("2021-09-02T03:41:14Z"),
+        "lastHeartbeat" : ISODate("2021-09-02T03:41:19.531Z"),
+        "lastHeartbeatRecv" : ISODate("2021-09-02T03:41:19.029Z"),
+        "pingMs" : NumberLong(0),
+        "lastHeartbeatMessage" : "",
+        "syncingTo" : "localhost:27012",
+        "syncSourceHost" : "localhost:27012",
+        "syncSourceId" : 1,
+        "infoMessage" : "",
+        "configVersion" : 3
+      }
+    ],
+    "ok" : 1,
+    "operationTime" : Timestamp(1630554074, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630554074, 1),
+      "signature" : {
+        "hash" : BinData(0,"eYW1d85AhdWgUxzQAbPzV5d5Yno="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+```
+
 We can see that for a given node we get the state of the node. In this case, it's the primary. We have the up time, which is the number of seconds this note has been running for. And we have the optime, which is the last time this node applied an operation from its oplog. There are heartbeat stats for each node as well but not for the node that we ran this command on. That's because the heartbeat stats are all relative to where rs.status was run.
 
 We know that it was run from this because the self flag in this node is true. We can scroll down to one of the other nodes and see that we have some heartbeats stats down here. Because we know the primary was where this command was run from. We know that last heartbeat refers to the last time this node successfully received a heartbeat from the primary.
