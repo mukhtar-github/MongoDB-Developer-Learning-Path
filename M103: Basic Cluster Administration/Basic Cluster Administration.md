@@ -2871,6 +2871,43 @@ There is a vast amount of other configuration options that either deal with inte
 
 In this lesson, we're going to cover some of the commands we use to gather information about a *replica set*. You've probably noticed that there are a lot of different ways to check the status of a *replica set* because each *node* emits a lot of information. Each *replication command* gives a different subset of this information.
 
+```javascript
+// Starting my replica set
+vagrant@vagrant:~$ mongod -f node1.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1824
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f node2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1903
+child process started successfully, parent exiting
+vagrant@vagrant:~$ mongod -f node3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1993
+ERROR: child process failed, exited with error number 1
+To see additional information in this output, start without the "--fork" option.
+vagrant@vagrant:~$ sudo mongod -f node3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1999
+child process started successfully, parent exiting
+~~~
+vagrant@vagrant:~$ mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-example
+2021-09-02T03:40:06.826+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-example/localhost:27011
+2021-09-02T03:40:06.833+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+2021-09-02T03:40:06.834+0000 I NETWORK  [thread1] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013 from m103-example/localhost:27011
+2021-09-02T03:40:06.837+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27012 (1 connections now open to localhost:27012 with a 5 second timeout)
+2021-09-02T03:40:06.843+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27013 (1 connections now open to localhost:27013 with a 5 second timeout)
+Implicit session: session { "id" : UUID("a838ae1c-f713-4b06-ba3d-30224734e043") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-02T03:35:58.173+0000 I STORAGE  [initandlisten] 
+2021-09-02T03:35:58.173+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-02T03:35:58.173+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+m103-example:PRIMARY>
+```
+
 The first one we're going to cover is *rs.status(). rs.status()* is used to report on the general health of each node in the set. *The data it gets from the heartbeat sent in-between nodes in the set*. Because it relies on *heartbeats* for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific *node*.
 
 ```javascript
@@ -3106,7 +3143,7 @@ So this is a quick report on the current length of the *oplog in time and in meg
 
 ### Local DB: Part 1
 
-In this lesson, we are going to take a quick peek into a fundamental database and the old replication process-- our dear, sweet Local DB. The minute we start our MongoDB, like I'm doing right now, there's a standalone node. And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
+In this lesson, we are going to take a quick peek into a *fundamental database and the old replication process -- our dear, sweet Local DB*. The minute we start our MongoDB, like I'm doing right now, there's a standalone node. And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
 
 And we have local. So let's jump into local for a second. And we can see that, in this instance, a standalone, all by itself, node. The local DB has only one collection-- startup.log. Nothing extraordinary so far, in that this startup_log only holds the start up log of this particular node, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
 
@@ -3122,6 +3159,4 @@ So 1.8 gigabytes gives me those 5%. The size of our oplog will determine our rep
 
 And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular replica set. So the calculated time to fill in the oplog is relatively low. But wait just a second. I thought that the oplog size was measured in size, therefore it's megabytes, but we are talking about hours?
 
-Fear not, young Padawan. What is happening here is that MongoDB will let you know how much time it will take-- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about 0.1 hours to fill the oplog, which is not really predictable at this point.
-
-We need more data to actually calculate correctly how much time does it take to fill up our oplog.
+Fear not, young Padawan. What is happening here is that MongoDB will let you know how much time it will take-- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about 0.1 hours to fill the oplog, which is not really predictable at this point. We need more data to actually calculate correctly how much time does it take to fill up our oplog.
