@@ -3143,7 +3143,46 @@ So this is a quick report on the current length of the *oplog in time and in meg
 
 ### Local DB: Part 1
 
-In this lesson, we are going to take a quick peek into a *fundamental database and the old replication process -- our dear, sweet Local DB*. The minute we start our MongoDB, like I'm doing right now, there's a standalone node. And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
+In this lesson, we are going to take a quick peek into a *fundamental database and the old replication process -- our dear, sweet Local DB*. The minute we start our *MongoD*, like I'm doing right now, there's a *standalone node*.
+
+```javascript
+vagrant@vagrant:~$ sudo mkdir allbymyselfdb
+vagrant@vagrant:~$ mongod --dbpath allbymyselfdb
+2021-09-02T05:54:54.988+0000 I CONTROL  [initandlisten] MongoDB starting : pid=2366 port=27017 dbpath=allbymyselfdb 64-bit host=vagrant
+2021-09-02T05:54:54.988+0000 I CONTROL  [initandlisten] db version v3.6.23
+2021-09-02T05:54:54.989+0000 I CONTROL  [initandlisten] git version: d352e6a4764659e0d0350ce77279de3c1f243e5c
+2021-09-02T05:54:54.989+0000 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2n  7 Dec 2017
+2021-09-02T05:54:54.989+0000 I CONTROL  [initandlisten] allocator: tcmalloc
+2021-09-02T05:54:54.989+0000 I CONTROL  [initandlisten] modules: none
+2021-09-02T05:54:54.990+0000 I CONTROL  [initandlisten] build environment:
+2021-09-02T05:54:54.990+0000 I CONTROL  [initandlisten]     distmod: ubuntu1604
+2021-09-02T05:54:54.990+0000 I CONTROL  [initandlisten]     distarch: x86_64
+2021-09-02T05:54:54.990+0000 I CONTROL  [initandlisten]     target_arch: x86_64
+2021-09-02T05:54:54.990+0000 I CONTROL  [initandlisten] options: { storage: { dbPath: "allbymyselfdb" } }
+2021-09-02T05:54:54.991+0000 I STORAGE  [initandlisten] exception in initAndListen: IllegalOperation: Attempted to create a lock file on a read-only directory: allbymyselfdb, terminating
+2021-09-02T05:54:54.991+0000 I CONTROL  [initandlisten] now exiting
+2021-09-02T05:54:54.992+0000 I CONTROL  [initandlisten] shutting down with code:100
+~~~
+vagrant@vagrant:~$ mongo
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("7d4b49b7-a0b5-4043-a8b0-74674fb036ae") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-02T03:26:40.494+0000 I STORAGE  [initandlisten] 
+2021-09-02T03:26:40.494+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-02T03:26:40.494+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-02T03:26:43.456+0000 I CONTROL  [initandlisten] 
+2021-09-02T03:26:43.456+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2021-09-02T03:26:43.456+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2021-09-02T03:26:43.457+0000 I CONTROL  [initandlisten] 
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+```
+
+And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
 
 And we have local. So let's jump into local for a second. And we can see that, in this instance, a standalone, all by itself, node. The local DB has only one collection-- startup.log. Nothing extraordinary so far, in that this startup_log only holds the start up log of this particular node, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
 
