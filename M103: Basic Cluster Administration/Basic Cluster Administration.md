@@ -3227,6 +3227,23 @@ Now that I'm connected to a *replica set* -- and you can see here from the promp
 
 They don't really vary that much, and the information they hold are simple *configuration data* -- nothing too interesting there. But where things get really interesting is with *one collection* in particular -- *oplog.rs. oplog.rs* is *the central point of our replication mechanism*. This is the *oplog collection* that will keep track of all statements being *replicated in our replica set*.
 
+```javascript
+m103-example:PRIMARY> db.oplog.rs.findOne()
+{
+    "ts" : Timestamp(1630222100, 1),
+    "t" : NumberLong(1),
+    "h" : NumberLong("-9163983915734987866"),
+    "v" : 2,
+    "op" : "n",
+    "ns" : "",
+    "wall" : ISODate("2021-08-29T07:28:20.096Z"),
+    "o" : {
+      "msg" : "Reconfig set",
+      "version" : 3
+    }
+}
+```
+
 Every single piece of information and operations that need to be replicated will be logged in this collection. There are a few things about the oplog.rs collection that you should know about. First of all, it's a capped collection. Capped collection means that the size of this collection is limited to a specific size. If we collect the stats of our oplog.rs collection into this variable, there's a flag called .capped that will tell us that this collection is, indeed, capped.
 
 You can see the size of this collection. We can also see the max size of the particular collection. Now if you want to see the stats into a megabyte unit, you can see that this collection in here holds up to almost 2 gigabytes of data-- 1.8 gigabytes. By default, the oplog.rs collection will take 5% of your free disk. In my case, I have nearly 36 gigabytes of available data.
