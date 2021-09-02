@@ -3182,9 +3182,16 @@ config  0.000GB
 local   0.000GB
 ```
 
-And once I connect to that node, we can see two different name spaces, or databases, if you prefer. We have admin, which comprises all the Administration Data and where most of our administration commands like db.shutdownServer, for example, needs to be executed, or will be executed.
+And once I connect to that *node*, we can see three different *name spaces, or databases*, if you prefer. We have *admin, which comprises all the Administration Data* and where most of our *administration commands like db.shutdownServer()*, for example, needs to be executed, or will be executed. And we have *local and config*. So let's jump into *local* for a second.
 
-And we have local. So let's jump into local for a second. And we can see that, in this instance, a standalone, all by itself, node. The local DB has only one collection-- startup.log. Nothing extraordinary so far, in that this startup_log only holds the start up log of this particular node, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
+```javascript
+> use local
+switched to db local
+> show collections
+startup_log
+```
+
+And we can see that, in this instance, *a standalone, all by itself, node*. The *local DB has only one collection -- startup.log*. Nothing extraordinary so far, in that this *startup_log* only holds the *start up log of this particular node*, as the saying kind of leads to. So let's connect to our replica set instead and check out how these local do once we are in the replica set land.
 
 Now that I'm connected to a replica set-- and you can see here from the prompt that I'm connected ta replica M103 and to its primary. If I use local and show the collections-- so here we have a little bit more of information, or at least a bit more of collections in this scenario. Great, but what are these for anyway? Most of these collections, like me, startup log, system replica set, system rollback ID, or replica set election, and min val are collections maintained internally by the server.
 
