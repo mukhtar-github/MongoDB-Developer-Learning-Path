@@ -3244,7 +3244,17 @@ m103-example:PRIMARY> db.oplog.rs.findOne()
 }
 ```
 
-Every single piece of information and operations that need to be replicated will be logged in this collection. There are a few things about the oplog.rs collection that you should know about. First of all, it's a capped collection. Capped collection means that the size of this collection is limited to a specific size. If we collect the stats of our oplog.rs collection into this variable, there's a flag called .capped that will tell us that this collection is, indeed, capped.
+Every single piece of information and operations that need to be *replicated will be logged in this collection*. There are a few things about the *oplog.rs collection* that you should know about. First of all, it's a *capped collection. Capped collection means that the size of this collection is limited to a specific size*. If we collect the *stats of our oplog.rs collection* into this variable, there's *a flag called .capped* that will tell us that this collection is, indeed, *capped*.
+
+```javascript
+m103-example:PRIMARY> var stats = db.oplog.rs.stats()
+m103-example:PRIMARY> stats.capped
+true
+m103-example:PRIMARY> stats.size
+191842
+m103-example:PRIMARY> stats.maxSize
+NumberLong("2982878208")
+```
 
 You can see the size of this collection. We can also see the max size of the particular collection. Now if you want to see the stats into a megabyte unit, you can see that this collection in here holds up to almost 2 gigabytes of data-- 1.8 gigabytes. By default, the oplog.rs collection will take 5% of your free disk. In my case, I have nearly 36 gigabytes of available data.
 
