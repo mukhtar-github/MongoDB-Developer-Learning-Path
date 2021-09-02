@@ -3056,9 +3056,40 @@ function () {
 }
 ```
 
-And we can see that *rs.isMaster* is actually just a wrapper around a function called *db.isMaster()*. You're going to notice that a lot of the *rs.commands in Mongo Shell* are actually just wrappers around *db commands*. As a side note, this is the command that *the drivers use to discover each node's role in the replica set*.
+And we can see that *rs.isMaster* is actually just a wrapper around a function called *db.isMaster()*. You're going to notice that a lot of the *rs.commands in Mongo Shell* are actually just wrappers around *db commands*. As a side note, this is the command that *the drivers use to discover each node's role in the replica set*. For more on that, you can follow the reference in the lecture notes.
 
-For more on that, you can follow the reference in the lecture notes. The next command is db.serverStatus. This command gives us a lot of information about the Mongo D process, but we're just going to look at the section called repl. The output from this command is going to be very similar to the output of rs.isMaster. So as we can see, the output of this command is very similar to the output of rs.isMaster with the exception of one field here.
+The next command is *db.serverStatus()*. This command gives us a lot of information about the *MongoD process*, but we're just going to look at the section called *repl*. The output from this command is going to be very similar to the output of *rs.isMaster()*. So as we can see, the output of this command is very similar to the output of *rs.isMaster()* with the exception of one field here.
+
+```javascript
+m103-example:PRIMARY> db.serverStatus()['repl']
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 3,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000003"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630560115, 1),
+        "t" : NumberLong(3)
+      },
+      "lastWriteDate" : ISODate("2021-09-02T05:21:55Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630560115, 1),
+        "t" : NumberLong(3)
+      },
+      "majorityWriteDate" : ISODate("2021-09-02T05:21:55Z")
+    },
+    "rbid" : 1
+}
+```
 
 The rbid is not included in rs.isMaster. And all this does is count the number of rollbacks that have occurred on this node. The last command we're going to cover is rs.printReplicationInfo. This command only has data about the oplog and specifically only the oplog for the node we're currently connected to. It'll give us exact time stamps for the first and last events that occurred in the oplog for that node.
 
