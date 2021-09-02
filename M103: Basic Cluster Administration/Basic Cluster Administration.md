@@ -2869,7 +2869,7 @@ There is a vast amount of other configuration options that either deal with inte
 
 ### Replication Commands
 
-In this lesson, we're going to cover some of the commands we use to gather information about a replica set. You've probably noticed that there are a lot of different ways to check the status of a replica set because each node emits a lot of information. Each replication command gives a different subset of this information.
+In this lesson, we're going to cover some of the commands we use to gather information about a *replica set*. You've probably noticed that there are a lot of different ways to check the status of a *replica set* because each *node* emits a lot of information. Each *replication command* gives a different subset of this information.
 
 The first one we're going to cover is rs.status. rs.status is used to report on the general health of each node in the set. The data it gets from the heartbeat sent in-between nodes in the set. Because it relies on heartbeats for this data, it may actually be a few seconds out of date. This command gives us the most information for each specific node.
 
