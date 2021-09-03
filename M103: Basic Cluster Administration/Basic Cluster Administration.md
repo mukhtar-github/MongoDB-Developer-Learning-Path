@@ -3305,15 +3305,7 @@ Now, not all *nodes* need to be the same. For example, sync sources might have d
 
 To sum up, the *replication window* measured in hours will be proportional to the *load of your system*. You should keep an eye on that. The other good thing is that our *oplog.rs size* can be changed. And we have a fair amount of good documentation telling you how to do that as a administration task. Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
 
-Let me show you how this works.
-
-I'm going to use this database here-- M03.
-
-I'm going to create a collection called messages.
-
-Once I create that, I can see that collection there created.
-
-Now if I jump into my local database and I look into our oplog.rs, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the oplog.
+Let me show you how this works. I'm going to use this database here -- M03. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
 
 Cool, this is really good.
 
