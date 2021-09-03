@@ -3447,16 +3447,6 @@ We use our rs.conf to retrieve a replica set configuration. So this gives us a c
 
 And I've chosen the node at index position 3 in that list. And I've changed the number of votes it has to 0. This is going to leave us with an odd number of voting members in the set. And here I'm setting the hidden variable of that node to true to hide this note from any client applications. And hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0.
 
-So this is a new command, rs.reconfig, that we use to reconfigure a running replica set. We pass in our updated configuration as an argument, and we need to specify this whole document. That's why we took a copy of the original configuration and then modified it as we needed. Bear in mind that reconfig might trigger an election depending on what's in the new configuration.
+So this is a new command, rs.reconfig, that we use to reconfigure a running replica set. We pass in our updated configuration as an argument, and we need to specify this whole document. That's why we took a copy of the original configuration and then modified it as we needed. Bear in mind that reconfig might trigger an election depending on what's in the new configuration. And it looked like this worked.
 
-And it looked like this worked.
-
-I'm just going to verify that it worked with the rs.conf to get the current configuration of the replica set.
-
-And it looks like this node now has priority 0, it can't vote, and it's hidden.
-
-So now our replica set still has four nodes in it, which is an even number, but only an odd number of them can vote.
-
-So just to recap, in this lesson we covered how to add arbiters and new secondaries, we said a little bit about hidden nodes, and we added one to our set.
-
-And we also covered how to reconfigure a replica set while it's still running.
+I'm just going to verify that it worked with the rs.conf to get the current configuration of the replica set. And it looks like this node now has priority 0, it can't vote, and it's hidden. So now our replica set still has four nodes in it, which is an even number, but only an odd number of them can vote. So just to recap, in this lesson we covered how to add arbiters and new secondaries, we said a little bit about hidden nodes, and we added one to our set. And we also covered how to reconfigure a replica set while it's still running.
