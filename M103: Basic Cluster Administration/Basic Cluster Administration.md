@@ -3435,6 +3435,55 @@ This is going to be the *typology of our replica set* once we've added our *two 
 
 So here I'm connected to our replica set, and I'm just going to rs.isMaster to see that typology really quickly. And we can see that our replica set currently has three nodes in it. So here I'm just going to launch a mongod using a configuration file for our fourth node. And the config files for the arbiter and the secondary are going to be very similar to the ones for our other nodes.
 
+```javascript
+m103-example:PRIMARY> use admin
+switched to db admin
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 3,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000007"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630662489, 1),
+        "t" : NumberLong(7)
+      },
+      "lastWriteDate" : ISODate("2021-09-03T09:48:09Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630662489, 1),
+        "t" : NumberLong(7)
+      },
+      "majorityWriteDate" : ISODate("2021-09-03T09:48:09Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-03T09:48:18.270Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630662489, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630662489, 1),
+      "signature" : {
+        "hash" : BinData(0,"7jmiyh+G7RG07pneg76UUAlgwQQ="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+```
+
 So I'm not going to go over them here, but you can find them attached to the lecture as handouts. So once we've started our node4, we can start our arbiter. And we now have the two nodes we need. And we just have to add them to the set. So here we're just adding the fourth node to our set. So here when we add our arbiter, we use a special command called addArb.
 
 And it looks like this completed. And I'm just going to check rs.isMaster to make sure of that. And we can see that our replica set now has four nodes in it and one arbiter. So now our replica set is running with one primary, three secondaries, and an arbiter node. But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
