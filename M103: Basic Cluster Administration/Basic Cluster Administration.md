@@ -3431,91 +3431,23 @@ The size of our *oplog will impact the replication window* and should be closely
 
 All right, so until this point, we've covered basic replication concepts and how to deploy a replica set. But in this lesson, we're going to cover how to reconfigure a replica set while it's still running. So let's say our replica set containing our data is up and running with a primary and two secondary nodes. Our supervisor tells us he wants to add two more nodes, one secondary and one arbiter.
 
-This is going to be the typology of our replica set once we've added our two nodes.
+This is going to be the typology of our replica set once we've added our two nodes. And our supervisor wanted to add a secondary and an arbiter instead of just two secondaries, because an arbiter is a much cheaper node to maintain. It doesn't need to copy or replicate all of the data from the primary, but it still provides us with an odd number of voting numbers in the set.
 
-And our supervisor wanted to add a secondary and an arbiter instead of just two secondaries, because an arbiter is a much cheaper node to maintain.
+So here I'm connected to our replica set, and I'm just going to rs.isMaster to see that typology really quickly. And we can see that our replica set currently has three nodes in it. So here I'm just going to launch a mongod using a configuration file for our fourth node. And the config files for the arbiter and the secondary are going to be very similar to the ones for our other nodes.
 
-It doesn't need to copy or replicate all of the data from the primary, but it still provides us with an odd number of voting numbers in the set.
+So I'm not going to go over them here, but you can find them attached to the lecture as handouts. So once we've started our node4, we can start our arbiter. And we now have the two nodes we need. And we just have to add them to the set. So here we're just adding the fourth node to our set. So here when we add our arbiter, we use a special command called addArb.
 
-So here I'm connected to our replica set, and I'm just going to rs.isMaster to see that typology really quickly.
+And it looks like this completed. And I'm just going to check rs.isMaster to make sure of that. And we can see that our replica set now has four nodes in it and one arbiter. So now our replica set is running with one primary, three secondaries, and an arbiter node. But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
 
-And we can see that our replica set currently has three nodes in it.
+So here to the remove command, we just pass the port where our arbiter was running. And we've successfully removed it. However, right now our replica is set only has four members. We can verify that from rs.isMaster. Our list of hosts only has four nodes in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
 
-So here I'm just going to launch a mongod using a configuration file for our fourth node.
+We just have to revoke its voting privileges so that will leave us with three voting members. Our head of engineering has also been talking about using a hidden node to store backups. So we decide to be a little clever. In addition to being nonvoting, this secondary is also going to be a hidden node. So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
 
-And the config files for the arbiter and the secondary are going to be very similar to the ones for our other nodes.
+We use our rs.conf to retrieve a replica set configuration. So this gives us a complete configuration of the replica set, including the host name and port of each node, as well as if the node is hidden or an arbiter. It also gives us the number of votes that each node has. So here I'm just storing the configuration for the set in a variable called cfg. So members here is a section of the config that has a list of the nodes in the set.
 
-So I'm not going to go over them here, but you can find them attached to the lecture as handouts.
+And I've chosen the node at index position 3 in that list. And I've changed the number of votes it has to 0. This is going to leave us with an odd number of voting members in the set. And here I'm setting the hidden variable of that node to true to hide this note from any client applications. And hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0.
 
-So once we've started our node4, we can start our arbiter.
-
-And we now have the two nodes we need.
-
-And we just have to add them to the set.
-
-So here we're just adding the fourth node to our set.
-
-So here when we add our arbiter, we use a special command called addArb.
-
-And it looks like this completed.
-
-And I'm just going to check rs.isMaster to make sure of that.
-
-And we can see that our replica set now has four nodes in it and one arbiter.
-
-So now our replica set is running with one primary, three secondaries, and an arbiter node.
-
-But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
-
-So here to the remove command, we just pass the port where our arbiter was running.
-
-And we've successfully removed it.
-
-However, right now our replica is set only has four members.
-
-We can verify that from rs.isMaster.
-
-Our list of hosts only has four nodes in it.
-
-So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
-
-We just have to revoke its voting privileges so that will leave us with three voting members.
-
-Our head of engineering has also been talking about using a hidden node to store backups.
-
-So we decide to be a little clever.
-
-In addition to being nonvoting, this secondary is also going to be a hidden node.
-
-So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
-
-We use our rs.conf to retrieve a replica set configuration.
-
-So this gives us a complete configuration of the replica set, including the host name and port of each node, as well as if the node is hidden or an arbiter.
-
-It also gives us the number of votes that each node has.
-
-So here I'm just storing the configuration for the set in a variable called cfg.
-
-So members here is a section of the config that has a list of the nodes in the set.
-
-And I've chosen the node at index position 3 in that list.
-
-And I've changed the number of votes it has to 0.
-
-This is going to leave us with an odd number of voting members in the set.
-
-And here I'm setting the hidden variable of that node to true to hide this note from any client applications.
-
-And hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0.
-
-So this is a new command, rs.reconfig, that we use to reconfigure a running replica set.
-
-We pass in our updated configuration as an argument, and we need to specify this whole document.
-
-That's why we took a copy of the original configuration and then modified it as we needed.
-
-Bear in mind that reconfig might trigger an election depending on what's in the new configuration.
+So this is a new command, rs.reconfig, that we use to reconfigure a running replica set. We pass in our updated configuration as an argument, and we need to specify this whole document. That's why we took a copy of the original configuration and then modified it as we needed. Bear in mind that reconfig might trigger an election depending on what's in the new configuration.
 
 And it looked like this worked.
 
