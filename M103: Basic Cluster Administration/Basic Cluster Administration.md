@@ -3297,9 +3297,7 @@ After initiating our *node* and adding the *node* to the *replica set*, the *opl
 
 Once that happens, the first operations in our *oplog* start to be overwritten with newer operations. The time it takes to fill in fully our *oplog* and start rewriting the early statements determines the *replication window*. The *replication window* is important aspect to monitor because we'll impact how much time the *replica set* can afford a *node* to be down without requiring any human intervention to auto recover.
 
-Every node in our replica set has its own oplog. As writes and operations gets to the primary node, these are captured in the oplog. And then the secondary nodes replicate that data and apply it on their own oplog.
-
-Now if for some reason one of the nodes gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the replica set keeps on accumulating new writes-- for the server to be able to catch up with the remaining nodes, you will need to figure out what's a common point where everyone can see what happened in the past.
+Every *node* in our *replica set* has its own *oplog*. As writes and operations gets to the *primary node*, these are captured in the *oplog*. And then the *secondary nodes replicate that data and apply it on their own oplog*. Now if for some reason one of the *nodes* gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the *replica set* keeps on accumulating new writes -- for the server to be able to catch up with the remaining *nodes*, you will need to figure out what's a common point where everyone can see what happened in the past.
 
 Basically what will happen is that a recovering node will check for its last oplog entry and try to find it in one of the available nodes. Once he finds it, he will just simply re-apply all operations since that point and catch up with the remaining nodes of the sets.
 
