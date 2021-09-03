@@ -3382,15 +3382,7 @@ m103-example:PRIMARY> db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: 
 Type "it" for more
 ```
 
-But now let's do a simple updateMany operation.
-
-Let's say that I want to make sure these messages here have an author.
-
-So I'm going to set a new field called author with the value called, well, my own name-- Norberto.
-
-Once I do this-- and keep in mind that this is one single operation, one UpdateOne, that modified and matched 100 different documents.
-
-If we jump back to local, and if we look for more operations, I can see that there is an update operation, or several update operations-- op equals u means an update-- for all the affected documents in this collection.
+But now let's do a simple *updateMany* operation. Let's say that I want to make sure these *messages here have an author*. So I'm going to set a new field called *author with the value called, well, my own name -- Mukhtar*. Once I do this -- and keep in mind that this is one single operation, one *UpdateOne*, that modified and matched *100 different documents*. If we jump back to *local*, and if we look for more operations, I can see that there is an *update operation, or several update operations -- op equals u means an update* -- for all the affected documents in this collection.
 
 So one single instruction-- an updateMany-- into our primary, produced 100 different operations into our oplog.
 
