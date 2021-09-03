@@ -3429,7 +3429,7 @@ The size of our *oplog will impact the replication window* and should be closely
 
 ### Reconfiguring a Running Replica Set
 
-All right, so until this point, we've covered basic replication concepts and how to deploy a replica set. But in this lesson, we're going to cover how to reconfigure a replica set while it's still running. So let's say our replica set containing our data is up and running with a primary and two secondary nodes. Our supervisor tells us he wants to add two more nodes, one secondary and one arbiter.
+All right, so until this point, we've covered *basic replication concepts* and how to deploy a *replica set*. But in this lesson, we're going to cover how to *reconfigure a replica set* while it's still running. So let's say our *replica set* containing our data is up and running with a *primary and two secondary nodes*. Our supervisor tells us he wants to add *two more nodes, one secondary and one arbiter*.
 
 This is going to be the typology of our replica set once we've added our two nodes. And our supervisor wanted to add a secondary and an arbiter instead of just two secondaries, because an arbiter is a much cheaper node to maintain. It doesn't need to copy or replicate all of the data from the primary, but it still provides us with an odd number of voting numbers in the set.
 
