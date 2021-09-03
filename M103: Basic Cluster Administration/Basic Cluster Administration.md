@@ -3307,6 +3307,25 @@ To sum up, the *replication window* measured in hours will be proportional to th
 
 Let me show you how this works. I'm going to use this database here -- M03. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
 
+```javascript
+m103-example:PRIMARY> use m103
+switched to db m103
+m103-example:PRIMARY> db.createCollection('messages')
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630650066, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630650066, 1),
+      "signature" : {
+        "hash" : BinData(0,"iFsF+p4uC7waoq55OjtgFCRZA/o="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+m103-example:PRIMARY> show collections
+messages
+```
+
 Cool, this is really good.
 
 Now let's jump back to our M103 collection.
