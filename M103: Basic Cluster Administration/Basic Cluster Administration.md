@@ -3290,3 +3290,141 @@ now:                     Fri Sep 03 2021 03:50:56 GMT+0000 (UTC)
 And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular *replica set*. So the calculated time to fill in the *oplog* is relatively low. But wait just a second. I thought that the *oplog size* was measured in size, therefore it's megabytes, but we are talking about hours?
 
 Fear not, young Padawan. What is happening here is that *MongoDB* will let you know how much time it will take -- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about *0.1 hours to fill the oplog*, which is not really predictable at this point. We need more data to actually calculate correctly how much time does it take to fill up our *oplog*.
+
+### Local DB: Part 2
+
+After initiating our node and adding the node to the replica set, the oplog.rs collection is created.
+
+By default, as I mentioned before, we take 5% of the available disk.
+
+But this value can also be set by configuring it through the oplog size in megabytes under the replication section of our configuration file.
+
+As operations get logged into the oplog, like inserts or deletes or create collection kind of operations, the oplog.rs collection starts to accumulate the operations and statements, until it reaches the oplog size limit.
+
+Once that happens, the first operations in our oplog start to be overwritten with newer operations.
+
+The time it takes to fill in fully our oplog and start rewriting the early statements determines the replication window.
+
+The replication window is important aspect to monitor because we'll impact how much time the replica set can afford a node to be down without requiring any human intervention to auto recover.
+
+Every node in our replica set has its own oplog.
+
+As writes and operations gets to the primary node, these are captured in the oplog.
+
+And then the secondary nodes replicate that data and apply it on their own oplog.
+
+Now if for some reason one of the nodes gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the replica set keeps on accumulating new writes-- for the server to be able to catch up with the remaining nodes, you will need to figure out what's a common point where everyone can see what happened in the past.
+
+Basically what will happen is that a recovering node will check for its last oplog entry and try to find it in one of the available nodes.
+
+Once he finds it, he will just simply re-apply all operations since that point and catch up with the remaining nodes of the sets.
+
+However, if it is not able to find the same common operation in the remaining nodes' oplog because of the oplog already rotated and no sync source point as the last operation, the node will not be able to automatically recover and sync with the rest of the set, being placed in recovery mode.
+
+Now, not all nodes need to be the same.
+
+For example, sync sources might have different oplog sizes.
+
+However, if our oplog size is larger and able to accommodate more changes in the system, we can afford our nodes to be down for longer and still be able to reconnect once they're being brought back up again.
+
+Therefore, the size of our oplog.rs collection is an important aspect to keep in mind.
+
+To sum up, the replication window measured in hours will be proportional to the load of your system.
+
+You should keep an eye on that.
+
+The other good thing is that our oplog.rs size can be changed.
+
+And we have a fair amount of good documentation telling you how to do that as a administration task.
+
+Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
+
+Let me show you how this works.
+
+I'm going to use this database here-- M03.
+
+I'm going to create a collection called messages.
+
+Once I create that, I can see that collection there created.
+
+Now if I jump into my local database and I look into our oplog.rs, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the oplog.
+
+Cool, this is really good.
+
+Now let's jump back to our M103 collection.
+
+And let's insert a few documents just for fun.
+
+There you go.
+
+We inserted 100 documents with the message, not yet.
+
+If I go ahead and count them up, I can see 100 documents there-- great.
+
+If I jump back to my local database and look for those messages, I can see that I can find those insert-- the operation there is an insert.
+
+And the object being inserted is one of the 100 documents inserted-- great.
+
+But now let's do a simple updateMany operation.
+
+Let's say that I want to make sure these messages here have an author.
+
+So I'm going to set a new field called author with the value called, well, my own name-- Norberto.
+
+Once I do this-- and keep in mind that this is one single operation, one UpdateOne, that modified and matched 100 different documents.
+
+If we jump back to local, and if we look for more operations, I can see that there is an update operation, or several update operations-- op equals u means an update-- for all the affected documents in this collection.
+
+So one single instruction-- an updateMany-- into our primary, produced 100 different operations into our oplog.
+
+Now this is the magic of idempotence.
+
+Be aware of this.
+
+Sometimes is easy to dismiss the fact that idempotency might generate a lot more operations in our oplog than the number of commands actually issued from the client.
+
+One last point that I want to bring to your attention is that, please don't change any of this information present on any of this collection.
+
+Contrary to what MC Hammer used to say, you can, in fact, touch this, given the correct set of permissions.
+
+But please don't.
+
+This might affect tremendously badly the way that your replica works.
+
+So try not to mess around too much with this collection.
+
+That said, and to prove you that you can do some damage, let's try to write to this local database.
+
+I'm going to go ahead and in my local collection, insert a message saying that you cannot touch this.
+
+And if we look for it in our oplog.rs, we will not find it.
+
+You should keep in mind that this data that I've just written into this particular database-- there it is, my local collection-- is written into the local database.
+
+That means it's local to this particular instance.
+
+Any data written in this collection will not be replicated.
+
+Local database is like Vegas.
+
+What happens in local, stays in local.
+
+No other node in the set will ever see that data, except obviously for the oplog.rs, which they are reading and applying it on their own.
+
+Anything else that you might want to keep local, you can write here.
+
+But we do not recommend you to do any of that unless you really know what you're doing.
+
+Let's quickly sum up what we just learned.
+
+Local database holds very important information and should not be messed up with.
+
+Changing the data in your oplog or any of the configuration collections will impact the settings in the replication mechanism.
+
+The oplog.rs is central to our replication mechanism.
+
+Everything that needs to be replicated will be stored and logged in the oplog in an idempotent way.
+
+The size of our oplog will impact the replication window and should be closely monitored.
+
+Any data written to local database that is not written to oplog.rs or changing any of the system configuration collections will stay there and will not be replicated.
