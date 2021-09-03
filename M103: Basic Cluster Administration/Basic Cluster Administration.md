@@ -3382,9 +3382,40 @@ m103-example:PRIMARY> db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: 
 Type "it" for more
 ```
 
-But now let's do a simple *updateMany* operation. Let's say that I want to make sure these *messages here have an author*. So I'm going to set a new field called *author with the value called, well, my own name -- Mukhtar*. Once I do this -- and keep in mind that this is one single operation, one *UpdateOne*, that modified and matched *100 different documents*. If we jump back to *local*, and if we look for more operations, I can see that there is an *update operation, or several update operations -- op equals u means an update* -- for all the affected documents in this collection.
+But now let's do a simple *updateMany* operation. Let's say that I want to make sure these *messages here have an author*. So I'm going to *set a new field called author with the value called, well, my own name -- Mukhtar*. Once I do this -- and keep in mind that this is one single operation, one *UpdateOne*, that modified and matched a *100 different documents*. If we jump back to *local*, and if we look for more operations, I can see that there is an *update operation, or several update operations -- op equals u means an update* -- for all the affected documents in this collection.
 
-So one single instruction-- an updateMany-- into our primary, produced 100 different operations into our oplog.
+```javascript
+m103-example:PRIMARY> use m103
+switched to db m103
+m103-example:PRIMARY> db.messages.updateMany( {}, { $set: { author: 'mukhtar' } } )
+{ "acknowledged" : true, "matchedCount" : 100, "modifiedCount" : 100 }
+m103-example:PRIMARY> use local
+switched to db local
+m103-example:PRIMARY> db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: -1})
+{ "ts" : Timestamp(1630652137, 100), "t" : NumberLong(6), "h" : NumberLong("-8534103641536125094"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 99 }, "wall" : ISODate("2021-09-03T06:55:37.039Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 99), "t" : NumberLong(6), "h" : NumberLong("288900995957784935"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 98 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 98), "t" : NumberLong(6), "h" : NumberLong("3624722856287622280"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 97 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 97), "t" : NumberLong(6), "h" : NumberLong("3913651132485641192"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 96 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 96), "t" : NumberLong(6), "h" : NumberLong("1225747564355888828"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 95 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 95), "t" : NumberLong(6), "h" : NumberLong("1787482418599511463"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 94 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 94), "t" : NumberLong(6), "h" : NumberLong("6775874645454816157"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 93 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 93), "t" : NumberLong(6), "h" : NumberLong("-6883882204935609754"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 92 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 92), "t" : NumberLong(6), "h" : NumberLong("470471816365817158"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 91 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 91), "t" : NumberLong(6), "h" : NumberLong("1121285584689862102"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 90 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 90), "t" : NumberLong(6), "h" : NumberLong("-3038099509928694460"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 89 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 89), "t" : NumberLong(6), "h" : NumberLong("-5177685639751637833"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 88 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 88), "t" : NumberLong(6), "h" : NumberLong("1973326019216495466"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 87 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 87), "t" : NumberLong(6), "h" : NumberLong("-4672804929243938547"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 86 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 86), "t" : NumberLong(6), "h" : NumberLong("393821079842678359"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 85 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 85), "t" : NumberLong(6), "h" : NumberLong("-8307356263748828023"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 84 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 84), "t" : NumberLong(6), "h" : NumberLong("4054984903873593972"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 83 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 83), "t" : NumberLong(6), "h" : NumberLong("8411188256638889527"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 82 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 82), "t" : NumberLong(6), "h" : NumberLong("3411208979155169700"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 81 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+{ "ts" : Timestamp(1630652137, 81), "t" : NumberLong(6), "h" : NumberLong("-3072546549805371544"), "v" : 2, "op" : "u", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "o2" : { "_id" : 80 }, "wall" : ISODate("2021-09-03T06:55:37.022Z"), "o" : { "$v" : 1, "$set" : { "author" : "mukhtar" } } }
+Type "it" for more
+```
+
+So one single instruction -- an updateMany -- into our primary, produced 100 different operations into our oplog.
 
 Now this is the magic of idempotence.
 
