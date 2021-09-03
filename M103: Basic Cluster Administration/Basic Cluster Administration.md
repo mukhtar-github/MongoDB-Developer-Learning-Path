@@ -3305,7 +3305,7 @@ Now, not all *nodes* need to be the same. For example, sync sources might have d
 
 To sum up, the *replication window* measured in hours will be proportional to the *load of your system*. You should keep an eye on that. The other good thing is that our *oplog.rs size* can be changed. And we have a fair amount of good documentation telling you how to do that as a administration task. Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
 
-Let me show you how this works. I'm going to use this database here -- *M03*. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
+Let me show you how this works. I'm going to use this database here -- *M03*. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations (Query the oplog, filtering out the heartbeats ("periodic noop") and only returning the latest entry) maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
 
 ```javascript
 m103-example:PRIMARY> use m103
@@ -3351,21 +3351,36 @@ m103-example:PRIMARY> db.oplog.rs.find( { "o.msg": { $ne: "periodic noop" } } ).
 }
 ```
 
-Cool, this is really good.
+Cool, this is really good. Now let's jump back to our *M103 collection*. And let's insert a few documents just for fun. There you go. We inserted *100 documents with the message, 'not yet'*. If I go ahead and *count* them up, I can see *100 documents* there -- great. If I jump back to my *local database* and look for those *messages*, I can see that I can find those *insert -- the operation there is an insert*. And the *object being inserted is one of the 100 documents inserted* -- great.
 
-Now let's jump back to our M103 collection.
-
-And let's insert a few documents just for fun.
-
-There you go.
-
-We inserted 100 documents with the message, not yet.
-
-If I go ahead and count them up, I can see 100 documents there-- great.
-
-If I jump back to my local database and look for those messages, I can see that I can find those insert-- the operation there is an insert.
-
-And the object being inserted is one of the 100 documents inserted-- great.
+```javascript
+m103-example:PRIMARY> for ( i=0; i< 100; i++) { db.messages.insert( { 'msg': 'not yet', _id: i } ) }
+WriteResult({ "nInserted" : 1 })
+m103-example:PRIMARY> db.messages.count()
+100
+m103-example:PRIMARY> db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: -1})
+{ "ts" : Timestamp(1630651165, 22), "t" : NumberLong(6), "h" : NumberLong("6508079293193041593"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.205Z"), "o" : { "_id" : 99, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 21), "t" : NumberLong(6), "h" : NumberLong("2973945474308489380"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.205Z"), "o" : { "_id" : 98, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 20), "t" : NumberLong(6), "h" : NumberLong("-8221932705297272416"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.205Z"), "o" : { "_id" : 97, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 19), "t" : NumberLong(6), "h" : NumberLong("-5595774155362448800"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.193Z"), "o" : { "_id" : 96, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 18), "t" : NumberLong(6), "h" : NumberLong("3783694305258530864"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.172Z"), "o" : { "_id" : 95, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 17), "t" : NumberLong(6), "h" : NumberLong("6022248371005021610"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.172Z"), "o" : { "_id" : 94, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 16), "t" : NumberLong(6), "h" : NumberLong("-1164814900668139500"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.172Z"), "o" : { "_id" : 93, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 15), "t" : NumberLong(6), "h" : NumberLong("7023464676330311418"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.148Z"), "o" : { "_id" : 92, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 14), "t" : NumberLong(6), "h" : NumberLong("-7402120424984514579"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.148Z"), "o" : { "_id" : 91, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 13), "t" : NumberLong(6), "h" : NumberLong("8476639276962447637"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.133Z"), "o" : { "_id" : 90, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 12), "t" : NumberLong(6), "h" : NumberLong("4631706011983230875"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.133Z"), "o" : { "_id" : 89, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 11), "t" : NumberLong(6), "h" : NumberLong("-4555050392990166032"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.133Z"), "o" : { "_id" : 88, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 10), "t" : NumberLong(6), "h" : NumberLong("8792356470516605225"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.133Z"), "o" : { "_id" : 87, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 9), "t" : NumberLong(6), "h" : NumberLong("4915953572770435485"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.117Z"), "o" : { "_id" : 86, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 8), "t" : NumberLong(6), "h" : NumberLong("5401690467671356700"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.077Z"), "o" : { "_id" : 85, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 7), "t" : NumberLong(6), "h" : NumberLong("919894708143489714"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.053Z"), "o" : { "_id" : 84, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 6), "t" : NumberLong(6), "h" : NumberLong("4845480713877310196"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.040Z"), "o" : { "_id" : 83, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 5), "t" : NumberLong(6), "h" : NumberLong("8404444682584706680"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.040Z"), "o" : { "_id" : 82, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 4), "t" : NumberLong(6), "h" : NumberLong("-3734036438003271301"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.029Z"), "o" : { "_id" : 81, "msg" : "not yet" } }
+{ "ts" : Timestamp(1630651165, 3), "t" : NumberLong(6), "h" : NumberLong("2475864841565525401"), "v" : 2, "op" : "i", "ns" : "m103.messages", "ui" : UUID("b4106b49-4833-487e-8514-bdf8e68abba3"), "wall" : ISODate("2021-09-03T06:39:25.029Z"), "o" : { "_id" : 80, "msg" : "not yet" } }
+Type "it" for more
+```
 
 But now let's do a simple updateMany operation.
 
