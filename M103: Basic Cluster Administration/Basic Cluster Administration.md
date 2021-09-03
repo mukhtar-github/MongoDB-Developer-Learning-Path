@@ -3305,7 +3305,7 @@ Now, not all *nodes* need to be the same. For example, sync sources might have d
 
 To sum up, the *replication window* measured in hours will be proportional to the *load of your system*. You should keep an eye on that. The other good thing is that our *oplog.rs size* can be changed. And we have a fair amount of good documentation telling you how to do that as a administration task. Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
 
-Let me show you how this works. I'm going to use this database here -- M03. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
+Let me show you how this works. I'm going to use this database here -- *M03*. I'm going to create a collection called *messages*. Once I create that, I can see that collection there created. Now if I jump into *my local database* and I look into our *oplog.rs*, excluding any periodic noop operations maintained by the server, I can find here the instruction that creates this collection in the *oplog*.
 
 ```javascript
 m103-example:PRIMARY> use m103
@@ -3324,6 +3324,31 @@ m103-example:PRIMARY> db.createCollection('messages')
 }
 m103-example:PRIMARY> show collections
 messages
+m103-example:PRIMARY> use local
+switched to db local
+m103-example:PRIMARY> db.oplog.rs.find( { "o.msg": { $ne: "periodic noop" } } ).sort( { $natural: -1 } ).limit(1).pretty()
+{
+    "ts" : Timestamp(1630650310, 1),
+    "t" : NumberLong(6),
+    "h" : NumberLong("1325100494529941778"),
+    "v" : 2,
+    "op" : "u",
+    "ns" : "config.system.sessions",
+    "ui" : UUID("73255264-b3a5-4246-8dc1-aba181e3242d"),
+    "o2" : {
+      "_id" : {
+        "id" : UUID("913c7fad-fa3a-44a0-846b-47d60ff86d4d"),
+        "uid" : BinData(0,"om3K6e0e4eyhVYdfFiMHY8N8YziMIKZJnpi+fSEg//Q=")
+      }
+    },
+    "wall" : ISODate("2021-09-03T06:25:10.167Z"),
+    "o" : {
+      "$v" : 1,
+      "$set" : {
+        "lastUse" : ISODate("2021-09-03T06:25:10.170Z")
+      }
+    }
+}
 ```
 
 Cool, this is really good.
