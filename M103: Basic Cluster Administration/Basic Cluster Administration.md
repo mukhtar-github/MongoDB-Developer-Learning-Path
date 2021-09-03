@@ -3415,47 +3415,13 @@ m103-example:PRIMARY> db.oplog.rs.find({"ns": "m103.messages"}).sort({$natural: 
 Type "it" for more
 ```
 
-So one single instruction -- an updateMany -- into our primary, produced 100 different operations into our oplog.
+So one single instruction -- *an updateMany* -- into our primary, produced *100 different operations into our oplog*. Now this is the magic of *idempotence*. Be aware of this. Sometimes is easy to dismiss the fact that *idempotency* might generate a lot more operations in our *oplog* than the number of commands actually issued from the client. One last point that I want to bring to your attention is that, please don't change any of this information present on any of this collection.
 
-Now this is the magic of idempotence.
+Contrary to what MC Hammer used to say, you can, in fact, touch this, given the correct set of permissions. But please don't. This might affect tremendously badly the way that your *replica* works. So try not to mess around too much with this collection. That said, and to prove you that you can do some damage, let's try to write to this local database. I'm going to go ahead and in my *local collection, insert a message saying that you cannot touch this*.
 
-Be aware of this.
+And if we look for it in our *oplog.rs*, we will not find it. You should keep in mind that this data that I've just written into this particular database -- there it is, my local collection -- is written into the local database. That means it's local to this particular instance. Any data written in this collection will not be replicated.
 
-Sometimes is easy to dismiss the fact that idempotency might generate a lot more operations in our oplog than the number of commands actually issued from the client.
-
-One last point that I want to bring to your attention is that, please don't change any of this information present on any of this collection.
-
-Contrary to what MC Hammer used to say, you can, in fact, touch this, given the correct set of permissions.
-
-But please don't.
-
-This might affect tremendously badly the way that your replica works.
-
-So try not to mess around too much with this collection.
-
-That said, and to prove you that you can do some damage, let's try to write to this local database.
-
-I'm going to go ahead and in my local collection, insert a message saying that you cannot touch this.
-
-And if we look for it in our oplog.rs, we will not find it.
-
-You should keep in mind that this data that I've just written into this particular database-- there it is, my local collection-- is written into the local database.
-
-That means it's local to this particular instance.
-
-Any data written in this collection will not be replicated.
-
-Local database is like Vegas.
-
-What happens in local, stays in local.
-
-No other node in the set will ever see that data, except obviously for the oplog.rs, which they are reading and applying it on their own.
-
-Anything else that you might want to keep local, you can write here.
-
-But we do not recommend you to do any of that unless you really know what you're doing.
-
-Let's quickly sum up what we just learned.
+Local database is like Vegas. What happens in local, stays in local. No other node in the set will ever see that data, except obviously for the oplog.rs, which they are reading and applying it on their own. Anything else that you might want to keep local, you can write here. But we do not recommend you to do any of that unless you really know what you're doing. Let's quickly sum up what we just learned.
 
 Local database holds very important information and should not be messed up with.
 
