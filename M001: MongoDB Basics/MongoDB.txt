@@ -53,6 +53,7 @@ sudo systemctl stop mongod.service
 sudo systemctl start mongod.service
 sudo systemctl enable mongod.service
 sudo systemctl status mongod.service
+sudo apt update
 
 
 storage:
@@ -71,3 +72,9 @@ processManagement:
   fork: true
 replication:
   replSetName: m103-example
+
+
+mongod -f node1.conf
+sudo mongod -f node2.conf
+sudo mongod -f node3.conf
+mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
