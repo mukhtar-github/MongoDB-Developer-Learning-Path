@@ -3297,19 +3297,11 @@ After initiating our *node* and adding the *node* to the *replica set*, the *opl
 
 Once that happens, the first operations in our *oplog* start to be overwritten with newer operations. The time it takes to fill in fully our *oplog* and start rewriting the early statements determines the *replication window*. The *replication window* is important aspect to monitor because we'll impact how much time the *replica set* can afford a *node* to be down without requiring any human intervention to auto recover.
 
-Every *node* in our *replica set* has its own *oplog*. As writes and operations gets to the *primary node*, these are captured in the *oplog*. And then the *secondary nodes replicate that data and apply it on their own oplog*. Now if for some reason one of the *nodes* gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the *replica set* keeps on accumulating new writes -- for the server to be able to catch up with the remaining *nodes*, you will need to figure out what's a common point where everyone can see what happened in the past.
+Every *node* in our *replica set* has its own *oplog*. As *writes and operations* gets to the *primary node*, these are captured in the *oplog*. And then the *secondary nodes replicate that data and apply it on their own oplog*. Now if for some reason one of the *nodes* gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the *replica set* keeps on accumulating new writes -- for the server to be able to catch up with the *remaining nodes*, it will need to figure out what's a common point where everyone can see what happened in the past.
 
-Basically what will happen is that a recovering node will check for its last oplog entry and try to find it in one of the available nodes. Once he finds it, he will just simply re-apply all operations since that point and catch up with the remaining nodes of the sets.
+Basically what will happen is that a *recovering node* will check for its *last oplog entry* and try to find it in one of the *available nodes*. Once it finds it, it will just simply re-apply all operations since that point and catch up with the remaining *nodes of the sets*. However, if it is not able to find the same common operation in the remaining nodes' oplog because of the oplog already rotated and no sync source point as the last operation, the node will not be able to automatically recover and sync with the rest of the set, being placed in recovery mode.
 
-However, if it is not able to find the same common operation in the remaining nodes' oplog because of the oplog already rotated and no sync source point as the last operation, the node will not be able to automatically recover and sync with the rest of the set, being placed in recovery mode.
-
-Now, not all nodes need to be the same.
-
-For example, sync sources might have different oplog sizes.
-
-However, if our oplog size is larger and able to accommodate more changes in the system, we can afford our nodes to be down for longer and still be able to reconnect once they're being brought back up again.
-
-Therefore, the size of our oplog.rs collection is an important aspect to keep in mind.
+Now, not all *nodes* need to be the same. For example, sync sources might have different *oplog sizes*. However, if our *oplog size* is larger and able to accommodate more changes in the system, we can afford our *nodes* to be down for longer and still be able to reconnect once they're being brought back up again. Therefore, the size of our *oplog.rs collection is an important aspect to keep in mind*.
 
 To sum up, the replication window measured in hours will be proportional to the load of your system.
 
