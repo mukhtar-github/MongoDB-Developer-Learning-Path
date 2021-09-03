@@ -3276,7 +3276,7 @@ vagrant                        23G   14G  9.3G  60% /vagrant
 tmpfs                          99M     0   99M   0% /run/user/1000
 ```
 
-*The size of our oplog will determine our replication window* -- the amount of time that it will take to fill in your *oplog*. Now, we can also see some of that information from the *printReplicationInfo()*, where here, giving the current status of my oplog. We are configured for those 1,819 megabytes. The log length starts to end is around 362 seconds, 0.1 hours -- a very short one.
+*The size of our oplog will determine our replication window* -- the amount of time that it will take to fill in your *oplog*. Now, we can also see some of that information from the *printReplicationInfo()*, where here, giving the current status of *my oplog*. We are configured for those 2845 megabytes. The log length starts to end is around 484986secs (134.72hrs).
 
 ```javascript
 m103-example:PRIMARY> rs.printReplicationInfo()
@@ -3287,6 +3287,6 @@ oplog last event time:   Fri Sep 03 2021 03:50:50 GMT+0000 (UTC)
 now:                     Fri Sep 03 2021 03:50:56 GMT+0000 (UTC)
 ```
 
-And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular replica set. So the calculated time to fill in the oplog is relatively low. But wait just a second. I thought that the oplog size was measured in size, therefore it's megabytes, but we are talking about hours?
+And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular *replica set*. So the calculated time to fill in the *oplog* is relatively low. But wait just a second. I thought that the *oplog size* was measured in size, therefore it's megabytes, but we are talking about hours?
 
-Fear not, young Padawan. What is happening here is that MongoDB will let you know how much time it will take-- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about 0.1 hours to fill the oplog, which is not really predictable at this point. We need more data to actually calculate correctly how much time does it take to fill up our oplog.
+Fear not, young Padawan. What is happening here is that *MongoDB* will let you know how much time it will take -- given the current workload, how much time will it take to start overwriting entries in your oplog. In this case, I have not been doing much, therefore my workload is quite low. So it will only take about *0.1 hours to fill the oplog*, which is not really predictable at this point. We need more data to actually calculate correctly how much time does it take to fill up our *oplog*.
