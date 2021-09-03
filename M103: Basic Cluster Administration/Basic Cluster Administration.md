@@ -3419,18 +3419,10 @@ So one single instruction -- *an updateMany* -- into our primary, produced *100 
 
 Contrary to what MC Hammer used to say, you can, in fact, touch this, given the correct set of permissions. But please don't. This might affect tremendously badly the way that your *replica* works. So try not to mess around too much with this collection. That said, and to prove you that you can do some damage, let's try to write to this local database. I'm going to go ahead and in my *local collection, insert a message saying that you cannot touch this*.
 
-And if we look for it in our *oplog.rs*, we will not find it. You should keep in mind that this data that I've just written into this particular database -- there it is, my local collection -- is written into the local database. That means it's local to this particular instance. Any data written in this collection will not be replicated.
+And if we look for it in our *oplog.rs*, we will not find it. You should keep in mind that this data that I've just written into this particular database -- there it is, *my local collection* -- is written into the local database. That means it's local to this particular instance. Any data written in this *collection will not be replicated*.
 
-Local database is like Vegas. What happens in local, stays in local. No other node in the set will ever see that data, except obviously for the oplog.rs, which they are reading and applying it on their own. Anything else that you might want to keep local, you can write here. But we do not recommend you to do any of that unless you really know what you're doing. Let's quickly sum up what we just learned.
+*Local database* is like Vegas. What happens in local, stays in local. No other *node* in the set will ever see that data, except obviously for the *oplog.rs*, which they are reading and applying it on their own. Anything else that you might want to keep local, you can write here. But we do not recommend you to do any of that unless you really know what you're doing. Let's quickly sum up what we just learned.
 
-Local database holds very important information and should not be messed up with.
+*Local database* holds very important information and should not be messed up with. Changing the data in your *oplog or any of the configuration collections* will impact the settings in the *replication mechanism*. The *oplog.rs* is central to our *replication mechanism*. Everything that needs to be *replicated will be stored and logged in the oplog in an idempotent way*.
 
-Changing the data in your oplog or any of the configuration collections will impact the settings in the replication mechanism.
-
-The oplog.rs is central to our replication mechanism.
-
-Everything that needs to be replicated will be stored and logged in the oplog in an idempotent way.
-
-The size of our oplog will impact the replication window and should be closely monitored.
-
-Any data written to local database that is not written to oplog.rs or changing any of the system configuration collections will stay there and will not be replicated.
+The size of our *oplog will impact the replication window* and should be closely monitored. Any data written to *local database* that is not written to *oplog.rs or changing any of the system configuration collections will stay there and will not be replicated*.
