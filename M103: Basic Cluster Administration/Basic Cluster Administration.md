@@ -3303,15 +3303,7 @@ Basically what will happen is that a *recovering node* will check for its *last 
 
 Now, not all *nodes* need to be the same. For example, sync sources might have different *oplog sizes*. However, if our *oplog size* is larger and able to accommodate more changes in the system, we can afford our *nodes* to be down for longer and still be able to reconnect once they're being brought back up again. Therefore, the size of our *oplog.rs collection is an important aspect to keep in mind*.
 
-To sum up, the replication window measured in hours will be proportional to the load of your system.
-
-You should keep an eye on that.
-
-The other good thing is that our oplog.rs size can be changed.
-
-And we have a fair amount of good documentation telling you how to do that as a administration task.
-
-Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
+To sum up, the *replication window* measured in hours will be proportional to the *load of your system*. You should keep an eye on that. The other good thing is that our *oplog.rs size* can be changed. And we have a fair amount of good documentation telling you how to do that as a administration task. Another aspect to know about this collection is that given the idempotent nature of the instructions, one single update may result in several different operations in this collection.
 
 Let me show you how this works.
 
