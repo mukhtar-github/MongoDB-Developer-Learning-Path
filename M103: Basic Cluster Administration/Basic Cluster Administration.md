@@ -3293,11 +3293,11 @@ Fear not, young Padawan. What is happening here is that *MongoDB* will let you k
 
 ### Local DB: Part 2
 
-After initiating our node and adding the node to the replica set, the oplog.rs collection is created. By default, as I mentioned before, we take 5% of the available disk. But this value can also be set by configuring it through the oplog size in megabytes under the replication section of our configuration file.
+After initiating our *node* and adding the *node* to the *replica set*, the *oplog.rs collection* is created. By default, as I mentioned before, we take 5% of the available disk. But this value can also be set by configuring it through the *oplog size* in megabytes under the *replication section of our configuration file*. As operations get logged into the *oplog*, like *inserts or deletes or create collection* kind of operations, the *oplog.rs collection* starts to accumulate the operations and statements, until it reaches the *oplog size limit*.
 
-As operations get logged into the oplog, like inserts or deletes or create collection kind of operations, the oplog.rs collection starts to accumulate the operations and statements, until it reaches the oplog size limit. Once that happens, the first operations in our oplog start to be overwritten with newer operations. The time it takes to fill in fully our oplog and start rewriting the early statements determines the replication window.
+Once that happens, the first operations in our *oplog* start to be overwritten with newer operations. The time it takes to fill in fully our *oplog* and start rewriting the early statements determines the *replication window*. The *replication window* is important aspect to monitor because we'll impact how much time the *replica set* can afford a *node* to be down without requiring any human intervention to auto recover.
 
-The replication window is important aspect to monitor because we'll impact how much time the replica set can afford a node to be down without requiring any human intervention to auto recover. Every node in our replica set has its own oplog. As writes and operations gets to the primary node, these are captured in the oplog. And then the secondary nodes replicate that data and apply it on their own oplog.
+Every node in our replica set has its own oplog. As writes and operations gets to the primary node, these are captured in the oplog. And then the secondary nodes replicate that data and apply it on their own oplog.
 
 Now if for some reason one of the nodes gets disconnected, either because they're going some maintenance, or there's some sort of network issues, or any server downtime of any kind, and the server keeps on working, the replica set keeps on accumulating new writes-- for the server to be able to catch up with the remaining nodes, you will need to figure out what's a common point where everyone can see what happened in the past.
 
