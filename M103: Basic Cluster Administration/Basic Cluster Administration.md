@@ -3259,7 +3259,7 @@ m103-example:PRIMARY> stats.maxSize
 2844
 ```
 
-You can see the *size of this collection*. We can also see the *max size of the particular collection*. Now if you want to see the *stats into a megabyte unit*, you can see that this collection in here holds up to almost 3 gigabytes of data -- 2.8 gigabytes. By default, the *oplog.rs collection* will take *5% of your free disk*. In my case, I have nearly *56 gigabytes* of available data.
+You can see the *size of this collection*. We can also see the *max size of the particular collection*. Now if you want to see the *stats into a megabyte unit*, you can see that this collection in here holds up to almost 3 gigabytes of data -- 2.8 gigabytes. By default, the *oplog.rs collection* will take *5% of your free disk*. In my case, I have nearly *56 gigabytes* of available data. So 2.8 gigabytes gives me those 5%.
 
 ```javascript
 m103-example:PRIMARY> exit
@@ -3276,7 +3276,16 @@ vagrant                        23G   14G  9.3G  60% /vagrant
 tmpfs                          99M     0   99M   0% /run/user/1000
 ```
 
-So 1.8 gigabytes gives me those 5%. The size of our oplog will determine our replication window-- the amount of time that it will take to fill in your oplog. Now, we can also see some of that information from the printReplicationInfo, where here, giving the current status of my oplog. We are configured for those 1,819 megabytes. The log length starts to end is around 362 seconds, 0.1 hours-- a very short one.
+*The size of our oplog will determine our replication window* -- the amount of time that it will take to fill in your *oplog*. Now, we can also see some of that information from the *printReplicationInfo()*, where here, giving the current status of my oplog. We are configured for those 1,819 megabytes. The log length starts to end is around 362 seconds, 0.1 hours -- a very short one.
+
+```javascript
+m103-example:PRIMARY> rs.printReplicationInfo()
+configured oplog size:   2845.00048828125MB
+log length start to end: 484986secs (134.72hrs)
+oplog first event time:  Sat Aug 28 2021 13:07:44 GMT+0000 (UTC)
+oplog last event time:   Fri Sep 03 2021 03:50:50 GMT+0000 (UTC)
+now:                     Fri Sep 03 2021 03:50:56 GMT+0000 (UTC)
+```
 
 And it's calculated based on the oplog first event time and the oplog last event time. Now as you can see, I haven't done much so far. And from now, where we stand right now at this moment in time, I see that I have not done much in this particular replica set. So the calculated time to fill in the oplog is relatively low. But wait just a second. I thought that the oplog size was measured in size, therefore it's megabytes, but we are talking about hours?
 
