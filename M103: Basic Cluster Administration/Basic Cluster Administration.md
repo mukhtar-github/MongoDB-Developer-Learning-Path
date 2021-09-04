@@ -4068,4 +4068,126 @@ m103-repl:PRIMARY> cfg = rs.conf()
                 "replicaSetId" : ObjectId("61331adba9fd2cfa38e61c65")
         }
 }
+
+m103-repl:PRIMARY> cfg.members[3].votes = 0
+0
+m103-repl:PRIMARY> cfg.members[3].hidden = true
+true
+m103-repl:PRIMARY> cfg.members[3].priority = 0
+0
+m103-repl:PRIMARY> rs.reconfig(cfg)
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1630740675, 1),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1630740675, 1),
+                "signature" : {
+                        "hash" : BinData(0,"Gbm/zIGoE+GMmCzlavi/YSnxU9k="),
+                        "keyId" : NumberLong("7003971381981347841")
+                }
+        }
+}
+m103-repl:PRIMARY> 2021-09-04T07:31:16.451+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] changing hosts to m103-repl/localhost:27001,localhost:27002,localhost:27003 from m103-repl/localhost:27001,localhost:27002,localhost:27003,localhost:27004
 ```
+
+### Reads and Writes on a Replica Set
+
+So in this lesson we're going to take a look at *reads and writes in a replica set* just to get a sense of how the *MongoDB replication mechanism works*. So I'm just going to use this command to connect to our *three node replica set called m103-example*. And to figure out which *node in this set is currently the primary*, I'm going to run this command *rs.isMaster()*.
+
+And this output actually gives us a lot of information.
+
+It gives us the current primary, which is the node running on port 27011.
+
+And it also gives us the node that we're currently connected to, me.
+
+In this case, it's the same as the primary, because we're connected to the replica set through the shell.
+
+It also gives us the other nodes in this replica set.
+
+So I'm just going to create a new database here called newDB.
+
+And insert a new document into a new collection called new collection in newDB.
+
+And I'm just going to connect to a secondary to make sure they receive the write as well.
+
+We can scroll up to the rs.isMaster output to figure out which of these nodes is a secondary.
+
+And we know this is the primary, so we just have to connect to one of these two nodes.
+
+So this is the command we're going to use to connect directly to a secondary node in our replica set.
+
+Notice that we've changed the node port that we've selected in our host name.
+
+And we also haven't specified the name of the replica set.
+
+Because if we were to specify the name of the replica set, the shell would automatically direct us to the primary.
+
+And in this case, we actually want to connect directly to a secondary.
+
+And as we can see, the shell prompt is changed to reflect that we're now connected to a secondary node.
+
+So we can to start running shell commands on the secondary note, right?
+
+No, actually we can't.
+
+When we're connected to a secondary node, we can only run read commands after telling MongoDB that we're sure that's what we want to do.
+
+This is because MongoDB errs on the side of consistency.
+
+Given that we want to make sure you always have a consistent view of your data, you need to explicitly say otherwise if you want to read from the secondaries.
+
+So this is the command we're going to run in order to enable read operations on the secondary node.
+
+And now, our show DBs command should actually work.
+
+And it does.
+
+And we can see that the write command was replicated to the secondary node.
+
+So here I've tried to insert a document into a secondary node.
+
+And as expected, we can only enable reads on this secondary.
+
+We'll never be able to write to a secondary node.
+
+The purpose of this is to enforce strong consistency on our cluster.
+
+The Mongo shell lets us know that we can't write to the secondary.
+
+So far we've covered how reads and writes work in a replica set when it's healthy.
+
+In the interest of learning how replica sets handle crisis, we're going to break a few things.
+
+First, we're going to shut this node off.
+
+Now when we connect back to the replica set, we run rs.status() we can see that the node we shut down is no longer reachable from the primary.
+
+Now I'm just going to shut down this other node here.
+
+So now that we've shut off two of the nodes in our replica set, there's only one left.
+
+And one out of three does not form a majority.
+
+So we actually won't be able to connect to the primary, because the current primary, which was running on this node, has stepped down to become a secondary.
+
+So here I haven't specified the name of the replica set, because I want to connect directly to this node.
+
+And as we can see, that node has stepped down to be the secondary.
+
+We can verify that by running rs.isMaster().
+
+So as we can see, we're still connected the same node as before.
+
+But that node is now a secondary node.
+
+Even though the primary node never went down, we lost the last secondary that gave us a majority.
+
+If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
+
+And because they're secondaries, we can't write anything to the replica set, because there is no primary.
+
+This is just another safe mechanism used by the MongoDB replica set to ensure data consistency.
+
+So just to recap.
+
+In this lesson, we covered data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available-- which is to say, we can't.
