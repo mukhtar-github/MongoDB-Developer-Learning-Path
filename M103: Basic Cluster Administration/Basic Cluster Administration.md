@@ -3487,11 +3487,11 @@ m103-example:PRIMARY> rs.isMaster()
 So I'm not going to go over them here, but you can find them attached to the lecture as handouts. So once we've started our *node4*, we can start our *arbiter*. And we now have the two *nodes* we need. And we just have to *add them to the set*. So here we're just adding the *fourth node to our set*. So here when we add our *arbiter, we use a special command called addArb*.
 
 ```javascript
-// Copy file in vim editor
+// Copying file in vim editor
 cp node3.conf node4.conf
-// Open and edit file in vim editor
+// Open and edit file in the vim editor
 vim node4.conf
-// Make directory parent folder
+// Make directory in the dbpath parent folder
 sudo mkdir -p /var/mongodb/db/node4
 // Start new node
 sudo mongod -f node4.conf
@@ -3523,7 +3523,11 @@ m103-example:PRIMARY> rs.addArb("localhost:28000")
       }
     }
 }
+```
 
+And it looks like this completed. And I'm just going to check *rs.isMaster* to make sure of that. And we can see that our *replica set now has four nodes in it and one arbiter*. So now our *replica set is running with one primary, three secondaries, and an arbiter node*. But our head of engineering just told us we have to kill the *arbiter node* because we don't have the budget for it.
+
+```javascript
 // Checking replica set makeup after adding two new nodes:
 m103-example:PRIMARY> rs.isMaster()
 {
@@ -3573,10 +3577,7 @@ m103-example:PRIMARY> rs.isMaster()
       }
     }
 }
-
 ```
-
-And it looks like this completed. And I'm just going to check rs.isMaster to make sure of that. And we can see that our replica set now has four nodes in it and one arbiter. So now our replica set is running with one primary, three secondaries, and an arbiter node. But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
 
 So here to the remove command, we just pass the port where our arbiter was running. And we've successfully removed it. However, right now our replica is set only has four members. We can verify that from rs.isMaster. Our list of hosts only has four nodes in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
 
