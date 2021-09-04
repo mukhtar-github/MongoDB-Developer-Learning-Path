@@ -3870,3 +3870,124 @@ Remember to authenticate as *m103-admin with password m103-pass*.
 3 Reconfigure the replica set using your new configuration document.
 
 4 Once you've run the proper commands, click "Run Tests" to run a suite of tests that will check the configuration of *m103-repl*. The results of these tests will let you know which steps you've yet to complete.
+
+#### Answer 2
+
+```javascript
+user@M103# mongo --host "m103-repl/localhost:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v4.0.5
+connecting to: mongodb://localhost:27001/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-repl
+2021-09-04T07:10:45.379+0000 I NETWORK  [js] Starting new replica set monitor for m103-repl/localhost:27001
+2021-09-04T07:10:45.402+0000 I NETWORK  [js] Successfully connected to localhost:27001 (1 connections now open to localhost:27001 with a 5 second timeout)
+2021-09-04T07:10:45.402+0000 I NETWORK  [js] changing hosts to m103-repl/localhost:27001,localhost:27002,localhost:27003,localhost:27004 from m103-repl/localhost:27001
+2021-09-04T07:10:45.403+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27002 (1 connections now open to localhost:27002 with a 5 second timeout)
+2021-09-04T07:10:45.423+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27004 (1 connections now open to localhost:27004 with a 5 second timeout)
+Implicit session: session { "id" : UUID("97b16081-b5cc-408b-a00a-6f724124babc") }
+MongoDB server version: 4.0.5
+2021-09-04T07:10:45.435+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor] Successfully connected to localhost:27003 (1 connections now open to localhost:27003 with a 5 second timeout)
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] 
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] ** WARNING: This server is bound to localhost.
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] **          Remote systems will be unable to connect to this server. 
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] **          Start the server with --bind_ip <address> to specify which IP 
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] **          addresses it should serve responses from, or with --bind_ip_all to
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] **          bind to all interfaces. If this behavior is desired, start the
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] **          server with --bind_ip 127.0.0.1 to disable this warning.
+2021-09-04T07:06:03.610+0000 I CONTROL  [initandlisten] 
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+m103-repl:PRIMARY> rs.conf()
+{
+        "_id" : "m103-repl",
+        "version" : 4,
+        "protocolVersion" : NumberLong(1),
+        "writeConcernMajorityJournalDefault" : true,
+        "members" : [
+                {
+                        "_id" : 0,
+                        "host" : "localhost:27001",
+                        "arbiterOnly" : false,
+                        "buildIndexes" : true,
+                        "hidden" : false,
+                        "priority" : 1,
+                        "tags" : {
+
+                        },
+                        "slaveDelay" : NumberLong(0),
+                        "votes" : 1
+                },
+                {
+                        "_id" : 1,
+                        "host" : "localhost:27002",
+                        "arbiterOnly" : false,
+                        "buildIndexes" : true,
+                        "hidden" : false,
+                        "priority" : 1,
+                        "tags" : {
+
+                        },
+                        "slaveDelay" : NumberLong(0),
+                        "votes" : 1
+                },
+                {
+                        "_id" : 2,
+                        "host" : "localhost:27003",
+                        "arbiterOnly" : false,
+                        "buildIndexes" : true,
+                        "hidden" : false,
+                        "priority" : 1,
+                        "tags" : {
+
+                        },
+                        "slaveDelay" : NumberLong(0),
+                        "votes" : 1
+                },
+                {
+                        "_id" : 3,
+                        "host" : "localhost:27004",
+                        "arbiterOnly" : false,
+                        "buildIndexes" : true,
+                        "hidden" : false,
+                        "priority" : 1,
+                        "tags" : {
+
+                        },
+                        "slaveDelay" : NumberLong(0),
+                        "votes" : 1
+                }
+        ],
+        "settings" : {
+                "chainingAllowed" : true,
+                "heartbeatIntervalMillis" : 2000,
+                "heartbeatTimeoutSecs" : 10,
+                "electionTimeoutMillis" : 10000,
+                "catchUpTimeoutMillis" : -1,
+                "catchUpTakeoverDelayMillis" : 30000,
+                "getLastErrorModes" : {
+
+                },
+                "getLastErrorDefaults" : {
+                        "w" : 1,
+                        "wtimeout" : 0
+                },
+                "replicaSetId" : ObjectId("61331adba9fd2cfa38e61c65")
+        }
+}
+```
