@@ -4243,7 +4243,7 @@ WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
 So far we've covered how *reads and writes work in a replica set* when it's healthy. In the interest of learning how *replica sets handle crisis*, we're going to break a few things. First, we're going to *shut this node off*. Now when we connect back to the *replica set, we run rs.status()* we can see that the *node we shut down is no longer reachable from the primary - "stateStr" : "(not reachable/healthy)"*.
 
 ```javascript
-// Shutting down the server (on both secondary nodes)
+// Shutting down the server (on first secondary node)
 m103-example:SECONDARY> use admin
 switched to db admin
 m103-example:PRIMARY> db.shutdownServer()
@@ -4420,7 +4420,25 @@ m103-example:PRIMARY> rs.status()
 
 ```
 
-Now I'm just going to *shut down this other node here*. So now that we've shut off two of the nodes in our replica set, there's only one left. And one out of three does not form a majority. So we actually won't be able to connect to the primary, because the current primary, which was running on this node, has stepped down to become a secondary. So here I haven't specified the name of the replica set, because I want to connect directly to this node. And as we can see, that node has stepped down to be the secondary.
+Now I'm just going to *shut down node three*. So now that we've *shut off two of the nodes in our replica set, there's only one left. And one out of three does not form a majority*. So we actually won't be able to *connect to the primary, because the current primary, which was running on this node, has stepped down to become a secondary*. So here I haven't specified the name of the *replica set, because I want to connect directly to this node. And as we can see, that node has stepped down to be the secondary*.
+
+```javascript
+// Shutting down the server (on second secondary node)
+m103-example:PRIMARY> exit
+bye
+vagrant@vagrant:~$ mongo --host "localhost:27013" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27013/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("ca14a0ec-9deb-407f-ba37-01a37e4e048a") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-03T06:05:53.056+0000 I STORAGE  [initandlisten] 
+2021-09-03T06:05:53.056+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-03T06:05:53.056+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-03T06:05:55.741+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-03T06:05:55.741+0000 I CONTROL  [initandlisten] 
+m103-example:SECONDARY> 
+```
 
 We can verify that by running *rs.isMaster()*. So as we can see, we're still connected the same node as before. But that node is now a secondary node. Even though the primary node never went down, we lost the last secondary that gave us a majority. If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
 
