@@ -4240,13 +4240,7 @@ m103-example:SECONDARY> db.new_collection.insert( { "student": "Norberto Leite",
 WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
 ```
 
-So far we've covered how reads and writes work in a replica set when it's healthy.
-
-In the interest of learning how replica sets handle crisis, we're going to break a few things.
-
-First, we're going to shut this node off.
-
-Now when we connect back to the replica set, we run rs.status() we can see that the node we shut down is no longer reachable from the primary.
+So far we've covered how *reads and writes work in a replica set* when it's healthy. In the interest of learning how *replica sets handle crisis*, we're going to break a few things. First, we're going to *shut this node off*. Now when we connect back to the *replica set, we run rs.status()* we can see that the *node we shut down is no longer reachable from the primary*.
 
 Now I'm just going to shut down this other node here.
 
