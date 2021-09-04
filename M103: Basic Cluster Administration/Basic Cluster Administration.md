@@ -4235,7 +4235,7 @@ switched to db newDB
 m103-example:SECONDARY> db.new_collection.find()
 { "_id" : ObjectId("613328cd221f266dbf769257"), "student" : "Matt Javaly", "grade" : "A+" }
 
-// Attempting to write data directly to a secondary node (this should fail, because we cannot write data directly to a secondary):
+// Attempting to write data directly to a secondary node (this should fail, because we cannot write data directly to a secondary node):
 m103-example:SECONDARY> db.new_collection.insert( { "student": "Norberto Leite", "grade": "B+" } )
 WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
 ```
