@@ -4228,6 +4228,18 @@ newDB   0.000GB
 
 And we can see that the *write command was replicated to the secondary node*. So here I've tried to *insert a document into a secondary node*. And as expected, we can only enable *reads on this secondary*. We'll never be able to *write to a secondary node*. The purpose of this is to enforce *strong consistency on our cluster*. The *Mongo shell* lets us know that we can't *write to the secondary*.
 
+```javascript
+// Reading from a secondary node:
+m103-example:SECONDARY> use newDB
+switched to db newDB
+m103-example:SECONDARY> db.new_collection.find()
+{ "_id" : ObjectId("613328cd221f266dbf769257"), "student" : "Matt Javaly", "grade" : "A+" }
+
+// Attempting to write data directly to a secondary node (this should fail, because we cannot write data directly to a secondary):
+m103-example:SECONDARY> db.new_collection.insert( { "student": "Norberto Leite", "grade": "B+" } )
+WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
+```
+
 So far we've covered how reads and writes work in a replica set when it's healthy.
 
 In the interest of learning how replica sets handle crisis, we're going to break a few things.
