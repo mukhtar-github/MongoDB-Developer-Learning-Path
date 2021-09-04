@@ -4469,7 +4469,7 @@ Server has startup warnings:
 m103-example:SECONDARY>
 ```
 
-We can verify that by running *rs.isMaster()*. So as we can see, we're still connected the same node as before. But that node is now a secondary node. Even though the primary node never went down, we lost the last secondary that gave us a majority. If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
+We can verify that by running *rs.isMaster()*. So as we can see, we're still *connected the same node as before*. But that *node is now a secondary node*. Even though the *primary node never went down, we lost the last secondary that gave us a majority*. If the *replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries*.
 
 ```javascript
 m103-example:SECONDARY> rs.isMaster()
