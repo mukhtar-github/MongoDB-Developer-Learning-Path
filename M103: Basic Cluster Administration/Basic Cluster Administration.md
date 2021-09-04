@@ -3484,7 +3484,34 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So I'm not going to go over them here, but you can find them attached to the lecture as handouts. So once we've started our node4, we can start our arbiter. And we now have the two nodes we need. And we just have to add them to the set. So here we're just adding the fourth node to our set. So here when we add our arbiter, we use a special command called addArb.
+So I'm not going to go over them here, but you can find them attached to the lecture as handouts. So once we've started our *node4*, we can start our *arbiter*. And we now have the two *nodes* we need. And we just have to *add them to the set*. So here we're just adding the *fourth node to our set*. So here when we add our *arbiter, we use a special command called addArb*.
+
+```javascript
+// Copy file in vim editor
+cp node3.conf node4.conf
+// Open and edit file in vim editor
+vim node4.conf
+// Make directory parent folder
+sudo mkdir -p /var/mongodb/db/node4
+// Start new node
+sudo mongod -f node4.conf
+// Add new node to repSet
+m103-example:PRIMARY> rs.add("localhost:27014")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630726564, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630726564, 1),
+      "signature" : {
+        "hash" : BinData(0,"ZLS/KeqE+Zn8Bm+L9QTJd3nPpBg="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+m103-example:PRIMARY> 2021-09-04T03:36:26.215+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013,localhost:27014 from m103-example/localhost:27011,localhost:27012,localhost:27013
+2021-09-04T03:36:26.221+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27014 (1 connections now open to localhost:27014 with a 5 second timeout)
+
+```
 
 And it looks like this completed. And I'm just going to check rs.isMaster to make sure of that. And we can see that our replica set now has four nodes in it and one arbiter. So now our replica set is running with one primary, three secondaries, and an arbiter node. But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
 

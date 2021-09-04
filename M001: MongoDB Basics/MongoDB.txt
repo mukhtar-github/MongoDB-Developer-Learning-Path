@@ -73,14 +73,19 @@ processManagement:
 replication:
   replSetName: m103-example
 
-
 mongod -f node1.conf
 sudo mongod -f node2.conf
 sudo mongod -f node3.conf
 mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 
+* Adding new nodes to  my repSet
+cp node3.conf node4.conf
+sudo mkdir -p /var/mongodb/db/node2
+sudo mongod -f node4.conf
+rs.add("localhost:27012")
+sudo mongod -f arbiter.conf
+rs.addArb("localhost:28000")
+
 To paste you in Vim Editor, can use "+p or "*p 
 To create a new file vim (filename)
 :wq or :x or ZZ - write (save) and quit
-cp node3.conf node4.conf
-sudo mkdir -p /var/mongodb/db/node2
