@@ -4184,15 +4184,47 @@ Server has startup warnings:
 2021-09-03T06:05:34.368+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
 2021-09-03T06:05:34.368+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
 2021-09-03T06:05:37.325+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
-2021-09-03T06:05:37.325+0000 I CONTROL  [initandlisten] 
-m103-example:SECONDARY>
+2021-09-03T06:05:37.325+0000 I CONTROL  [initandlisten]
+
+// Attempting to execute a read command on a secondary node (this should fail):
+m103-example:SECONDARY> show dbs
+2021-09-04T08:27:18.028+0000 E QUERY    [thread1] Error: listDatabases failed:{
+    "operationTime" : Timestamp(1630744033, 1),
+    "ok" : 0,
+    "errmsg" : "not master and slaveOk=false",
+    "code" : 13435,
+    "codeName" : "NotMasterNoSlaveOk",
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630744033, 1),
+      "signature" : {
+        "hash" : BinData(0,"P96rX6zMAZMniJJ0MbKGx15+99g="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+} :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+Mongo.prototype.getDBs@src/mongo/shell/mongo.js:79:1
+shellHelper.show@src/mongo/shell/utils.js:860:19
+shellHelper@src/mongo/shell/utils.js:750:15
+@(shellhelp2):1:1
 ```
 
 And as we can see, the shell prompt is changed to reflect that we're now connected to *a secondary node*. So we can just start running *shell commands on the secondary note*, right? No, actually we can't. When we're *connected to a secondary node*, we can only run *read commands after telling MongoDB* that we're sure that's what we want to do. This is because *MongoDB errs on the side of consistency*.
 
-Given that we want to make sure you always have a consistent view of your data, you need to explicitly say otherwise if you want to read from the secondaries.
+Given that we want to make sure you always have a *consistent view of your data*, you need to explicitly say otherwise if you want to *read from the secondaries*. So this is the command we're going to *run in order to enable read operations on the secondary node*.
 
-So this is the command we're going to run in order to enable read operations on the secondary node.
+```javascript
+// Enabling read commands on a secondary node:
+m103-example:SECONDARY> rs.slaveOk()
+WARNING: slaveOk() is deprecated and may be removed in the next major release. Please use secondaryOk() instead.
+m103-example:SECONDARY> rs.secondaryOk()
+m103-example:SECONDARY> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.001GB
+m103    0.000GB
+newDB   0.000GB
+```
 
 And now, our show DBs command should actually work.
 
