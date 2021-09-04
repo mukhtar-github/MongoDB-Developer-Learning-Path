@@ -4211,7 +4211,7 @@ shellHelper@src/mongo/shell/utils.js:750:15
 
 And as we can see, the shell prompt is changed to reflect that we're now connected to *a secondary node*. So we can just start running *shell commands on the secondary note*, right? No, actually we can't. When we're *connected to a secondary node*, we can only run *read commands after telling MongoDB* that we're sure that's what we want to do. This is because *MongoDB errs on the side of consistency*.
 
-Given that we want to make sure you always have a *consistent view of your data*, you need to explicitly say otherwise if you want to *read from the secondaries*. So this is the command we're going to *run in order to enable read operations on the secondary node*.
+Given that we want to make sure you always have a *consistent view of your data*, you need to explicitly say otherwise if you want to *read from the secondaries*. So this is the command we're going to *run in order to enable read operations on the secondary node*. And now, our *show DBs* command should actually work. And it does.
 
 ```javascript
 // Enabling read commands on a secondary node:
@@ -4226,21 +4226,7 @@ m103    0.000GB
 newDB   0.000GB
 ```
 
-And now, our show DBs command should actually work.
-
-And it does.
-
-And we can see that the write command was replicated to the secondary node.
-
-So here I've tried to insert a document into a secondary node.
-
-And as expected, we can only enable reads on this secondary.
-
-We'll never be able to write to a secondary node.
-
-The purpose of this is to enforce strong consistency on our cluster.
-
-The Mongo shell lets us know that we can't write to the secondary.
+And we can see that the *write command was replicated to the secondary node*. So here I've tried to *insert a document into a secondary node*. And as expected, we can only enable *reads on this secondary*. We'll never be able to *write to a secondary node*. The purpose of this is to enforce *strong consistency on our cluster*. The *Mongo shell* lets us know that we can't *write to the secondary*.
 
 So far we've covered how reads and writes work in a replica set when it's healthy.
 
