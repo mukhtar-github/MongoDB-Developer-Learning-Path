@@ -4420,32 +4420,8 @@ m103-example:PRIMARY> rs.status()
 
 ```
 
-Now I'm just going to shut down this other node here.
+Now I'm just going to *shut down this other node here*. So now that we've shut off two of the nodes in our replica set, there's only one left. And one out of three does not form a majority. So we actually won't be able to connect to the primary, because the current primary, which was running on this node, has stepped down to become a secondary. So here I haven't specified the name of the replica set, because I want to connect directly to this node. And as we can see, that node has stepped down to be the secondary.
 
-So now that we've shut off two of the nodes in our replica set, there's only one left.
+We can verify that by running *rs.isMaster()*. So as we can see, we're still connected the same node as before. But that node is now a secondary node. Even though the primary node never went down, we lost the last secondary that gave us a majority. If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
 
-And one out of three does not form a majority.
-
-So we actually won't be able to connect to the primary, because the current primary, which was running on this node, has stepped down to become a secondary.
-
-So here I haven't specified the name of the replica set, because I want to connect directly to this node.
-
-And as we can see, that node has stepped down to be the secondary.
-
-We can verify that by running rs.isMaster().
-
-So as we can see, we're still connected the same node as before.
-
-But that node is now a secondary node.
-
-Even though the primary node never went down, we lost the last secondary that gave us a majority.
-
-If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
-
-And because they're secondaries, we can't write anything to the replica set, because there is no primary.
-
-This is just another safe mechanism used by the MongoDB replica set to ensure data consistency.
-
-So just to recap.
-
-In this lesson, we covered data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available-- which is to say, we can't.
+And because they're secondaries, we can't write anything to the replica set, because there is no primary. This is just another safe mechanism used by the MongoDB replica set to ensure data consistency. So just to recap. In this lesson, we covered data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available-- which is to say, we can't.
