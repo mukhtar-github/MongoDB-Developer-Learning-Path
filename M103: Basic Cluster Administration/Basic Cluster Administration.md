@@ -3763,4 +3763,84 @@ m103-example:PRIMARY> 2021-09-04T05:39:46.499+0000 I NETWORK  [ReplicaSetMonitor
 
 I'm just going to verify that it worked with the *rs.conf() to get the current configuration of the replica set*. And it looks like this *node now has priority 0, it can't vote, and it's hidden*. So now our *replica set still has four nodes* in it, which is *an even number, but only an odd number of them can vote*.
 
+```javascript
+m103-example:PRIMARY> rs.conf()
+{
+    "_id" : "m103-example",
+    "version" : 7,
+    "protocolVersion" : NumberLong(1),
+    "members" : [
+      {
+        "_id" : 0,
+        "host" : "localhost:27011",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 1,
+        "host" : "localhost:27012",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 2,
+        "host" : "localhost:27013",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 3,
+        "host" : "localhost:27014",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : true,
+        "priority" : 0,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 0
+      }
+    ],
+    "settings" : {
+      "chainingAllowed" : true,
+      "heartbeatIntervalMillis" : 2000,
+      "heartbeatTimeoutSecs" : 10,
+      "electionTimeoutMillis" : 10000,
+      "catchUpTimeoutMillis" : -1,
+      "catchUpTakeoverDelayMillis" : 30000,
+      "getLastErrorModes" : {
+        
+      },
+      "getLastErrorDefaults" : {
+        "w" : 1,
+        "wtimeout" : 0
+      },
+      "replicaSetId" : ObjectId("612a351f26dce4d03639158f")
+    }
+}
+
+```
+
 So just to recap, in this lesson we covered how to *add arbiters and new secondaries*, we said a little bit about *hidden nodes, and we added one to our set*. And we also covered how to *reconfigure a replica set while it's still running*.
