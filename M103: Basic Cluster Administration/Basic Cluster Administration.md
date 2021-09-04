@@ -3645,11 +3645,107 @@ m103-example:PRIMARY> rs.isMaster()
 
 Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an *even number of voting members in the set*, we don't have to *remove one of our secondary entirely*. We just have to *revoke its voting privileges so that will leave us with three voting members*. Our head of engineering has also been talking about using *a hidden node to store backups*.
 
-So we decide to be a little clever. In addition to being *non-voting, this secondary is also going to be a hidden node*. So we can actually *reconfigure this node to be hidden and nonvoting without removing it or restarting the node*. We use our *rs.conf() to retrieve a replica set configuration*. So this gives us a complete configuration of the *replica set*, including the *host name and port of each node, as well as if the node is hidden or an arbiter*.
+So we decide to be a little clever. In addition to being *non-voting, this secondary is also going to be a hidden node*. So we can actually *reconfigure this node to be hidden and non-voting without removing it or restarting the node*. We use our *rs.conf() to retrieve a replica set configuration*.
 
-It also gives us the number of votes that each node has. So here I'm just storing the configuration for the set in a variable called cfg. So members here is a section of the config that has a list of the nodes in the set.
+```javascript
+m103-example:PRIMARY> rs.conf()
+{
+    "_id" : "m103-example",
+    "version" : 6,
+    "protocolVersion" : NumberLong(1),
+    "members" : [
+      {
+        "_id" : 0,
+        "host" : "localhost:27011",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 1,
+        "host" : "localhost:27012",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 2,
+        "host" : "localhost:27013",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 3,
+        "host" : "localhost:27014",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      }
+    ],
+    "settings" : {
+      "chainingAllowed" : true,
+      "heartbeatIntervalMillis" : 2000,
+      "heartbeatTimeoutSecs" : 10,
+      "electionTimeoutMillis" : 10000,
+      "catchUpTimeoutMillis" : -1,
+      "catchUpTakeoverDelayMillis" : 30000,
+      "getLastErrorModes" : {
+        
+      },
+      "getLastErrorDefaults" : {
+        "w" : 1,
+        "wtimeout" : 0
+      },
+      "replicaSetId" : ObjectId("612a351f26dce4d03639158f")
+    }
+}
+```
 
-And I've chosen the node at index position 3 in that list. And I've changed the number of votes it has to 0. This is going to leave us with an odd number of voting members in the set. And here I'm setting the hidden variable of that node to true to hide this note from any client applications. And hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0.
+So this gives us a complete configuration of the *replica set*, including the *host name and port of each node, as well as if the node is hidden or an arbiter*. It also gives us the *number of votes that each node has*. So here I'm just storing the configuration for the set in a variable called *cfg*. So members here is a section of the config that has a list of the nodes in the set.
+
+```javascript
+// Assigning the current configuration to a shell variable we can edit, in order to reconfigure the replica set:
+m103-example:PRIMARY> cfg = rs.conf()
+// Editing our new variable cfg to change topology - specifically, by modifying cfg.members:
+m103-example:PRIMARY> cfg.members[3].votes = 0
+0
+m103-example:PRIMARY> cfg.members[3].hidden = true
+true
+m103-example:PRIMARY> cfg.members[3].priority = 0
+0
+```
+
+And I've chosen the *node at index position 3* in that list. And I've changed the *number of votes it has to 0*. This is going to leave us with *an odd number of voting members in the set*. And here I'm setting the *hidden variable of that node to true* to hide this note from any client applications. And *hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0*.
+
+```javascript
+// Updating our replica set to use the new configuration cfg:
+
+```
 
 So this is a new command, rs.reconfig, that we use to reconfigure a running replica set. We pass in our updated configuration as an argument, and we need to specify this whole document. That's why we took a copy of the original configuration and then modified it as we needed. Bear in mind that reconfig might trigger an election depending on what's in the new configuration. And it looked like this worked.
 
