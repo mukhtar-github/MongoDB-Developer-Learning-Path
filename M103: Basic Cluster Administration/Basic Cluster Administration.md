@@ -4261,6 +4261,163 @@ bye
 2021-09-04T13:39:13.521+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27012, in(checking socket for error after poll), reason: Connection refused
 2021-09-04T13:39:13.522+0000 I NETWORK  [thread1] reconnect localhost:27012 (127.0.0.1) failed failed 
 2021-09-04T13:39:13.524+0000 I QUERY    [thread1] Failed to end session { id: UUID("7372d24f-8da9-4e34-8da6-8de8e3ba80aa") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server localhost:27012, connection attempt failed
+
+// Connecting directly to the last healthy node in our set:
+vagrant@vagrant:~$ mongo --host "localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("bcab1a12-2254-42fa-9605-e2945c910928") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+
+// Verifying that the last node stepped down to become a secondary when a majority of nodes in the set were not available:
+m103-example:PRIMARY> rs.status()
+{
+    "set" : "m103-example",
+    "date" : ISODate("2021-09-04T13:49:33.021Z"),
+    "myState" : 1,
+    "term" : NumberLong(9),
+    "syncingTo" : "",
+    "syncSourceHost" : "",
+    "syncSourceId" : -1,
+    "heartbeatIntervalMillis" : NumberLong(2000),
+    "optimes" : {
+      "lastCommittedOpTime" : {
+        "ts" : Timestamp(1630763369, 1),
+        "t" : NumberLong(9)
+      },
+      "readConcernMajorityOpTime" : {
+        "ts" : Timestamp(1630763369, 1),
+        "t" : NumberLong(9)
+      },
+      "appliedOpTime" : {
+        "ts" : Timestamp(1630763369, 1),
+        "t" : NumberLong(9)
+      },
+      "durableOpTime" : {
+        "ts" : Timestamp(1630763369, 1),
+        "t" : NumberLong(9)
+      }
+    },
+    "members" : [
+      {
+        "_id" : 0,
+        "name" : "localhost:27011",
+        "health" : 1,
+        "state" : 1,
+        "stateStr" : "PRIMARY",
+        "uptime" : 114267,
+        "optime" : {
+          "ts" : Timestamp(1630763369, 1),
+          "t" : NumberLong(9)
+        },
+        "optimeDate" : ISODate("2021-09-04T13:49:29Z"),
+        "syncingTo" : "",
+        "syncSourceHost" : "",
+        "syncSourceId" : -1,
+        "infoMessage" : "",
+        "electionTime" : Timestamp(1630762658, 1),
+        "electionDate" : ISODate("2021-09-04T13:37:38Z"),
+        "configVersion" : 7,
+        "self" : true,
+        "lastHeartbeatMessage" : ""
+      },
+      {
+        "_id" : 1,
+        "name" : "localhost:27012",
+        "health" : 0,
+        "state" : 8,
+        "stateStr" : "(not reachable/healthy)",
+        "uptime" : 0,
+        "optime" : {
+          "ts" : Timestamp(0, 0),
+          "t" : NumberLong(-1)
+        },
+        "optimeDurable" : {
+          "ts" : Timestamp(0, 0),
+          "t" : NumberLong(-1)
+        },
+        "optimeDate" : ISODate("1970-01-01T00:00:00Z"),
+        "optimeDurableDate" : ISODate("1970-01-01T00:00:00Z"),
+        "lastHeartbeat" : ISODate("2021-09-04T13:49:32.930Z"),
+        "lastHeartbeatRecv" : ISODate("2021-09-04T13:37:38.251Z"),
+        "pingMs" : NumberLong(0),
+        "lastHeartbeatMessage" : "Connection refused",
+        "syncingTo" : "",
+        "syncSourceHost" : "",
+        "syncSourceId" : -1,
+        "infoMessage" : "",
+        "configVersion" : -1
+      },
+      {
+        "_id" : 2,
+        "name" : "localhost:27013",
+        "health" : 1,
+        "state" : 2,
+        "stateStr" : "SECONDARY",
+        "uptime" : 105225,
+        "optime" : {
+          "ts" : Timestamp(1630763369, 1),
+          "t" : NumberLong(9)
+        },
+        "optimeDurable" : {
+          "ts" : Timestamp(1630763369, 1),
+          "t" : NumberLong(9)
+        },
+        "optimeDate" : ISODate("2021-09-04T13:49:29Z"),
+        "optimeDurableDate" : ISODate("2021-09-04T13:49:29Z"),
+        "lastHeartbeat" : ISODate("2021-09-04T13:49:32.930Z"),
+        "lastHeartbeatRecv" : ISODate("2021-09-04T13:49:31.160Z"),
+        "pingMs" : NumberLong(0),
+        "lastHeartbeatMessage" : "",
+        "syncingTo" : "localhost:27011",
+        "syncSourceHost" : "localhost:27011",
+        "syncSourceId" : 0,
+        "infoMessage" : "",
+        "configVersion" : 7
+      },
+      {
+        "_id" : 3,
+        "name" : "localhost:27014",
+        "health" : 1,
+        "state" : 2,
+        "stateStr" : "SECONDARY",
+        "uptime" : 10292,
+        "optime" : {
+          "ts" : Timestamp(1630763369, 1),
+          "t" : NumberLong(9)
+        },
+        "optimeDurable" : {
+          "ts" : Timestamp(1630763369, 1),
+          "t" : NumberLong(9)
+        },
+        "optimeDate" : ISODate("2021-09-04T13:49:29Z"),
+        "optimeDurableDate" : ISODate("2021-09-04T13:49:29Z"),
+        "lastHeartbeat" : ISODate("2021-09-04T13:49:32.936Z"),
+        "lastHeartbeatRecv" : ISODate("2021-09-04T13:49:31.259Z"),
+        "pingMs" : NumberLong(0),
+        "lastHeartbeatMessage" : "",
+        "syncingTo" : "localhost:27013",
+        "syncSourceHost" : "localhost:27013",
+        "syncSourceId" : 2,
+        "infoMessage" : "",
+        "configVersion" : 7
+      }
+    ],
+    "ok" : 1,
+    "operationTime" : Timestamp(1630763369, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630763369, 1),
+      "signature" : {
+        "hash" : BinData(0,"YbMSAveyzB48hE//RDKds/b+i1E="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+
 ```
 
 Now I'm just going to shut down this other node here.
