@@ -4262,7 +4262,7 @@ bye
 2021-09-04T13:39:13.522+0000 I NETWORK  [thread1] reconnect localhost:27012 (127.0.0.1) failed failed 
 2021-09-04T13:39:13.524+0000 I QUERY    [thread1] Failed to end session { id: UUID("7372d24f-8da9-4e34-8da6-8de8e3ba80aa") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server localhost:27012, connection attempt failed
 
-// Connecting directly to the last healthy node in our set:
+// Connecting directly to the healthy primary node in our set:
 vagrant@vagrant:~$ mongo --host "localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 MongoDB shell version v3.6.23
 connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb
@@ -4437,7 +4437,36 @@ Server has startup warnings:
 2021-09-03T06:05:53.056+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
 2021-09-03T06:05:55.741+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
 2021-09-03T06:05:55.741+0000 I CONTROL  [initandlisten] 
-m103-example:SECONDARY> 
+m103-example:SECONDARY> db.shutdownServer()
+shutdown command only works with the admin database; try 'use admin'
+m103-example:SECONDARY> use admin
+switched to db admin
+m103-example:SECONDARY> db.shutdownServer()
+server should be down...
+2021-09-04T14:19:24.205+0000 I NETWORK  [thread1] trying reconnect to localhost:27013 (127.0.0.1) failed
+2021-09-04T14:19:24.212+0000 I NETWORK  [thread1] Socket say send() Connection reset by peer 127.0.0.1:27013
+2021-09-04T14:19:24.214+0000 I NETWORK  [thread1] reconnect localhost:27013 (127.0.0.1) failed failed 
+2021-09-04T14:19:24.218+0000 I NETWORK  [thread1] trying reconnect to localhost:27013 (127.0.0.1) failed
+2021-09-04T14:19:24.219+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27013, in(checking socket for error after poll), reason: Connection refused
+2021-09-04T14:19:24.220+0000 I NETWORK  [thread1] reconnect localhost:27013 (127.0.0.1) failed failed 
+> exit
+bye
+2021-09-04T14:20:56.984+0000 I NETWORK  [thread1] trying reconnect to localhost:27013 (127.0.0.1) failed
+2021-09-04T14:20:56.986+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27013, in(checking socket for error after poll), reason: Connection refused
+2021-09-04T14:20:56.987+0000 I NETWORK  [thread1] reconnect localhost:27013 (127.0.0.1) failed failed 
+2021-09-04T14:20:56.988+0000 I QUERY    [thread1] Failed to end session { id: UUID("ca14a0ec-9deb-407f-ba37-01a37e4e048a") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server localhost:27013, connection attempt failed
+
+// Connecting directly to the last healthy node in our set:
+vagrant@vagrant:~$ mongo --host "localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("7b6c78eb-9078-4d3b-9552-aa499f4033fb") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] **     See http://dochub.mongodb.org/core/prodnotes-filesystem
+m103-example:SECONDARY>
 ```
 
 We can verify that by running *rs.isMaster()*. So as we can see, we're still connected the same node as before. But that node is now a secondary node. Even though the primary node never went down, we lost the last secondary that gave us a majority. If the replica set can no longer reach a majority of the nodes, all the remaining nodes in the set become secondaries.
