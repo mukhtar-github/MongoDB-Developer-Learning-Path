@@ -4094,6 +4094,24 @@ m103-repl:PRIMARY> 2021-09-04T07:31:16.451+0000 I NETWORK  [ReplicaSetMonitor-Ta
 
 So in this lesson we're going to take a look at *reads and writes in a replica set* just to get a sense of how the *MongoDB replication mechanism works*. So I'm just going to use this command to connect to our *three node replica set called m103-example*. And to figure out which *node in this set is currently the primary*, I'm going to run this command *rs.isMaster()*.
 
+```javascript
+vagrant@vagrant:~$ mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27011/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-example
+2021-09-04T04:09:45.706+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-example/localhost:27011
+2021-09-04T04:09:45.710+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+2021-09-04T04:09:45.712+0000 I NETWORK  [thread1] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013,localhost:27014 from m103-example/localhost:27011
+2021-09-04T04:09:45.716+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27012 (1 connections now open to localhost:27012 with a 5 second timeout)
+2021-09-04T04:09:45.731+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27014 (1 connections now open to localhost:27014 with a 5 second timeout)
+2021-09-04T04:09:45.734+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27013 (1 connections now open to localhost:27013 with a 5 second timeout)
+Implicit session: session { "id" : UUID("a01b24c3-744f-49ce-a5b4-71791ce13848") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] 
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] **      See http://dochub.mongodb.org/core/prodnotes-filesystem
+```
+
 And this output actually gives us a lot of information.
 
 It gives us the current primary, which is the node running on port 27011.
