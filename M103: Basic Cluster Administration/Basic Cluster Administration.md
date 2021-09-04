@@ -4516,4 +4516,4 @@ m103-example:SECONDARY> rs.isMaster()
 }
 ```
 
-And because they're secondaries, we can't write anything to the replica set, because there is no primary. This is just another safe mechanism used by the MongoDB replica set to ensure data consistency. So just to recap. In this lesson, we covered data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available-- which is to say, we can't.
+And because they're *secondaries, we can't write anything to the replica set, because there is no primary*. This is just another *safe mechanism used by the MongoDB replica set to ensure data consistency*. So just to recap. In this lesson, we covered *data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available* -- which is to say, we can't.
