@@ -3579,7 +3579,7 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So here to the *remove command*, we just pass the *port where our arbiter was running*. And we've successfully removed it. However, right now our *replica is set only has four members*. We can verify that from *rs.isMaster*. Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
+So here to the *remove command*, we just pass the *port where our arbiter was running*. And we've successfully removed it. However, right now our *replica is set only has four members*. We can verify that from *rs.isMaster()*. Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
 
 ```javascript
 // Removing the arbiter from our replica set:
@@ -3591,6 +3591,52 @@ m103-example:PRIMARY> rs.remove("localhost:28000")
       "clusterTime" : Timestamp(1630731750, 1),
       "signature" : {
         "hash" : BinData(0,"O3HSbEViqCnDarm5zdMh6kcNbEo="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013",
+      "localhost:27014"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 6,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000007"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630731987, 1),
+        "t" : NumberLong(7)
+      },
+      "lastWriteDate" : ISODate("2021-09-04T05:06:27Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630731987, 1),
+        "t" : NumberLong(7)
+      },
+      "majorityWriteDate" : ISODate("2021-09-04T05:06:27Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-04T05:06:35.299Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630731987, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630731987, 1),
+      "signature" : {
+        "hash" : BinData(0,"hUhRFk2MF91WIZRoJsaUSRnJTK0="),
         "keyId" : NumberLong("7001466986551050241")
       }
     }
