@@ -4168,17 +4168,10 @@ switched to db newDB
 m103-example:PRIMARY> db.new_collection.insert( { "student": "Matt Javaly", "grade": "A+" } )
 WriteResult({ "nInserted" : 1 })
 
+mongo --host "localhost:27012" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 ```
 
-So this is the command we're going to use to connect directly to a secondary node in our replica set.
-
-Notice that we've changed the node port that we've selected in our host name.
-
-And we also haven't specified the name of the replica set.
-
-Because if we were to specify the name of the replica set, the shell would automatically direct us to the primary.
-
-And in this case, we actually want to connect directly to a secondary.
+So this is the command we're going to use to connect directly to *a secondary node in our replica set*. Notice that we've changed the *node port that we've selected in our host name*. And we also haven't specified the name of the *replica set*. Because if we were to specify the name of the *replica set, the shell would automatically direct us to the primary*. And in this case, we actually want to *connect directly to a secondary*.
 
 And as we can see, the shell prompt is changed to reflect that we're now connected to a secondary node.
 
