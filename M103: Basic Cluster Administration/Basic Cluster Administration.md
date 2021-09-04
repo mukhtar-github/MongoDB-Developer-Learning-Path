@@ -3511,6 +3511,69 @@ m103-example:PRIMARY> rs.add("localhost:27014")
 m103-example:PRIMARY> 2021-09-04T03:36:26.215+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013,localhost:27014 from m103-example/localhost:27011,localhost:27012,localhost:27013
 2021-09-04T03:36:26.221+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] Successfully connected to localhost:27014 (1 connections now open to localhost:27014 with a 5 second timeout)
 
+m103-example:PRIMARY> rs.addArb("localhost:28000")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630728600, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630728600, 1),
+      "signature" : {
+        "hash" : BinData(0,"jrYMAU0IAeTe8Dh7IV653wu6RTo="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+
+// Checking replica set makeup after adding two new nodes:
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013",
+      "localhost:27014"
+    ],
+    "arbiters" : [
+      "localhost:28000"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 5,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000007"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630728697, 1),
+        "t" : NumberLong(7)
+      },
+      "lastWriteDate" : ISODate("2021-09-04T04:11:37Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630728697, 1),
+        "t" : NumberLong(7)
+      },
+      "majorityWriteDate" : ISODate("2021-09-04T04:11:37Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-04T04:11:42.335Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630728697, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630728697, 1),
+      "signature" : {
+        "hash" : BinData(0,"PtA9Ljjg1IzjNLRsL8S3LujhoRw="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+
 ```
 
 And it looks like this completed. And I'm just going to check rs.isMaster to make sure of that. And we can see that our replica set now has four nodes in it and one arbiter. So now our replica set is running with one primary, three secondaries, and an arbiter node. But our head of engineering just told us we have to kill the arbiter node because we don't have the budget for it.
