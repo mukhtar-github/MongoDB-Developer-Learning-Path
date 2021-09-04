@@ -4167,21 +4167,28 @@ m103-example:PRIMARY> use newDB
 switched to db newDB
 m103-example:PRIMARY> db.new_collection.insert( { "student": "Matt Javaly", "grade": "A+" } )
 WriteResult({ "nInserted" : 1 })
-
-mongo --host "localhost:27012" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 ```
 
-So this is the command we're going to use to connect directly to *a secondary node in our replica set*. Notice that we've changed the *node port that we've selected in our host name*. And we also haven't specified the name of the *replica set*. Because if we were to specify the name of the *replica set, the shell would automatically direct us to the primary*. And in this case, we actually want to *connect directly to a secondary*.
+So this is the command we're going to use to connect directly to *a secondary node in our replica set*. Notice that we've changed the *node port that we've selected in our host name to - localhost:27012*. And we also haven't specified the name of the *replica set*. Because if we were to specify the name of the *replica set, the shell would automatically direct us to the primary*. And in this case, we actually want to *connect directly to a secondary*.
 
-And as we can see, the shell prompt is changed to reflect that we're now connected to a secondary node.
+```javascript
+m103-example:PRIMARY> exit
+bye
+vagrant@vagrant:~$ mongo --host "localhost:27012" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://localhost:27012/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("7372d24f-8da9-4e34-8da6-8de8e3ba80aa") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-03T06:05:34.368+0000 I STORAGE  [initandlisten] 
+2021-09-03T06:05:34.368+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-03T06:05:34.368+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-03T06:05:37.325+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-03T06:05:37.325+0000 I CONTROL  [initandlisten] 
+m103-example:SECONDARY>
+```
 
-So we can to start running shell commands on the secondary note, right?
-
-No, actually we can't.
-
-When we're connected to a secondary node, we can only run read commands after telling MongoDB that we're sure that's what we want to do.
-
-This is because MongoDB errs on the side of consistency.
+And as we can see, the shell prompt is changed to reflect that we're now connected to *a secondary node*. So we can just start running *shell commands on the secondary note*, right? No, actually we can't. When we're *connected to a secondary node*, we can only run *read commands after telling MongoDB* that we're sure that's what we want to do. This is because *MongoDB errs on the side of consistency*.
 
 Given that we want to make sure you always have a consistent view of your data, you need to explicitly say otherwise if you want to read from the secondaries.
 
