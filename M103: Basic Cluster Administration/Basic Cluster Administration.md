@@ -3579,7 +3579,7 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So here to the *remove command*, we just pass the *port where our arbiter was running*. And we've successfully removed it. However, right now our *replica is set only has four members*. We can verify that from *rs.isMaster()*. Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
+So here to the *remove command*, we just pass the *port where our arbiter was running*. And we've successfully removed it. However, right now our *replica set only has four members*. We can verify that from *rs.isMaster()*.
 
 ```javascript
 // Removing the arbiter from our replica set:
@@ -3643,7 +3643,9 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-We just have to revoke its voting privileges so that will leave us with three voting members. Our head of engineering has also been talking about using a hidden node to store backups. So we decide to be a little clever. In addition to being nonvoting, this secondary is also going to be a hidden node. So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
+Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an *even number of voting members in the set*, we don't have to *remove one of our secondary entirely*. We just have to *revoke its voting privileges so that will leave us with three voting members*. Our head of engineering has also been talking about using a hidden node to store backups. So we decide to be a little clever.
+
+In addition to being nonvoting, this secondary is also going to be a hidden node. So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
 
 We use our rs.conf to retrieve a replica set configuration. So this gives us a complete configuration of the replica set, including the host name and port of each node, as well as if the node is hidden or an arbiter. It also gives us the number of votes that each node has. So here I'm just storing the configuration for the set in a variable called cfg. So members here is a section of the config that has a list of the nodes in the set.
 
