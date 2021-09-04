@@ -3728,6 +3728,8 @@ m103-example:PRIMARY> rs.conf()
 
 So this gives us a complete configuration of the *replica set*, including the *host name and port of each node, as well as if the node is hidden or an arbiter*. It also gives us the *number of votes that each node has*. So here I'm just storing the configuration for the set in a variable called *cfg*. So members here is a section of the config that has a list of the nodes in the set.
 
+And I've chosen the *node at index position 3* in that list. And I've changed the *number of votes it has to 0*. This is going to leave us with *an odd number of voting members in the set*. And here I'm setting the *hidden variable of that node to true* to hide this note from any client applications. And *hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0*.
+
 ```javascript
 // Assigning the current configuration to a shell variable we can edit, in order to reconfigure the replica set:
 m103-example:PRIMARY> cfg = rs.conf()
@@ -3740,13 +3742,25 @@ m103-example:PRIMARY> cfg.members[3].priority = 0
 0
 ```
 
-And I've chosen the *node at index position 3* in that list. And I've changed the *number of votes it has to 0*. This is going to leave us with *an odd number of voting members in the set*. And here I'm setting the *hidden variable of that node to true* to hide this note from any client applications. And *hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0*.
+So this is a new command, *rs.reconfig()*, that we use to *reconfigure a running replica set*. We pass in our *updated configuration as an argument*, and we need to specify this whole document. That's why we took a copy of the *original configuration* and then modified it as we needed. Bear in mind that *reconfig might trigger an election depending on what's in the new configuration*. And it looked like this worked.
 
 ```javascript
 // Updating our replica set to use the new configuration cfg:
-
+m103-example:PRIMARY> rs.reconfig(cfg)
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630733973, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630733973, 1),
+      "signature" : {
+        "hash" : BinData(0,"bRLMth+B6skv6tTRSb4ZJozaP8s="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+m103-example:PRIMARY> 2021-09-04T05:39:46.499+0000 I NETWORK  [ReplicaSetMonitor-TaskExecutor-0] changing hosts to m103-example/localhost:27011,localhost:27012,localhost:27013 from m103-example/localhost:27011,localhost:27012,localhost:27013,localhost:27014
 ```
 
-So this is a new command, rs.reconfig, that we use to reconfigure a running replica set. We pass in our updated configuration as an argument, and we need to specify this whole document. That's why we took a copy of the original configuration and then modified it as we needed. Bear in mind that reconfig might trigger an election depending on what's in the new configuration. And it looked like this worked.
+I'm just going to verify that it worked with the *rs.conf() to get the current configuration of the replica set*. And it looks like this *node now has priority 0, it can't vote, and it's hidden*. So now our *replica set still has four nodes* in it, which is *an even number, but only an odd number of them can vote*.
 
-I'm just going to verify that it worked with the rs.conf to get the current configuration of the replica set. And it looks like this node now has priority 0, it can't vote, and it's hidden. So now our replica set still has four nodes in it, which is an even number, but only an odd number of them can vote. So just to recap, in this lesson we covered how to add arbiters and new secondaries, we said a little bit about hidden nodes, and we added one to our set. And we also covered how to reconfigure a replica set while it's still running.
+So just to recap, in this lesson we covered how to *add arbiters and new secondaries*, we said a little bit about *hidden nodes, and we added one to our set*. And we also covered how to *reconfigure a replica set while it's still running*.
