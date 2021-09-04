@@ -3844,3 +3844,29 @@ m103-example:PRIMARY> rs.conf()
 ```
 
 So just to recap, in this lesson we covered how to *add arbiters and new secondaries*, we said a little bit about *hidden nodes, and we added one to our set*. And we also covered how to *reconfigure a replica set while it's still running*.
+
+### Lab: Reconfigure a Replica Set
+
+#### Problem 2
+
+A *4-node replica set* has already been launched. You can find the configuration files used to start each server in the IDE.
+
+Reconfigure the replica set to make one node more suitable for analytics queries:
+
+1 Connect to the *replica set m103-repl* and retrieve the configuration of the *node localhost:27004*. This is the node you will reconfigure.
+
+Remember to authenticate as *m103-admin with password m103-pass*.
+
+2 Store this configuration in a variable and use this variable to update the following fields in the configuration document for *localhost:27004:*
+
+* the number of *votes* should be *0*
+
+* the *hidden* field should be *true*
+
+* the *priority* should be *0*
+
+**You should not need to update the configuration files or restart mongod.**
+
+3 Reconfigure the replica set using your new configuration document.
+
+4 Once you've run the proper commands, click "Run Tests" to run a suite of tests that will check the configuration of *m103-repl*. The results of these tests will let you know which steps you've yet to complete.
