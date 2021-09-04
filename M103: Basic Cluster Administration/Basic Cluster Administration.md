@@ -4240,7 +4240,7 @@ m103-example:SECONDARY> db.new_collection.insert( { "student": "Norberto Leite",
 WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
 ```
 
-So far we've covered how *reads and writes work in a replica set* when it's healthy. In the interest of learning how *replica sets handle crisis*, we're going to break a few things. First, we're going to *shut this node off*. Now when we connect back to the *replica set, we run rs.status()* we can see that the *node we shut down is no longer reachable from the primary*.
+So far we've covered how *reads and writes work in a replica set* when it's healthy. In the interest of learning how *replica sets handle crisis*, we're going to break a few things. First, we're going to *shut this node off*. Now when we connect back to the *replica set, we run rs.status()* we can see that the *node we shut down is no longer reachable from the primary - "stateStr" : "(not reachable/healthy)"*.
 
 ```javascript
 // Shutting down the server (on both secondary nodes)
@@ -4273,7 +4273,7 @@ Server has startup warnings:
 2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
 2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
 
-// Verifying that the last node stepped down to become a secondary when a majority of nodes in the set were not available:
+// The node we shut down is no longer reachable from the primary:
 m103-example:PRIMARY> rs.status()
 {
     "set" : "m103-example",
