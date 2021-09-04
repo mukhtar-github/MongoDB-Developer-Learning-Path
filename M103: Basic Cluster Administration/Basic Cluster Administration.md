@@ -3579,7 +3579,23 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So here to the remove command, we just pass the port where our arbiter was running. And we've successfully removed it. However, right now our replica is set only has four members. We can verify that from rs.isMaster. Our list of hosts only has four nodes in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
+So here to the *remove command*, we just pass the *port where our arbiter was running*. And we've successfully removed it. However, right now our *replica is set only has four members*. We can verify that from *rs.isMaster*. Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an even number of voting members in the set, we don't have to remove our secondary entirely.
+
+```javascript
+// Removing the arbiter from our replica set:
+m103-example:PRIMARY> rs.remove("localhost:28000")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630731750, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630731750, 1),
+      "signature" : {
+        "hash" : BinData(0,"O3HSbEViqCnDarm5zdMh6kcNbEo="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+```
 
 We just have to revoke its voting privileges so that will leave us with three voting members. Our head of engineering has also been talking about using a hidden node to store backups. So we decide to be a little clever. In addition to being nonvoting, this secondary is also going to be a hidden node. So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
 
