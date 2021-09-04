@@ -4242,6 +4242,27 @@ WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
 
 So far we've covered how *reads and writes work in a replica set* when it's healthy. In the interest of learning how *replica sets handle crisis*, we're going to break a few things. First, we're going to *shut this node off*. Now when we connect back to the *replica set, we run rs.status()* we can see that the *node we shut down is no longer reachable from the primary*.
 
+```javascript
+// Shutting down the server (on both secondary nodes)
+m103-example:SECONDARY> use admin
+switched to db admin
+m103-example:PRIMARY> db.shutdownServer()
+server should be down...
+2021-09-04T13:37:38.096+0000 I NETWORK  [thread1] trying reconnect to localhost:27012 (127.0.0.1) failed
+2021-09-04T13:37:38.757+0000 I NETWORK  [thread1] Socket recv() Connection reset by peer 127.0.0.1:27012
+2021-09-04T13:37:38.758+0000 I NETWORK  [thread1] SocketException: remote: (NONE):0 error: SocketException socket exception [RECV_ERROR] server [127.0.0.1:27012] 
+2021-09-04T13:37:38.759+0000 I NETWORK  [thread1] reconnect localhost:27012 (127.0.0.1) failed failed 
+2021-09-04T13:37:38.763+0000 I NETWORK  [thread1] trying reconnect to localhost:27012 (127.0.0.1) failed
+2021-09-04T13:37:38.764+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27012, in(checking socket for error after poll), reason: Connection refused
+2021-09-04T13:37:38.765+0000 I NETWORK  [thread1] reconnect localhost:27012 (127.0.0.1) failed failed 
+> exit
+bye
+2021-09-04T13:39:13.520+0000 I NETWORK  [thread1] trying reconnect to localhost:27012 (127.0.0.1) failed
+2021-09-04T13:39:13.521+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27012, in(checking socket for error after poll), reason: Connection refused
+2021-09-04T13:39:13.522+0000 I NETWORK  [thread1] reconnect localhost:27012 (127.0.0.1) failed failed 
+2021-09-04T13:39:13.524+0000 I QUERY    [thread1] Failed to end session { id: UUID("7372d24f-8da9-4e34-8da6-8de8e3ba80aa") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server localhost:27012, connection attempt failed
+```
+
 Now I'm just going to shut down this other node here.
 
 So now that we've shut off two of the nodes in our replica set, there's only one left.
