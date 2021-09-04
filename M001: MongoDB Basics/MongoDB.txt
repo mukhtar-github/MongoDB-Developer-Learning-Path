@@ -83,3 +83,4 @@ To paste you in Vim Editor, can use "+p or "*p
 To create a new file vim (filename)
 :wq or :x or ZZ - write (save) and quit
 cp node3.conf node4.conf
+sudo mkdir -p /var/mongodb/db/node2
