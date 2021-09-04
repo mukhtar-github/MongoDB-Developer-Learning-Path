@@ -4516,4 +4516,138 @@ m103-example:SECONDARY> rs.isMaster()
 }
 ```
 
-And because they're *secondaries, we can't write anything to the replica set, because there is no primary*. This is just another *safe mechanism used by the MongoDB replica set to ensure data consistency*. So just to recap. In this lesson, we covered *data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available* -- which is to say, we can't.
+And because they're *secondaries, we can't write anything to the replica set, because there is no primary*. This is just another *fail safe mechanism used by the MongoDB replica set to ensure data consistency*. So just to recap. In this lesson, we covered *data being replicated to a secondary, how reading from secondary nodes works, and how writing to a replica set when a majority isn't available* -- which is to say, we can't.
+
+### Failover and Elections
+
+In this lesson, we're going to discuss how failovers and elections work in MongoDB.
+
+The primary node is the first point of contact for any client communicating to the database.
+
+Even if secondaries go down, the client will continue communicating with the node acting as primary until the primary is unavailable.
+
+But what would cause a primary to become unavailable?
+
+A common reason is maintenance.
+
+So let's say we're doing a rolling upgrade on a three-node replica set.
+
+A rolling upgrade just means we're upgrading one server at a time, starting with the secondaries.
+
+And eventually, we'll upgrade the primary.
+
+Rolling upgrades are great because they allow us to perform updates while maximizing availability to any clients using the database.
+
+We'll start by stopping the MongoDB process on a secondary, and then bringing it back up with the new database version.
+
+And we can do the same thing to upgrade our other secondary.
+
+When all of our secondaries have been upgraded, it's time to upgrade the primary.
+
+But restarting the database server on the primary would trigger an election anyway, so we're going to safely initiate an election with rs.stepDown().
+
+Once the election is complete, the last database server running the old database version will be a secondary node.
+
+So we can bring it down, and then bring it back up with the new database server without affecting the availability of the whole replica set.
+
+Let's talk a little bit about how elections work.
+
+Elections take place whenever there's a change in topology.
+
+Reconfiguring a replica set will always trigger an election that may or may not elect a new primary.
+
+But you will definitely see a new primary elected in two cases-- anytime the current primary node becomes unavailable, or when the current primary node steps down to be a secondary.
+
+The method to figure out which secondary will run for election begins with priority, which we'll discuss in a minute; and whichever node has the latest copy of the data.
+
+So let's say every node in our set has the same priority, which is the default unless we've been setting priorities for the nodes in our set.
+
+And this node has the latest copy of the data.
+
+So it's going to run for election, and then automatically vote for itself.
+
+Then it's going to ask the other two nodes for their support in the election.
+
+And they're going to say, all right, you have a pretty recent copy of the data, you seem like a good candidate, then they'll pledge their support as well.
+
+This node will be elected primary.
+
+There is also the very slim possibility that two nodes run for election simultaneously.
+
+But in a replica set with an odd number of nodes, this doesn't matter.
+
+These two nodes are both going to run, which means they're both going to vote for themselves.
+
+And then this node is going to essentially decide which one of these nodes becomes primary by virtue of a tiebreaker.
+
+This becomes a problem when we have an even number of voting members in a set.
+
+If two secondaries are running for election simultaneously and there are an even number of remaining nodes in the set, there's a possibility that they split the vote and there's a tie.
+
+Now a tie is not the end of the world, because the nodes will just start over and hold another election.
+
+The problem with repeating elections over and over is that any applications accessing the data will have to pause all activity and wait until a primary is elected.
+
+An even number of nodes increases the chances an election has to be repeated, so we generally try to keep an odd number in our replica sets.
+
+Another important aspect of elections is the priority assigned to each node in a set.
+
+Priority is essentially the likelihood that a node will become the primary during an election.
+
+The default primary for a node is 1, and any node with priority 1 or higher can be elected primary.
+
+We can increase the priority of a node if we want it to be more likely at this node becomes primary.
+
+But changing this value alone does not guarantee that.
+
+We can also set the priority of node to be 0 if we never want that node to become primary.
+
+A priority 0 node can still vote in elections, but it can't run for election.
+
+Let's take a look at how to change the priority of a node.
+
+So here I'm just storing a configuration document in a variable.
+
+So here I'm just setting the priority of one of our secondaries to 0 so it can never become the primary node.
+
+And here, I'm just saving the new configuration in a replica set.
+
+So now we've reconfigured our replica set, I'm going to run rs.isMaster() through the new topology.
+
+So in MongoDB, nodes that aren't eligible to become the primary are defined as passive nodes.
+
+And we can see the node that we reconfigured to have priority 0 has appeared in our list of passives.
+
+The other two nodes are still eligible to become the primary.
+
+Something I want to point out here.
+
+When we call rs.stepDown(), it always tries to choose a new primary node.
+
+But in this case, other than the current primary, there's only one node that's eligible to become the primary.
+
+Which means that if we were to call an election right now, this node would have to become the primary node.
+
+So incidentally, by changing node priority, we've rigged the election in favor of this node.
+
+So just to prove our theory, we'll call an election on this replica set.
+
+We just have to wait for the election to complete.
+
+All right, so it finished, and I'm just going to check what the current primary is.
+
+And we can see that we were right.
+
+This node became the primary node because it was the only eligible primary in that election.
+
+So one last thing to note.
+
+If the current primary can't reach a majority of the other nodes in the set, then it will automatically step down to become a secondary.
+
+In a three-node replica set, a majority is two nodes.
+
+So if two nodes go down, even if the primary is still available, it will step down.
+
+At this point, an election cannot take place until enough nodes come back up to form a majority, and the clients will be able to connect to the whole set because there is no primary.
+
+So just to recap, we've covered how availability is maintained during elections, the effective priority on elections, and the behavior of a replica set when a majority of the nodes aren't available.
