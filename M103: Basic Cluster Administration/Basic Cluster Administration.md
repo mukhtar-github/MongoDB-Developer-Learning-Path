@@ -4159,7 +4159,16 @@ m103-example:PRIMARY> rs.isMaster()
 
 And this output actually gives us a lot of information. It gives us the *current primary, which is the node running on port 27011*. And it also gives us the *node that we're currently connected to, me*. In this case, it's the same as the *primary, because we're connected to the replica set through the shell*. It also gives us the *other nodes in this replica set*.
 
-So I'm just going to create a *new database here called newDB*. And *insert a new document into a new collection called new collection in newDB*. And I'm just going to connect to *a secondary to make sure they receive the write as well*. We can scroll up to the *rs.isMaster()* output to figure out which of *these nodes is a secondary*. And we know this is the *primary, so we just have to connect to one of these two nodes*.
+So I'm just going to create a *new database here called newDB*. And *insert a new document into a new collection called new collection in newDB*. And I'm just going to connect to *a secondary to make sure they receive the write as well*. We can scroll up to the *rs.isMaster() output* to figure out which of *these nodes is a secondary*. And we know *one is the primary, so we just have to connect to one of the other two nodes*.
+
+```javascript
+// Inserting one document into a new collection:
+m103-example:PRIMARY> use newDB
+switched to db newDB
+m103-example:PRIMARY> db.new_collection.insert( { "student": "Matt Javaly", "grade": "A+" } )
+WriteResult({ "nInserted" : 1 })
+
+```
 
 So this is the command we're going to use to connect directly to a secondary node in our replica set.
 
