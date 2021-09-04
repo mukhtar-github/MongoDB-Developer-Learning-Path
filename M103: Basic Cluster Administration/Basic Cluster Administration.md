@@ -3643,11 +3643,11 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an *even number of voting members in the set*, we don't have to *remove one of our secondary entirely*. We just have to *revoke its voting privileges so that will leave us with three voting members*. Our head of engineering has also been talking about using a hidden node to store backups. So we decide to be a little clever.
+Our list of *hosts only has four nodes* in it. So in order to remedy this problem of having an *even number of voting members in the set*, we don't have to *remove one of our secondary entirely*. We just have to *revoke its voting privileges so that will leave us with three voting members*. Our head of engineering has also been talking about using *a hidden node to store backups*.
 
-In addition to being nonvoting, this secondary is also going to be a hidden node. So we can actually reconfigure this node to be hidden and nonvoting without removing it or restarting the node.
+So we decide to be a little clever. In addition to being *non-voting, this secondary is also going to be a hidden node*. So we can actually *reconfigure this node to be hidden and nonvoting without removing it or restarting the node*. We use our *rs.conf() to retrieve a replica set configuration*. So this gives us a complete configuration of the *replica set*, including the *host name and port of each node, as well as if the node is hidden or an arbiter*.
 
-We use our rs.conf to retrieve a replica set configuration. So this gives us a complete configuration of the replica set, including the host name and port of each node, as well as if the node is hidden or an arbiter. It also gives us the number of votes that each node has. So here I'm just storing the configuration for the set in a variable called cfg. So members here is a section of the config that has a list of the nodes in the set.
+It also gives us the number of votes that each node has. So here I'm just storing the configuration for the set in a variable called cfg. So members here is a section of the config that has a list of the nodes in the set.
 
 And I've chosen the node at index position 3 in that list. And I've changed the number of votes it has to 0. This is going to leave us with an odd number of voting members in the set. And here I'm setting the hidden variable of that node to true to hide this note from any client applications. And hidden nodes can never become primary, so in order to make this a hidden node, we have to set the priority to 0.
 
