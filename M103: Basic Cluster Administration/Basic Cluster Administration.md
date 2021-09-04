@@ -4110,27 +4110,56 @@ Server has startup warnings:
 2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] 
 2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
 2021-09-03T06:05:06.850+0000 I STORAGE  [initandlisten] **      See http://dochub.mongodb.org/core/prodnotes-filesystem
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012",
+      "localhost:27013",
+      "localhost:27014"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 6,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff0000000000000007"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630731987, 1),
+        "t" : NumberLong(7)
+      },
+      "lastWriteDate" : ISODate("2021-09-04T05:06:27Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630731987, 1),
+        "t" : NumberLong(7)
+      },
+      "majorityWriteDate" : ISODate("2021-09-04T05:06:27Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-04T05:06:35.299Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630731987, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630731987, 1),
+      "signature" : {
+        "hash" : BinData(0,"hUhRFk2MF91WIZRoJsaUSRnJTK0="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
 ```
 
-And this output actually gives us a lot of information.
+And this output actually gives us a lot of information. It gives us the *current primary, which is the node running on port 27011*. And it also gives us the *node that we're currently connected to, me*. In this case, it's the same as the *primary, because we're connected to the replica set through the shell*. It also gives us the *other nodes in this replica set*.
 
-It gives us the current primary, which is the node running on port 27011.
-
-And it also gives us the node that we're currently connected to, me.
-
-In this case, it's the same as the primary, because we're connected to the replica set through the shell.
-
-It also gives us the other nodes in this replica set.
-
-So I'm just going to create a new database here called newDB.
-
-And insert a new document into a new collection called new collection in newDB.
-
-And I'm just going to connect to a secondary to make sure they receive the write as well.
-
-We can scroll up to the rs.isMaster output to figure out which of these nodes is a secondary.
-
-And we know this is the primary, so we just have to connect to one of these two nodes.
+So I'm just going to create a *new database here called newDB*. And *insert a new document into a new collection called new collection in newDB*. And I'm just going to connect to *a secondary to make sure they receive the write as well*. We can scroll up to the *rs.isMaster()* output to figure out which of *these nodes is a secondary*. And we know this is the *primary, so we just have to connect to one of these two nodes*.
 
 So this is the command we're going to use to connect directly to a secondary node in our replica set.
 
