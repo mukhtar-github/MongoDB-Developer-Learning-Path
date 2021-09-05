@@ -4640,7 +4640,11 @@ m103-example:PRIMARY> rs.reconfig(cfg)
       }
     }
 }
+```
 
+So now we've *reconfigured our replica set, I'm going to run rs.isMaster() through the new topology*. So in *MongoDB, nodes that aren't eligible to become the primary are defined as **passive** nodes*. And we can see the *node that we reconfigured to have priority 0 has appeared in our list of passives*. The other *two nodes are still eligible to become the primary*.
+
+```javascript
 // Checking the new topology of our set:
 m103-example:PRIMARY> rs.isMaster()
 {
@@ -4690,19 +4694,7 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-So now we've reconfigured our replica set, I'm going to run rs.isMaster() through the new topology.
-
-So in MongoDB, nodes that aren't eligible to become the primary are defined as passive nodes.
-
-And we can see the node that we reconfigured to have priority 0 has appeared in our list of passives.
-
-The other two nodes are still eligible to become the primary.
-
-Something I want to point out here.
-
-When we call rs.stepDown(), it always tries to choose a new primary node.
-
-But in this case, other than the current primary, there's only one node that's eligible to become the primary.
+Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the current primary, there's only one node that's eligible to become the primary.
 
 Which means that if we were to call an election right now, this node would have to become the primary node.
 
