@@ -4526,17 +4526,9 @@ So let's say we're doing a *rolling upgrade on a three-node replica set*. A *rol
 
 We'll start by *stopping the MongoDB process on a secondary*, and then bringing it back up with the *new database version*. And we can do the same thing to *upgrade our other secondary*. When all of our *secondaries have been upgraded, it's time to upgrade the primary*. But *restarting the database server on the primary would trigger an election anyway*, so we're going to *safely initiate an election with rs.stepDown()*.
 
-Once the election is complete, the last database server running the old database version will be a secondary node.
+Once the *election is complete, the last database server running the old database version will be a secondary node*. So we can bring it *down, and then bring it back up with the new database server* without affecting the *availability of the whole replica set*. Let's talk a little bit about how *elections work*.
 
-So we can bring it down, and then bring it back up with the new database server without affecting the availability of the whole replica set.
-
-Let's talk a little bit about how elections work.
-
-Elections take place whenever there's a change in topology.
-
-Reconfiguring a replica set will always trigger an election that may or may not elect a new primary.
-
-But you will definitely see a new primary elected in two cases-- anytime the current primary node becomes unavailable, or when the current primary node steps down to be a secondary.
+Elections take place whenever there's a *change in topology. Reconfiguring a replica set will always trigger an election that may or may not elect a new primary*. But you will definitely see a *new primary elected in two cases -- anytime the current primary node becomes unavailable, or when the current primary node steps down to be a secondary*.
 
 The method to figure out which secondary will run for election begins with priority, which we'll discuss in a minute; and whichever node has the latest copy of the data.
 
