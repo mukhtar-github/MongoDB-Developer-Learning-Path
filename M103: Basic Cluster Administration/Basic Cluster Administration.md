@@ -4532,27 +4532,13 @@ Elections take place whenever there's a *change in topology. Reconfiguring a rep
 
 The method to figure out which *secondary will run for election begins with priority*, which we'll discuss in a minute; and whichever *node has the latest copy of the data*. So let's say every *node in our set has the same priority, which is the default unless we've been setting priorities for the nodes in our set*. And *one of the secondary nodes has the latest copy of the data*. So it's going to run for *election, and then automatically vote for itself*.
 
-Then it's going to ask the other *two nodes for their support in the election*. And they're going to say, all right, you have a pretty *recent copy of the data*, you seem like a good candidate, then they'll pledge their support as well. The *secondary node will be elected primary*.
+Then it's going to ask the other *two nodes for their support in the election*. And they're going to say, all right, you have a pretty *recent copy of the data*, you seem like a good candidate, then they'll pledge their support as well. The *secondary node will be elected primary*. There is also the very slim possibility that *two nodes run for election simultaneously*.
 
-There is also the very slim possibility that two nodes run for election simultaneously.
+But in a *replica set with an odd number of nodes*, this doesn't matter. The *two secondary nodes are both going to run, which means they're both going to vote for themselves*. And then the *former primaty node* is going to essentially decide which one of these *nodes becomes primary by virtue of a tie-breaker*.
 
-But in a replica set with an odd number of nodes, this doesn't matter.
+This becomes a problem when we have an *even number of voting members in a set*. If *two secondaries are running for election simultaneously* and there are an *even number of remaining nodes in the set*, there's a possibility that they *split the vote and there's a tie*. Now a *tie* is not the end of the world, because the *nodes* will just start over and hold another *election*.
 
-These two nodes are both going to run, which means they're both going to vote for themselves.
-
-And then this node is going to essentially decide which one of these nodes becomes primary by virtue of a tiebreaker.
-
-This becomes a problem when we have an even number of voting members in a set.
-
-If two secondaries are running for election simultaneously and there are an even number of remaining nodes in the set, there's a possibility that they split the vote and there's a tie.
-
-Now a tie is not the end of the world, because the nodes will just start over and hold another election.
-
-The problem with repeating elections over and over is that any applications accessing the data will have to pause all activity and wait until a primary is elected.
-
-An even number of nodes increases the chances an election has to be repeated, so we generally try to keep an odd number in our replica sets.
-
-Another important aspect of elections is the priority assigned to each node in a set.
+The problem with *repeating elections over and over is that any applications accessing the data will have to pause all activity and wait until a primary is elected*. An *even number of nodes increases the chances an election has to be repeated*, so we generally try to keep an *odd number in our replica sets*. Another important aspect of *elections is the priority assigned to each node in a set*.
 
 Priority is essentially the likelihood that a node will become the primary during an election.
 
