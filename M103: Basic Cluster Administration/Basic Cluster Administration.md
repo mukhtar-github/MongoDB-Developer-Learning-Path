@@ -4542,15 +4542,90 @@ The problem with *repeating elections over and over is that any applications acc
 
 *Priority* is essentially the likelihood that a *node will become the primary during an election. The default primary for a node is 1, and any node with priority 1 or higher can be elected primary*. We can *increase the priority of a node if we want it to be more likely at this node becomes primary*. But changing this value alone does not guarantee that. We can also set the *priority of node to be 0 if we never want that node to become primary*.
 
-A priority 0 node can still vote in elections, but it can't run for election.
+A *priority 0 node can still vote in elections, but it can't run for election*. Let's take a look at how to *change the priority of a node*. So here I'm just *storing a configuration document in a variable*. So here I'm just *setting the priority of one of our secondaries to 0* so it can never become the *primary node*. And here, I'm just *saving the new configuration in a replica set*.
 
-Let's take a look at how to change the priority of a node.
+```javascript
+// Storing replica set configuration as a variable cfg:
+m103-example:PRIMARY> cfg = rs.conf()
+{
+    "_id" : "m103-example",
+    "version" : 7,
+    "protocolVersion" : NumberLong(1),
+    "members" : [
+      {
+        "_id" : 0,
+        "host" : "localhost:27011",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 1,
+        "host" : "localhost:27012",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 2,
+        "host" : "localhost:27013",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : false,
+        "priority" : 1,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 1
+      },
+      {
+        "_id" : 3,
+        "host" : "localhost:27014",
+        "arbiterOnly" : false,
+        "buildIndexes" : true,
+        "hidden" : true,
+        "priority" : 0,
+        "tags" : {
+          
+        },
+        "slaveDelay" : NumberLong(0),
+        "votes" : 0
+      }
+    ],
+    "settings" : {
+      "chainingAllowed" : true,
+      "heartbeatIntervalMillis" : 2000,
+      "heartbeatTimeoutSecs" : 10,
+      "electionTimeoutMillis" : 10000,
+      "catchUpTimeoutMillis" : -1,
+      "catchUpTakeoverDelayMillis" : 30000,
+      "getLastErrorModes" : {
+        
+      },
+      "getLastErrorDefaults" : {
+        "w" : 1,
+        "wtimeout" : 0
+      },
+      "replicaSetId" : ObjectId("612a351f26dce4d03639158f")
+    }
+}
 
-So here I'm just storing a configuration document in a variable.
-
-So here I'm just setting the priority of one of our secondaries to 0 so it can never become the primary node.
-
-And here, I'm just saving the new configuration in a replica set.
+//Setting the priority of a node to 0, so it cannot become primary (making the node "passive"):
+cfg.members[2].priority = 0
+```
 
 So now we've reconfigured our replica set, I'm going to run rs.isMaster() through the new topology.
 
