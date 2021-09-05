@@ -4786,15 +4786,7 @@ Starting with *MongoDB 3.2.6, a write concern of majority actually implies j equ
 
 In general, the *core write commands all support write concern*. Now, we've talked about this all at a pretty high level. *Write concern* makes a lot more sense when you watch it in action. In an earlier lesson, we showed you how an *application writes "behave" during a failover event*. Let's return to that example now but to talk about *write concern*. We have our *three-member replica set with an application inserting data into the primary*.
 
-As you might remember, data is replicated from the primary to the secondaries.
-
-The default write concern is one.
-
-So even though we don't set the write concern explicitly, the application implicitly assigns it a write concern of one.
-
-At this point, we know that our primary has received the write operation.
-
-We've received one acknowledgment based on our write concern of one.
+As you might remember, *data is replicated from the primary to the secondaries*. The default *write concern is one*. So even though we don't set the *write concern explicitly, the application implicitly assigns it a write concern of one*. At this point, we know that our *primary has received the write operation*. We've received one *acknowledgment based on our write concern of one*.
 
 Since that matches the write concern we requested, we're good to go.
 
