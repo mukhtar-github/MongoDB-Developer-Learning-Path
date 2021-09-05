@@ -4826,22 +4826,8 @@ db.product.insert(
 wtimeout exceeded!
 ```
 
-Remember, the timeout error does not mean that the write failed.
+Remember, the *timeout error does not mean that the write failed*. We can see here that the primary and at least one secondary did acknowledge. But because we *timed out waiting for the requested write concern*, as far as the application is concerned, it did not receive the level of guarantee it requested. Generally, setting a *W of majority is a nice middle ground between fast writes and durability guarantees*.
 
-We can see here that the primary and at least one secondary did acknowledge.
+To recap, *write concern* allows your applications to request a certain *number of acknowledgments for a write operation for the MongoDB cluster*. These *acknowledgments* represent increasing *durability guarantees for a given write operations. Write concern comes with a trade off of write speed*. The *higher guarantee* you need that a right is durable, the *more time the overall write operation requires to complete*.
 
-But because we timed out waiting for the requested write concern, as far as the application is concerned, it did not receive the level of guarantee it requested.
-
-Generally, setting a W of majority is a nice middle ground between fast writes and durability guarantees.
-
-To recap, write concern allows your applications to request a certain number of acknowledgments for a write operation for the MongoDB cluster.
-
-These acknowledgments represent increasing durability guarantees for a given write operations.
-
-Write concern comes with a trade off of write speed.
-
-The higher guarantee you need that a right is durable, the more time the overall write operation requires to complete.
-
-MongoDB supports a write concern on all deployment types.
-
-That means standalone, replica sets, and sharded clusters all support write concern.
+*MongoDB supports a write concern* on all deployment types. That means *standalone, replica sets, and sharded clusters all support write concern*.
