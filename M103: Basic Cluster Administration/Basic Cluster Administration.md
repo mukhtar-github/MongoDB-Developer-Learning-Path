@@ -4763,3 +4763,21 @@ m103-example:PRIMARY> rs.isMaster()
 ```
 
 In a *three-node replica set, a majority is two nodes*. So if *two nodes go down, even if the primary is still available, it will step down*. At this point, an election cannot take place until *enough nodes* come back up to form a majority, and the clients will be able to connect to the whole set because there is no *primary*. So just to recap, we've covered *how availability is maintained during elections, the effective priority on elections, and the behavior of a replica set when a majority of the nodes aren't available*.
+
+### Write Concerns: Part 1
+
+*MongoDB write concern is an acknowledgment mechanism that developers can add to write operations*. Higher levels of acknowledgment produce a *stronger durability guarantee. Durability means that the write has propagated to the number of replica set member nodes specified in the write concern*. The more *replica set members that acknowledge the success of a write*, the more likely that the *write is durable in the event of a failure*.
+
+Majority here is defined as a simple majority of replica set members. So divide by two, and round up. The trade-off with increased durability is time. More durability requires more time to achieve the specified durability guarantee since you have to wait for those acknowledgments. Let's go over the available write concern levels. A write concern of zero means that the application doesn't wait for any acknowledgments.
+
+The write might succeed or fail. The application doesn't really care. It only checks that it can connect to the node successfully. Think of this like a fire-and-forget strategy-- very fast, but with no safety checks in place. The default write concern is one. That means the application waits for an acknowledgment from a single member of the replica set, specifically, the primary.
+
+This is a baseline guarantee of success. Write concerns greater than one increase the number of acknowledgments to include one or more secondary members. Higher levels of write concern correspond to a stronger guarantee of write durability. For example, I can set a write concern of three to require acknowledgment from all three replica set members. Majority is a keyword that translates to a majority of replica set members.
+
+It's a simple majority. So divide the number of members by two and round up. So this three-member replica set has a majority of two. A five-member replica set would have a majority of three-- so on and so forth. The nice thing with majority is that you don't have to update your write concern if you increase the size of your replica set. There's also a write concern level for replica set tags.
+
+That's a little advance for this course series, but you can check out our documentation on write concern for more information. We're just talking about replica sets in this lesson. But MongoDB supports write concern for both standalone and sharded clusters. For sharded clusters in particular, write concern is pushed down to the shard level. Finally, I want to make it very clear that no matter what write concern you specify, MongoDB always replicates data to every data-bearing node in the cluster.
+
+Write concern is just there for you to have a way of tracking the durability of inserted data. There are two additional write concern options that MongoDB provides. The first is wtimeout. This lets you set a maximum amount of time the application waits before marking an operation as failed. An important note here-- hitting a wtimeout error does not mean that the write operation itself has failed. It only means that the application did not get the level of durability that it requested.
+
+The second is j, or journal. This option requires that each replica set member to receive the write and commit to the journal filed for the write to be considered acknowledged. Starting with MongoDB 3.2.6, a write concern of majority actually implies j equals true. The advantage of setting j equals true for any given write concern is that you have a stronger guarantee that not only were the writes received, they've been written to an on-disk journal. If you set j to false, or if journaling is disabled on the mongod, the node only needs to store the data in memory before reporting success.
