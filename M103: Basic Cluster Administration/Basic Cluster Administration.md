@@ -4640,6 +4640,54 @@ m103-example:PRIMARY> rs.reconfig(cfg)
       }
     }
 }
+
+// Checking the new topology of our set:
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012"
+    ],
+    "passives" : [
+      "localhost:27013"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 8,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27011",
+    "me" : "localhost:27011",
+    "electionId" : ObjectId("7fffffff000000000000000a"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630830245, 1),
+        "t" : NumberLong(10)
+      },
+      "lastWriteDate" : ISODate("2021-09-05T08:24:05Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630830245, 1),
+        "t" : NumberLong(10)
+      },
+      "majorityWriteDate" : ISODate("2021-09-05T08:24:05Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-05T08:24:14.124Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630830245, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630830245, 1),
+      "signature" : {
+        "hash" : BinData(0,"VCK1URv9Gnt4QYgiwsrd0Lp4F3g="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
 ```
 
 So now we've reconfigured our replica set, I'm going to run rs.isMaster() through the new topology.
