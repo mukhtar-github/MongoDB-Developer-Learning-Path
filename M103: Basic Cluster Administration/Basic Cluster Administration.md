@@ -4834,122 +4834,28 @@ To recap, *write concern* allows your applications to request a certain *number 
 
 ### Read Concerns
 
-Read concern is a companion to write concern, an acknowledgment mechanism for read operations where developers can direct their application to perform read operations where the returned documents meet the requested durability guarantee.
+Read concern is a companion to write concern, an acknowledgment mechanism for read operations where developers can direct their application to perform read operations where the returned documents meet the requested durability guarantee. Consider a replica set where applications insert a document, which is acknowledged by the primary. Before the document can replicate to the secondaries, the application reads that document.
 
-Consider a replica set where applications insert a document, which is acknowledged by the primary.
+Suddenly, the primary fails. The document we have read has not yet replicated to the secondaries. When the old primary comes back online, that data is going to be rolled back as part of the synchronization process. While you can access the rolled back data manually, the application effectively has a piece of data that no longer exists in the cluster. This might cause problems in the application, depending on your architecture.
 
-Before the document can replicate to the secondaries, the application reads that document.
+Read concern provides a way of dealing with the issue of data durability during a failover event. Just like how write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents written by a read operation. The read operation only returns data acknowledged as having been written to a number of replica set members specified in the read concern.
 
-Suddenly, the primary fails.
+You can choose between returning the most recent data in a cluster or the data received by a majority of members in the cluster. One really important note. A document that does not meet the specified read concern is not a document that is guaranteed to be lost. It just means that at the time of the read, the data had not propagated to enough nodes to meet the requested durability guarantee. There are four read concern levels.
 
-The document we have read has not yet replicated to the secondaries.
+Local returns the most recent data in the cluster. Any data freshly written to the primary qualifies for local read concern. There are no guarantees that the data will be safe during a failover event. Local reads are the default for read operations against the primary. Available read concerns the same as local read concern for replica set deployments. Available read concern is the default for read operations against secondary members.
 
-When the old primary comes back online, that data is going to be rolled back as part of the synchronization process.
+Secondary reads are an aspect of MongoDB read preference, which is covered in a later lesson. The main difference between local and available read concern is in the context of sharded clusters. We're going to talk more about sharded clusters later. It's enough to know that available read concern has special behavior in sharded clusters. Majority read concern only returns data that has been acknowledged as written to a majority of replica set members.
 
-While you can access the rolled back data manually, the application effectively has a piece of data that no longer exists in the cluster.
+So here in our three-member replica set, our read operations would only return those documents written to both the primary and the secondary. The only way that documents returned by a read concern majority read operation could be lost is if a majority of replica set members went down and the documents were not replicated to the remaining replica set members, which is a very unlikely situation, depending on your deployment architecture.
 
-This might cause problems in the application, depending on your architecture.
+Majority read concern provides the stronger guarantee compared to local or available writes. But the trade-off is that you may not get the freshest or latest data in your cluster. As a special note, the MMAPv1 storage engine does not support write concern of majority. Linearizeable read concern was added in MongoDB 3.4, and has special behavior. Like read concern majority, it also only returns data that has been majority committed.
 
-Read concern provides a way of dealing with the issue of data durability during a failover event.
+Linearizeable goes beyond that, and provides read your own write functionality. So when should you use what read concern? Really depends on your application requirements. Fast, safe, or the latest data in your cluster. Pick two. That's the general idea. If you want fast reads of the latest data, local or available read concern should suit you just fine. But you are going to lose your durability guarantee.
 
-Just like how write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents written by a read operation.
+If you want fast reads of the safest data, then majority read concern is a good middle ground. But again, you may not be getting the latest written data to your cluster. If you want safe reads of the latest data at the time of the read operation, then linearizeable is a good choice, but it's more likely to be slower. And it's single document reads only. One thing to be really clear about, read concern doesn't prevent deleting data using a CRUD operation, such as delete.
 
-The read operation only returns data acknowledged as having been written to a number of replica set members specified in the read concern.
+We're only talking about the durability of data returned by a read operation in context of a failover event. In a later lesson, we're going to talk about read preference, where you can route your read operations to secondary members. Read preference for secondaries does allow you to specify local or available read concern, but you're going to lose the guarantee of getting the most recent data. So just remember that with secondary reads, local and available read concern is really just fast, but not necessarily the latest.
 
-You can choose between returning the most recent data in a cluster or the data received by a majority of members in the cluster.
+To recap, read concern uses an acknowledgment mechanism for read operations where applications can request only that data which meets the requested durability guarantee. There are four available read concern options. Local and available are identical for replica sets. Their behavior's more distinct in sharded clusters. Majority read concern is your middle ground between durability and fast reads, but it can return stale data. Linearizeable has the strongest durability guarantees, and always returns the freshest data in context of a read operation in exchange for potentially slow read operations as well as the overall restrictions and requirements for using it.
 
-One really important note.
-
-A document that does not meet the specified read concern is not a document that is guaranteed to be lost.
-
-It just means that at the time of the read, the data had not propagated to enough nodes to meet the requested durability guarantee.
-
-There are four read concern levels.
-
-Local returns the most recent data in the cluster.
-
-Any data freshly written to the primary qualifies for local read concern.
-
-There are no guarantees that the data will be safe during a failover event.
-
-Local reads are the default for read operations against the primary.
-
-Available read concerns the same as local read concern for replica set deployments.
-
-Available read concern is the default for read operations against secondary members.
-
-Secondary reads are an aspect of MongoDB read preference, which is covered in a later lesson.
-
-The main difference between local and available read concern is in the context of sharded clusters.
-
-We're going to talk more about sharded clusters later.
-
-It's enough to know that available read concern has special behavior in sharded clusters.
-
-Majority read concern only returns data that has been acknowledged as written to a majority of replica set members.
-
-So here in our three-member replica set, our read operations would only return those documents written to both the primary and the secondary.
-
-The only way that documents returned by a read concern majority read operation could be lost is if a majority of replica set members went down and the documents were not replicated to the remaining replica set members, which is a very unlikely situation, depending on your deployment architecture.
-
-Majority read concern provides the stronger guarantee compared to local or available writes.
-
-But the trade-off is that you may not get the freshest or latest data in your cluster.
-
-As a special note, the MMAPv1 storage engine does not support write concern of majority.
-
-Linearizeable read concern was added in MongoDB 3.4, and has special behavior.
-
-Like read concern majority, it also only returns data that has been majority committed.
-
-Linearizeable goes beyond that, and provides read your own write functionality.
-
-So when should you use what read concern?
-
-Really depends on your application requirements.
-
-Fast, safe, or the latest data in your cluster.
-
-Pick two.
-
-That's the general idea.
-
-If you want fast reads of the latest data, local or available read concern should suit you just fine.
-
-But you are going to lose your durability guarantee.
-
-If you want fast reads of the safest data, then majority read concern is a good middle ground.
-
-But again, you may not be getting the latest written data to your cluster.
-
-If you want safe reads of the latest data at the time of the read operation, then linearizeable is a good choice, but it's more likely to be slower.
-
-And it's single document reads only.
-
-One thing to be really clear about, read concern doesn't prevent deleting data using a CRUD operation, such as delete.
-
-We're only talking about the durability of data returned by a read operation in context of a failover event.
-
-In a later lesson, we're going to talk about read preference, where you can route your read operations to secondary members.
-
-Read preference for secondaries does allow you to specify local or available read concern, but you're going to lose the guarantee of getting the most recent data.
-
-So just remember that with secondary reads, local and available read concern is really just fast, but not necessarily the latest.
-
-To recap, read concern uses an acknowledgment mechanism for read operations where applications can request only that data which meets the requested durability guarantee.
-
-There are four available read concern options.
-
-Local and available are identical for replica sets.
-
-Their behavior's more distinct in sharded clusters.
-
-Majority read concern is your middle ground between durability and fast reads, but it can return stale data.
-
-Linearizeable has the strongest durability guarantees, and always returns the freshest data in context of a read operation in exchange for potentially slow read operations as well as the overall restrictions and requirements for using it.
-
-Finally, you can use read concern in conjunction with write concern to specify durability guarantees on both reads and writes.
-
-Remember that the two work together, but are not dependent on each other.
-
-You can use read concern with write concern or read concern without write concern.
+Finally, you can use read concern in conjunction with write concern to specify durability guarantees on both reads and writes. Remember that the two work together, but are not dependent on each other. You can use read concern with write concern or read concern without write concern.
