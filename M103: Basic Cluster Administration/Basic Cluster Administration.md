@@ -4814,7 +4814,7 @@ db.product.insert(
 
 So shouldn't I always set my *write concern as high as possible*? Well, a *stronger level of durability guarantee comes with the trade off*. Specifically, you have to wait for the *acknowledgments to come in*. That means your *write operations may take longer than required if you requested a lesser or even no write acknowledgment*. As the number of *replica set nodes increase, write operations may take even longer to return as successful*.
 
-Alternatively, what happens if one of your *secondaries are down*? Based on our *write concern*, we need an *acknowledgment from three members of the replica set*. This *write now blocks until the secondary* comes back online which may take longer than is acceptable. This is where the *W-timeout option* comes in handy. You can set it to a reasonable time wherein the *application* stops waiting and moves forward *throwing an error related to write concern*.
+Alternatively, what happens if one of your *secondaries are down*? Based on our *write concern*, we need an *acknowledgment from three members of the replica set*. This *write now blocks until the secondary* comes back online which may take longer than is acceptable. This is where the *wtimeout option* comes in handy. You can set it to a *reasonable time wherein the application stops waiting and moves forward throwing an error related to write concern*.
 
 ```javascript
 db.product.insert(
