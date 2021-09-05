@@ -4844,7 +4844,7 @@ db.products.insert(
 
 Suddenly, the *primary fails. The document we have read has not yet replicated to the secondaries*. When the *old primary comes back online, that data is going to be rolled back as part of the synchronization process*. While you can access the *rolled back data manually, the application effectively has a piece of data that no longer exists in the cluster*. This might cause problems in the *application, depending on your architecture*.
 
-Read concern provides a way of dealing with the issue of data durability during a failover event. Just like how write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents written by a read operation. The read operation only returns data acknowledged as having been written to a number of replica set members specified in the read concern.
+*Read concern* provides a way of dealing with the issue of *data durability during a failover event*. Just like how *write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents written by a read operation*. The *read operation only returns data acknowledged* as having been written to a number of *replica set members specified in the read concern*.
 
 You can choose between returning the most recent data in a cluster or the data received by a majority of members in the cluster. One really important note. A document that does not meet the specified read concern is not a document that is guaranteed to be lost. It just means that at the time of the read, the data had not propagated to enough nodes to meet the requested durability guarantee. There are four read concern levels.
 
