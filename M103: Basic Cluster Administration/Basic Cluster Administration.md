@@ -4768,7 +4768,7 @@ In a *three-node replica set, a majority is two nodes*. So if *two nodes go down
 
 *MongoDB write concern is an acknowledgment mechanism that developers can add to write operations*. Higher levels of acknowledgment produce a *stronger durability guarantee. Durability means that the write has propagated to the number of replica set member nodes specified in the write concern*. The more *replica set members that acknowledge the success of a write*, the more likely that the *write is durable in the event of a failure*.
 
-Majority here is defined as a simple majority of replica set members. So divide by two, and round up. The trade-off with increased durability is time. More durability requires more time to achieve the specified durability guarantee since you have to wait for those acknowledgments. Let's go over the available write concern levels. A write concern of zero means that the application doesn't wait for any acknowledgments.
+*Majority here is defined as a simple majority of replica set members*. So *divide by two, and round up*. The *trade-off with increased durability is time*. More *durability requires more time* to achieve the *specified durability guarantee* since you have to wait for those acknowledgments. Let's go over the *available write concern levels*. A *write concern of zero* means that the application doesn't wait for any acknowledgments.
 
 The write might succeed or fail. The application doesn't really care. It only checks that it can connect to the node successfully. Think of this like a fire-and-forget strategy-- very fast, but with no safety checks in place. The default write concern is one. That means the application waits for an acknowledgment from a single member of the replica set, specifically, the primary.
 
