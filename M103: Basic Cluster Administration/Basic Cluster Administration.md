@@ -4694,14 +4694,72 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the *current primary, there's only one node that's eligible to become the primary*. Which means that if we were to *call an election* right now, this *node would have to become the primary node*. So incidentally, by changing *node priority, we've rigged the election in favor of this node*.
+Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the *current primary, there's only one node that's eligible to become the primary*. Which means that if we were to *call an election* right now, this *node - ("localhost:27012") would have to become the primary node*. So incidentally, by changing *node priority, we've rigged the election in favor of this node*.
 
-So just to prove our theory, we'll call an *election on this replica set*. We just have to *wait for the election to complete*. All right, so it finished, and I'm just going to check what the *current primary* is. And we can see that we were right. This *node became the primary node* because it was the only *eligible primary in that election*. So one last thing to note. If the *current primary can't reach a majority of the other nodes in the set*, then it will automatically *step down to become a secondary*.
+So just to prove our theory, we'll call an *election on this replica set*. We just have to *wait for the election to complete*. All right, so it finished, and I'm just going to check what the *current primary* is. And we can see that we were right. This *node - ("localhost:27012") became the primary node* because it was the only *eligible primary in that election*. So one last thing to note. If the *current primary can't reach a majority of the other nodes in the set*, then it will automatically *step down to become a secondary*.
 
-In a three-node replica set, a majority is two nodes.
+```javascript
+// Forcing an election in this replica set (although in this case, we rigged the election so only one node could become primary):
+m103-example:PRIMARY> rs.stepDown()
+2021-09-05T09:32:55.158+0000 E QUERY    [thread1] Error: error doing query: failed: network error while attempting to run command 'replSetStepDown' on host 'localhost:27011'  :
+DB.prototype.runCommand@src/mongo/shell/db.js:168:1
+DB.prototype.adminCommand@src/mongo/shell/db.js:186:16
+rs.stepDown@src/mongo/shell/utils.js:1413:12
+@(shell):1:1
+2021-09-05T09:32:55.162+0000 I NETWORK  [thread1] Marking host localhost:27011 as failed :: caused by :: Location40657: Last known master host cannot be reached
+2021-09-05T09:32:55.163+0000 I NETWORK  [thread1] Socket closed remotely, no longer connected (idle 18 secs, remote host 127.0.0.1:27011)
+2021-09-05T09:32:55.166+0000 I NETWORK  [thread1] Successfully connected to localhost:27011 (1 connections now open to localhost:27011 with a 5 second timeout)
+2021-09-05T09:32:55.169+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+2021-09-05T09:32:55.672+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
+2021-09-05T09:32:56.178+0000 W NETWORK  [thread1] Unable to reach primary for set m103-example
 
-So if two nodes go down, even if the primary is still available, it will step down.
+// Checking the topology of our set after the election:
+m103-example:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:27011",
+      "localhost:27012"
+    ],
+    "passives" : [
+      "localhost:27013"
+    ],
+    "setName" : "m103-example",
+    "setVersion" : 8,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:27012",
+    "me" : "localhost:27012",
+    "electionId" : ObjectId("7fffffff000000000000000b"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1630834466, 1),
+        "t" : NumberLong(11)
+      },
+      "lastWriteDate" : ISODate("2021-09-05T09:34:26Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1630834466, 1),
+        "t" : NumberLong(11)
+      },
+      "majorityWriteDate" : ISODate("2021-09-05T09:34:26Z")
+    },
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-05T09:34:36.041Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1630834466, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630834466, 1),
+      "signature" : {
+        "hash" : BinData(0,"AerXo+qBHyVzA2AQ0rft7F3O+Yc="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
+```
 
-At this point, an election cannot take place until enough nodes come back up to form a majority, and the clients will be able to connect to the whole set because there is no primary.
-
-So just to recap, we've covered how availability is maintained during elections, the effective priority on elections, and the behavior of a replica set when a majority of the nodes aren't available.
+In a *three-node replica set, a majority is two nodes*. So if *two nodes go down, even if the primary is still available, it will step down*. At this point, an election cannot take place until *enough nodes* come back up to form a majority, and the clients will be able to connect to the whole set because there is no *primary*. So just to recap, we've covered *how availability is maintained during elections, the effective priority on elections, and the behavior of a replica set when a majority of the nodes aren't available*.
