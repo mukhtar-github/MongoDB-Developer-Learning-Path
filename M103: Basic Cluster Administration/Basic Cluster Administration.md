@@ -4540,15 +4540,7 @@ This becomes a problem when we have an *even number of voting members in a set*.
 
 The problem with *repeating elections over and over is that any applications accessing the data will have to pause all activity and wait until a primary is elected*. An *even number of nodes increases the chances an election has to be repeated*, so we generally try to keep an *odd number in our replica sets*. Another important aspect of *elections is the priority assigned to each node in a set*.
 
-Priority is essentially the likelihood that a node will become the primary during an election.
-
-The default primary for a node is 1, and any node with priority 1 or higher can be elected primary.
-
-We can increase the priority of a node if we want it to be more likely at this node becomes primary.
-
-But changing this value alone does not guarantee that.
-
-We can also set the priority of node to be 0 if we never want that node to become primary.
+*Priority* is essentially the likelihood that a *node will become the primary during an election. The default primary for a node is 1, and any node with priority 1 or higher can be elected primary*. We can *increase the priority of a node if we want it to be more likely at this node becomes primary*. But changing this value alone does not guarantee that. We can also set the *priority of node to be 0 if we never want that node to become primary*.
 
 A priority 0 node can still vote in elections, but it can't run for election.
 
