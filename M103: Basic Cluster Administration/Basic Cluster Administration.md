@@ -4522,21 +4522,9 @@ And because they're *secondaries, we can't write anything to the replica set, be
 
 In this lesson, we're going to discuss how *failovers and elections work in MongoDB*. The *primary node* is the first point of contact for any *client communicating to the database*. Even if *secondaries go down, the client will continue communicating with the node acting as primary until the primary is unavailable*. But what would cause a *primary to become unavailable*? A common reason is *maintenance*.
 
-So let's say we're doing a rolling upgrade on a three-node replica set.
+So let's say we're doing a *rolling upgrade on a three-node replica set*. A *rolling upgrade* just means we're upgrading one server at a time, *starting with the secondaries*. And eventually, we'll *upgrade the primary*. *Rolling upgrades* are great because they allow us to perform *updates while maximizing availability to any clients using the database*.
 
-A rolling upgrade just means we're upgrading one server at a time, starting with the secondaries.
-
-And eventually, we'll upgrade the primary.
-
-Rolling upgrades are great because they allow us to perform updates while maximizing availability to any clients using the database.
-
-We'll start by stopping the MongoDB process on a secondary, and then bringing it back up with the new database version.
-
-And we can do the same thing to upgrade our other secondary.
-
-When all of our secondaries have been upgraded, it's time to upgrade the primary.
-
-But restarting the database server on the primary would trigger an election anyway, so we're going to safely initiate an election with rs.stepDown().
+We'll start by *stopping the MongoDB process on a secondary*, and then bringing it back up with the *new database version*. And we can do the same thing to *upgrade our other secondary*. When all of our *secondaries have been upgraded, it's time to upgrade the primary*. But *restarting the database server on the primary would trigger an election anyway*, so we're going to *safely initiate an election with rs.stepDown()*.
 
 Once the election is complete, the last database server running the old database version will be a secondary node.
 
