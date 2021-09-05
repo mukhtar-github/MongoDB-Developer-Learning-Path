@@ -4801,29 +4801,11 @@ db.product.insert(
 )
 ```
 
-With *two acknowledgments the application can consider the write a success*. Now if the *primary* happens to go down, we have a reasonable g*uarantee that at least one of the secondaries has received the write operation*. If I set the *write concern to three, the application would require an acknowledgment from all three members before considering the write successful*.
+With *two acknowledgments the application can consider the write a success*. Now if the *primary* happens to go down, we have a reasonable *guarantee that at least one of the secondaries has received the write operation*. If I set the *write concern to three, the application would require an acknowledgment from all three members before considering the write successful*. At this point, you might be thinking, well, I want *guarantees of data durability*.
 
-At this point, you might be thinking, well, I want guarantees of data durability.
+So shouldn't I always set my *write concern as high as possible*? Well, a *stronger level of durability guarantee comes with the trade off*. Specifically, you have to wait for the *acknowledgments to come in*. That means your *write operations may take longer than required if you requested a lesser or even no write acknowledgment*. As the number of *replica set nodes increase, write operations may take even longer to return as successful*.
 
-So shouldn't I always set my write concern as high as possible?
-
-Well, a stronger level of durability guarantee comes with the trade off.
-
-Specifically, you have to wait for the acknowledgments to come in.
-
-That means your write operations may take longer than required if you requested a lesser or even no write acknowledgment.
-
-As the number of replica set nodes increase, write operations may take even longer to return as successful.
-
-Alternatively, what happens if one of your secondaries are down?
-
-Based on our write concern, we need an acknowledgment from three members of the replica set.
-
-This write now blocks until the secondary comes back online which may take longer than is acceptable.
-
-This is where the W timeout option comes in handy.
-
-You can set it to a reasonable time wherein the application stops waiting and moves forward throwing an error related to write concern.
+Alternatively, what happens if one of your *secondaries are down*? Based on our *write concern*, we need an *acknowledgment from three members of the replica set*. This *write now blocks until the secondary* comes back online which may take longer than is acceptable. This is where the *W-timeout option* comes in handy. You can set it to a reasonable time wherein the *application* stops waiting and moves forward *throwing an error related to write concern*.
 
 Remember, the timeout error does not mean that the write failed.
 
