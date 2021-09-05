@@ -4820,7 +4820,7 @@ Alternatively, what happens if one of your *secondaries are down*? Based on our 
 db.product.insert(
   {...},
   {
-    writeConcern : { w : 3 }
+    writeConcern : { w : 3, wtimeout : 60 }
   }
 )
 wtimeout exceeded!
