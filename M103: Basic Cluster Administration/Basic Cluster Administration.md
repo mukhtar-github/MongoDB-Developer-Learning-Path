@@ -4816,6 +4816,16 @@ So shouldn't I always set my *write concern as high as possible*? Well, a *stron
 
 Alternatively, what happens if one of your *secondaries are down*? Based on our *write concern*, we need an *acknowledgment from three members of the replica set*. This *write now blocks until the secondary* comes back online which may take longer than is acceptable. This is where the *W-timeout option* comes in handy. You can set it to a reasonable time wherein the *application* stops waiting and moves forward *throwing an error related to write concern*.
 
+```javascript
+db.product.insert(
+  {...},
+  {
+    writeConcern : { w : 3 }
+  }
+)
+wtimeout exceeded!
+```
+
 Remember, the timeout error does not mean that the write failed.
 
 We can see here that the primary and at least one secondary did acknowledge.
