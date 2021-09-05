@@ -4792,6 +4792,15 @@ Since that matches the *write concern* we requested, we're good to go. But what 
 
 As far as our *application is concerned, this was a successful write*. But when this *primary* comes back online the right would actually be rolled back. Let's imagine the same scenario but with a *write concern of majority*. That means we now would need an *acknowledgment from two members of our three-member replica set. The application waits until the primary reports that at least one of the secondaries has also acknowledged the write*.
 
+```javascript
+db.product.insert(
+  {...},
+  {
+    writeConcern : { w : "majority"}
+  }
+)
+```
+
 With *two acknowledgments the application can consider the write a success*. Now if the *primary* happens to go down, we have a reasonable g*uarantee that at least one of the secondaries has received the write operation*. If I set the *write concern to three, the application would require an acknowledgment from all three members before considering the write successful*.
 
 At this point, you might be thinking, well, I want guarantees of data durability.
