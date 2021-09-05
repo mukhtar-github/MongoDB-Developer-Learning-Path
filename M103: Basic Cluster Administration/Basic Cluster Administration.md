@@ -4624,7 +4624,22 @@ m103-example:PRIMARY> cfg = rs.conf()
 }
 
 //Setting the priority of a node to 0, so it cannot become primary (making the node "passive"):
-cfg.members[2].priority = 0
+m103-example:PRIMARY> cfg.members[2].priority = 0
+0
+
+// Updating our replica set to use the new configuration cfg:
+m103-example:PRIMARY> rs.reconfig(cfg)
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1630830151, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1630830151, 1),
+      "signature" : {
+        "hash" : BinData(0,"z9yzl00pifXC5QX+CPMlejReJ3s="),
+        "keyId" : NumberLong("7001466986551050241")
+      }
+    }
+}
 ```
 
 So now we've reconfigured our replica set, I'm going to run rs.isMaster() through the new topology.
