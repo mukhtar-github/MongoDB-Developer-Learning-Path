@@ -4788,15 +4788,7 @@ In general, the *core write commands all support write concern*. Now, we've talk
 
 As you might remember, *data is replicated from the primary to the secondaries*. The default *write concern is one*. So even though we don't set the *write concern explicitly, the application implicitly assigns it a write concern of one*. At this point, we know that our *primary has received the write operation*. We've received one *acknowledgment based on our write concern of one*.
 
-Since that matches the write concern we requested, we're good to go.
-
-But what would happen if the primary failed at this point of time before it completes replicating this write to the secondaries?
-
-The secondaries won't see the write.
-
-While it was successful on a single node, we had no guarantee that the write had propagated to the remaining replica set members.
-
-Even though we got the level of write concern we asked for, the guarantee level was too low to accommodate the scenario.
+Since that matches the *write concern* we requested, we're good to go. But what would happen if the *primary failed at this point of time before it completes replicating this write to the secondaries*? The *secondaries won't see the write*. While it was successful on a *single node, we had no guarantee that the write had propagated to the remaining replica set members*. Even though we got the level of *write concern* we asked for, the *guarantee level was too low to accommodate the scenario*.
 
 As far as our application is concerned, this was a successful write.
 
