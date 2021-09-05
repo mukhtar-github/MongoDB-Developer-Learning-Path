@@ -4834,7 +4834,7 @@ To recap, *write concern* allows your applications to request a certain *number 
 
 ### Read Concerns
 
-Read concern is a companion to write concern, an acknowledgment mechanism for read operations where developers can direct their application to perform read operations where the returned documents meet the requested durability guarantee. Consider a replica set where applications insert a document, which is acknowledged by the primary. Before the document can replicate to the secondaries, the application reads that document.
+*Read concern is a companion to write concern, an acknowledgment mechanism for read operations* where developers can direct their *application to perform read operations* where the returned documents meet the requested *durability guarantee*. Consider a *replica set where applications insert a document*, which is *acknowledged by the primary*. Before the document can *replicate to the secondaries, the application reads that document*.
 
 Suddenly, the primary fails. The document we have read has not yet replicated to the secondaries. When the old primary comes back online, that data is going to be rolled back as part of the synchronization process. While you can access the rolled back data manually, the application effectively has a piece of data that no longer exists in the cluster. This might cause problems in the application, depending on your architecture.
 
