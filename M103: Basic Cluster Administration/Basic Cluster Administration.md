@@ -4784,17 +4784,7 @@ Starting with *MongoDB 3.2.6, a write concern of majority actually implies j equ
 
 ### Write Concerns: Part 2
 
-In general, the core write commands all support write concern.
-
-Now, we've talked about this all at a pretty high level.
-
-Write concern makes a lot more sense when you watch it in action.
-
-In an earlier lesson, we showed you how an application writes "behave" during a failover event.
-
-Let's return to that example now but to talk about write concern.
-
-We have our three-member replica set with an application inserting data into the primary.
+In general, the *core write commands all support write concern*. Now, we've talked about this all at a pretty high level. *Write concern* makes a lot more sense when you watch it in action. In an earlier lesson, we showed you how an *application writes "behave" during a failover event*. Let's return to that example now but to talk about *write concern*. We have our *three-member replica set with an application inserting data into the primary*.
 
 As you might remember, data is replicated from the primary to the secondaries.
 
