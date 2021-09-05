@@ -4530,19 +4530,9 @@ Once the *election is complete, the last database server running the old databas
 
 Elections take place whenever there's a *change in topology. Reconfiguring a replica set will always trigger an election that may or may not elect a new primary*. But you will definitely see a *new primary elected in two cases -- anytime the current primary node becomes unavailable, or when the current primary node steps down to be a secondary*.
 
-The method to figure out which secondary will run for election begins with priority, which we'll discuss in a minute; and whichever node has the latest copy of the data.
+The method to figure out which *secondary will run for election begins with priority*, which we'll discuss in a minute; and whichever *node has the latest copy of the data*. So let's say every *node in our set has the same priority, which is the default unless we've been setting priorities for the nodes in our set*. And *one of the secondary nodes has the latest copy of the data*. So it's going to run for *election, and then automatically vote for itself*.
 
-So let's say every node in our set has the same priority, which is the default unless we've been setting priorities for the nodes in our set.
-
-And this node has the latest copy of the data.
-
-So it's going to run for election, and then automatically vote for itself.
-
-Then it's going to ask the other two nodes for their support in the election.
-
-And they're going to say, all right, you have a pretty recent copy of the data, you seem like a good candidate, then they'll pledge their support as well.
-
-This node will be elected primary.
+Then it's going to ask the other *two nodes for their support in the election*. And they're going to say, all right, you have a pretty *recent copy of the data*, you seem like a good candidate, then they'll pledge their support as well. The *secondary node will be elected primary*.
 
 There is also the very slim possibility that two nodes run for election simultaneously.
 
