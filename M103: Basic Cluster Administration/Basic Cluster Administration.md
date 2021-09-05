@@ -4694,11 +4694,7 @@ m103-example:PRIMARY> rs.isMaster()
 }
 ```
 
-Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the current primary, there's only one node that's eligible to become the primary.
-
-Which means that if we were to call an election right now, this node would have to become the primary node.
-
-So incidentally, by changing node priority, we've rigged the election in favor of this node.
+Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the *current primary, there's only one node that's eligible to become the primary*. Which means that if we were to *call an election* right now, this *node would have to become the primary node*. So incidentally, by changing *node priority, we've rigged the election in favor of this node*.
 
 So just to prove our theory, we'll call an election on this replica set.
 
