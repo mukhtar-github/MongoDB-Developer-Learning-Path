@@ -4696,19 +4696,7 @@ m103-example:PRIMARY> rs.isMaster()
 
 Something I want to point out here. When we call *rs.stepDown()*, it always tries to choose a *new primary node*. But in this case, other than the *current primary, there's only one node that's eligible to become the primary*. Which means that if we were to *call an election* right now, this *node would have to become the primary node*. So incidentally, by changing *node priority, we've rigged the election in favor of this node*.
 
-So just to prove our theory, we'll call an election on this replica set.
-
-We just have to wait for the election to complete.
-
-All right, so it finished, and I'm just going to check what the current primary is.
-
-And we can see that we were right.
-
-This node became the primary node because it was the only eligible primary in that election.
-
-So one last thing to note.
-
-If the current primary can't reach a majority of the other nodes in the set, then it will automatically step down to become a secondary.
+So just to prove our theory, we'll call an *election on this replica set*. We just have to *wait for the election to complete*. All right, so it finished, and I'm just going to check what the *current primary* is. And we can see that we were right. This *node became the primary node* because it was the only *eligible primary in that election*. So one last thing to note. If the *current primary can't reach a majority of the other nodes in the set*, then it will automatically *step down to become a secondary*.
 
 In a three-node replica set, a majority is two nodes.
 
