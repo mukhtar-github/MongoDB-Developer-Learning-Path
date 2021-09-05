@@ -4520,15 +4520,7 @@ And because they're *secondaries, we can't write anything to the replica set, be
 
 ### Failover and Elections
 
-In this lesson, we're going to discuss how failovers and elections work in MongoDB.
-
-The primary node is the first point of contact for any client communicating to the database.
-
-Even if secondaries go down, the client will continue communicating with the node acting as primary until the primary is unavailable.
-
-But what would cause a primary to become unavailable?
-
-A common reason is maintenance.
+In this lesson, we're going to discuss how *failovers and elections work in MongoDB*. The *primary node* is the first point of contact for any *client communicating to the database*. Even if *secondaries go down, the client will continue communicating with the node acting as primary until the primary is unavailable*. But what would cause a *primary to become unavailable*? A common reason is *maintenance*.
 
 So let's say we're doing a rolling upgrade on a three-node replica set.
 
