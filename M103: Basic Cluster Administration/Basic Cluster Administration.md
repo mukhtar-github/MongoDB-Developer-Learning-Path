@@ -4858,9 +4858,7 @@ There are *four read concern* levels. *Local* returns the most *recent data in t
 
 *Available read concern* is the default for *read operations against secondary members. Secondary reads* are an aspect of *MongoDB read preference*, which is covered in a later lesson. The main difference between *local and available read concern is in the context of sharded clusters*. We're going to talk more about *sharded clusters later*. It's enough to know that *available read concern has special behavior in sharded clusters*.
 
-Majority read concern only returns data that has been acknowledged as written to a majority of replica set members.
-
-So here in our three-member replica set, our read operations would only return those documents written to both the primary and the secondary. The only way that documents returned by a read concern majority read operation could be lost is if a majority of replica set members went down and the documents were not replicated to the remaining replica set members, which is a very unlikely situation, depending on your deployment architecture.
+*Majority read concern only returns data that has been acknowledged as written to a majority of replica set members*. So here in our *three-member replica set, our read operations* would only return those *documents written to both the primary and the secondary*. The only way that documents returned by a *read concern majority read operation* could be lost is if a *majority of replica set members* went down and the documents were not *replicated to the remaining replica set members*, which is a very unlikely situation, depending on your deployment architecture.
 
 Majority read concern provides the stronger guarantee compared to local or available writes. But the trade-off is that you may not get the freshest or latest data in your cluster. As a special note, the MMAPv1 storage engine does not support write concern of majority. Linearizeable read concern was added in MongoDB 3.4, and has special behavior. Like read concern majority, it also only returns data that has been majority committed.
 
