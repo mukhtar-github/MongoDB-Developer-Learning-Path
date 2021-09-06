@@ -4844,7 +4844,7 @@ db.products.insert(
 
 Suddenly, the *primary fails. The document we have read has not yet replicated to the secondaries*. When the *old primary comes back online, that data is going to be rolled back as part of the synchronization process*. While you can access the *rolled back data manually, the application effectively has a piece of data that no longer exists in the cluster*. This might cause problems in the *application, depending on your architecture*.
 
-*Read concern* provides a way of dealing with the issue of *data durability during a failover event*. Just like how *write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents returned by a read operation*. The *read operation only returns data acknowledged* as having been written to a number of *replica set members specified in the read concern*.
+*Read concern* provides a way of dealing with the issue of *data durability during a failover event*. Just like how *write concern lets you specify how durable write operations should be, read concern lets your application specify a durability guarantee for documents returned by a read operation. The read operation only returns data acknowledged* as having been written to a number of *replica set members specified in the read concern*.
 
 ```javascript
 db.products.find(
@@ -4852,11 +4852,13 @@ db.products.find(
 ).readConcern( level : "majority" )
 ```
 
-You can choose between returning the most recent data in a cluster or the data received by a majority of members in the cluster. One really important note. A document that does not meet the specified read concern is not a document that is guaranteed to be lost. It just means that at the time of the read, the data had not propagated to enough nodes to meet the requested durability guarantee. There are four read concern levels.
+You can choose between returning the *most recent data in a cluster or the data received by a majority of members in the cluster*. One really important note. A document that does not meet the specified *read concern* is not a document that is *guaranteed to be lost*. It just means that at the *time of the read, the data had not propagated to enough nodes* to meet the requested *durability guarantee*.
 
-Local returns the most recent data in the cluster. Any data freshly written to the primary qualifies for local read concern. There are no guarantees that the data will be safe during a failover event. Local reads are the default for read operations against the primary. Available read concerns the same as local read concern for replica set deployments. Available read concern is the default for read operations against secondary members.
+There are *four read concern* levels. *Local* returns the most *recent data in the cluster*. Any data freshly written to the *primary qualifies for local read concern*. There are no *guarantees* that the data will be safe during a *failover* event. *Local reads* are the default for *read operations against the primary. Available read concerns is the same as local read concern for replica set deployments*.
 
-Secondary reads are an aspect of MongoDB read preference, which is covered in a later lesson. The main difference between local and available read concern is in the context of sharded clusters. We're going to talk more about sharded clusters later. It's enough to know that available read concern has special behavior in sharded clusters. Majority read concern only returns data that has been acknowledged as written to a majority of replica set members.
+*Available read concern* is the default for *read operations against secondary members. Secondary reads* are an aspect of *MongoDB read preference*, which is covered in a later lesson. The main difference between *local and available read concern is in the context of sharded clusters*. We're going to talk more about *sharded clusters later*. It's enough to know that *available read concern has special behavior in sharded clusters*.
+
+Majority read concern only returns data that has been acknowledged as written to a majority of replica set members.
 
 So here in our three-member replica set, our read operations would only return those documents written to both the primary and the secondary. The only way that documents returned by a read concern majority read operation could be lost is if a majority of replica set members went down and the documents were not replicated to the remaining replica set members, which is a very unlikely situation, depending on your deployment architecture.
 
