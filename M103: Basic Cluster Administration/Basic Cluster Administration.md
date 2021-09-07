@@ -4878,9 +4878,21 @@ To recap, *read concern uses an acknowledgment mechanism for read operations whe
 
 *Read preference* allows your applications to route read operations to *specific members of a replica set. Read preference* is principally a driver side setting. Make sure to check your *driver documentation* for complete instructions on specifying a *read preference for your read operations*.
 
-Take the *three member replica set*, for example. By default, your applications *read and write data on the primary*. With *replica sets, data is replicated to all data bearing members*. So both of the *secondaries would eventually have copies of the primary data*. What if we, instead, wanted to have our application prefer *reading from a secondary member*?
+Take the *three member replica set*, for example. By default, your applications *read and write data on the primary*. With *replica sets, data is replicated to all data bearing members*. So both of the *secondaries would eventually have copies of the primary data*. What if we, instead, wanted to have our application prefer *reading from a secondary member?*
+
+```javascript
+db.product.find(
+  { "name" : "Mongo 101", ... }
+)
+```
 
 With the *read preference*, we can direct the application to *route its query to a secondary member of the replica set, instead of the primary*. There are *five supported read preference modes. Primary read preference routes all read operations to the primary only*. This is the default read preference.
+
+```javascript
+db.product.find(
+  { "name" : "Mongo 101", ... }
+)
+```
 
 PrimaryPreferred routes read operations to the primary.
 
