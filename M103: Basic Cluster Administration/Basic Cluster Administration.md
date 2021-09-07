@@ -4928,4 +4928,4 @@ This table gives you an idea of some of the scenarios where you'd use a given *r
 
 > Geographically distributed replica sets are more likely to suffer from stale reads, for example, than a replica set where all the members are in the same geographic region, or even the same data center.
 
-To summarize, read preference lets you choose what replica set members to route read operations to. The big drawback of using a read preference, other than primary, is the potential for stale read operations. And the nearest read preference is most useful if you want to support geographically local reads. Just remember that it can come with the potential of reading stale data.
+To summarize, *read preference* lets you choose what *replica set members to route read operations* to. The big drawback of using a *secondary read preference, other than primary*, is the potential for *stale read operations*. And the *nearest read preference is most useful if you want to support geographically local reads*. Just remember that it can come with the *potential of reading stale data*.
