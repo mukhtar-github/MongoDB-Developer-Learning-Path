@@ -4891,16 +4891,10 @@ With the *read preference*, we can direct the application to *route its query to
 ```javascript
 db.product.find(
   { "name" : "Mongo 101", ... }
-)
+).readPref("secondaryPreferred")
 ```
 
-PrimaryPreferred routes read operations to the primary.
-
-But if the primary is unavailable, such as during an election or fail-over event, the application can route reads to an available secondary member instead.
-
-Secondary routes read operations only to the secondary members in the replica set.
-
-SecondaryPreferred routes read operations to the secondary members.
+*PrimaryPreferred routes read operations to the primary*. But if the *primary* is unavailable, such as during an election or fail-over event, the application can *route reads to an available secondary* member instead. *Secondary routes read operations only to the secondary members in the replica set. SecondaryPreferred routes read operations to the secondary members*.
 
 But if no secondary members are available, the operation then routes to the primary.
 
