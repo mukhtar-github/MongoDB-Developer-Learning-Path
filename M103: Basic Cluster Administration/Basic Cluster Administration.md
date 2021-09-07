@@ -4873,3 +4873,55 @@ One thing to be really clear about, *read concern doesn't prevent deleting data 
 To recap, *read concern uses an acknowledgment mechanism for read operations where applications can request only that data which meets the requested durability guarantee*. There are four available read concern options. *Local and available are identical for replica sets*. Their behavior's more distinct in *sharded clusters. Majority read concern is your middle ground between durability and fast reads*, but it can return stale data.
 
 *Linearizeable has the strongest durability guarantees*, and always returns the *freshest data in context of a read operation* in exchange for potentially *slow read operations* as well as the overall restrictions and requirements for using it. Finally, you can use *read concern in conjunction with write concern to specify durability guarantees on both reads and writes*. Remember that the two work together, but are not dependent on each other. You can use *read concern with write concern or read concern without write concern*.
+
+### Read Preferences
+
+*Read preference* allows your applications to route read operations to *specific members of a replica set. Read preference* is principally a driver side setting. Make sure to check your *driver documentation* for complete instructions on specifying a *read preference for your read operations*.
+
+Take this three member replica set, for example. By default, your applications read and write data on the primary. With replica sets, data is replicated to all data bearing members. So both of these secondaries would eventually have copies of the primary data. What if we, instead, wanted to have our application prefer reading from a secondary member?
+
+With the read preference, we can direct the application to route its query to a secondary member of the replica set, instead of the primary.
+
+There are five supported read preference modes.
+
+Primary read preference routes all read operations to the primary only.
+
+This is the default read preference.
+
+PrimaryPreferred routes read operations to the primary.
+
+But if the primary is unavailable, such as during an election or fail-over event, the application can route reads to an available secondary member instead.
+
+Secondary routes read operations only to the secondary members in the replica set.
+
+SecondaryPreferred routes read operations to the secondary members.
+
+But if no secondary members are available, the operation then routes to the primary.
+
+Nearest routes read operations to the replica set member with the least network latency to the host, regardless of the members type.
+
+This typically supports geographically local read operations.
+
+With secondary reads, always keep in mind that depending on the amount of replication latency in a replica set, you can receive stale data.
+
+For example, let's say this replica set receives a write operation that updates this document, where name is Mongo 101, to have a status of published.
+
+At this time, the secondary still has the old version of this document where the status is pending.
+
+If I issue a secondary read, using nearest read preference selects the secondary member to read from, I'm going to get an older version of this document.
+
+This table gives you an idea of some of the scenarios where you'd use a given read preference.
+
+The big takeaway here, is that secondary reads always have a chance of returning stale data.
+
+How stale that data is, depends entirely on how much of a delay there is between your primary and your secondaries.
+
+Geographically distributed replica sets are more likely to suffer from stale reads, for example, than a replica set where all the members are in the same geographic region, or even the same data center.
+
+To summarize, read preference lets you choose what replica set members to route read operations to.
+
+The big drawback of using a read preference, other than primary, is the potential for stale read operations.
+
+And the nearest read preference is most useful if you want to support geographically local reads.
+
+Just remember that it can come with the potential of reading stale data.
