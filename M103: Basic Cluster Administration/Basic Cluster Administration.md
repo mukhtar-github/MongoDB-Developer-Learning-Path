@@ -4886,7 +4886,7 @@ db.product.find(
 )
 ```
 
-With the *read preference*, we can direct the application to *route its query to a secondary member of the replica set, instead of the primary*. There are *five supported read preference modes. Primary read preference routes all read operations to the primary only*. This is the default read preference.
+With the *read preference*, we can direct the application to *route its query to a secondary member of the replica set, instead of the primary*. There are *five supported read preference* modes. *Primary* read preference routes all read operations to the *primary* only. This is the default read preference.
 
 ```javascript
 db.product.find(
@@ -4894,13 +4894,9 @@ db.product.find(
 ).readPref("secondaryPreferred")
 ```
 
-*PrimaryPreferred routes read operations to the primary*. But if the *primary* is unavailable, such as during an election or fail-over event, the application can *route reads to an available secondary* member instead. *Secondary routes read operations only to the secondary members in the replica set. SecondaryPreferred routes read operations to the secondary members*.
+*PrimaryPreferred* routes read operations to the primary. But if the *primary* is unavailable, such as during an election or fail-over event, the application can route reads to an available *secondary* member instead. *Secondary* routes read operations only to the *secondary* members in the replica set. *SecondaryPreferred* routes read operations to the *secondary* members. But if no *secondary* members are available, the operation then routes to the *primary*.
 
-But if no *secondary members* are available, the operation then *routes to the primary. Nearest routes read operations to the replica set member* with the least network latency to the host, regardless of the members type. This typically supports *geographically local read operations*.
-
-With secondary reads, always keep in mind that depending on the amount of replication latency in a replica set, you can receive stale data.
-
-For example, let's say this replica set receives a write operation that updates this document, where name is Mongo 101, to have a status of published.
+*Nearest* routes read operations to the replica set member with the least network latency to the host, regardless of the members type. This typically supports *geographically local read operations*. With *secondary reads*, always keep in mind that depending on the amount of *replication latency in a replica set*, you can receive *stale data*. For example, let's say a replica set receives a write operation that updates a document, where name is *Mongo 101*, to have a *status of published*.
 
 At this time, the secondary still has the old version of this document where the status is pending.
 
