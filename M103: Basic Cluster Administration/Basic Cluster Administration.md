@@ -4916,7 +4916,7 @@ At this time, the *secondary* still has the old version of this document where t
 }
 ```
 
-This table gives you an idea of some of the scenarios where you'd use a given read preference. The big takeaway here, is that secondary reads always have a chance of returning stale data. How stale that data is, depends entirely on how much of a delay there is between your primary and your secondaries.
+This table gives you an idea of some of the scenarios where you'd use a given *read preference*. The big takeaway here, is that *secondary reads* always have a chance of returning *stale data*. How *stale that data* is, depends entirely on how much of a delay there is between your *primary and your secondaries*.
 
 | Scenario                                                  | Tradeoff                              | Read Preferrence     |
 |-----------------------------------------------------------|---------------------------------------|----------------------|
