@@ -4918,13 +4918,13 @@ At this time, the *secondary* still has the old version of this document where t
 
 This table gives you an idea of some of the scenarios where you'd use a given read preference. The big takeaway here, is that secondary reads always have a chance of returning stale data. How stale that data is, depends entirely on how much of a delay there is between your primary and your secondaries.
 
-| Scenario                                                  | Tradeoff                              | Read Preferrence     |   |   |
-|-----------------------------------------------------------|---------------------------------------|----------------------|---|---|
-| Read from the primary only                                | Secondaries are for availability only | *primary* (default)  |   |   |
-| If the primary is unavailable, read from a secondary      | Possible to read stale data           | *primaryPreferred*   |   |   |
-| Read from secondary members only                          | Possible to read stale data           | *secondary*          |   |   |
-| If all secondaries are unavailable, read from the primary | Possible to read stale data           | *secondaryPreferred* |   |   |
-| Application's read from the geographically closest member | Possible to read stale data           | *nearest*            |   |   |
+| Scenario                                                  | Tradeoff                              | Read Preferrence     |
+|-----------------------------------------------------------|---------------------------------------|----------------------|
+| Read from the primary only                                | Secondaries are for availability only | *primary* (default)  |
+| If the primary is unavailable, read from a secondary      | Possible to read stale data           | *primaryPreferred*   |
+| Read from secondary members only                          | Possible to read stale data           | *secondary*          |
+| If all secondaries are unavailable, read from the primary | Possible to read stale data           | *secondaryPreferred* |
+| Application's read from the geographically closest member | Possible to read stale data           | *nearest*            |
 
 > Geographically distributed replica sets are more likely to suffer from stale reads, for example, than a replica set where all the members are in the same geographic region, or even the same data center.
 
