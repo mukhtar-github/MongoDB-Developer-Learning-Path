@@ -4941,3 +4941,77 @@ Consider a *3-node replica set* that experiences a network outage. Two of the th
 The key concept to understand here is that when *two nodes* go down in a *three-node replica set*, the *third node becomes a secondary* regardless of whether it started as a *primary*.
 
 Therefore, connecting to the *third node* is the same as connecting to a *secondary node*, and any *readPreference* will work except for *primary*, which requires all operations to read from the *primary node*.
+
+## Chapter 3: Sharding
+
+### What is Sharding?
+
+So until this point, we've learned about MongoDB deployments of small and average sizes.
+
+So it's feasible to store an entire data set on one server.
+
+In a replica set, we have more than one server in our database.
+
+But each server still has to contain the entire dataset.
+
+As our dataset grows to the point where our machines can't properly service client applications, one of our options is just to make the machines better.
+
+We could increase the capacity of individual machines so they have more RAM, or disk space, or maybe a more powerful CPU.
+
+This is referred to as vertical scaling.
+
+But this could potentially become very expensive.
+
+And besides, cloud-based providers aren't going to let us scale vertically forever.
+
+They'll eventually put a limit on the possible hardware configurations, which would effectively limit our storage layer.
+
+In MongoDB, scaling is done horizontally, which means instead of making the individual machines better, we just add more machines and then distribute the dataset among those machines.
+
+The way we distribute data in MongoDB is called Sharding.
+
+And Sharding allows us to grow our dataset without worrying about being able to store it all on one server.
+
+Instead, we divide the dataset into pieces and then distribute the pieces across as many shards as we want.
+
+Together, the shards make up a Sharded Cluster.
+
+In order to guarantee high availability in our Sharded Cluster, we deploy each shard as a replica set.
+
+This way, we can ensure a level of fault tolerance against each piece of data regardless of which shard actually contains that data.
+
+So with our data distributed across several servers, queries may become a little tricky.
+
+We query our database looking for a specific document.
+
+It's not obvious at first where to look for it.
+
+So in between a Sharded Cluster and its clients, we set up a kind of router process that accepts queries from clients and then figures out which shard should receive that query.
+
+That router process is called the Mongos.
+
+And clients connect to Mongos us instead of connecting to each shard individually.
+
+And we have any number of Mongos processes so we can service many different applications or requests to the same Sharded Cluster.
+
+So Mongos must be pretty small, right, to know where each piece of data is at any given point in time in a massive Sharded Cluster?
+
+But actually, Mongos doesn't know anything.
+
+It uses the metadata about which data is contained on each shard.
+
+And that metadata is stored on the Config Servers.
+
+But the data on the Config Servers is used very often by Mongos.
+
+So we need to make sure that data stays highly available.
+
+And you can probably guess how we guarantee high availability here.
+
+Yes, we use replication.
+
+We replicate the data on the Config Servers.
+
+So instead of a single Config Server, we deploy a Config Server Replica Set.
+
+So that's a high level overview of Sharding in MongoDB-- the Sharded Cluster contains the shards where the data lives; the Config Servers, which contain the metadata of each shard; and the Mongos, which routes the queries to the correct shards.
