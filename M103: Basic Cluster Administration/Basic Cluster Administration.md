@@ -4880,13 +4880,7 @@ To recap, *read concern uses an acknowledgment mechanism for read operations whe
 
 Take the *three member replica set*, for example. By default, your applications *read and write data on the primary*. With *replica sets, data is replicated to all data bearing members*. So both of the *secondaries would eventually have copies of the primary data*. What if we, instead, wanted to have our application prefer *reading from a secondary member*?
 
-With the read preference, we can direct the application to route its query to a secondary member of the replica set, instead of the primary.
-
-There are five supported read preference modes.
-
-Primary read preference routes all read operations to the primary only.
-
-This is the default read preference.
+With the *read preference*, we can direct the application to *route its query to a secondary member of the replica set, instead of the primary*. There are *five supported read preference modes. Primary read preference routes all read operations to the primary only*. This is the default read preference.
 
 PrimaryPreferred routes read operations to the primary.
 
