@@ -4990,15 +4990,7 @@ You can learn all about it in our *M121 MongoDB Aggregation Course*. So stay tun
 
 ### Sharding Architecture
 
-So in this lesson, we're going to walk to the architecture of a sharded cluster.
-
-The most important aspect of a sharded cluster is that we can add any number of shards.
-
-And because that could potentially be a lot of different shards, client applications aren't going to communicate directly with the shards.
-
-Instead, we set up a kind of router process called mongos.
-
-Then the client connects to mongos, and mongos routes queries to the correct shards.
+So in this lesson, we're going to walk to the *architecture of a sharded cluster*. The most important aspect of a *sharded cluster is that we can add any number of shards*. And because that could potentially be *a lot of different shards*, client applications aren't going to *communicate directly with the shards*. Instead, we set up a kind of *router process called mongos*. Then the client connects to mongos, and mongos routes queries to the correct shards.
 
 So how does mongos figure out exactly where everything is?
 
