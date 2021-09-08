@@ -4990,19 +4990,9 @@ You can learn all about it in our *M121 MongoDB Aggregation Course*. So stay tun
 
 ### Sharding Architecture
 
-So in this lesson, we're going to walk to the *architecture of a sharded cluster*. The most important aspect of a *sharded cluster is that we can add any number of shards*. And because that could potentially be *a lot of different shards*, client applications aren't going to *communicate directly with the shards*. Instead, we set up a kind of *router process called mongos*. Then the client connects to mongos, and mongos routes queries to the correct shards.
+So in this lesson, we're going to walk to the *architecture of a sharded cluster*. The most important aspect of a *sharded cluster is that we can add any number of shards*. And because that could potentially be *a lot of different shards*, client applications aren't going to *communicate directly with the shards*. Instead, we set up a kind of *router process called mongos*. Then the client connects to *mongos, and mongos routes queries to the correct shards*.
 
-So how does mongos figure out exactly where everything is?
-
-Well it has to understand exactly how the data is distributed.
-
-So, let's say this data is on soccer players.
-
-Some of you may know them as football players.
-
-We split our data set on the last name of each player.
-
-So players with last names between A and J are stored in the first shard, between K and Q on the second shard, and between R and Z on the third shard.
+So how does *mongos* figure out exactly where everything is? Well it has to understand exactly how the *data is distributed*. So, let's say this data is on soccer players. Some of you may know them as football players. We split our data set on the last name of each player. So players with *last names between A and J are stored in the first shard, between K and Q on the second shard, and between R and Z on the third shard*.
 
 Mongos is going to need this information to route queries the client.
 
