@@ -4987,3 +4987,101 @@ More than that, it just becomes too time consuming to operate with. Finally, the
 As an example of a single thread operations will be *aggregation framework commands*. If your application relies heavily on *aggregation framework commands and if the response time of those commands becomes slower over time, you should consider sharding your cluster*. That said, not all stages of the *aggregation pipeline are parallelizable*. So a deeper understanding of your pipeline is required before making that decision.
 
 You can learn all about it in our *M121 MongoDB Aggregation Course*. So stay tuned for that. Finally, *geodistributed data is significantly simple to manage using zone sharding. Zone sharding allows us to easily distribute data that needs to be co-located. Zone sharding is out of scope for this course, but bear in mind that this is an efficient way to manage geographically distributed data sets*.
+
+### Sharding Architecture
+
+So in this lesson, we're going to walk to the architecture of a sharded cluster.
+
+The most important aspect of a sharded cluster is that we can add any number of shards.
+
+And because that could potentially be a lot of different shards, client applications aren't going to communicate directly with the shards.
+
+Instead, we set up a kind of router process called mongos.
+
+Then the client connects to mongos, and mongos routes queries to the correct shards.
+
+So how does mongos figure out exactly where everything is?
+
+Well it has to understand exactly how the data is distributed.
+
+So, let's say this data is on soccer players.
+
+Some of you may know them as football players.
+
+We split our data set on the last name of each player.
+
+So players with last names between A and J are stored in the first shard, between K and Q on the second shard, and between R and Z on the third shard.
+
+Mongos is going to need this information to route queries the client.
+
+For example, if the client sends a query to mongos about Luis Suarez, mongos can use the last name Suarez to figure out exactly which shard contains that player's document, and then route that query to the correct shard.
+
+We can also have multiple mongos processes from high availability with mongos, or to service multiple applications at once.
+
+The mongos processes are going to use the metadata around the collections that have been sharded to figure out exactly where to route queries.
+
+The metadata for this collection will look like this.
+
+But the data is not stored on mongos.
+
+Instead, the collection metadata gets stored in config servers, which constantly keep track of where each piece of data lives in the cluster.
+
+This is especially important because the information contained on each shard might change with time.
+
+So mongos queries the config servers often, in case a piece of data is moved.
+
+But why might a piece of data have to move?
+
+Well, the config servers have to make sure that there's an even distribution of data across each part.
+
+For example, if there are a lot of people in our database with the last name Smith, the third shard is going to contain a disproportionately large amount of data.
+
+When this happens, the config servers have to decide what data has to be moved around so the shards have a more even distribution.
+
+In this example, all the names beginning with R hadn't moved to the second shard from the third shard, to make room and third shard for all those people named Smith.
+
+The config servers will then update the data they contain, and then send the data to the correct shards.
+
+There's also a chance that a chunk gets too big and needs to be split.
+
+In that case, mongos would split the chunk.
+
+We'll talk more about this in the lesson about chunks.
+
+In the sharded cluster, we also have this notion of a primary shard.
+
+Each database will be assigned a primary shard, and all the non-sharded collections on that database will remain on that shard.
+
+Remember, not all the collections in a sharded cluster need to be distributed.
+
+The config servers will assign a primary shard to each database once they get created.
+
+But we can also change the primary shard of a database.
+
+We're just not going to cover that in this course.
+
+The primary shard also has a few other responsibilities, specifically around merge operations for aggregation commands.
+
+So while we're talking about merging results, I just to point something out here.
+
+In our example, the data is organized across shards by the name of each player.
+
+So if the client receives a query about the age of a player, it doesn't know exactly where to look.
+
+So it's just going to check every shard.
+
+It's going to send this query to every single shard in the cluster.
+
+And it might find a few documents here, a few documents here.
+
+And each individual shard is going to send their results back to mongos.
+
+The mongos will gather results, and then maybe sort the results if the query mandated it.
+
+This stage is called the shard merge, and it takes place on the mongos.
+
+Once the shard merge is complete, the mongos will return the results back to the client, but the client won't be aware of any of this.
+
+It will query this process like a regular mongoD.
+
+So just to recap, in this lesson we covered the basic responsibilities of mongos, the metadata contained on the contact servers, and we defined the concept of a primary shard.
