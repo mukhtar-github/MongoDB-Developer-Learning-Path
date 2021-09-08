@@ -4964,9 +4964,7 @@ And you can probably guess how we *guarantee high availability here*. Yes, we us
 
 OK, so *MongoDB can scale*. Awesome. Let's do it then. Let's go ahead and build the scalable cluster right off the bat. OK. Not so fast young Padawan. Let's look into when you should definitely *consider to shard*. First let's understand what indicators we should check for to see if we really got to the *moment for sharding*. One of the first things to do is to check out if it is still *economically viable to vertical scale*.
 
-When we need to address a throughput performance or volume bottleneck, which are generally the technical drivers for adding more resources to your system, the first step would be to check if we can still add more resources and scale up.
-
-Great, but we need to validate that adding more of those vertical resources, such as adding more CPU, network, memory, or disk to your existing servers, is economically viable and possible.
+When we need to address a *throughput performance or volume bottleneck*, which are generally the technical drivers for *adding more resources to your system*, the first step would be to check if we can still *add more resources and scale up*. Great, but we need to validate that *adding more of those vertical resources, such as adding more CPU, network, memory, or disk to your existing servers, is economically viable and possible*.
 
 So in case we have a small set of servers, checking that, increasing that server's unit resources, in any of the identified resource bottlenecks, gives you an increased performance with very little downtime in an economical scale way.
 
