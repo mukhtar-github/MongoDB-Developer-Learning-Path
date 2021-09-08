@@ -4952,25 +4952,9 @@ We could increase the capacity of individual machines so they have more *RAM, or
 
 In *MongoDB, scaling is done horizontally*, which means instead of making the individual machines better, we just *add more machines and then distribute the dataset among those machines*. The way we distribute data in *MongoDB is called Sharding. And Sharding allows us to grow our dataset* without worrying about being able to store it *all on one server*. Instead, we *divide the dataset into pieces and then distribute the pieces across as many shards as we want*.
 
-Together, the shards make up a Sharded Cluster.
+Together, the *shards make up a Sharded Cluster*. In order to *guarantee high availability in our Sharded Cluster*, we deploy each *shard as a replica set*. This way, we can ensure a level of *fault tolerance* against each piece of data regardless of which *shard* actually contains that data. So with our data distributed across several servers, queries may become a *little tricky*. We query our database looking for a specific document. It's not obvious at first where to look for it.
 
-In order to guarantee high availability in our Sharded Cluster, we deploy each shard as a replica set.
-
-This way, we can ensure a level of fault tolerance against each piece of data regardless of which shard actually contains that data.
-
-So with our data distributed across several servers, queries may become a little tricky.
-
-We query our database looking for a specific document.
-
-It's not obvious at first where to look for it.
-
-So in between a Sharded Cluster and its clients, we set up a kind of router process that accepts queries from clients and then figures out which shard should receive that query.
-
-That router process is called the Mongos.
-
-And clients connect to Mongos us instead of connecting to each shard individually.
-
-And we have any number of Mongos processes so we can service many different applications or requests to the same Sharded Cluster.
+So in between a *Sharded Cluster and its clients*, we set up a kind of *router process* that accepts queries from clients and then figures out which *shard* should receive that query. That router process is called the *Mongos*. And clients connect to Mongos us instead of connecting to each shard individually. And we have any number of Mongos processes so we can service many different applications or requests to the same Sharded Cluster.
 
 So Mongos must be pretty small, right, to know where each piece of data is at any given point in time in a massive Sharded Cluster?
 
