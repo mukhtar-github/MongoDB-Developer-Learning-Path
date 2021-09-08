@@ -4954,19 +4954,9 @@ In *MongoDB, scaling is done horizontally*, which means instead of making the in
 
 Together, the *shards make up a Sharded Cluster*. In order to *guarantee high availability in our Sharded Cluster*, we deploy each *shard as a replica set*. This way, we can ensure a level of *fault tolerance* against each piece of data regardless of which *shard* actually contains that data. So with our data distributed across several servers, queries may become a *little tricky*. We query our database looking for a specific document. It's not obvious at first where to look for it.
 
-So in between a *Sharded Cluster and its clients*, we set up a kind of *router process* that accepts queries from clients and then figures out which *shard* should receive that query. That router process is called the *Mongos*. And clients connect to Mongos us instead of connecting to each shard individually. And we have any number of Mongos processes so we can service many different applications or requests to the same Sharded Cluster.
+So in between a *Sharded Cluster and its clients*, we set up a kind of *router process* that accepts queries from clients and then figures out which *shard* should receive that query. That router process is called the *Mongos*. And clients connect to *Mongos* instead of connecting to each *shard individually*. And we can have any number of *Mongos processes* so we can service many different applications or requests to the same *Sharded Cluster*.
 
-So Mongos must be pretty small, right, to know where each piece of data is at any given point in time in a massive Sharded Cluster?
-
-But actually, Mongos doesn't know anything.
-
-It uses the metadata about which data is contained on each shard.
-
-And that metadata is stored on the Config Servers.
-
-But the data on the Config Servers is used very often by Mongos.
-
-So we need to make sure that data stays highly available.
+So *Mongos* must be pretty small, right, to know where each piece of data is at any given point in time in a *massive Sharded Cluster*? But actually, *Mongos* doesn't know anything. It uses the *metadata* about which data is contained on each *shard*. And that *metadata is stored on the Config Servers*. But the data on the *Config Servers* is used very often by *Mongos*. So we need to make sure that data stays highly available.
 
 And you can probably guess how we guarantee high availability here.
 
