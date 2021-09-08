@@ -4946,15 +4946,7 @@ Therefore, connecting to the *third node* is the same as connecting to a *second
 
 ### What is Sharding?
 
-So until this point, we've learned about MongoDB deployments of small and average sizes.
-
-So it's feasible to store an entire data set on one server.
-
-In a replica set, we have more than one server in our database.
-
-But each server still has to contain the entire dataset.
-
-As our dataset grows to the point where our machines can't properly service client applications, one of our options is just to make the machines better.
+So until this point, we've learned about *MongoDB deployments* of small and average sizes. So it's feasible to *store an entire data set on one server*. In a *replica set, we have more than one server in our database*. But each server still has to contain *the entire dataset*. As our *dataset grows* to the point where our machines can't properly service client applications, one of our options is just to make the machines better.
 
 We could increase the capacity of individual machines so they have more RAM, or disk space, or maybe a more powerful CPU.
 
