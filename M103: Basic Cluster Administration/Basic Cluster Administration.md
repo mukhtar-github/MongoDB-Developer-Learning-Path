@@ -4966,17 +4966,9 @@ OK, so *MongoDB can scale*. Awesome. Let's do it then. Let's go ahead and build 
 
 When we need to address a *throughput performance or volume bottleneck*, which are generally the technical drivers for *adding more resources to your system*, the first step would be to check if we can still *add more resources and scale up*. Great, but we need to validate that *adding more of those vertical resources, such as adding more CPU, network, memory, or disk to your existing servers, is economically viable and possible*.
 
-So in case we have a small set of servers, checking that, increasing that server's unit resources, in any of the identified resource bottlenecks, gives you an increased performance with very little downtime in an economical scale way.
+So in case we have a *small set of servers*, checking that, increasing that server's unit resources, in any of the identified resource bottlenecks, gives you an increased performance with very little downtime in an economical scale way. Adding *10 times more RAM to solve a memory allocation bottleneck* does not cost you *100 times more*, if that's the case, great. That should be your reasoning for continuing to scale up.
 
-Adding 10 times more RAM to solve a memory allocation bottleneck does not cost you 100 times more, if that's the case, great.
-
-That should be your reasoning for continuing to scale up.
-
-You are still able to do so in economical viable manner, but you will eventually reach a point where vertical scaling is no longer economically viable or it's very difficult to say impossible to accomplish.
-
-Let's say that your current architecture relies on servers that cost $100 per hour.
-
-You have three member rep cassettes, so you're sitting on top of $300 per hour.
+You are still able to do so in economical viable manner, but you will eventually reach a point where vertical scaling is no longer economically viable or it's very difficult to say impossible to accomplish. Let's say that your *current architecture relies on servers that cost $100 per hour*. You have *three member replica set, so you're sitting on top of $300 per hour*.
 
 The next available type of server costs $1,000 per hour, but where your overall impact in performance is only of 2x, that is probably not going to be a very wise decision.
 
