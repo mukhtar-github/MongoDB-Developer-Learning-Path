@@ -4956,6 +4956,96 @@ Together, the *shards make up a Sharded Cluster*. In order to *guarantee high av
 
 So in between a *Sharded Cluster and its clients*, we set up a kind of *router process* that accepts queries from clients and then figures out which *shard* should receive that query. That router process is called the *Mongos*. And clients connect to *Mongos* instead of connecting to each *shard individually*. And we can have any number of *Mongos processes* so we can service many different applications or requests to the same *Sharded Cluster*.
 
-So *Mongos* must be pretty small, right, to know where each piece of data is at any given point in time in a *massive Sharded Cluster*? But actually, *Mongos* doesn't know anything. It uses the *metadata* about which data is contained on each *shard*. And that *metadata is stored on the Config Servers*. But the data on the *Config Servers* is used very often by *Mongos*. So we need to make sure that data stays highly available.
+So *Mongos* must be pretty small, right, to know where each piece of data is at any given point in time in a *massive Sharded Cluster*? But actually, *Mongos* doesn't know anything. It uses the *metadata* about which data is contained on each *shard*. And that *metadata is stored on the Config Servers*. But the data on the *Config Servers* is used very often by *Mongos*. So we need to make sure that data stays *highly available*.
 
 And you can probably guess how we *guarantee high availability here*. Yes, we use *replication. We replicate the data on the Config Servers*. So instead of a *single Config Server*, we deploy a *Config Server Replica Set*. So that's a *high level overview of Sharding in MongoDB -- the Sharded Cluster contains the shards where the data lives; the Config Servers, which contain the metadata of each shard; and the Mongos, which routes the queries to the correct shards*.
+
+### When to Shard
+
+OK, so *MongoDB can scale*. Awesome. Let's do it then. Let's go ahead and build the scalable cluster right off the bat. OK. Not so fast young Padawan. Let's look into when you should definitely *consider to shard*. First let's understand what indicators we should check for to see if we really got to the *moment for sharding*. One of the first things to do is to check out if it is still *economically viable to vertical scale*.
+
+When we need to address a throughput performance or volume bottleneck, which are generally the technical drivers for adding more resources to your system, the first step would be to check if we can still add more resources and scale up.
+
+Great, but we need to validate that adding more of those vertical resources, such as adding more CPU, network, memory, or disk to your existing servers, is economically viable and possible.
+
+So in case we have a small set of servers, checking that, increasing that server's unit resources, in any of the identified resource bottlenecks, gives you an increased performance with very little downtime in an economical scale way.
+
+Adding 10 times more RAM to solve a memory allocation bottleneck does not cost you 100 times more, if that's the case, great.
+
+That should be your reasoning for continuing to scale up.
+
+You are still able to do so in economical viable manner, but you will eventually reach a point where vertical scaling is no longer economically viable or it's very difficult to say impossible to accomplish.
+
+Let's say that your current architecture relies on servers that cost $100 per hour.
+
+You have three member rep cassettes, so you're sitting on top of $300 per hour.
+
+The next available type of server costs $1,000 per hour, but where your overall impact in performance is only of 2x, that is probably not going to be a very wise decision.
+
+10 times the cost per server for only two times the performance overall.
+
+You will probably be way better off with a horizontal scale where you increase in cost will be, let's say, three times.
+
+Three more servers for another rep cassette, plus three more for your configuration servers, with a potential increase of performance of 2x.
+
+$900 per hour is more acceptable than $3,000 for the same performance improvement.
+
+The economics here will play a considerable weight in your decision.
+
+Another aspect to consider is the impact on your operational tasks.
+
+Let's say that you are currently considering increasing the size of your disks to allow moving from one terabyte disk space to 20 terabyte disks.
+
+The purpose of that is to scale vertically your storage capabilities, which is totally fine.
+
+But if we are expecting to run these at 75% capacity, this will mean loading up to 15 terabytes of data.
+
+Which means 15 times more data to backup.
+
+Like a quite significant amount of other aspects, this will probably mean that you will take 15 times more time to back up those servers, probably an even bigger penalty while restoring such large servers, as well as doing initial syncs between replica sets.
+
+And we have to account now for impact on the network when backing up those 15 terabytes of data.
+
+In such a scenario, having horizontal scale and distributing that amount of data across different shards, will allow getting horizontal performance gains like parallelization of the backup, restore, and initial sync processes.
+
+Remember, that even though these may be infrequent operations, they can become serious scalability issues to handle from the operational side.
+
+This same scenario will also impact your operational workload.
+
+15 times bigger dataset per MongoDB will most likely translate to at least 15 times bigger indexes.
+
+As we know, indexes are essential for the performance of our queries in a database.
+
+If they take 15 times more space per processing unit or server, they will require more RAM so that indexes can be kept in memory.
+
+A very important part of your working dataset.
+
+Increasing the size of your disks most likely will imply eventual increasing the size of your RAM, which Brings added costs or other bottlenecks to your system.
+
+In such a scenario sharding, the parallelization of your workload across shards, might be way more beneficial for your application and budget than the waterfall of potential expensive upgrades.
+
+A general rule of thumb indicates that individual servers should contain two to 5 terabytes of data.
+
+More than that just becomes too time consuming to operate with.
+
+Finally, there are workloads that intrinsically play nicer in distributed deployments that sharing offers, like single threaded operations that can be parallelized and geographically distributed data.
+
+Data that needs to be stored in specific regional locations or will benefit from being co-located with the clients that consume such data.
+
+As an example of a single thread operations will be aggregation framework commands.
+
+If your application relies heavily on aggregation framework commands and if the response time of those commands becomes slower over time, you should consider sharding your cluster.
+
+That said, not all stages of the aggregation pipeline are parallelizable.
+
+So a deeper understanding of your pipeline is required before making that decision.
+
+You can learn all about it in our M121 MongoDB Aggregation Course.
+
+So stay tuned for that.
+
+Finally, geodistributed data is significantly simple to manage using zone sharding.
+
+Zone sharding allows us to easily distribute data that needs to be co-located.
+
+Zone sharding is out of scope for this course, but bear in mind that this is an efficient way to manage geographically distributed data sets.
