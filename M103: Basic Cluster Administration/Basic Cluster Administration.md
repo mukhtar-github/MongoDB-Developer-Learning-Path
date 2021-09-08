@@ -4970,72 +4970,20 @@ So in case we have a *small set of servers*, checking that, increasing that serv
 
 You are still able to do so in economical viable manner, but you will eventually reach a point where vertical scaling is no longer economically viable or it's very difficult to say impossible to accomplish. Let's say that your *current architecture relies on servers that cost $100 per hour*. You have *three member replica set, so you're sitting on top of $300 per hour*.
 
-The next available type of server costs $1,000 per hour, but where your overall impact in performance is only of 2x, that is probably not going to be a very wise decision.
+The next available type of server costs $1,000 per hour, but where your overall impact in performance is only of 2x, that is probably not going to be a very wise decision. 10 times the cost per server for only two times the performance overall. You will probably be way better off with a horizontal scale where you increase in cost will be, let's say, three times. Three more servers for another replica set, plus three more for your configuration servers, with a potential increase of performance of 2x.
 
-10 times the cost per server for only two times the performance overall.
+$900 per hour is more acceptable than $3,000 for the same performance improvement. The economics here will play a considerable weight in your decision. Another aspect to consider is the impact on your operational tasks. Let's say that you are currently considering increasing the size of your disks to allow moving from one terabyte disk space to 20 terabyte disks. The purpose of that is to scale vertically your storage capabilities, which is totally fine.
 
-You will probably be way better off with a horizontal scale where you increase in cost will be, let's say, three times.
+But if we are expecting to run these at 75% capacity, this will mean loading up to 15 terabytes of data. Which means 15 times more data to backup. Like a quite significant amount of other aspects, this will probably mean that you will take 15 times more time to back up those servers, probably an even bigger penalty while restoring such large servers, as well as doing initial syncs between replica sets.
 
-Three more servers for another rep cassette, plus three more for your configuration servers, with a potential increase of performance of 2x.
+And we have to account now for impact on the network when backing up those 15 terabytes of data. In such a scenario, having horizontal scale and distributing that amount of data across different shards, will allow getting horizontal performance gains like parallelization of the backup, restore, and initial sync processes. Remember, that even though these may be infrequent operations, they can become serious scalability issues to handle from the operational side.
 
-$900 per hour is more acceptable than $3,000 for the same performance improvement.
+This same scenario will also impact your operational workload. 15 times bigger dataset per MongoDB will most likely translate to at least 15 times bigger indexes. As we know, indexes are essential for the performance of our queries in a database. If they take 15 times more space per processing unit or server, they will require more RAM so that indexes can be kept in memory. A very important part of your working dataset.
 
-The economics here will play a considerable weight in your decision.
+Increasing the size of your disks most likely will imply eventual increasing the size of your RAM, which Brings added costs or other bottlenecks to your system. In such a scenario sharding, the parallelization of your workload across shards, might be way more beneficial for your application and budget than the waterfall of potential expensive upgrades. A general rule of thumb indicates that individual servers should contain two to 5 terabytes of data.
 
-Another aspect to consider is the impact on your operational tasks.
+More than that just becomes too time consuming to operate with. Finally, there are workloads that intrinsically play nicer in distributed deployments that sharing offers, like single threaded operations that can be parallelized and geographically distributed data. Data that needs to be stored in specific regional locations or will benefit from being co-located with the clients that consume such data.
 
-Let's say that you are currently considering increasing the size of your disks to allow moving from one terabyte disk space to 20 terabyte disks.
+As an example of a single thread operations will be aggregation framework commands. If your application relies heavily on aggregation framework commands and if the response time of those commands becomes slower over time, you should consider sharding your cluster. That said, not all stages of the aggregation pipeline are parallelizable. So a deeper understanding of your pipeline is required before making that decision.
 
-The purpose of that is to scale vertically your storage capabilities, which is totally fine.
-
-But if we are expecting to run these at 75% capacity, this will mean loading up to 15 terabytes of data.
-
-Which means 15 times more data to backup.
-
-Like a quite significant amount of other aspects, this will probably mean that you will take 15 times more time to back up those servers, probably an even bigger penalty while restoring such large servers, as well as doing initial syncs between replica sets.
-
-And we have to account now for impact on the network when backing up those 15 terabytes of data.
-
-In such a scenario, having horizontal scale and distributing that amount of data across different shards, will allow getting horizontal performance gains like parallelization of the backup, restore, and initial sync processes.
-
-Remember, that even though these may be infrequent operations, they can become serious scalability issues to handle from the operational side.
-
-This same scenario will also impact your operational workload.
-
-15 times bigger dataset per MongoDB will most likely translate to at least 15 times bigger indexes.
-
-As we know, indexes are essential for the performance of our queries in a database.
-
-If they take 15 times more space per processing unit or server, they will require more RAM so that indexes can be kept in memory.
-
-A very important part of your working dataset.
-
-Increasing the size of your disks most likely will imply eventual increasing the size of your RAM, which Brings added costs or other bottlenecks to your system.
-
-In such a scenario sharding, the parallelization of your workload across shards, might be way more beneficial for your application and budget than the waterfall of potential expensive upgrades.
-
-A general rule of thumb indicates that individual servers should contain two to 5 terabytes of data.
-
-More than that just becomes too time consuming to operate with.
-
-Finally, there are workloads that intrinsically play nicer in distributed deployments that sharing offers, like single threaded operations that can be parallelized and geographically distributed data.
-
-Data that needs to be stored in specific regional locations or will benefit from being co-located with the clients that consume such data.
-
-As an example of a single thread operations will be aggregation framework commands.
-
-If your application relies heavily on aggregation framework commands and if the response time of those commands becomes slower over time, you should consider sharding your cluster.
-
-That said, not all stages of the aggregation pipeline are parallelizable.
-
-So a deeper understanding of your pipeline is required before making that decision.
-
-You can learn all about it in our M121 MongoDB Aggregation Course.
-
-So stay tuned for that.
-
-Finally, geodistributed data is significantly simple to manage using zone sharding.
-
-Zone sharding allows us to easily distribute data that needs to be co-located.
-
-Zone sharding is out of scope for this course, but bear in mind that this is an efficient way to manage geographically distributed data sets.
+You can learn all about it in our M121 MongoDB Aggregation Course. So stay tuned for that. Finally, geodistributed data is significantly simple to manage using zone sharding. Zone sharding allows us to easily distribute data that needs to be co-located. Zone sharding is out of scope for this course, but bear in mind that this is an efficient way to manage geographically distributed data sets.
