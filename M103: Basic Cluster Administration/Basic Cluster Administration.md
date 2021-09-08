@@ -4948,23 +4948,9 @@ Therefore, connecting to the *third node* is the same as connecting to a *second
 
 So until this point, we've learned about *MongoDB deployments* of small and average sizes. So it's feasible to *store an entire data set on one server*. In a *replica set, we have more than one server in our database*. But each server still has to contain *the entire dataset*. As our *dataset grows* to the point where our machines can't properly service client applications, one of our options is just to make the machines better.
 
-We could increase the capacity of individual machines so they have more RAM, or disk space, or maybe a more powerful CPU.
+We could increase the capacity of individual machines so they have more *RAM, or disk space, or maybe a more powerful CPU*. This is referred to as *vertical scaling*. But this could potentially become very expensive. And besides, *cloud-based* providers aren't going to let us *scale vertically forever*. They'll eventually put a limit on the possible hardware configurations, which would effectively limit our storage layer.
 
-This is referred to as vertical scaling.
-
-But this could potentially become very expensive.
-
-And besides, cloud-based providers aren't going to let us scale vertically forever.
-
-They'll eventually put a limit on the possible hardware configurations, which would effectively limit our storage layer.
-
-In MongoDB, scaling is done horizontally, which means instead of making the individual machines better, we just add more machines and then distribute the dataset among those machines.
-
-The way we distribute data in MongoDB is called Sharding.
-
-And Sharding allows us to grow our dataset without worrying about being able to store it all on one server.
-
-Instead, we divide the dataset into pieces and then distribute the pieces across as many shards as we want.
+In *MongoDB, scaling is done horizontally*, which means instead of making the individual machines better, we just *add more machines and then distribute the dataset among those machines*. The way we distribute data in *MongoDB is called Sharding. And Sharding allows us to grow our dataset* without worrying about being able to store it *all on one server*. Instead, we *divide the dataset into pieces and then distribute the pieces across as many shards as we want*.
 
 Together, the shards make up a Sharded Cluster.
 
