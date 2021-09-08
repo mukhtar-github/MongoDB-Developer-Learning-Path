@@ -4958,12 +4958,4 @@ So in between a *Sharded Cluster and its clients*, we set up a kind of *router p
 
 So *Mongos* must be pretty small, right, to know where each piece of data is at any given point in time in a *massive Sharded Cluster*? But actually, *Mongos* doesn't know anything. It uses the *metadata* about which data is contained on each *shard*. And that *metadata is stored on the Config Servers*. But the data on the *Config Servers* is used very often by *Mongos*. So we need to make sure that data stays highly available.
 
-And you can probably guess how we guarantee high availability here.
-
-Yes, we use replication.
-
-We replicate the data on the Config Servers.
-
-So instead of a single Config Server, we deploy a Config Server Replica Set.
-
-So that's a high level overview of Sharding in MongoDB-- the Sharded Cluster contains the shards where the data lives; the Config Servers, which contain the metadata of each shard; and the Mongos, which routes the queries to the correct shards.
+And you can probably guess how we *guarantee high availability here*. Yes, we use *replication. We replicate the data on the Config Servers*. So instead of a *single Config Server*, we deploy a *Config Server Replica Set*. So that's a *high level overview of Sharding in MongoDB -- the Sharded Cluster contains the shards where the data lives; the Config Servers, which contain the metadata of each shard; and the Mongos, which routes the queries to the correct shards*.
