@@ -5025,4 +5025,7 @@ The *config servers will assign a primary shard* to each database once they get 
 
 In our example, the data is organized across *shards* by the name of each player. So if the client receives a query about the *age of a player*, it doesn't know exactly where to look. So it's just going to check *every shard*. It's going to send this query to every single *shard in the cluster*. And it might find a few documents here, a few documents here. And each *individual shard* is going to send their results back to *mongos*.
 
-The *mongos* will gather results, and then maybe sort the results if the query mandated it. This stage is called the *shard merge*, and it takes place on the *mongos*. Once the *shard merge* is complete, the *mongos* will return the results back to the client, but the client won't be aware of any of this. It will query this process like a regular *mongoD*. So just to recap, in this lesson we covered the *basic responsibilities of mongos, the metadata contained on the contact servers*, and we defined the concept of a *primary shard*.
+The *mongos* will gather results, and then maybe sort the results if the query mandated it. This stage is called the *shard merge*, and it takes place on the *mongos*. Once the *shard merge* is complete, the *mongos* will return the results back to the client, but the client won't be aware of any of this. It will query this process like a regular *mongoD*.
+
+So just to recap, in this lesson we covered the *basic responsibilities of mongos, the metadata contained on the contact servers*, and we defined the concept of a *primary shard*.
+> The *SHARD_MERGE* stage that takes place on mongos. This is not necessarily true - this stage can take place on *mongos or a randomly chosen shard in the cluster*.
