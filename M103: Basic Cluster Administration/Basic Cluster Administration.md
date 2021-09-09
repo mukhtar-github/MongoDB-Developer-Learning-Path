@@ -5029,3 +5029,153 @@ The *mongos* will gather results, and then maybe sort the results if the query m
 
 So just to recap, in this lesson we covered the *basic responsibilities of mongos, the metadata contained on the contact servers*, and we defined the concept of a *primary shard*.
 > The *SHARD_MERGE* stage that takes place on mongos. This is not necessarily true - this stage can take place on *mongos or a randomly chosen shard in the cluster*.
+
+### Setting Up a Sharded Cluster
+
+So now that we've gone over the architecture of a basic sharded cluster in MongoDB, we're actually going to build one in our course virtual environment.
+
+So right now, all we have is our replica set and 103 repl.
+
+And this is just a normal replica set, but eventually it will become the first shard in our cluster.
+
+This diagram is the bare minimum required to start a sharded cluster.
+
+Essentially just the Mongos a config server replica set, and at least one shard.
+
+The main things we have to build are the CSRS and the Mongo s.
+
+The rest of the work will just be connecting everything together.
+
+The first thing we're going to build is our config servers.
+
+So this is the configuration file for one of our config servers.
+
+It's going to be one of the nodes in the CSRS, but it's just a regular MongoD, so it's still going to have a port, a dbpath, and a log path.
+
+Now, the config servers have a very important role in the shard cluster, so we have to specify in the configuration that this is in fact a config server.
+
+So here I'm just going to use that file to start up a MongoD process.
+
+And here I'm going to do the same thing for the other two nodes and the CSRS.
+
+And you can find those config files in the lecture notes.
+
+They look very similar to the first one.
+
+So we enabled this replica set to use authentication, and the key file authentication is fine, because we already created our key file.
+
+We're going to share the same key file in this setup, since all the MongoD instances are running on the same virtual machine.
+
+But in a real production environment, X509 certificates would be the way to go.
+
+Having a shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised, so just keep that in mind.
+
+Here I'm just initiating the config server replica set.
+
+And here I just use the local host exception to create our super user.
+
+So now I'm just going to authenticate as the super user.
+
+One means that it worked.
+
+And now we can start adding those to the set.
+
+Here's our second node and our third, and now we have a complete config server replica set.
+
+I'm just going to verify that with rs.isMaster.
+
+And it looks like the set has three nodes in it.
+
+So now that we have our CSRS up and running, we can start up Mongos and then point Mongos in the direction of our config server replica set.
+
+So this is the configuration file from Mongos, and the first thing you're going to notice is that there is no dbpath.
+
+That's because Mongos doesn't need to store any data.
+
+All of the data used by Mongos is stored on the config servers.
+
+So in the sharding section, we've specified those.
+
+And note that we've specified the entire replica set, instead of the individual members.
+
+We also enabled key file authentication, so we're going to need to authenticate to Mongos, but it will inherit the same uses as our config servers, and we'll see that in a minute.
+
+So this is the command we use to start Mongos.
+
+We pass the config file like we did before, but note that this is not a mongod process.
+
+Mongos is a different process with different properties, so just bear that in mind.
+
+So as we saw before, Mongos has auth- enabled, and it's also going to inherit any users that we created on the config servers.
+
+So this user is actually ready to go.
+
+And it looks like we're in.
+
+I'm just going to check the status here.
+
+So sh.status is the most basic way to get sharding data from the Mongos.
+
+And if we take a look at the output, we can see that we have the number of Mongoses currently connected, and we also have the number of shards.
+
+Right now, this is empty, because we don't have any shards.
+
+But you can probably see where this is going.
+
+Right now, we have our Mongos running with the config servers, and, actually, we also have a replica set that we can use.
+
+We just need to tweak the configuration so we can use it as a shard node.
+
+So this is the one line that we have to add if we want to enable sharding on this node.
+
+This line is going to tell Mongos, hey, you know, you can use me as a shard node in your cluster.
+
+We have to add this line to every single node in the replica set.
+
+So I just changed the config files for all three nodes in our set.
+
+But the nodes still need to be restarted in order to account for those changes.
+
+We're going to do a rolling upgrade in order to do this, which means we're going to upgrade the secondaries first, then bring them back up, step down the current primary, and then upgrade that last node.
+
+Here, I'm just connecting to one of the secondary nodes.
+
+I'm just going to switch to the admin database and shut down this node.
+
+And here I'm just starting it back up with the new configuration.
+
+Do the same thing for our third node.
+
+And here I'm starting up the third node with the new configuration.
+
+So now that both secondaries have been upgraded for the new configuration, I'm going to connect to the primary and then step it down so I can upgrade that one, too.
+
+I'm just going to force an election so this node becomes a secondary, and it worked.
+
+Now I'm just going to shut this node down, as well.
+
+So now I'm starting up our last node with the new configuration, and it worked.
+
+So now we've successfully enabled sharding on this replica set.
+
+Now I'm going to connect back to Mongos.
+
+So once I'm connected back to Mongos, I can add the shard that we just enabled sharding on.
+
+And we specify the entire replica set, so we only need to specify one node in order for Mongos to discover the current primary of this replica set.
+
+And it looks like it worked.
+
+I'm just going to check sh.status.
+
+And our list of shards now has one shard in it.
+
+And as we can see, we only specified one node, but Mongos was able to discover all the nodes in the set.
+
+So just to recap here.
+
+We covered how to launch Mongos and a config server replica set.
+
+We learned how to enable sharding on a replica set, and we did so, by way of a rolling upgrade.
+
+And we added shards to our cluster.
