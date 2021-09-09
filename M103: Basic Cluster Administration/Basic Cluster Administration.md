@@ -5007,17 +5007,9 @@ The *metadata for this collection* will look like this.
 |   2   | K - Q |
 |   3   | R - Z |
 
-But the data is not stored on mongos. Instead, the collection metadata gets stored in config servers, which constantly keep track of where each piece of data lives in the cluster. This is especially important because the information contained on each shard might change with time.
+But the *data is not stored on mongos*. Instead, the *collection metadata gets stored in config servers*, which constantly keep track of where each piece of *data lives in the cluster*. This is especially important because the information contained on each *shard* might change with time. So *mongos queries the config servers* often, in case a piece of data is moved.
 
-So mongos queries the config servers often, in case a piece of data is moved.
-
-But why might a piece of data have to move?
-
-Well, the config servers have to make sure that there's an even distribution of data across each part.
-
-For example, if there are a lot of people in our database with the last name Smith, the third shard is going to contain a disproportionately large amount of data.
-
-When this happens, the config servers have to decide what data has to be moved around so the shards have a more even distribution.
+But why might a piece of data have to move? Well, the *config servers* have to make sure that there's an even distribution of data across each part. For example, if there are a lot of people in our database with the last name *Smith, the third shard is going to contain a disproportionately large amount of data*. When this happens, the *config servers* have to decide what data has to be moved around so the *shards* have a more even distribution.
 
 In this example, all the names beginning with R hadn't moved to the second shard from the third shard, to make room and third shard for all those people named Smith.
 
