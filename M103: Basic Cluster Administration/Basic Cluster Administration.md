@@ -5011,21 +5011,15 @@ But the *data is not stored on mongos*. Instead, the *collection metadata gets s
 
 But why might a piece of data have to move? Well, the *config servers* have to make sure that there's an even distribution of data across each part. For example, if there are a lot of people in our database with the last name *Smith, the third shard is going to contain a disproportionately large amount of data*. When this happens, the *config servers* have to decide what data has to be moved around so the *shards* have a more even distribution.
 
-In this example, all the names beginning with R hadn't moved to the second shard from the third shard, to make room and third shard for all those people named Smith.
+In this example, all the names beginning with *R had to move to the second shard from the third shard*, to make room in *third shard for all those people named Smith. The config servers* will then update the data they contain, and then send the data to the correct *shards*.
 
-The config servers will then update the data they contain, and then send the data to the correct shards.
+| Shard | Data  |
+|:-----:|-------|
+|   1   | A - J |
+|   2   | K - R |
+|   3   | S - Z |
 
-There's also a chance that a chunk gets too big and needs to be split.
-
-In that case, mongos would split the chunk.
-
-We'll talk more about this in the lesson about chunks.
-
-In the sharded cluster, we also have this notion of a primary shard.
-
-Each database will be assigned a primary shard, and all the non-sharded collections on that database will remain on that shard.
-
-Remember, not all the collections in a sharded cluster need to be distributed.
+There's also a chance that a *chunk gets too big and needs to be split*. In that case, *mongos would split the chunk*. We'll talk more about this in the lesson about *chunks*. In the *sharded cluster*, we also have this notion of a *primary shard*. Each database will be assigned a *primary shard*, and all the *non-sharded collections* on that database will remain on that *shard*. Remember, not all the *collections in a sharded cluster need to be distributed*.
 
 The config servers will assign a primary shard to each database once they get created.
 
