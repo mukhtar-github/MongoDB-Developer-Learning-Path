@@ -5021,27 +5021,9 @@ In this example, all the names beginning with *R had to move to the second shard
 
 There's also a chance that a *chunk gets too big and needs to be split*. In that case, *mongos would split the chunk*. We'll talk more about this in the lesson about *chunks*. In the *sharded cluster*, we also have this notion of a *primary shard*. Each database will be assigned a *primary shard*, and all the *non-sharded collections* on that database will remain on that *shard*. Remember, not all the *collections in a sharded cluster need to be distributed*.
 
-The config servers will assign a primary shard to each database once they get created.
+The *config servers will assign a primary shard* to each database once they get created. But we can also change the *primary shard* of a database. We're just not going to cover that in this course. The *primary shard* also has a few other responsibilities, specifically around *merge operations for aggregation commands*. So while we're talking about merging results, I just to point something out here.
 
-But we can also change the primary shard of a database.
-
-We're just not going to cover that in this course.
-
-The primary shard also has a few other responsibilities, specifically around merge operations for aggregation commands.
-
-So while we're talking about merging results, I just to point something out here.
-
-In our example, the data is organized across shards by the name of each player.
-
-So if the client receives a query about the age of a player, it doesn't know exactly where to look.
-
-So it's just going to check every shard.
-
-It's going to send this query to every single shard in the cluster.
-
-And it might find a few documents here, a few documents here.
-
-And each individual shard is going to send their results back to mongos.
+In our example, the data is organized across *shards* by the name of each player. So if the client receives a query about the *age of a player*, it doesn't know exactly where to look. So it's just going to check *every shard*. It's going to send this query to every single *shard in the cluster*. And it might find a few documents here, a few documents here. And each *individual shard* is going to send their results back to *mongos*.
 
 The mongos will gather results, and then maybe sort the results if the query mandated it.
 
