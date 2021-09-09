@@ -4994,11 +4994,7 @@ So in this lesson, we're going to walk to the *architecture of a sharded cluster
 
 So how does *mongos* figure out exactly where everything is? Well it has to understand exactly how the *data is distributed*. So, let's say this data is on soccer players. Some of you may know them as football players. We split our data set on the last name of each player. So players with *last names between A and J are stored in the first shard, between K and Q on the second shard, and between R and Z on the third shard*.
 
-Mongos is going to need this information to route queries the client.
-
-For example, if the client sends a query to mongos about Luis Suarez, mongos can use the last name Suarez to figure out exactly which shard contains that player's document, and then route that query to the correct shard.
-
-We can also have multiple mongos processes from high availability with mongos, or to service multiple applications at once.
+*Mongos is going to need this information to route queries the client*. For example, if the client sends a query to *mongos about Luis Suarez, mongos can use the last name Suarez to figure out exactly which shard contains that player's document, and then route that query to the correct shard*. We can also have *multiple mongos processes from high availability with mongos*, or to service multiple applications at once.
 
 The mongos processes are going to use the metadata around the collections that have been sharded to figure out exactly where to route queries.
 
