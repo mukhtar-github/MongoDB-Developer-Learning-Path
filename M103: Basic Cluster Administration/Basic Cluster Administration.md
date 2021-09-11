@@ -5424,33 +5424,88 @@ Server has startup warnings:
 2021-09-11T15:15:56.607+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
 2021-09-11T15:15:56.608+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
 2021-09-11T15:16:08.450+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
-2021-09-11T15:16:08.451+0000 I CONTROL  [initandlisten] 
-m103-example:OTHER> 
+2021-09-11T15:16:08.451+0000 I CONTROL  [initandlisten]
 ```
 
-I'm just going to switch to the admin database and shut down this node.
+I'm just going to switch to the *admin database and shut down this node*. And here I'm just starting it back up with the *new configuration*. Do the same thing for our *third node*. And here I'm starting up the *third node* with the *new configuration*. So now that *both secondaries have been upgraded for the new configuration*, I'm going to connect to the *primary and then step it down so I can upgrade that one, too*. I'm just going to force an election so this *node becomes a secondary*, and it worked. Now I'm just going to shut this *node down*, as well. So now I'm starting up our *last node* with the new configuration, and it worked.
 
-And here I'm just starting it back up with the new configuration.
+```javascript
+// Shutting down node:
+m103-example:OTHER> use admin
+switched to db admin
+m103-example:OTHER> db.shutdownServer()
+server should be down...
+2021-09-11T15:32:27.719+0000 I NETWORK  [thread1] trying reconnect to 127.0.0.1:27012 (127.0.0.1) failed
+2021-09-11T15:32:27.724+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27012, in(checking socket for error after poll), reason: Connection refused
+2021-09-11T15:32:27.729+0000 I NETWORK  [thread1] reconnect 127.0.0.1:27012 (127.0.0.1) failed failed 
+> exit
+bye
+2021-09-11T15:33:52.288+0000 I NETWORK  [thread1] trying reconnect to 127.0.0.1:27012 (127.0.0.1) failed
+2021-09-11T15:33:52.291+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27012, in(checking socket for error after poll), reason: Connection refused
+2021-09-11T15:33:52.293+0000 I NETWORK  [thread1] reconnect 127.0.0.1:27012 (127.0.0.1) failed failed 
+2021-09-11T15:33:52.298+0000 I QUERY    [thread1] Failed to end session { id: UUID("c6f8897b-f6b4-473d-a01a-def805d26eaa") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server 127.0.0.1:27012, connection attempt failed
 
-Do the same thing for our third node.
+// Restarting node with new configuration:
+vagrant@vagrant:~$ sudo mongod -f node2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2877
+child process started successfully, parent exiting
 
-And here I'm starting up the third node with the new configuration.
+// Do the same thing for our *third node*
+vagrant@vagrant:~$ mongo --port 27013 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:27013/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("b756f74b-2d01-486c-a85e-63748286fbfb") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-11T15:16:33.551+0000 I STORAGE  [initandlisten] 
+2021-09-11T15:16:33.552+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-11T15:16:33.552+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-11T15:16:45.561+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-11T15:16:45.562+0000 I CONTROL  [initandlisten] 
+m103-example:OTHER> use admin
+switched to db admin
+m103-example:OTHER> db.shutdownServer()
+server should be down...
+2021-09-11T15:43:32.262+0000 I NETWORK  [thread1] trying reconnect to 127.0.0.1:27013 (127.0.0.1) failed
+2021-09-11T15:43:32.264+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27013, in(checking socket for error after poll), reason: Connection refused
+2021-09-11T15:43:32.269+0000 I NETWORK  [thread1] reconnect 127.0.0.1:27013 (127.0.0.1) failed failed 
+> exit
+bye
+2021-09-11T15:43:39.481+0000 I NETWORK  [thread1] trying reconnect to 127.0.0.1:27013 (127.0.0.1) failed
+2021-09-11T15:43:39.486+0000 W NETWORK  [thread1] Failed to connect to 127.0.0.1:27013, in(checking socket for error after poll), reason: Connection refused
+2021-09-11T15:43:39.490+0000 I NETWORK  [thread1] reconnect 127.0.0.1:27013 (127.0.0.1) failed failed 
+2021-09-11T15:43:39.511+0000 I QUERY    [thread1] Failed to end session { id: UUID("b756f74b-2d01-486c-a85e-63748286fbfb") } due to SocketException: socket exception [CONNECT_ERROR] for couldn't connect to server 127.0.0.1:27013, connection attempt failed
 
-So now that both secondaries have been upgraded for the new configuration, I'm going to connect to the primary and then step it down so I can upgrade that one, too.
+// Restarting the third node with new configuration:
+vagrant@vagrant:~$ sudo mongod -f node3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2967
+child process started successfully, parent exiting
 
-I'm just going to force an election so this node becomes a secondary, and it worked.
+// connecting to the primary node
+vagrant@vagrant:~$ mongo --port 27011 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:27011/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("dce937f5-345c-434a-a806-d6a384bafe28") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-11T15:14:52.451+0000 I STORAGE  [initandlisten] 
+2021-09-11T15:14:52.453+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-11T15:14:52.454+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-11T15:15:03.957+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-11T15:15:03.957+0000 I CONTROL  [initandlisten] 
+m103-example:OTHER> 
 
-Now I'm just going to shut this node down, as well.
+// Stepping down current primary:
 
-So now I'm starting up our last node with the new configuration, and it worked.
+```
 
-So now we've successfully enabled sharding on this replica set.
+So now we've successfully *enabled sharding on this replica set*. Now I'm going to connect back to *Mongos*. So once I'm connected back to *Mongos*, I can *add the shard that we just enabled sharding on*. And we specify the entire *replica set*, so we only need to specify *one node in order for Mongos to discover the current primary of this replica set*.
 
-Now I'm going to connect back to Mongos.
-
-So once I'm connected back to Mongos, I can add the shard that we just enabled sharding on.
-
-And we specify the entire replica set, so we only need to specify one node in order for Mongos to discover the current primary of this replica set.
+```javascript
+sh.addShard("m103-repl/localhost:27012")
+```
 
 And it looks like it worked.
 
