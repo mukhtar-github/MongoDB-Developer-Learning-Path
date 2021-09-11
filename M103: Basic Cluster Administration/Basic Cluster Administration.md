@@ -5301,27 +5301,102 @@ Server has startup warnings:
 mongos> 
 ```
 
-And it looks like we're in.
+And it looks like we're in. I'm just going to check the status here. So *sh.status()* is the most basic way to get *sharding data from the Mongos*. And if we take a look at the output, we can see that we have the number of *Mongoses currently connected, and we also have the number of shards*. Right now, this is empty, because we don't have any *shards*. But you can probably see where this is going.
 
-I'm just going to check the status here.
+```javascript
+// Check sharding status:
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+```
 
-So sh.status is the most basic way to get sharding data from the Mongos.
+Right now, we have our *Mongos running with the config servers*, and, actually, we also have a *replica set* that we can use. We just need to *tweak the configuration so we can use it as a shard node*. So this is the one line that we have to add if we want to *enable sharding on this node*. This line is going to tell *Mongos, hey, you know, you can use me as a shard node in your cluster*. We have to add this line to every *single node in the replica set*.
 
-And if we take a look at the output, we can see that we have the number of Mongoses currently connected, and we also have the number of shards.
+```javascript
+// Updated configuration for node1.conf:
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/node1
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: localhost
+  port: 27011
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/node1/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
 
-Right now, this is empty, because we don't have any shards.
+// Updated configuration for node2.conf:
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/node2
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: localhost
+  port: 27012
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/node2/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
 
-But you can probably see where this is going.
-
-Right now, we have our Mongos running with the config servers, and, actually, we also have a replica set that we can use.
-
-We just need to tweak the configuration so we can use it as a shard node.
-
-So this is the one line that we have to add if we want to enable sharding on this node.
-
-This line is going to tell Mongos, hey, you know, you can use me as a shard node in your cluster.
-
-We have to add this line to every single node in the replica set.
+// Updated configuration for node3.conf:
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/node3
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: localhost
+  port: 27013
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/node3/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+```
 
 So I just changed the config files for all three nodes in our set.
 
