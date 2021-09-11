@@ -5032,21 +5032,9 @@ So just to recap, in this lesson we covered the *basic responsibilities of mongo
 
 ### Setting Up a Sharded Cluster
 
-So now that we've gone over the architecture of a *basic sharded cluster in MongoDB*, we're actually going to build one in our course virtual environment. So right now, all we have is our *replica set and 103 repl*. And this is just a *normal replica set*, but eventually it will become the first *shard in our cluster*.
+So now that we've gone over the architecture of a *basic sharded cluster in MongoDB*, we're actually going to build one in our course virtual environment. So right now, all we have is our *replica set - M103 repl*. And this is just a *normal replica set*, but eventually it will become the first *shard in our cluster*. Essentially we just need the *Mongos, a config server replica set (CSRS), and at least one shard*.
 
-This diagram is the bare minimum required to start a sharded cluster.
-
-Essentially just the Mongos a config server replica set, and at least one shard.
-
-The main things we have to build are the CSRS and the Mongo s.
-
-The rest of the work will just be connecting everything together.
-
-The first thing we're going to build is our config servers.
-
-So this is the configuration file for one of our config servers.
-
-It's going to be one of the nodes in the CSRS, but it's just a regular MongoD, so it's still going to have a port, a dbpath, and a log path.
+The main things we have to build are the *CSRS and the Mongos*. The rest of the work will just be connecting everything together. The first thing we're going to build is our *config servers*. So this is the *configuration file* for one of our *config servers*. It's going to be one of the *nodes in the CSRS*, but it's just a *regular MongoD*, so it's still going to have a *port, a dbpath, and a log path*.
 
 Now, the config servers have a very important role in the shard cluster, so we have to specify in the configuration that this is in fact a config server.
 
