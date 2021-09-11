@@ -5036,6 +5036,27 @@ So now that we've gone over the architecture of a *basic sharded cluster in Mong
 
 The main things we have to build are the *CSRS and the Mongos*. The rest of the work will just be connecting everything together. The first thing we're going to build is our *config servers*. So this is the *configuration file* for one of our *config servers*. It's going to be one of the *nodes in the CSRS*, but it's just a *regular MongoD*, so it's still going to have a *port, a dbpath, and a log path*.
 
+```javascript
+// Configuration file for first config server csrs_1.conf:
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost
+  port: 26001
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs1.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs1
+```
+
 Now, the config servers have a very important role in the shard cluster, so we have to specify in the configuration that this is in fact a config server.
 
 So here I'm just going to use that file to start up a MongoD process.
