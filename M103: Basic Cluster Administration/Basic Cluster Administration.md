@@ -5254,15 +5254,33 @@ m103-csrs:PRIMARY> rs.isMaster()
 }
 ```
 
-And it looks like the set has *three nodes* in it. So now that we have our *CSRS* up and running, we can start up *Mongos and then point Mongos in the direction of our config server replica set*. So this is the *configuration file from Mongos*, and the first thing you're going to notice is that there is no *dbpath*. That's because *Mongos* doesn't need to store any data. All of the data used by *Mongos is stored on the config servers*.
+And it looks like the set has *three nodes* in it. So now that we have our *CSRS* up and running, we can start up *Mongos and then point Mongos in the direction of our config server replica set*. So this is the *configuration file from Mongos*, and the first thing you're going to notice is that there is no *dbpath*. That's because *Mongos* doesn't need to store any data.
 
-So in the sharding section, we've specified those.
+```javascript
+// Mongos config (mongos.conf):
+sharding:
+  configDB: m103-csrs/localhost:26001,localhost:26002,localhost:26003
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost
+  port: 26000
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongos.log
+  logAppend: true
+processManagement:
+  fork: true
+```
 
-And note that we've specified the entire replica set, instead of the individual members.
+All of the data used by *Mongos is stored on the config servers*. So in the *sharding section*, we've specified those. And note that we've specified the entire *replica set, instead of the individual members*. We also enabled *key file authentication*, so we're going to need to *authenticate to Mongos*, but it will inherit the same uses as our *config servers*, and we'll see that in a minute. So this is the command we use to start *Mongos*.
 
-We also enabled key file authentication, so we're going to need to authenticate to Mongos, but it will inherit the same uses as our config servers, and we'll see that in a minute.
+```javascript
+m103-csrs:PRIMARY> exit
+bye
+vagrant@vagrant:~$ vim mongos.conf
 
-So this is the command we use to start Mongos.
+```
 
 We pass the config file like we did before, but note that this is not a mongod process.
 
