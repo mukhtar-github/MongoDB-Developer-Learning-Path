@@ -5098,10 +5098,19 @@ storage:
 Now, the *config servers* have a very important role in the *shard cluster*, so we have to specify in the configuration that this is in fact a *config server*. So here I'm just going to use that file to start up a *MongoD process*. And here I'm going to do the same thing for the other two nodes and the CSRS. And you can find those config files in the lecture notes. They look very similar to the first one.
 
 ```javascript
-Starting the three config servers:
-sudo mongod -f csrs_1.conf
-sudo mongod -f csrs_2.conf
-sudo mongod -f csrs_3.conf
+// Starting the three config servers:
+vagrant@vagrant:~$ sudo mongod -f csrs_1.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1494
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f csrs_2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1530
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f csrs_3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1568
+child process started successfully, parent exiting
 ```
 
 So we enabled this replica set to use authentication, and the key file authentication is fine, because we already created our key file.

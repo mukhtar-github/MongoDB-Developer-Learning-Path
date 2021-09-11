@@ -84,9 +84,15 @@ To create a new file vim (filename)
 
 * Adding new nodes to  my repSet
 cp node3.conf node4.conf
-sudo mkdir -p /var/mongodb/db/node2
+sudo mkdir -p /var/mongodb/db/node4
 sudo mongod -f node4.conf
 rs.add("localhost:27012")
 sudo mongod -f arbiter.conf
 rs.addArb("localhost:28000")
 rs.remove("localhost:28000")
+
+** If you'd like to deploy a sharded cluster on your machine, you can find the commands from the lecture here:
+vagrant@vagrant:~$ vim csrs_1.conf
+vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/db/csrs1
+Starting the three config servers:
+sudo mongod -f csrs_1.conf
