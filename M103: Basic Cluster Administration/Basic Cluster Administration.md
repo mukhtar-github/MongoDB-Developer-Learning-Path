@@ -5055,6 +5055,44 @@ processManagement:
   fork: true
 storage:
   dbPath: /var/mongodb/db/csrs1
+
+// csrs_2.conf:
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost
+  port: 26002
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs2.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs2
+
+// csrs_3.conf
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost
+  port: 26003
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs3.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs3
 ```
 
 Now, the config servers have a very important role in the shard cluster, so we have to specify in the configuration that this is in fact a config server.
