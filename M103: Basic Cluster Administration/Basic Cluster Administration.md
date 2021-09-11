@@ -5111,14 +5111,52 @@ vagrant@vagrant:~$ sudo mongod -f csrs_3.conf
 about to fork child process, waiting until server is ready for connections.
 forked process: 1568
 child process started successfully, parent exiting
-
-// Connect to one of the config servers:
-mongo --port 26001
 ```
 
 So we enabled this *replica set to use authentication*, and the *key file authentication* is fine, because we already created our *key file*. We're going to share the same *key file in this setup*, since all the *MongoD instances are running on the same virtual machine*. But in a real production environment, *X509 certificates* would be the way to go. Having a *shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised*, so just keep that in mind.
 
 Here I'm just *initiating the config server replica set*. And here I just use the *local host exception to create our super user*. So now I'm just going to *authenticate as the super user*. One means that it worked. And now we can start adding those to the set. Here's our *second node and our third, and now we have a complete config server replica set*. I'm just going to verify that with *rs.isMaster*.
+
+```javascript
+// Connect to one of the config servers:
+vagrant@vagrant:~$ mongo --port 26001
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:26001/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("19631e88-46c4-4ea1-ab4c-e3f0b6fd8e21") }
+MongoDB server version: 3.6.23
+
+// Initiating the CSRS:
+> rs.initiate()
+{
+    "info2" : "no configuration specified. Using a default configuration for the set",
+    "me" : "localhost:26001",
+    "ok" : 1,
+    "$gleStats" : {
+      "lastOpTime" : Timestamp(1631359193, 1),
+      "electionId" : ObjectId("000000000000000000000000")
+    }
+}
+
+// Creating super user on CSRS:
+m103-csrs:SECONDARY> use admin
+switched to db admin
+m103-csrs:PRIMARY> db.createUser({
+...   user: "m103-admin",
+...   pwd: "m103-pass",
+...   roles: [
+...     {role: "root", db: "admin"}
+...   ]
+... })
+Successfully added user: {
+    "user" : "m103-admin",
+    "roles" : [
+      {
+        "role" : "root",
+        "db" : "admin"
+      }
+    ]
+}
+```
 
 And it looks like the set has three nodes in it.
 
