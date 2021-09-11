@@ -5118,19 +5118,7 @@ mongo --port 26001
 
 So we enabled this *replica set to use authentication*, and the *key file authentication* is fine, because we already created our *key file*. We're going to share the same *key file in this setup*, since all the *MongoD instances are running on the same virtual machine*. But in a real production environment, *X509 certificates* would be the way to go. Having a *shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised*, so just keep that in mind.
 
-Here I'm just initiating the config server replica set.
-
-And here I just use the local host exception to create our super user.
-
-So now I'm just going to authenticate as the super user.
-
-One means that it worked.
-
-And now we can start adding those to the set.
-
-Here's our second node and our third, and now we have a complete config server replica set.
-
-I'm just going to verify that with rs.isMaster.
+Here I'm just *initiating the config server replica set*. And here I just use the *local host exception to create our super user*. So now I'm just going to *authenticate as the super user*. One means that it worked. And now we can start adding those to the set. Here's our *second node and our third, and now we have a complete config server replica set*. I'm just going to verify that with *rs.isMaster*.
 
 And it looks like the set has three nodes in it.
 
