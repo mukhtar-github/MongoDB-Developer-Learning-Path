@@ -5276,19 +5276,30 @@ processManagement:
 All of the data used by *Mongos is stored on the config servers*. So in the *sharding section*, we've specified those. And note that we've specified the entire *replica set, instead of the individual members*. We also enabled *key file authentication*, so we're going to need to *authenticate to Mongos*, but it will inherit the same uses as our *config servers*, and we'll see that in a minute. So this is the command we use to start *Mongos*.
 
 ```javascript
+// Start the mongos server:
 m103-csrs:PRIMARY> exit
 bye
 vagrant@vagrant:~$ vim mongos.conf
-
+vagrant@vagrant:~$ sudo mongos -f mongos.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1936
+child process started successfully, parent exiting
 ```
 
-We pass the config file like we did before, but note that this is not a mongod process.
+We pass the *config file* like we did before, but note that this is not a *mongod process. Mongos* is a different process with different properties, so just bear that in mind. So as we saw before, *Mongos has auth- enabled*, and it's also going to inherit any users that we created on the *config servers*. So this user is actually ready to go.
 
-Mongos is a different process with different properties, so just bear that in mind.
-
-So as we saw before, Mongos has auth- enabled, and it's also going to inherit any users that we created on the config servers.
-
-So this user is actually ready to go.
+```javascript
+// Connect to mongos:
+vagrant@vagrant:~$ mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("79aba230-015e-45ef-9ea9-ca39313a56e0") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-11T12:50:40.836+0000 I CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-11T12:50:40.837+0000 I CONTROL  [main] 
+mongos> 
+```
 
 And it looks like we're in.
 
