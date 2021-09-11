@@ -5398,13 +5398,35 @@ replication:
   replSetName: m103-repl
 ```
 
-So I just changed the config files for all three nodes in our set.
+So I just changed the *config files for all three nodes* in our set. But the *nodes still need to be restarted* in order to account for those changes. We're going to do a *rolling upgrade* in order to do this, which means we're going to *upgrade the secondaries first, then bring them back up, step down the current primary, and then upgrade that last node*. Here, I'm just connecting to one of the *secondary nodes*.
 
-But the nodes still need to be restarted in order to account for those changes.
-
-We're going to do a rolling upgrade in order to do this, which means we're going to upgrade the secondaries first, then bring them back up, step down the current primary, and then upgrade that last node.
-
-Here, I'm just connecting to one of the secondary nodes.
+```javascript
+// Connecting directly to secondary node (note that if an election has taken place in your replica set, the specified node may have become primary):
+vagrant@vagrant:~$ sudo mongod -f node1.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2650
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f node2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2697
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f node3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2737
+child process started successfully, parent exiting
+vagrant@vagrant:~$ mongo --port 27012 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:27012/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("c6f8897b-f6b4-473d-a01a-def805d26eaa") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-11T15:15:56.607+0000 I STORAGE  [initandlisten] 
+2021-09-11T15:15:56.607+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2021-09-11T15:15:56.608+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2021-09-11T15:16:08.450+0000 I CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-11T15:16:08.451+0000 I CONTROL  [initandlisten] 
+m103-example:OTHER> 
+```
 
 I'm just going to switch to the admin database and shut down this node.
 

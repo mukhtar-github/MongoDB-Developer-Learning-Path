@@ -73,7 +73,7 @@ processManagement:
 replication:
   replSetName: m103-example
 
-mongod -f node1.conf
+sudo mongod -f node1.conf
 sudo mongod -f node2.conf
 sudo mongod -f node3.conf
 mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
