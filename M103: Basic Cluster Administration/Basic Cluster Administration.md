@@ -5115,7 +5115,7 @@ child process started successfully, parent exiting
 
 So we enabled this *replica set to use authentication*, and the *key file authentication* is fine, because we already created our *key file*. We're going to share the same *key file in this setup*, since all the *MongoD instances are running on the same virtual machine*. But in a real production environment, *X509 certificates* would be the way to go. Having a *shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised*, so just keep that in mind.
 
-Here I'm just *initiating the config server replica set*. And here I just use the *local host exception to create our super user*. So now I'm just going to *authenticate as the super user*. One (1) means that it worked. And now we can start adding those to the set. Here's our *second node and our third, and now we have a complete config server replica set*. I'm just going to verify that with *rs.isMaster*.
+Here I'm just *initiating the config server replica set*. And here I just use the *local host exception to create our super user*. So now I'm just going to *authenticate as the super user*. One (1) means that it worked. And now we can start adding those to the set. Here's our *second node and our third, and now we have a complete config server replica set*. I'm just going to verify that with *rs.isMaster()*.
 
 ```javascript
 // Connect to one of the config servers:
@@ -5196,6 +5196,58 @@ m103-csrs:PRIMARY> rs.add("localhost:26003")
       "clusterTime" : Timestamp(1631362569, 1),
       "signature" : {
         "hash" : BinData(0,"quPaC5dX/h4subzBQN84LSqQv4s="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+m103-csrs:PRIMARY> rs.isMaster()
+{
+    "hosts" : [
+      "localhost:26001",
+      "localhost:26002",
+      "localhost:26003"
+    ],
+    "setName" : "m103-csrs",
+    "setVersion" : 3,
+    "ismaster" : true,
+    "secondary" : false,
+    "primary" : "localhost:26001",
+    "me" : "localhost:26001",
+    "electionId" : ObjectId("7fffffff0000000000000001"),
+    "lastWrite" : {
+      "opTime" : {
+        "ts" : Timestamp(1631362760, 1),
+        "t" : NumberLong(1)
+      },
+      "lastWriteDate" : ISODate("2021-09-11T12:19:20Z"),
+      "majorityOpTime" : {
+        "ts" : Timestamp(1631362760, 1),
+        "t" : NumberLong(1)
+      },
+      "majorityWriteDate" : ISODate("2021-09-11T12:19:20Z")
+    },
+    "configsvr" : 2,
+    "maxBsonObjectSize" : 16777216,
+    "maxMessageSizeBytes" : 48000000,
+    "maxWriteBatchSize" : 100000,
+    "localTime" : ISODate("2021-09-11T12:19:28.176Z"),
+    "logicalSessionTimeoutMinutes" : 30,
+    "minWireVersion" : 0,
+    "maxWireVersion" : 6,
+    "readOnly" : false,
+    "ok" : 1,
+    "operationTime" : Timestamp(1631362760, 1),
+    "$gleStats" : {
+      "lastOpTime" : {
+        "ts" : Timestamp(1631362569, 1),
+        "t" : NumberLong(1)
+      },
+      "electionId" : ObjectId("7fffffff0000000000000001")
+    },
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631362760, 1),
+      "signature" : {
+        "hash" : BinData(0,"YeVvWLwXlcycNRte1O5x0StJEGQ="),
         "keyId" : NumberLong("7006634394848854025")
       }
     }
