@@ -5116,9 +5116,7 @@ child process started successfully, parent exiting
 mongo --port 26001
 ```
 
-So we enabled this *replica set to use authentication*, and the *key file authentication* is fine, because we already created our *key file*. We're going to share the same *key file in this setup*, since all the *MongoD instances are running on the same virtual machine*. But in a real production environment, X509 certificates would be the way to go.
-
-Having a shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised, so just keep that in mind.
+So we enabled this *replica set to use authentication*, and the *key file authentication* is fine, because we already created our *key file*. We're going to share the same *key file in this setup*, since all the *MongoD instances are running on the same virtual machine*. But in a real production environment, *X509 certificates* would be the way to go. Having a *shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised*, so just keep that in mind.
 
 Here I'm just initiating the config server replica set.
 
