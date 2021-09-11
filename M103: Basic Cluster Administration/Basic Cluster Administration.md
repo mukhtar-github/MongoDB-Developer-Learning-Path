@@ -5032,11 +5032,7 @@ So just to recap, in this lesson we covered the *basic responsibilities of mongo
 
 ### Setting Up a Sharded Cluster
 
-So now that we've gone over the architecture of a basic sharded cluster in MongoDB, we're actually going to build one in our course virtual environment.
-
-So right now, all we have is our replica set and 103 repl.
-
-And this is just a normal replica set, but eventually it will become the first shard in our cluster.
+So now that we've gone over the architecture of a *basic sharded cluster in MongoDB*, we're actually going to build one in our course virtual environment. So right now, all we have is our *replica set and 103 repl*. And this is just a *normal replica set*, but eventually it will become the first *shard in our cluster*.
 
 This diagram is the bare minimum required to start a sharded cluster.
 
