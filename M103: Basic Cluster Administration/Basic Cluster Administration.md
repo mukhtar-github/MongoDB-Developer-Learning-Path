@@ -5254,15 +5254,7 @@ m103-csrs:PRIMARY> rs.isMaster()
 }
 ```
 
-And it looks like the set has three nodes in it.
-
-So now that we have our CSRS up and running, we can start up Mongos and then point Mongos in the direction of our config server replica set.
-
-So this is the configuration file from Mongos, and the first thing you're going to notice is that there is no dbpath.
-
-That's because Mongos doesn't need to store any data.
-
-All of the data used by Mongos is stored on the config servers.
+And it looks like the set has *three nodes* in it. So now that we have our *CSRS* up and running, we can start up *Mongos and then point Mongos in the direction of our config server replica set*. So this is the *configuration file from Mongos*, and the first thing you're going to notice is that there is no *dbpath*. That's because *Mongos* doesn't need to store any data. All of the data used by *Mongos is stored on the config servers*.
 
 So in the sharding section, we've specified those.
 
