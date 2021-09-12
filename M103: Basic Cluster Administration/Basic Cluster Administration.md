@@ -5583,3 +5583,85 @@ mongos> sh.status()
 ```
 
 And our list of *shards now has one shard* in it. And as we can see, we only specified *one node, but Mongos* was able to discover all the *nodes in the set*. So just to recap here. We covered how to *launch Mongos and a config server replica set*. We learned how to *enable sharding on a replica set, and we did so, by way of a rolling upgrade. And we added shards to our cluster*.
+
+### Config DB
+
+All right, so in this lesson, we're going to talk about a very important database in the sharded cluster, the config database.
+
+First thing you need to know about the config DB is that you should generally never write any data to it.
+
+It's maintained internally by MongoDB, and it's used internally.
+
+So, generally, you will never need to actually write any data to it.
+
+However, it's got some useful information in it, so we are going to read from it.
+
+So, I'm just connected to mongos and I'm running a quick s.h.
+
+status on it just to see the typology of the sharded cluster.
+
+So this is going to give us a lot of output about some of the shards, about the active mongos's.
+
+It's going to give us some information about the database in our sharded cluster.
+
+But all of this data is actually stored in the config DB.
+
+Here, and just switching over to the config database.
+
+I'm going to take a look at the collections we have in there already.
+
+So these are all the collections that we have access to in the config database.
+
+The first one we're going to look at is the databases collection.
+
+So here, I'm just printing the results from our databases querie.
+
+So this is going to return each database in our cluster as one document.
+
+It's going to give us the primary shard for each database, and the partition here is just telling us whether or not sharding has been enabled on this database.
+
+In this case, the m103 database has sharding enabled.
+
+Now, take a look at the collections.
+
+So this is only going to give us information on collections that have been sharded.
+
+But for those collections, it will tell us the shard key that we used.
+
+In this case, the m103 products collection was sharded on sale price.
+
+And it also tell us whether or not that key was unique.
+
+This one's going to tell us about the shards in our cluster.
+
+And here, you can see the hostname contains the replica set name because these shards are deployed as replica sets.
+
+The chunks collection is possibly the most interesting collection in this whole database.
+
+So each chunk for every collection in this database is returned to us as one document.
+
+The inclusive minimum and the exclusive maximum define the chunk range of the shard key values.
+
+That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only.
+
+So this collection is sharded on sale price.
+
+And we see that this chunk has documents with values of sale price for a minKey key to about $15.
+
+MinKey, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way.
+
+This chunk has documents with sale prices of at least $14.99, but lower than $33.99.
+
+For example, if I were to insert a document into this collection that had a sale price of $20, it would end up in this chunk.
+
+The config database also some information on the mongos process currently connected to this cluster, because we can have any number of them.
+
+As we can see right now, we only have one.
+
+But it'll give us a lot of information on it, including the mongos version that's running on the mongos.
+
+So, just to recap, in this lesson we've covered the collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos.
+
+But remember, never write to this database unless instructed to by MongoDB support or our official documentation.
+
+It has some useful information, but it's generally meant for internal MongoDB usage only.
