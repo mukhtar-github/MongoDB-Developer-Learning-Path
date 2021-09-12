@@ -5586,15 +5586,7 @@ And our list of *shards now has one shard* in it. And as we can see, we only spe
 
 ### Config DB
 
-All right, so in this lesson, we're going to talk about a very important database in the sharded cluster, the config database.
-
-First thing you need to know about the config DB is that you should generally never write any data to it.
-
-It's maintained internally by MongoDB, and it's used internally.
-
-So, generally, you will never need to actually write any data to it.
-
-However, it's got some useful information in it, so we are going to read from it.
+All right, so in this lesson, we're going to talk about a very important database in the *sharded cluster, the config database*. First thing you need to know about the *config DB* is that you should generally never write any data to it. It's maintained internally by *MongoDB*, and it's used internally. So, generally, you will never need to actually write any data to it. However, it's got some useful information in it, so we are going to read from it.
 
 So, I'm just connected to mongos and I'm running a quick s.h.
 
