@@ -5351,7 +5351,7 @@ systemLog:
 processManagement:
   fork: true
 replication:
-  replSetName: m103-repl
+  replSetName: m103-example
 
 // Updated configuration for node2.conf:
 sharding:
@@ -5373,7 +5373,7 @@ systemLog:
 processManagement:
   fork: true
 replication:
-  replSetName: m103-repl
+  replSetName: m103-example
 
 // Updated configuration for node3.conf:
 sharding:
@@ -5395,7 +5395,7 @@ systemLog:
 processManagement:
   fork: true
 replication:
-  replSetName: m103-repl
+  replSetName: m103-example
 ```
 
 So I just changed the *config files for all three nodes* in our set. But the *nodes still need to be restarted* in order to account for those changes. We're going to do a *rolling upgrade* in order to do this, which means we're going to *upgrade the secondaries first, then bring them back up, step down the current primary, and then upgrade that last node*. Here, I'm just connecting to one of the *secondary nodes*.
