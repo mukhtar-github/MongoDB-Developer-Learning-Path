@@ -5582,4 +5582,4 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-And our list of shards now has one *shard* in it. And as we can see, we only specified one node, but Mongos was able to discover all the nodes in the set. So just to recap here. We covered how to launch Mongos and a config server replica set. We learned how to enable sharding on a replica set, and we did so, by way of a rolling upgrade. And we added shards to our cluster.
+And our list of *shards now has one shard* in it. And as we can see, we only specified *one node, but Mongos* was able to discover all the *nodes in the set*. So just to recap here. We covered how to *launch Mongos and a config server replica set*. We learned how to *enable sharding on a replica set, and we did so, by way of a rolling upgrade. And we added shards to our cluster*.
