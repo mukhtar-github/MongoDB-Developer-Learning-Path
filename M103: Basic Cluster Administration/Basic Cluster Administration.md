@@ -5592,41 +5592,13 @@ So, I'm just connected to *mongos* and I'm running a quick *sh.status()* on it j
 
 Here, and just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the databases collection. So here, I'm just printing the results from our *databases querie*. So this is going to return each database in our cluster as one document.
 
-It's going to give us the primary shard for each database, and the partition here is just telling us whether or not sharding has been enabled on this database.
+It's going to give us the *primary shard for each database*, and the partition here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used.
 
-In this case, the m103 database has sharding enabled.
+In this case, the *m103 products collection was sharded on sale price*. And it also tell us whether or not that key was unique. This one's going to tell us about the *shards in our cluster*. And here, you can see the *hostname* contains the *replica set name because these shards are deployed as replica sets*. The chunks collection is possibly the most interesting collection in this whole database.
 
-Now, take a look at the collections.
+So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only. So this collection is sharded on sale price.
 
-So this is only going to give us information on collections that have been sharded.
-
-But for those collections, it will tell us the shard key that we used.
-
-In this case, the m103 products collection was sharded on sale price.
-
-And it also tell us whether or not that key was unique.
-
-This one's going to tell us about the shards in our cluster.
-
-And here, you can see the hostname contains the replica set name because these shards are deployed as replica sets.
-
-The chunks collection is possibly the most interesting collection in this whole database.
-
-So each chunk for every collection in this database is returned to us as one document.
-
-The inclusive minimum and the exclusive maximum define the chunk range of the shard key values.
-
-That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only.
-
-So this collection is sharded on sale price.
-
-And we see that this chunk has documents with values of sale price for a minKey key to about $15.
-
-MinKey, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way.
-
-This chunk has documents with sale prices of at least $14.99, but lower than $33.99.
-
-For example, if I were to insert a document into this collection that had a sale price of $20, it would end up in this chunk.
+And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
 
 The config database also some information on the mongos process currently connected to this cluster, because we can have any number of them.
 
