@@ -5588,27 +5588,9 @@ And our list of *shards now has one shard* in it. And as we can see, we only spe
 
 All right, so in this lesson, we're going to talk about a very important database in the *sharded cluster, the config database*. First thing you need to know about the *config DB* is that you should generally never write any data to it. It's maintained internally by *MongoDB*, and it's used internally. So, generally, you will never need to actually write any data to it. However, it's got some useful information in it, so we are going to read from it.
 
-So, I'm just connected to mongos and I'm running a quick s.h.
+So, I'm just connected to *mongos* and I'm running a quick *sh.status()* on it just to see the *typology of the sharded cluster*. So this is going to give us a lot of output about some of the *shards, about the active mongos's*. It's going to give us some information about the database in our *sharded cluster*. But all of this data is actually stored in the *config DB*.
 
-status on it just to see the typology of the sharded cluster.
-
-So this is going to give us a lot of output about some of the shards, about the active mongos's.
-
-It's going to give us some information about the database in our sharded cluster.
-
-But all of this data is actually stored in the config DB.
-
-Here, and just switching over to the config database.
-
-I'm going to take a look at the collections we have in there already.
-
-So these are all the collections that we have access to in the config database.
-
-The first one we're going to look at is the databases collection.
-
-So here, I'm just printing the results from our databases querie.
-
-So this is going to return each database in our cluster as one document.
+Here, and just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the databases collection. So here, I'm just printing the results from our *databases querie*. So this is going to return each database in our cluster as one document.
 
 It's going to give us the primary shard for each database, and the partition here is just telling us whether or not sharding has been enabled on this database.
 
