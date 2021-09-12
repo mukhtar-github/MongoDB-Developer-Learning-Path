@@ -5600,14 +5600,6 @@ So each *chunk* for every collection in this database is returned to us as one d
 
 And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
 
-The config database also some information on the mongos process currently connected to this cluster, because we can have any number of them.
+The *config database* also some information on the *mongos process* currently connected to this cluster, because we can have any number of them. As we can see right now, we only have one. But it'll give us a lot of information on it, including the *mongos version that's running on the mongos*.
 
-As we can see right now, we only have one.
-
-But it'll give us a lot of information on it, including the mongos version that's running on the mongos.
-
-So, just to recap, in this lesson we've covered the collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos.
-
-But remember, never write to this database unless instructed to by MongoDB support or our official documentation.
-
-It has some useful information, but it's generally meant for internal MongoDB usage only.
+So, just to recap, in this lesson we've covered the collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos. But remember, never write to this database unless instructed to by MongoDB support or our official documentation. It has some useful information, but it's generally meant for internal MongoDB usage only.
