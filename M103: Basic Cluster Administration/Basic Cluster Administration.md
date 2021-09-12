@@ -5526,24 +5526,60 @@ forked process: 2864
 child process started successfully, parent exiting
 ```
 
-So now we've successfully *enabled sharding on this replica set*. Now I'm going to connect back to *Mongos*. So once I'm connected back to *Mongos*, I can *add the shard that we just enabled sharding on*. And we specify the entire *replica set*, so we only need to specify *one node in order for Mongos to discover the current primary of this replica set*.
+So now we've successfully *enabled sharding on this replica set*. Now I'm going to connect back to *Mongos*. So once I'm connected back to *Mongos*, I can *add the shard that we just enabled sharding on*. And we specify the entire *replica set*, so we only need to specify *one node in order for Mongos to discover the current primary of this replica set*. And it looks like it worked. I'm just going to check *sh.status()*.
 
 ```javascript
-sh.addShard("m103-repl/localhost:27012")
+// Connecting back to mongos
+vagrant@vagrant:~$ mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("4a6ac54b-0268-4022-a7e4-288b2d9190de") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-12T09:36:55.448+0000 I CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-12T09:36:55.448+0000 I CONTROL  [main] 
+mongos>
+
+// Adding new shard to cluster from mongos:
+mongos> sh.addShard("m103-example/localhost:27012")
+{
+    "shardAdded" : "m103-example",
+    "ok" : 1,
+    "operationTime" : Timestamp(1631442330, 6),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631442330, 7),
+      "signature" : {
+        "hash" : BinData(0,"gYDjmstDwbXXqTLUqHfNnWWnyZI="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+
+// Checking the status of our shard
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : false }
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-And it looks like it worked.
-
-I'm just going to check sh.status.
-
-And our list of shards now has one shard in it.
-
-And as we can see, we only specified one node, but Mongos was able to discover all the nodes in the set.
-
-So just to recap here.
-
-We covered how to launch Mongos and a config server replica set.
-
-We learned how to enable sharding on a replica set, and we did so, by way of a rolling upgrade.
-
-And we added shards to our cluster.
+And our list of shards now has one *shard* in it. And as we can see, we only specified one node, but Mongos was able to discover all the nodes in the set. So just to recap here. We covered how to launch Mongos and a config server replica set. We learned how to enable sharding on a replica set, and we did so, by way of a rolling upgrade. And we added shards to our cluster.
