@@ -5818,3 +5818,137 @@ mongos> db.mongos.find().pretty()
 ```
 
 So, just to recap, in this lesson we've covered the *collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos*. But remember, never write to this database unless instructed to by *MongoDB* support or our official documentation. It has some useful information, but it's generally meant for internal *MongoDB* usage only.
+
+### Shard Keys
+
+In this lesson, we're going to talk about the shard key.
+
+This is the indexed field or fields that MongoDB uses to partition data in a sharded collection, and distribute it across the shards in your cluster.
+
+Let's start with how the shard key is used to distribute your data.
+
+Consider a collection with some number of documents in them.
+
+MongoDB uses the shard key to divide up these documents into logical groupings that MongoDB then distributes across our sharded cluster.
+
+MongoDB he refers to these groupings as chunks.
+
+The value of the field or fields we choose as our shard key help to define the inclusive lower bound, and the exclusive upper bound of each chunk.
+
+Because the shard key is used to define chunk boundaries, it also defines which chunk a given document is going to belong to.
+
+Every time you write a new document to the collection, the Mongo S router checks which shard contains the appropriate chunk for that documents key value, and routes the document to that shard only.
+
+That's how sharded clusters handle distributed write operations.
+
+Depending on what shard is holding a given chunk, a new document is routed to that shared and only that shard.
+
+This also means that your shard key must be present in every document in the collection, and every new document inserted.
+
+So I could shard on as sku or type, but not imdb since that field isn't included in every document within this collection.
+
+Shard keys also support distributed read operations.
+
+If you specify the shard key as part of your queries, MongoDB can redirect the query to only those chunks, and therefore, shards that contain the related data.
+
+Ideally, your shard key should support the majority of queries you run on the collection.
+
+That way, the majority of your read operations can be targeted to a single shard.
+
+Without the shard key in the query, the Mongo S router would need to check each shard in the cluster to find the documents that match the query.
+
+We'll go into the specifics of targeted versus broadcast operations in a later lesson.
+
+Let's go over a few important aspects of your shard key.
+
+First, I mentioned earlier that the shard key are an index field or fields in your collection.
+
+This is a hard requirement.
+
+You cannot select a field or fields for your shard key if you do not have an existing index for the field or fields.
+
+You'll need to create the index first before you can shard.
+
+Sharding is a permanent operation.
+
+Once you have selected your shard key, that's it.
+
+Furthermore, the shard key is immutable.
+
+Not only can you not change it later, you cannot update the shard key values of the shard key fields for any document in the collection.
+
+So choose carefully.
+
+The next lesson has some guidance on choosing a good shard key, so stay tuned for that.
+
+Finally, you cannot unshard a collection.
+
+This kind of builds off of shard keys being immutable.
+
+Once you have sharded a collection, you cannot unshard it later.
+
+The steps for sharding are actually pretty straightforward.
+
+First, you need to use sh.enablesharding, specifying the name of the database, to enable sharding for the specified database.
+
+This does not automatically shard your collections.
+
+It just means that the collections in this particular database are eligible for sharding.
+
+This won't affect other databases in your MongoDB cluster.
+
+Next, you have to create the index to back your shard key for the collection you want to shard, using db.collection.createindex.
+
+Remember, we're going to substitute collection here with the name of the collection we want to create the index on.
+
+Finally, we're going to use sh.shardCollection, specifying the full path to the collection, and the shard key to shard the specified Collection let's actually try this in action real quick.
+
+So here, you can see I'm using sh.status status to show that I have a two shard sharded cluster.
+
+I'm currently connected to the Mongo S.
+
+I'm going to switch to the m103 database, because I want to shard the products collection in that database.
+
+I'm going to enable sharding on the m103 database first.
+
+Now before we shard a collection, we need to decide what key we will be using.
+
+I'm using db.products.find0ne to show you those one document from the products collection.
+
+I'm going to use the sku field for my shard key.
+
+Before sharding, I need to ensure that the selected key or keys that compose my shard key are supported by an index.
+
+So let's create an index on sku using db.collection.createindex.
+
+So here, I'm creating the index on sku, and I have specified ascending here.
+
+It's not super important.
+
+And you can see here that I now have this additional index on sku.
+
+Remember that all collections have an index on ID by default.
+
+Finally, I'm going to shard the collection using the next I just specified.
+
+Here, I have the full path to the products collection, m103.products, and then the shard key that I want to use for this collection, sky.
+
+If I run sh.status, I can now see that the m103.primary collection has a shard key, and has actually already been broken up into three separate chunks.
+
+So if I run sh.status again, we can see now that the collection is marked as sharded because it has a shard key.
+
+My documents have actually been already broken up into chunks, and distributed across the two shards in my cluster-- two chunks in shard 1, one chunk in shard 2.
+
+And we can even see the ranges of values for each chunk.
+
+To recap, your shard determines the partitioning and data distribution of data across your sharted cluster.
+
+Shard keys are immutable.
+
+You cannot change them after sharding.
+
+Shard key values are also immutable.
+
+You cannot update a document shard key.
+
+And you need to create the underlying index first before sharding on the indexed field or fields.
