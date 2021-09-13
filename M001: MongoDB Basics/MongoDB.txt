@@ -78,6 +78,12 @@ sudo mongod -f node2.conf
 sudo mongod -f node3.conf
 mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 
+sudo mongod -f csrs_1.conf
+sudo mongod -f csrs_2.conf
+sudo mongod -f csrs_3.conf
+sudo mongos -f mongos.conf
+mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+
 To paste in the Vim Editor, use "+p then paste.
 To create a new file vim (filename)
 :wq or :x or ZZ - write (save) and quit

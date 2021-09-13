@@ -5588,7 +5588,67 @@ And our list of *shards now has one shard* in it. And as we can see, we only spe
 
 All right, so in this lesson, we're going to talk about a very important database in the *sharded cluster, the config database*. First thing you need to know about the *config DB* is that you should generally never write any data to it. It's maintained internally by *MongoDB*, and it's used internally. So, generally, you will never need to actually write any data to it. However, it's got some useful information in it, so we are going to read from it.
 
-So, I'm just connected to *mongos* and I'm running a quick *sh.status()* on it just to see the *typology of the sharded cluster*. So this is going to give us a lot of output about some of the *shards, about the active mongos's*. It's going to give us some information about the database in our *sharded cluster*. But all of this data is actually stored in the *config DB*.
+So, I'm just connected to *mongos* and I'm running a quick *sh.status()* on it just to see the *typology of the sharded cluster*. So this is going to give us a lot of output about some of the *shards, about the active mongos's*. It's going to give us some information about the *database in our sharded cluster*. But all of this data is actually stored in the *config DB*.
+
+```javascript
+vagrant@vagrant:~$ sudo mongod -f csrs_1.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1796
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f csrs_2.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 1895
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongod -f csrs_3.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2185
+child process started successfully, parent exiting
+vagrant@vagrant:~$ sudo mongos -f mongos.conf
+about to fork child process, waiting until server is ready for connections.
+forked process: 2311
+child process started successfully, parent exiting
+vagrant@vagrant:~$ mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("7f54c793-db66-4872-805d-fd90497215ed") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-09-13T06:02:35.837+0000 I CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-13T06:02:35.837+0000 I CONTROL  [main] 
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example	1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : false }
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
+
+mongos> 
+```
 
 Here, and just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the databases collection. So here, I'm just printing the results from our *databases querie*. So this is going to return each database in our cluster as one document.
 
