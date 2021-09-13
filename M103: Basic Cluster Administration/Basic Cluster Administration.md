@@ -5798,8 +5798,23 @@ mongos> db.chunks.find().pretty()
 Type "it" for more
 ```
 
-So this collection is sharded on sale price. And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
+So this collection is sharded on *config.system.sessions*. And we see that this *chunk* has documents with values of *id for a minKey key to about "004000...". MinKey*, here, means the lowest possible value of "id" or negative infinity, if you want to think about it that way.
 
 The *config database* also some information on the *mongos process* currently connected to this cluster, because we can have any number of them. As we can see right now, we only have one. But it'll give us a lot of information on it, including the *mongos version that's running on the mongos*.
 
-So, just to recap, in this lesson we've covered the collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos. But remember, never write to this database unless instructed to by MongoDB support or our official documentation. It has some useful information, but it's generally meant for internal MongoDB usage only.
+```javascript
+// Query config.mongos:
+mongos> db.mongos.find().pretty()
+{
+    "_id" : "vagrant:26000",
+    "advisoryHostFQDNs" : [
+      "vagrant.vm"
+    ],
+    "mongoVersion" : "3.6.23",
+    "ping" : ISODate("2021-09-13T08:00:32.519Z"),
+    "up" : NumberLong(7075),
+    "waiting" : true
+}
+```
+
+So, just to recap, in this lesson we've covered the *collections that we have in the configure database, including but not limited to, shards, chunks, and the mongos*. But remember, never write to this database unless instructed to by *MongoDB* support or our official documentation. It has some useful information, but it's generally meant for internal *MongoDB* usage only.
