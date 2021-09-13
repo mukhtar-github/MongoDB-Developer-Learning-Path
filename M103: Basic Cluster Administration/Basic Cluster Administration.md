@@ -5724,7 +5724,7 @@ mongos> db.shards.find().pretty()
 }
 ```
 
-The chunks collection is possibly the most interesting collection in this whole database. So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only.
+The *chunks collection* is possibly the most interesting collection in this whole database. So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the *chunk range of the shard key values*. That means that any document in the associated collection who's *shard key value* falls into this *chunks range will end up in this chunk, and this chunk only*.
 
 ```javascript
 // Query config.chunks:
@@ -5795,40 +5795,6 @@ mongos> db.chunks.find().pretty()
     },
     "shard" : "m103-example"
   }
-  {
-    "_id" : "config.system.sessions-_id_{ id: UUID(\"01000000-0000-0000-0000-000000000000\") }",
-    "lastmod" : Timestamp(1, 5),
-    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
-    "ns" : "config.system.sessions",
-    "min" : {
-      "_id" : {
-        "id" : UUID("01000000-0000-0000-0000-000000000000")
-      }
-    },
-    "max" : {
-      "_id" : {
-        "id" : UUID("01400000-0000-0000-0000-000000000000")
-      }
-    },
-    "shard" : "m103-example"
-  }
-  {
-    "_id" : "config.system.sessions-_id_{ id: UUID(\"01400000-0000-0000-0000-000000000000\") }",
-    "lastmod" : Timestamp(1, 6),
-    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
-    "ns" : "config.system.sessions",
-    "min" : {
-      "_id" : {
-        "id" : UUID("01400000-0000-0000-0000-000000000000")
-      }
-    },
-    "max" : {
-      "_id" : {
-        "id" : UUID("01800000-0000-0000-0000-000000000000")
-      }
-    },
-    "shard" : "m103-example"
-}
 Type "it" for more
 ```
 
