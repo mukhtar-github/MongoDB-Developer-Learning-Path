@@ -5642,15 +5642,38 @@ mongos> sh.status()
                         unique: false
                         balancing: true
                         chunks:
-                                m103-example	1024
+                                m103-example 1024
                         too many chunks to print, use verbose if you want to force print
         {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : false }
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 
-mongos> 
 ```
 
-Here, and just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the databases collection. So here, I'm just printing the results from our *databases querie*. So this is going to return each database in our cluster as one document.
+Here, I'm just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the *databases* collection. So here, I'm just printing the results from our *databases query*. So this is going to return each database in our cluster as one document.
+
+```javascript
+// Switch to config DB:
+mongos> use config
+switched to db config
+mongos> show collections
+changelog
+chunks
+collections
+databases
+lockpings
+locks
+migrations
+mongos
+shards
+tags
+transactions
+version
+
+// Query config.databases:
+mongos> db.databases.find().pretty()
+{ "_id" : "m103", "primary" : "m103-example", "partitioned" : false }
+{ "_id" : "newDB", "primary" : "m103-example", "partitioned" : false }
+```
 
 It's going to give us the *primary shard for each database*, and the partition here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used.
 
