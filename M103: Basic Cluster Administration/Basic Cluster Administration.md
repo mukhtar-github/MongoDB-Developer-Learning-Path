@@ -5618,10 +5618,10 @@ Server has startup warnings:
 mongos> sh.status()
 --- Sharding Status --- 
   sharding version: {
-  	"_id" : 1,
-  	"minCompatibleVersion" : 5,
-  	"currentVersion" : 6,
-  	"clusterId" : ObjectId("613c90dc078b9817172ec755")
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
   }
   shards:
         {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
@@ -5686,11 +5686,45 @@ mongos> db.databases.find().pretty()
 { "_id" : "newDB", "primary" : "m103-example", "partitioned" : false }
 ```
 
-It's going to give us the *primary shard for each database*, and the *partition* here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used.
+It's going to give us the *primary shard for each database*, and the *partition* here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used. It tell us whether or not that key was unique.
 
-In this case, the *m103 products collection was sharded on sale price*. And it also tell us whether or not that key was unique. This one's going to tell us about the *shards in our cluster*. And here, you can see the *hostname* contains the *replica set name because these shards are deployed as replica sets*. The chunks collection is possibly the most interesting collection in this whole database.
+```javascript
+// Query config.collections:
+mongos> db.collections.find().pretty()
+{
+    "_id" : "config.system.sessions",
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "lastmod" : ISODate("1970-02-19T17:02:47.296Z"),
+    "dropped" : false,
+    "key" : {
+      "_id" : 1
+    },
+    "unique" : false,
+    "uuid" : UUID("cc896907-9eff-4010-9ed8-c80dfb1caf4f")
+}
 
-So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only. So this collection is sharded on sale price.
+// Query config.shards:
+mongos> db.shards.find().pretty()
+{
+    "_id" : "m103-example",
+    "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",
+    "state" : 1
+}
+```
+
+ This one's going to tell us about the *shards in our cluster*. And here, you can see the *hostname* contains the *replica set name because these shards are deployed as replica sets*.
+
+```javascript
+// Query config.shards:
+mongos> db.shards.find().pretty()
+{
+    "_id" : "m103-example",
+    "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",
+    "state" : 1
+}
+```
+
+The chunks collection is possibly the most interesting collection in this whole database. So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only. So this collection is sharded on sale price.
 
 And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
 
