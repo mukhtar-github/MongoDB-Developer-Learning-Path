@@ -5618,10 +5618,10 @@ Server has startup warnings:
 mongos> sh.status()
 --- Sharding Status --- 
   sharding version: {
-      "_id" : 1,
-      "minCompatibleVersion" : 5,
-      "currentVersion" : 6,
-      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  	"_id" : 1,
+  	"minCompatibleVersion" : 5,
+  	"currentVersion" : 6,
+  	"clusterId" : ObjectId("613c90dc078b9817172ec755")
   }
   shards:
         {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
@@ -5644,12 +5644,11 @@ mongos> sh.status()
                         chunks:
                                 m103-example 1024
                         too many chunks to print, use verbose if you want to force print
-        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : false }
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
-
 ```
 
-Here, I'm just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the *databases* collection. So here, I'm just printing the results from our *databases query*. So this is going to return each database in our cluster as one document.
+Here, I'm just switching over to the *config database*. I'm going to take a look at the collections we have in there already. So these are all the collections that we have access to in the *config database*. The first one we're going to look at is the *databases* collection. So here, I'm just pretty printing the results from our *databases query*. So this is going to return each *database* in our cluster as one document.
 
 ```javascript
 // Switch to config DB:
@@ -5670,12 +5669,24 @@ transactions
 version
 
 // Query config.databases:
+mongos> sh.enableSharding("m103", "m103-example")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1631516381, 5),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631516381, 5),
+      "signature" : {
+        "hash" : BinData(0,"bE920n3OAwnTHkMEeiGj9NxEefQ="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
 mongos> db.databases.find().pretty()
-{ "_id" : "m103", "primary" : "m103-example", "partitioned" : false }
+{ "_id" : "m103", "primary" : "m103-example", "partitioned" : true }
 { "_id" : "newDB", "primary" : "m103-example", "partitioned" : false }
 ```
 
-It's going to give us the *primary shard for each database*, and the partition here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used.
+It's going to give us the *primary shard for each database*, and the *partition* here is just telling us whether or not *sharding has been enabled on this database*. In this case, the *m103 database has sharding enabled*. Now, take a look at the collections. So this is only going to give us information on collections that have been *sharded*. But for those collections, it will tell us the *shard key* that we used.
 
 In this case, the *m103 products collection was sharded on sale price*. And it also tell us whether or not that key was unique. This one's going to tell us about the *shards in our cluster*. And here, you can see the *hostname* contains the *replica set name because these shards are deployed as replica sets*. The chunks collection is possibly the most interesting collection in this whole database.
 
