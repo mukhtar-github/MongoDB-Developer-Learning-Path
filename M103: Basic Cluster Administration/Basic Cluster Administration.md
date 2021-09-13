@@ -5724,9 +5724,115 @@ mongos> db.shards.find().pretty()
 }
 ```
 
-The chunks collection is possibly the most interesting collection in this whole database. So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only. So this collection is sharded on sale price.
+The chunks collection is possibly the most interesting collection in this whole database. So each *chunk* for every collection in this database is returned to us as one document. The *inclusive minimum and the exclusive maximum* define the chunk range of the shard key values. That means that any document in the associated collection who's shard key value falls into this chunks range will end up in this chunk, and this chunk only.
 
-And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
+```javascript
+// Query config.chunks:
+mongos> db.chunks.find().pretty()
+{
+    "_id" : "config.system.sessions-_id_MinKey",
+    "lastmod" : Timestamp(1, 1),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : { "$minKey" : 1 }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("00400000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+  }
+  {
+    "_id" : "config.system.sessions-_id_{ id: UUID(\"00400000-0000-0000-0000-000000000000\") }",
+    "lastmod" : Timestamp(1, 2),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : {
+        "id" : UUID("00400000-0000-0000-0000-000000000000")
+      }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("00800000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+  }
+  {
+    "_id" : "config.system.sessions-_id_{ id: UUID(\"00800000-0000-0000-0000-000000000000\") }",
+    "lastmod" : Timestamp(1, 3),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : {
+        "id" : UUID("00800000-0000-0000-0000-000000000000")
+      }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("00c00000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+  }
+  {
+    "_id" : "config.system.sessions-_id_{ id: UUID(\"00c00000-0000-0000-0000-000000000000\") }",
+    "lastmod" : Timestamp(1, 4),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : {
+        "id" : UUID("00c00000-0000-0000-0000-000000000000")
+      }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("01000000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+  }
+  {
+    "_id" : "config.system.sessions-_id_{ id: UUID(\"01000000-0000-0000-0000-000000000000\") }",
+    "lastmod" : Timestamp(1, 5),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : {
+        "id" : UUID("01000000-0000-0000-0000-000000000000")
+      }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("01400000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+  }
+  {
+    "_id" : "config.system.sessions-_id_{ id: UUID(\"01400000-0000-0000-0000-000000000000\") }",
+    "lastmod" : Timestamp(1, 6),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : {
+        "id" : UUID("01400000-0000-0000-0000-000000000000")
+      }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("01800000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+}
+Type "it" for more
+```
+
+So this collection is sharded on sale price. And we see that this *chunk* has documents with values of *sale price for a minKey key to about $15. MinKey*, here, means the lowest possible value of sale price or negative infinity, if you want to think about it that way. This *chunk* has documents with *sale prices of at least $14.99, but lower than $33.99*. For example, if I were to insert a document into this collection that had a *sale price of $20, it would end up in this chunk*.
 
 The *config database* also some information on the *mongos process* currently connected to this cluster, because we can have any number of them. As we can see right now, we only have one. But it'll give us a lot of information on it, including the *mongos version that's running on the mongos*.
 
