@@ -109,3 +109,4 @@ child process started successfully, parent exiting
 
 rm -r repl_set
 rmdir (filename)
+mongos> cls -- for clear screen

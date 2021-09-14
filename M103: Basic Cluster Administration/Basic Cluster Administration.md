@@ -5837,7 +5837,7 @@ Finally, you cannot *unshard a collection*. This kind of builds off of *shard ke
 
 This won't affect other databases in your *MongoDB cluster*. Next, you have to create the *index to back your shard key for the collection you want to shard, using db.collection.createIndex()*. Remember, we're going to substitute collection here with the name of the collection we want to create the index on. Finally, we're going to use *sh.shardCollection("database.collection", { shard key }), specifying the full path to the collection, and the shard key to shard the specified Collection*.
 
-Let's actually try this in action real quick. So here, you can see I'm using sh.status status to show that I have a two shard sharded cluster. I'm currently connected to the Mongo S. I'm going to switch to the m103 database, because I want to shard the products collection in that database. I'm going to enable sharding on the m103 database first. Now before we shard a collection, we need to decide what key we will be using.
+Let's actually try this in action real quick. So here, you can see I'm using *sh.status()* to show that I have a two *shard sharded cluster*. I'm currently connected to the *MongoS*. I'm going to switch to the *m103 database*, because I want to *shard* the products collection in that database. I'm going to enable *sharding on the m103 database* first. Now before we *shard a collection*, we need to decide what key we will be using.
 
 I'm using db.products.find0ne to show you those one document from the products collection.
 
