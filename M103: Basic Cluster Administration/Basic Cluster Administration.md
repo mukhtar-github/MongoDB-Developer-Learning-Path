@@ -5983,8 +5983,60 @@ Here, I have the full path to the *products collection -- m103.products*, and th
 
 ```javascript
 // Shard the products collection on sku:
+mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
+{
+    "ok" : 0,
+    "errmsg" : "couldn't find valid index for shard key",
+    "code" : 96,
+    "codeName" : "OperationFailed",
+    "operationTime" : Timestamp(1631616203, 6),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631616203, 6),
+      "signature" : {
+        "hash" : BinData(0,"rsvcz/sLsDvQ/bAPCo7n7ufw0KE="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  3
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set m103-example
+        Time of Reported error:  Tue Sep 14 2021 07:32:26 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example	1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
 So if I run *sh.status()* again, we can see now that the collection is marked as *sharded* because it has a *shard key*. My documents have actually been already broken up into *chunks*, and distributed across the *two shards in my cluster -- two chunks in shard 1, one chunk in shard 2*. And we can even see the ranges of values for each *chunk*.
 
 To recap, your *shard* determines the partitioning and data distribution of data across your *sharded cluster. Shard keys are immutable*. You cannot change them after *sharding. Shard key values are also immutable*. You cannot update a document *shard key*. And you need to create the underlying *index first before sharding on the indexed field or fields*.
+
+### Picking a Good Shard Key
+
+
