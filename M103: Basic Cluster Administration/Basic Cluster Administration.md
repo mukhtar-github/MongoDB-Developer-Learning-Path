@@ -5979,24 +5979,12 @@ mongos> db.products.createIndex( { "sku": 1 } )
 }
 ```
 
-Here, I have the full path to the products collection, m103.products, and then the shard key that I want to use for this collection, sky.
+Here, I have the full path to the *products collection -- m103.products*, and then the *shard key that I want to use for this collection, sku*. If I run *sh.status()*, I can now see that the *m103.primary collection has a shard key*, and has actually already been broken up into three separate chunks.
 
-If I run sh.status, I can now see that the m103.primary collection has a shard key, and has actually already been broken up into three separate chunks.
+```javascript
+// Shard the products collection on sku:
+```
 
-So if I run sh.status again, we can see now that the collection is marked as sharded because it has a shard key.
+So if I run *sh.status()* again, we can see now that the collection is marked as *sharded* because it has a *shard key*. My documents have actually been already broken up into *chunks*, and distributed across the *two shards in my cluster -- two chunks in shard 1, one chunk in shard 2*. And we can even see the ranges of values for each *chunk*.
 
-My documents have actually been already broken up into chunks, and distributed across the two shards in my cluster-- two chunks in shard 1, one chunk in shard 2.
-
-And we can even see the ranges of values for each chunk.
-
-To recap, your shard determines the partitioning and data distribution of data across your sharted cluster.
-
-Shard keys are immutable.
-
-You cannot change them after sharding.
-
-Shard key values are also immutable.
-
-You cannot update a document shard key.
-
-And you need to create the underlying index first before sharding on the indexed field or fields.
+To recap, your *shard* determines the partitioning and data distribution of data across your *sharded cluster. Shard keys are immutable*. You cannot change them after *sharding. Shard key values are also immutable*. You cannot update a document *shard key*. And you need to create the underlying *index first before sharding on the indexed field or fields*.
