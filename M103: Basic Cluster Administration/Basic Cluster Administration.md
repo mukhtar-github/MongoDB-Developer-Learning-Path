@@ -5882,11 +5882,12 @@ mongos> sh.status()
                         too many chunks to print, use verbose if you want to force print
         {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
-
+// Show collections in m103 database:
 mongos> use m103
 switched to db m103
 mongos> show collections
 messages
+// Enable sharding on the m103 database:
 mongos> sh.enableSharding("m103", "m103-example")
 {
     "ok" : 1,
@@ -5899,6 +5900,7 @@ mongos> sh.enableSharding("m103", "m103-example")
       }
     }
 }
+// Find one document from the products collection, to help us choose a shard key:
 mongos> db.products.findOne()
 null
 mongos> db.createCollection("products")
@@ -5925,7 +5927,10 @@ mongos> db.products.insert(
 ...   }
 ... )
 WriteResult({ "nInserted" : 1 })
-mongos> db.products.findOne()
+mongos> db.getCollection('products').findOneAndUpdate(
+...   { "_id" : ObjectId("61406480013e1d1da41a69df") },
+...   { $push: { "sku" : 1000 } }
+... )
 {
     "_id" : ObjectId("61406480013e1d1da41a69df"),
     "name" : "MTG products",
@@ -5934,9 +5939,45 @@ mongos> db.products.findOne()
     "salePrice" : 39.95,
     "shippingWeight" : "0.01"
 }
+mongos> db.products.findOne()
+{
+    "_id" : ObjectId("61406480013e1d1da41a69df"),
+    "name" : "MTG products",
+    "type" : "Sofware",
+    "regularPrice" : 39.95,
+    "salePrice" : 39.95,
+    "shippingWeight" : "0.01",
+    "sku" : [
+      1000
+    ]
+}
 ```
 
-I'm going to use the sku field for my shard key. Before sharding, I need to ensure that the selected key or keys that compose my shard key are supported by an index. So let's create an index on sku using db.collection.createindex. So here, I'm creating the index on sku, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
+I'm going to use the *sku field for my shard key*. Before *sharding*, I need to ensure that the *selected key or keys that compose my shard key are supported by an index*. So let's create an *index on sku using db.products.createIndex( { "sku": 1 } )*. So here, I'm creating the *index on sku*, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
+
+```javascript
+// Create an index on sku:
+mongos> db.products.createIndex( { "sku": 1 } )
+{
+    "raw" : {
+      "m103-example/localhost:27011,localhost:27012,localhost:27013" : {
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+      }
+    },
+    "ok" : 1,
+    "operationTime" : Timestamp(1631614516, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631614516, 1),
+      "signature" : {
+        "hash" : BinData(0,"L+b+nJ2grc7XUnKi8Vp+7X4kStM="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+```
 
 Here, I have the full path to the products collection, m103.products, and then the shard key that I want to use for this collection, sky.
 
