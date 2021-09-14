@@ -5849,6 +5849,39 @@ admin   0.000GB
 config  0.001GB
 m103    0.000GB
 newDB   0.000GB
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  3
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set m103-example
+        Time of Reported error:  Tue Sep 14 2021 07:32:26 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
 I'm going to use the sku field for my shard key. Before sharding, I need to ensure that the selected key or keys that compose my shard key are supported by an index. So let's create an index on sku using db.collection.createindex. So here, I'm creating the index on sku, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
