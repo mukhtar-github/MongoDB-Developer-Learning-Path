@@ -5882,6 +5882,40 @@ mongos> sh.status()
                         too many chunks to print, use verbose if you want to force print
         {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
+
+mongos> use m103
+switched to db m103
+mongos> show collections
+messages
+mongos> sh.enableSharding("m103", "m103-example")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1631516381, 5),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631516381, 5),
+      "signature" : {
+        "hash" : BinData(0,"bE920n3OAwnTHkMEeiGj9NxEefQ="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+mongos> db.products.findOne()
+null
+mongos> db.createCollection("products")
+{
+    "ok" : 1,
+    "operationTime" : Timestamp(1631607990, 2),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1631607990, 2),
+      "signature" : {
+        "hash" : BinData(0,"AnbIH/SINP64Baw49th58lWi558="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+mongos> show collections
+messages
+products
 ```
 
 I'm going to use the sku field for my shard key. Before sharding, I need to ensure that the selected key or keys that compose my shard key are supported by an index. So let's create an index on sku using db.collection.createindex. So here, I'm creating the index on sku, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
