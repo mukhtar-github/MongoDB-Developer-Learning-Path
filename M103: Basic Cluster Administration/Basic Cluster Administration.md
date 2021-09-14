@@ -6039,7 +6039,7 @@ To recap, your *shard* determines the partitioning and data distribution of data
 
 ### Picking a Good Shard Key
 
-In the previous lesson, we talked about what a shard key is. Now, we're going to talk about what makes a good shard key. First, let's recap. You enable sharding at the database level. You shard collections. Enabling sharding on a database does not automatically shard the collections in that database. And, you can have both sharded and unsharded collections in the same database. Not all collections need to be equal.
+In the previous lesson, we talked about what a *shard key* is. Now, we're going to talk about what makes a good *shard key*. First, let's recap. You enable *sharding at the database level. You shard collections. Enabling sharding on a database does not automatically shard the collections in that database*. And, you can have both *sharded and unsharded collections in the same database*. Not all collections need to be equal.
 
 First, let's talk about using a shard key that provides good right distribution. These are the three basic properties, here. The cardinality of the shard key values, the frequency of the shard key values, and whether or not the shard key increases or decreases monotonically. We're going to go over each of these one by one. The first, is that the chosen shard key should have high cardinality. Cardinality is the measure of the number of elements within a set of values.
 
