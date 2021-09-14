@@ -5823,13 +5823,7 @@ So, just to recap, in this lesson we've covered the *collections that we have in
 
 In this lesson, we're going to talk about the *shard key*. This is the *indexed field or fields that MongoDB uses to partition data in a sharded collection, and distribute it across the shards in your cluster*. Let's start with how the *shard key* is used to distribute your data. Consider a collection with some number of documents in them. *MongoDB uses the shard key* to divide up these documents into logical groupings that *MongoDB then distributes across our sharded cluster*.
 
-MongoDB he refers to these groupings as chunks.
-
-The value of the field or fields we choose as our shard key help to define the inclusive lower bound, and the exclusive upper bound of each chunk.
-
-Because the shard key is used to define chunk boundaries, it also defines which chunk a given document is going to belong to.
-
-Every time you write a new document to the collection, the Mongo S router checks which shard contains the appropriate chunk for that documents key value, and routes the document to that shard only.
+*MongoDB he refers to these groupings as chunks*. The value of the field or fields we choose as our *shard key* help to define the *inclusive lower bound, and the exclusive upper bound of each chunk*. Because the *shard key is used to define chunk boundaries*, it also defines which *chunk a given document* is going to belong to. Every time you write a new document to the collection, the *MongoS router* checks which *shard* contains the appropriate *chunk* for that documents key value, and routes the document to that *shard* only.
 
 That's how sharded clusters handle distributed write operations.
 
