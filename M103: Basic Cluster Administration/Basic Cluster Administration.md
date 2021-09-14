@@ -5916,6 +5916,24 @@ mongos> db.createCollection("products")
 mongos> show collections
 messages
 products
+mongos> db.products.insert(
+...   { "name" : "MTG products",
+...     "type" : "Sofware",
+...     "regularPrice" : 39.95,
+...     "salePrice" : 39.95,
+...     "shippingWeight" : "0.01"
+...   }
+... )
+WriteResult({ "nInserted" : 1 })
+mongos> db.products.findOne()
+{
+	"_id" : ObjectId("61406480013e1d1da41a69df"),
+	"name" : "MTG products",
+	"type" : "Sofware",
+	"regularPrice" : 39.95,
+	"salePrice" : 39.95,
+	"shippingWeight" : "0.01"
+}
 ```
 
 I'm going to use the sku field for my shard key. Before sharding, I need to ensure that the selected key or keys that compose my shard key are supported by an index. So let's create an index on sku using db.collection.createindex. So here, I'm creating the index on sku, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
