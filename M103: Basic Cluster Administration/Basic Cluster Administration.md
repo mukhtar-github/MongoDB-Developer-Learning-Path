@@ -5953,7 +5953,7 @@ mongos> db.products.findOne()
 }
 ```
 
-I'm going to use the *sku field for my shard key*. Before *sharding*, I need to ensure that the *selected key or keys that compose my shard key are supported by an index*. So let's create an *index on sku using db.products.createIndex( { "sku": 1 } )*. So here, I'm creating the *index on sku*, and I have specified ascending here. It's not super important. And you can see here that I now have this additional index on sku. Remember that all collections have an index on ID by default. Finally, I'm going to shard the collection using the next I just specified.
+I'm going to use the *sku field for my shard key*. Before *sharding*, I need to ensure that the *selected key or keys that compose my shard key are supported by an index*. So let's create an *index on sku using db.products.createIndex( { "sku": 1 } )*. So here, I'm creating the *index on sku*, and I have specified ascending here (1). It's not super important. And you can see here that I now have this additional *index on sku*. Remember that all collections have an *index on ID by default*. Finally, I'm going to *shard the collection* using the *index I just specified*.
 
 ```javascript
 // Create an index on sku:
