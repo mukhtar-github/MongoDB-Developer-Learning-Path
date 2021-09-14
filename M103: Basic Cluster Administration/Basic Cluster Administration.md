@@ -5829,17 +5829,7 @@ That's how *sharded clusters* handle distributed write operations. Depending on 
 
 *Shard keys* also support distributed read operations. If you specify the *shard key* as part of your queries, *MongoDB* can redirect the query to only those *chunks*, and therefore, *shards* that contain the related data. Ideally, your *shard key* should support the majority of queries you run on the collection. That way, the majority of your read operations can be targeted to a *single shard*.
 
-Without the shard key in the query, the Mongo S router would need to check each shard in the cluster to find the documents that match the query.
-
-We'll go into the specifics of targeted versus broadcast operations in a later lesson.
-
-Let's go over a few important aspects of your shard key.
-
-First, I mentioned earlier that the shard key are an index field or fields in your collection.
-
-This is a hard requirement.
-
-You cannot select a field or fields for your shard key if you do not have an existing index for the field or fields.
+Without the *shard key* in the query, the *MongoS router* would need to check each *shard* in the cluster to find the documents that match the query. We'll go into the specifics of targeted versus broadcast operations in a later lesson. Let's go over a few important aspects of your *shard key*. First, I mentioned earlier that the *shard key are an index field or fields in your collection*. This is a hard requirement. You cannot select a *field or fields for your shard key* if you do not have an existing *index for the field or fields*.
 
 You'll need to create the index first before you can shard.
 
