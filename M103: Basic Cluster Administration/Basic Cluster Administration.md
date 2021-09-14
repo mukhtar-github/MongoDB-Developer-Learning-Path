@@ -5825,7 +5825,7 @@ In this lesson, we're going to talk about the *shard key*. This is the *indexed 
 
 *MongoDB he refers to these groupings as chunks*. The value of the field or fields we choose as our *shard key* help to define the *inclusive lower bound, and the exclusive upper bound of each chunk*. Because the *shard key is used to define chunk boundaries*, it also defines which *chunk a given document* is going to belong to. Every time you write a new document to the collection, the *MongoS router* checks which *shard* contains the appropriate *chunk* for that documents key value, and routes the document to that *shard* only.
 
-That's how *sharded clusters* handle distributed write operations. Depending on what *shard is holding a given chunk*, a new document is routed to that *shard and only that shard*. This also means that your *shard key* must be present in every document in the collection, and every new document inserted. So I could *shard on as sku or type, but not imdb* since that field isn't included in every document within the collection.
+That's how *sharded clusters* handle distributed write operations. Depending on what *shard is holding a given chunk*, a new document is routed to that *shard and only that shard*. This also means that your *shard key* must be present in every document in the collection, and every new document inserted. So I could *shard on as stock-keeping unit-(sku) or type, but not imdb* since that field isn't included in every document within the collection.
 
 *Shard keys* also support distributed read operations. If you specify the *shard key* as part of your queries, *MongoDB* can redirect the query to only those *chunks*, and therefore, *shards* that contain the related data. Ideally, your *shard key* should support the majority of queries you run on the collection. That way, the majority of your read operations can be targeted to a *single shard*.
 
@@ -5927,12 +5927,12 @@ mongos> db.products.insert(
 WriteResult({ "nInserted" : 1 })
 mongos> db.products.findOne()
 {
-	"_id" : ObjectId("61406480013e1d1da41a69df"),
-	"name" : "MTG products",
-	"type" : "Sofware",
-	"regularPrice" : 39.95,
-	"salePrice" : 39.95,
-	"shippingWeight" : "0.01"
+    "_id" : ObjectId("61406480013e1d1da41a69df"),
+    "name" : "MTG products",
+    "type" : "Sofware",
+    "regularPrice" : 39.95,
+    "salePrice" : 39.95,
+    "shippingWeight" : "0.01"
 }
 ```
 

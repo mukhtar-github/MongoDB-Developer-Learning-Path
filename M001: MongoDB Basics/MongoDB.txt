@@ -120,3 +120,8 @@ db.products.insert(
   }
 )
 db.createCollection(name, options)
+
+db.getCollection('products').findOneAndUpdate(
+  { "_id" : ObjectId("61406480013e1d1da41a69df") },
+  { $push: { "sku" : 1000 } }
+)
