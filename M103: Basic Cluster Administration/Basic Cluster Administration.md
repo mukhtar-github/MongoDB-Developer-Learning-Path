@@ -5831,41 +5831,11 @@ That's how *sharded clusters* handle distributed write operations. Depending on 
 
 Without the *shard key* in the query, the *MongoS router* would need to check each *shard* in the cluster to find the documents that match the query. We'll go into the specifics of targeted versus broadcast operations in a later lesson. Let's go over a few important aspects of your *shard key*. First, I mentioned earlier that the *shard key are an index field or fields in your collection*. This is a hard requirement. You cannot select a *field or fields for your shard key* if you do not have an existing *index for the field or fields*.
 
-You'll need to create the index first before you can shard.
+You'll need to create the *index first before you can shard. Sharding is a permanent operation. Once you have selected your shard key*, that's it. Furthermore, the *shard key is immutable*. Not only can you not change it later, you cannot update the *shard key values of the shard key fields* for any document in the collection. So choose carefully. The next lesson has some guidance on choosing a good *shard key*, so stay tuned for that.
 
-Sharding is a permanent operation.
+Finally, you cannot *unshard a collection*. This kind of builds off of *shard keys being immutable*. Once you have *sharded a collection, you cannot unshard it later*. The steps for *sharding* are actually pretty straightforward. First, you need to use *sh.enablesharding()*, specifying the name of the database, to enable *sharding* for the specified database. This does not automatically *shard* your collections. It just means that the collections in this particular database are *eligible for sharding*.
 
-Once you have selected your shard key, that's it.
-
-Furthermore, the shard key is immutable.
-
-Not only can you not change it later, you cannot update the shard key values of the shard key fields for any document in the collection.
-
-So choose carefully.
-
-The next lesson has some guidance on choosing a good shard key, so stay tuned for that.
-
-Finally, you cannot unshard a collection.
-
-This kind of builds off of shard keys being immutable.
-
-Once you have sharded a collection, you cannot unshard it later.
-
-The steps for sharding are actually pretty straightforward.
-
-First, you need to use sh.enablesharding, specifying the name of the database, to enable sharding for the specified database.
-
-This does not automatically shard your collections.
-
-It just means that the collections in this particular database are eligible for sharding.
-
-This won't affect other databases in your MongoDB cluster.
-
-Next, you have to create the index to back your shard key for the collection you want to shard, using db.collection.createindex.
-
-Remember, we're going to substitute collection here with the name of the collection we want to create the index on.
-
-Finally, we're going to use sh.shardCollection, specifying the full path to the collection, and the shard key to shard the specified Collection let's actually try this in action real quick.
+This won't affect other databases in your MongoDB cluster. Next, you have to create the index to back your shard key for the collection you want to shard, using db.collection.createindex. Remember, we're going to substitute collection here with the name of the collection we want to create the index on. Finally, we're going to use sh.shardCollection, specifying the full path to the collection, and the shard key to shard the specified Collection let's actually try this in action real quick.
 
 So here, you can see I'm using sh.status status to show that I have a two shard sharded cluster.
 
