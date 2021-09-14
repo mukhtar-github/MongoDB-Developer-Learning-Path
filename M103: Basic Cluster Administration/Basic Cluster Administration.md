@@ -6039,4 +6039,162 @@ To recap, your *shard* determines the partitioning and data distribution of data
 
 ### Picking a Good Shard Key
 
+In the previous lesson, we talked about what a shard key is.
 
+Now, we're going to talk about what makes a good shard key.
+
+First, let's recap.
+
+You enable sharding at the database level.
+
+You shard collections.
+
+Enabling sharding on a database does not automatically shard the collections in that database.
+
+And, you can have both sharded and unsharded collections in the same database.
+
+Not all collections need to be equal.
+
+First, let's talk about using a shard key that provides good right distribution.
+
+These are the three basic properties, here.
+
+The cardinality of the shard key values, the frequency of the shard key values, and whether or not the shard key increases or decreases monotonically.
+
+We're going to go over each of these one by one.
+
+The first, is that the chosen shard key should have high cardinality.
+
+Cardinality is the measure of the number of elements within a set of values.
+
+In context of the shard key, it is the number of unique possible shard key values.
+
+This is important for two reasons.
+
+The first is that if your shard key supports a small number of unique possible values, then that constrains the number of shards you can have in your cluster.
+
+Remember, chunks define boundaries based on shard key values, and a unique value can only exist on one chunk.
+
+Let's say we shard on a field whose values are the number of states in the United States of America.
+
+That's 50 states, so 50 possible values and an upper limit of 50 chunks.
+
+And, therefore, 50 shards.
+
+That's quite good, but imagine if we, instead, sharded on the days of the week.
+
+Now we're down to 7 shards.
+
+What if we happen to pick a shard key that was a boolean?
+
+Now we're down to two shards.
+
+Having a higher cardinality gives you more chunks, and with more chunks the number of shards can also grow, not restraining your ability to grow the cluster.
+
+I mentioned two reasons earlier.
+
+The second reason is actually related to our next property.
+
+The frequency of a shard key represents how often a unique value occurs in the data.
+
+Going back to our states example, imagine if we have a workload where 90% of the time we're inserting documents where the state is New York.
+
+That means 90% of our data is going to end up in the chunk whose range include New York.
+
+That's not good.
+
+Remember that a chunk lives in a single shard.
+
+So now 90% of our writes are going to this one shard that has that one chunk.
+
+That's pretty severe hot spotting, and that's not what we want.
+
+Remember the cardinality property?
+
+Even though the values for possible states had high cardinality, our workload has high frequency, leading to bad performance.
+
+If our workload has a low frequency of the possible shard key values, then the overall distribution is going to be more even.
+
+Now, if I have a very low frequency shard key combined with very low cardinality, like days of the week, I'm still potentially going to have problems.
+
+So the two of these properties work very closely together.
+
+Finally, we have to consider whether or not the shard is monotonically changing.
+
+Monotonically changing here means that the possible shard key values for a new document changes at a steady and predictable rate.
+
+Think of a field that has numeric progression.
+
+Time stamps or dates, for example, are monotonically increasing.
+
+Similarly, a stopwatch timer is a monotonically decreasing value.
+
+Why is this a problem?
+
+Remember that MongoDB splits your documents into chunks of data, each chunk having an inclusive lower bound, and then exclusive upper bound to shard key values.
+
+All documents that fall into the range of a chunk are stored in that chunk.
+
+If all of your new documents have a higher shard key value than the previous one, then they're all going to end up in that one chunk that contains the upper boundary of your possible shard key values.
+
+So, even though timestamps are technically very high cardinality, lots of unique values, and very low frequency, nearly no repetition of those unique values, it ends up being a pretty bad shard key.
+
+Fun fact, the object ID data type is actually monotonically increasing.
+
+That's why sharding on the ID field isn't a good idea.
+
+There are some tricks for achieving even distribution of monotonically changing shard key's, and we're going to talk about that in a later lesson.
+
+The ideal shard key provides good distribution of its possible values, have high cardinality, low frequency, and change non monotonically.
+
+A shard key that can fulfill those properties is more likely to result in an even distribution of written data.
+
+Having a shard key that doesn't quite fulfill one of these property doesn't guarantee bad distribution of data, but it's not going to help.
+
+So far, we've talked about properties that allow for good right distribution, but there is one other thing to consider-- read isolation.
+
+MongoDB can route queries that include the shard key to specific chunks, whose range contains the specified shard key values.
+
+Going back to the states example, if my query includes state New York, MongoDB can direct my read to the shard that contains my data.
+
+These targeted queries are very fast because MongoDB only needs to check in with a single shard before returning results.
+
+When choosing a shard key, you should consider whether your choice supports the queries you run most often.
+
+Now, it's possible that the fields you query on make for pretty bad shard keys.
+
+In that case, consider specifying a compound index as the underlying index for the shard key, where the extra field or fields provide high cardinality, low frequency, or are themselves non monotonically changing.
+
+So, without the shard key to guide it, MongoDB has to ask every single shard to check if it has the data that we're looking for.
+
+These broadcast operations are scatter gather operations and can be pretty slow.
+
+Let's go over some considerations of choosing a shard key.
+
+We've already talked about these, but I want to emphasize them.
+
+You cannot unshard a collection once sharded.
+
+You cannot update a shard key once you have sharded a collection.
+
+You cannot update the values for that shard key for any document in the collection.
+
+What that basically means is that your choice of shard key is final.
+
+Whenever possible, try to test your shard keys in a staging environment first, before sharding in production environments.
+
+If you use the Mongo dump and Mongo restore utilities, you can dump, drop, and restore the collection.
+
+But that's non-trivial.
+
+So again, whenever possible, you really want to test in a staging environment where you can safely drop and restore the collection without impacting production workloads.
+
+Let's recap.
+
+Good shard keys provide even right distribution and, where possible, read isolation by supporting targeted queries.
+
+You want to consider the cardinality and frequency of the shard keys, and avoid monotonically changing shard keys.
+
+Finally, really remember, unsharding a collection is hard.
+
+You really want to avoid it.
