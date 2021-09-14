@@ -5821,15 +5821,7 @@ So, just to recap, in this lesson we've covered the *collections that we have in
 
 ### Shard Keys
 
-In this lesson, we're going to talk about the shard key.
-
-This is the indexed field or fields that MongoDB uses to partition data in a sharded collection, and distribute it across the shards in your cluster.
-
-Let's start with how the shard key is used to distribute your data.
-
-Consider a collection with some number of documents in them.
-
-MongoDB uses the shard key to divide up these documents into logical groupings that MongoDB then distributes across our sharded cluster.
+In this lesson, we're going to talk about the *shard key*. This is the *indexed field or fields that MongoDB uses to partition data in a sharded collection, and distribute it across the shards in your cluster*. Let's start with how the *shard key* is used to distribute your data. Consider a collection with some number of documents in them. *MongoDB uses the shard key* to divide up these documents into logical groupings that *MongoDB then distributes across our sharded cluster*.
 
 MongoDB he refers to these groupings as chunks.
 
