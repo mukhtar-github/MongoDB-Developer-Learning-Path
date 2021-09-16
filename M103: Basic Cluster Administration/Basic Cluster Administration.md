@@ -6071,3 +6071,23 @@ Let's go over some considerations of choosing a *shard key*. We've already talke
 Whenever possible, try to test your *shard keys* in a staging environment first, before *sharding* in production environments. If you use the *Mongo dump and Mongo restore utilities, you can dump, drop, and restore the collection*. But that's non-trivial. So again, whenever possible, you really want to test in a staging environment where you can safely *drop and restore* the collection without impacting production workloads.
 
 Let's recap. Good *shard keys provide even right distribution and, where possible, read isolation by supporting targeted queries*. You want to consider the *cardinality and frequency of the shard keys, and avoid monotonically changing shard keys. Finally, really remember, unsharding a collection is hard*. You really want to avoid it.
+
+### Hashed Shard Keys
+
+So far, we've only talked about the default shard key. However, there's an additional type of shard key that is useful for certain scenarios. That is the hashed shard key. That is a shard key where the underlying index is hashed. Previously, if we had a document where, let's say x was 3 and the shard key was on x, MongoDB would place it into the following chunk where the value of 3 falls into the trunk range.
+
+With a hashed shard key, MongoDB first hashes the value 3, then uses that hash value to decide which chunk to place the document in. The hash shard key does not mean that MongoDB stores your shard key values with hashes. The actual data remains untouched. Instead, the underlying index backing the shard key itself is hashed. And MongoDB uses the hashed index for partitioning your data, so you end up with a more even distribution of your data across the sharded cluster.
+
+So when would you want to use a hashed shard key? In the previous lesson, we talked about monotonically increasing or decreasing shard key fields, like dates or time stamps. Because these values are constantly increasing or decreasing in numeric progression, you get hot spotting. But the output from the hash function can change drastically between values that are, themselves, similar.
+
+For example, if I have two documents where the shard key values are two and 3, the hashing function might output the shard key values as 609,000. Apply that same logic to a time stamp, two numerically adjacent timestamps would be hashed to very different values and are therefore more likely to end up on different chunks and different shards. Now there are a few drawbacks to using a hashed shard key.
+
+Since everything is hashed now, documents within a range of shard key values are likely to be completely distributed across the sharded cluster. So ranged queries on the shard key field will now have to hit multiple shards, instead of a single shard. Comparatively, a non-hash shard key is more likely to produce documents that are on a single chunk in a single shard, meaning ranged queries are more likely to be targeted with a non-hashed shard key.
+
+You're going to lose the ability to use features like zone sharding for the purpose of geographically isolated reads and writes. Again, if everything is randomly distributed across every shard in the cluster, there's no real way to isolate data into groupings like geography. You can't create hashed compound indexes. You can only hash a single field shard key. That plays into why these are best used for monotonically changing single fields, like timestamps.
+
+Also, the value in the hashed index must not be an array. Finally, because the index is using hashed values, you're going to lose the performance an index can provide for sorting documents on the shard key. To create a hashed shard, you're going to start by enabling sharding on the database using sh.enablesharding. Remember, this does not automatically shard your collections.
+
+You're still going to create an index, but now you're going to specify that it is a hashed index instead of specifying negative 1 or 1 as the value of the indexed field. Finally, you're going to use sh.shardcollection, still specifying the database and collection, but you're going to specify hashed for the shard key value.
+
+To recap, hashed shard keys provide more even distribution of data of a monotonically changing shard key field. Hashed shard key's do not support fast sorts, targeted queries on ranges of shard key values, or geographically isolated workloads. Finally, hashed indexes are single fields and do not support arrays.
