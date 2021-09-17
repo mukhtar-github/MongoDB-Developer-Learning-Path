@@ -6142,3 +6142,56 @@ Then reimport the dataset, and shard it using a different key.
 
 #### Answer 4
 
+```javascript
+user@M103# mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+MongoDB shell version v4.0.5
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("b44a002c-40dd-4810-a143-0540d2502364") }
+MongoDB server version: 4.0.5
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] 
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] ** WARNING: This server is bound to localhost.
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] **          Remote systems will be unable to connect to this server. 
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] **          Start the server with --bind_ip <address> to specify which IP 
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] **          addresses it should serve responses from, or with --bind_ip_all to
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] **          bind to all interfaces. If this behavior is desired, start the
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] **          server with --bind_ip 127.0.0.1 to disable this warning.
+2021-09-17T08:41:47.589+0000 I CONTROL  [main] 
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+        "_id" : 1,
+        "minCompatibleVersion" : 5,
+        "currentVersion" : 6,
+        "clusterId" : ObjectId("614454cb09969835769e8016")
+  }
+  shards:
+        {  "_id" : "shard1",  "host" : "shard1/localhost:27001,localhost:27002,localhost:27003",  "state" : 1 }
+        {  "_id" : "shard2",  "host" : "shard2/localhost:27007,localhost:27008,localhost:27009",  "state" : 1 }
+  active mongoses:
+        "4.0.5" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                shard1  1
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
+```
