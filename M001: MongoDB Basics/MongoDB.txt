@@ -119,6 +119,7 @@ db.getCollection('products').findOneAndUpdate(
 )
 
 mongoimport /dataset/products.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection products
+mongoimport /dataset/products.json --port 27000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection products
 
 db.products.insert(
   {

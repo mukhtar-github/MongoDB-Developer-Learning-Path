@@ -6405,3 +6405,147 @@ mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
         }
 }
 ```
+
+### Chunks
+
+So far, we've been briefly discussing the term chunks in a quite loose way.
+
+So let's take a few minutes to review what chunks are and what can we do with them.
+
+In a prior lecture, we've mentioned that the config servers hold the cluster metadata.
+
+Things like how many shards we have, which databases are sharded, and the configuration settings of our shard cluster.
+
+But one of the most important pieces of information that the config servers hold, is the mapping of the chunks to shards.
+
+Right, let's jump into our terminal to see this in action.
+
+If I jump into the config database and show the collections, you'll see a long list of different collections that hold information about this shard cluster.
+
+Within the chunks collection, if we find one document, we will see the definition of a chunk.
+
+In this case, we can see what's the name space that this chunk belongs to?
+
+When was this chunk last modified?
+
+Which shard holds this chunk?
+
+But more importantly, we can see the chunk bounce the Min and max fields indicate exactly that.
+
+But let's step back a little bit.
+
+Once we add documents in our collections, these documents contain fields that we can use as shard keys.
+
+For example, if we decide to use field x as our shard key, the minute we shard our collection, we immediately define one initial chunk.
+
+This initial chunk goes from minKey to maxKey.
+
+An important thing to note is that chunks lower bound is inclusive, while chunks upper bound is exclusive.
+
+The different values that our shard key may hold will define the keyspace of our sharding collection.
+
+As time progresses, the cluster will split up that initial chunk into several others to allow data to be evenly distributed between shards.
+
+All documents of the same chunk live in the same shard.
+
+If we would have only one magnanimous chunk, we could only have one single shard in our cluster.
+
+The number of chunks that our shard key allows may define the max number of shards of our system.
+
+This is why cardinality of the shard key is an important aspect to consider.
+
+There are other aspects that will determine the number of chunks within your shard.
+
+The first one is our chunk size.
+
+By default, MongoDB takes 64 megabytes as the default chunk size.
+
+That means that if a chunk is about 64 megabytes, or within 64 megatons range, it will be split.
+
+We can define a chunk size between the values of one megabyte and 1024 and one gigabyte.
+
+The chunk size is configurable during runtime.
+
+So if we decide to change a chunk size, we can easily do so.
+
+But before we go in changing our chunk size, let's have a look to how many chunks we currently hold.
+
+As you can see here, from our sh.status, the chunks mark tells me that shard-- m103 shard 1 has two chunks.
+
+While m103 shard 2 has one chunk.
+
+But I want to lower my chunk size to see what happens.
+
+To do that, what I need to do is, basically, go to my settings collection and save a document with ID chunk size, with the determined value that I intend the chunk size to be, in megabytes.
+
+Once I've done so, if I run again, sh.status, I can see that nothing changed.
+
+Well, why?
+
+Well, the component responsible for the thing is the mongos, and since we have not given any indication or signal to mongos that it needs to split anything-- because no new data came in-- it will basically do absolutely nothing.
+
+If something is working, why Porter bother trying to fix it?
+
+So, for us to see some action going on, what we need to do is tell the mongos to actually do something.
+
+So I'm going to go ahead and import this other file, products part 2 that I just recently changed, so I can see some splitting going on.
+
+Once I import this data, we'll connect back to see if there is any more chunks.
+
+Right, sweet.
+
+So we're done with our imports, so let's connect back.
+
+And again, let's do our sh.status for a second.
+
+Sweet.
+
+Now I have a lot more chunks, all kind of still not very well balanced, but that's fine.
+
+It will take them some time to actually balance everything between all shards.
+
+But, the good thing is that, I no longer have just one and two chunks spread across two different shards.
+
+I have around 51 chunks right now.
+
+And if I run it again, I'll see that, eventually, the system will be balanced.
+
+Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
+
+Now, let's consider that the chosen shard key wasn't that good after all.
+
+Although the cardinality initially was very good, we have an abnormal high frequency of some keys over time.
+
+So let's say, for example, if 90% of our new documents have the same shard key value, this might generate an abnormal situation.
+
+What do we call jumbo chunks?
+
+Jumbo chunks can be damaging because they are chunks which are way larger than the default or defined chunk size.
+
+The minute a chunk becomes larger than the defined chunk size, they will be marked as jumbo chunks.
+
+Jumbo chunks cannot be moved.
+
+If the balancer sees a chunk which is marked as jumbo, you will not even try to balance it.
+
+You will just leave it in its place, because it's basically marked as too big to be moved.
+
+In very extreme cases, there will be no split point on those chunks, and therefore, they will not be able to be moved at all, or even split, and that can be very, very damaging situation.
+
+So, keep an eye for that.
+
+Please do consider the frequency of our shard key, to avoid situations like jumbo chunks as much as possible.
+
+So, let's recap.
+
+Chunks are logical groups of documents that are based out of the shard key key space, and have bounds associated to it.
+
+Min bound, inclusive.
+
+Max bound, exclusive.
+
+A chunk can only live at one designated shard at the time.
+
+And all documents within the bound defined by the chunk live in the same shard.
+
+Shard key cardinality frequency and configured chunk size will determine the number of chunks in your sharded collection.
