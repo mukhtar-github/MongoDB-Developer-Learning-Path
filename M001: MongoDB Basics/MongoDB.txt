@@ -111,17 +111,22 @@ rm -r repl_set
 rmdir (filename)
 mongos> cls -- for clear screen
 
-db.products.insert(
-  { "name" : "MTG products",
-    "type" : "Sofware",
-    "regularPrice" : 39.95,
-    "salePrice" : 39.95,
-    "shippingWeight" : "0.01"
-  }
-)
 db.createCollection(name, options)
 
 db.getCollection('products').findOneAndUpdate(
   { "_id" : ObjectId("61406480013e1d1da41a69df") },
   { $push: { "sku" : 1000 } }
+)
+
+mongoimport /dataset/products.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection products
+
+db.products.insert(
+  {
+    "sku" : 1000000749,
+    "name" : "MTG products",
+    "type" : "Sofware",
+    "regularPrice" : 39.95,
+    "salePrice" : 39.95,
+    "shippingWeight" : "0.01"
+  }
 )

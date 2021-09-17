@@ -6143,6 +6143,9 @@ Then reimport the dataset, and shard it using a different key.
 #### Answer 4
 
 ```javascript
+user@M103# mongoimport /dataset/products.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection products
+2021-09-17T10:30:57.772+0000    connected to: mongodb://localhost:26000/
+2021-09-17T10:30:59.785+0000    9966 document(s) imported successfully. 0 document(s) failed to import.
 user@M103# mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
 MongoDB shell version v4.0.5
 connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
@@ -6170,7 +6173,7 @@ mongos> sh.status()
         "_id" : 1,
         "minCompatibleVersion" : 5,
         "currentVersion" : 6,
-        "clusterId" : ObjectId("614454cb09969835769e8016")
+        "clusterId" : ObjectId("61446d2a624f017fc12d8b07")
   }
   shards:
         {  "_id" : "shard1",  "host" : "shard1/localhost:27001,localhost:27002,localhost:27003",  "state" : 1 }
@@ -6194,4 +6197,211 @@ mongos> sh.status()
                         chunks:
                                 shard1  1
                         { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
+        {  "_id" : "m103",  "primary" : "shard2",  "partitioned" : false,  "version" : {  "uuid" : UUID("0e526a4c-7018-4f95-8764-770e66bdcc5b"),  "lastMod" : 1 } }
+
+mongos> use m103
+switched to db m103
+mongos> show collections
+products
+mongos> db.createCollection("products")
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1631871290, 10),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631871290, 10),
+                "signature" : {
+                        "hash" : BinData(0,"rtLLGLmlwKzjGKQWLFUnpUyhiNI="),
+                        "keyId" : NumberLong("7008820150950428679")
+                }
+        }
+}
+mongos> show collections
+products
+mongos> sh.enableSharding("m103")
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1631874945, 3),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631874945, 3),
+                "signature" : {
+                        "hash" : BinData(0,"4X47KL6Trlp3VdMvMVrUNFuMSO8="),
+                        "keyId" : NumberLong("7008846947251388443")
+                }
+        }
+}
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+        "_id" : 1,
+        "minCompatibleVersion" : 5,
+        "currentVersion" : 6,
+        "clusterId" : ObjectId("61446d2a624f017fc12d8b07")
+  }
+  shards:
+        {  "_id" : "shard1",  "host" : "shard1/localhost:27001,localhost:27002,localhost:27003",  "state" : 1 }
+        {  "_id" : "shard2",  "host" : "shard2/localhost:27007,localhost:27008,localhost:27009",  "state" : 1 }
+  active mongoses:
+        "4.0.5" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                shard1  1
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
+        {  "_id" : "m103",  "primary" : "shard2",  "partitioned" : true,  "version" : {  "uuid" : UUID("0e526a4c-7018-4f95-8764-770e66bdcc5b"),  "lastMod" : 1 } }
+mongos> db.products.findOne()
+{
+        "_id" : ObjectId("573f7197f29313caab89b21b"),
+        "sku" : 20000008,
+        "name" : "Come Into The World - CD",
+        "type" : "Music",
+        "regularPrice" : 14.99,
+        "salePrice" : 14.99,
+        "shippingWeight" : "0.25"
+}
+mongos> db.products.createIndex( { "sku": 1 } )
+{
+        "raw" : {
+                "shard2/localhost:27007,localhost:27008,localhost:27009" : {
+                        "createdCollectionAutomatically" : false,
+                        "numIndexesBefore" : 1,
+                        "numIndexesAfter" : 2,
+                        "ok" : 1
+                }
+        },
+        "ok" : 1,
+        "operationTime" : Timestamp(1631875312, 2),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631875312, 2),
+                "signature" : {
+                        "hash" : BinData(0,"CYu/Ch4IPvKA5BLwy1oOrWhiWNg="),
+                        "keyId" : NumberLong("7008846947251388443")
+                }
+        }
+}
+mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
+{
+        "collectionsharded" : "m103.products",
+        "collectionUUID" : UUID("b3874974-9312-446c-89e0-49db148066dd"),
+        "ok" : 1,
+        "operationTime" : Timestamp(1631875417, 12),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631875417, 12),
+                "signature" : {
+                        "hash" : BinData(0,"plDM9YLtraPhx3mXNqDhVTjslXI="),
+                        "keyId" : NumberLong("7008846947251388443")
+                }
+        }
+}
+
+// My trial
+mongos> db.products.insert(
+...   {
+...     "sku" : 1000000749,
+...     "name" : "MTG products",
+...     "type" : "Sofware",
+...     "regularPrice" : 39.95,
+...     "salePrice" : 39.95,
+...     "shippingWeight" : "0.01"
+...   }
+... )
+WriteResult({ "nInserted" : 1 })
+mongos> db.products.findOne()
+{
+        "_id" : ObjectId("614463c1e4d870a95347dbe9"),
+        "sku" : 1000000749,
+        "name" : "MTG products",
+        "type" : "Sofware",
+        "regularPrice" : 39.95,
+        "salePrice" : 39.95,
+        "shippingWeight" : "0.01"
+}
+mongos> sh.enableSharding("m103")
+{
+        "ok" : 1,
+        "operationTime" : Timestamp(1631872193, 3),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631872193, 3),
+                "signature" : {
+                        "hash" : BinData(0,"0EinMWIJ1gnMpUn4/7I7ctljmtQ="),
+                        "keyId" : NumberLong("7008835836170993693")
+                }
+        }
+}
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+        "_id" : 1,
+        "minCompatibleVersion" : 5,
+        "currentVersion" : 6,
+        "clusterId" : ObjectId("6144630f1e0bd54452cc319f")
+  }
+  shards:
+        {  "_id" : "shard1",  "host" : "shard1/localhost:27001,localhost:27002,localhost:27003",  "state" : 1 }
+        {  "_id" : "shard2",  "host" : "shard2/localhost:27007,localhost:27008,localhost:27009",  "state" : 1 }
+  active mongoses:
+        "4.0.5" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                shard1  1
+                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : shard1 Timestamp(1, 0) 
+        {  "_id" : "m103",  "primary" : "shard1",  "partitioned" : true,  "version" : {  "uuid" : UUID("be363122-66e5-4708-998b-e2bfaab09403"),  "lastMod" : 1 } }
+mongos> db.products.createIndex( { "sku": 1 } )
+{
+        "raw" : {
+                "shard1/localhost:27001,localhost:27002,localhost:27003" : {
+                        "createdCollectionAutomatically" : false,
+                        "numIndexesBefore" : 1,
+                        "numIndexesAfter" : 2,
+                        "ok" : 1
+                }
+        },
+        "ok" : 1,
+        "operationTime" : Timestamp(1631872453, 2),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631872453, 2),
+                "signature" : {
+                        "hash" : BinData(0,"z05oDDgX0YFHY4dp2aosCGjEjKs="),
+                        "keyId" : NumberLong("7008835836170993693")
+                }
+        }
+}
+mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
+{
+        "collectionsharded" : "m103.products",
+        "collectionUUID" : UUID("ee35eec4-233d-4078-875f-fb5586fcf6cf"),
+        "ok" : 1,
+        "operationTime" : Timestamp(1631872548, 14),
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1631872548, 14),
+                "signature" : {
+                        "hash" : BinData(0,"SiBvXwOy8CsNFpkEptGiNDTw1ao="),
+                        "keyId" : NumberLong("7008835836170993693")
+                }
+        }
+}
 ```
