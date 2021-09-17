@@ -6042,7 +6042,7 @@ To recap, your *shard* determines the partitioning and data distribution of data
 In the previous lesson, we talked about what a *shard key* is. Now, we're going to talk about what makes a good *shard key*. First, let's recap. You enable *sharding at the database level. You shard collections. Enabling sharding on a database does not automatically shard the collections in that database*. And, you can have both *sharded and unsharded collections in the same database*. Not all collections need to be equal.
 
 First, let's talk about using a *shard key that provides good right distribution*. These are the three basic properties, here. The *cardinality of the shard key values, the frequency of the shard key values*, and whether or not the *shard key increases or decreases monotonically*. We're going to go over each of these one by one. The first, is that the chosen *shard key should have high cardinality. Cardinality is the measure of the number of elements within a set of values*.
-> High Cardinality = many possible unique shard key values
+> High *Cardinality* = many possible unique *shard key* values
 
 In context of the *shard key, it is the number of unique possible shard key values*. This is important for two reasons. The first is that if your *shard key supports a small number of unique possible values, then that constrains the number of shards you can have in your cluster*. Remember, *chunks define boundaries based on shard key values, and a unique value can only exist on one chunk*. Let's say we *shard* on a field whose values are the number of states in the United States of America.
 
@@ -6074,7 +6074,7 @@ Let's recap. Good *shard keys provide even right distribution and, where possibl
 
 ### Hashed Shard Keys
 
-So far, we've only talked about the default shard key. However, there's an additional type of shard key that is useful for certain scenarios. That is the hashed shard key. That is a shard key where the underlying index is hashed. Previously, if we had a document where, let's say x was 3 and the shard key was on x, MongoDB would place it into the following chunk where the value of 3 falls into the trunk range.
+So far, we've only talked about the default *shard key*. However, there's an additional type of *shard key* that is useful for certain scenarios. That is the *hashed shard key*. That is a *shard key where the underlying index is hashed*. Previously, if we had a document where, let's say *x was 3 and the shard key was on x, MongoDB* would place it into the following *chunk where the value of 3 falls into the trunk range*.
 
 With a hashed shard key, MongoDB first hashes the value 3, then uses that hash value to decide which chunk to place the document in. The hash shard key does not mean that MongoDB stores your shard key values with hashes. The actual data remains untouched. Instead, the underlying index backing the shard key itself is hashed. And MongoDB uses the hashed index for partitioning your data, so you end up with a more even distribution of your data across the sharded cluster.
 
