@@ -134,3 +134,5 @@ db.products.insert(
     "shippingWeight" : "0.01"
   }
 )
+
+db.products.remove()
