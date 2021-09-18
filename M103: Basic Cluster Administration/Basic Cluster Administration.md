@@ -6418,7 +6418,7 @@ mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
 
 So far, we've been briefly discussing the term *chunks* in a quite loose way. So let's take a few minutes to review what *chunks* are and what can we do with them. In a prior lecture, we've mentioned that the *config servers hold the cluster metadata*. Things like how many *shards we have, which databases are sharded, and the configuration settings of our shard cluster*. But one of the most important pieces of information that the *config servers hold, is the mapping of the chunks to shards*.
 
-Right, let's jump into our terminal to see this in action. If I jump into the *config database and show the collections*, you'll see a long list of different *collections that hold information about this shard cluster*. Within the *chunks collection*, if we find one document, we will see the definition of a *chunk*. In this case, we can see what's the name space that this *chunk* belongs to? When was this *chunk* last modified? Which *shard holds this chunk*?
+Right, let's jump into our terminal to see this in action. If I jump into the *config database and show the collections*, you'll see a long list of different *collections that hold information about this shard cluster*. Within the *chunks collection*, if we find one *db.chunks.findOne()* document, we will see the definition of a *chunk*. In this case, we can see what's the *name* space that this *chunk* belongs to? When was this *chunk* last modified? Which *shard holds this chunk*?
 
 ```javascript
 mongos> show dbs
@@ -6458,10 +6458,9 @@ mongos> db.chunks.findOne()
     },
     "shard" : "m103-example"
 }
-
 ```
 
-But more importantly, we can see the chunk bounce the Min and max fields indicate exactly that. But let's step back a little bit. Once we add documents in our collections, these documents contain fields that we can use as shard keys. For example, if we decide to use field x as our shard key, the minute we shard our collection, we immediately define one initial chunk. This initial chunk goes from minKey to maxKey.
+But more importantly, we can see the *chunk bound - the Min and max fields* indicate exactly that. But let's step back a little bit. Once we add documents in our *collections*, these documents contain *fields that we can use as shard keys*. For example, if we decide to use *field x as our shard key*, the minute we *shard our collection*, we immediately define *one initial chunk. This initial chunk goes from minKey to maxKey*.
 
 An important thing to note is that chunks lower bound is inclusive, while chunks upper bound is exclusive. The different values that our shard key may hold will define the keyspace of our sharding collection. As time progresses, the cluster will split up that initial chunk into several others to allow data to be evenly distributed between shards. All documents of the same chunk live in the same shard. If we would have only one magnanimous chunk, we could only have one single shard in our cluster.
 
