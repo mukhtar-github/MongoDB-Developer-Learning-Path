@@ -2074,6 +2074,12 @@ for you on the *admin* database with password *m103-application-pass*
 mongo --port 27000 -u m103-admin -p m103-pass --authenticationDatabase admin
 
 mongoimport --db applicationData --collection products --port 27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin --file /dataset/products.json
+
+// The import can be properly completed with the following command:
+mongoimport --drop --port 27000 -u "m103-application-user" \
+-p "m103-application-pass" --authenticationDatabase "admin" \
+--db applicationData --collection products /dataset/products.json
+/* We authenticate to the database the same way with mongoimport as we did with mongo. The flags --db and --collection are used to designate a target database and collection for our data. The flag --drop is used to drop the existing collection, so we don't create duplicates by running this command twice. */
 ```
 
 ## Chapter 2: Replication
