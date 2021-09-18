@@ -6466,7 +6466,7 @@ An important thing to note is that *chunks lower bound is inclusive, while chunk
 
 The number of *chunks that our shard key* allows may define the *max number of shards of our system*. This is why *cardinality of the shard key* is an important aspect to consider. There are other aspects that will determine the number of *chunks within your shard*. The first one is our *chunk size*. By default, *MongoDB takes 64 megabytes as the default chunk size*. That means that if a *chunk is about 64 megabytes, or within 64 megabytes range, it will be split*.
 
-We can define a *chunk size* between the values of *one megabyte and 1024 as one gigabyte. The chunk size is configurable* during runtime. So if we decide to change a *chunk size*, we can easily do so. But before we go in changing our *chunk size*, let's have a look to how many *chunks* we currently hold. As you can see here, from our *sh.status()*, the *chunks mark tells me that shard -- m103 shard 1 has two chunks. While m103 shard 2 has one chunk*. But I want to lower my *chunk size* to see what happens.
+We can define a *chunk size* between the values of *one megabyte and 1024 as one gigabyte. The chunk size is configurable* during runtime. So if we decide to change a *chunk size*, we can easily do so. But before we go in changing our *chunk size*, let's have a look to how many *chunks* we currently hold. As you can see here, from our *sh.status()*, the *chunks mark tells me that shard -- m103-example has 1024 chunks*. But I want to lower my *chunk size* to see what happens.
 
 ```javascript
 mongos> sh.status()
@@ -6498,13 +6498,53 @@ mongos> sh.status()
                         unique: false
                         balancing: true
                         chunks:
-                                m103-example	1024
+                                m103-example 1024
                         too many chunks to print, use verbose if you want to force print
         {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-To do that, what I need to do is, basically, go to my settings collection and save a document with ID chunk size, with the determined value that I intend the chunk size to be, in megabytes. Once I've done so, if I run again, sh.status, I can see that nothing changed. Well, why? Well, the component responsible for the thing is the mongos, and since we have not given any indication or signal to mongos that it needs to split anything-- because no new data came in-- it will basically do absolutely nothing.
+To do that, what I need to do is, basically, go to my *settings collection and save a document with ID chunk size*, with the determined value that I intend the *chunk size to be, in megabytes*. Once I've done so, if I run again, *sh.status()*, I can see that nothing changed. Well, why? Well, the component responsible for the thing is the *mongos*, and since we have not given any indication or signal to *mongos* that it needs to split anything -- because no new data came in -- it will basically do absolutely nothing.
+
+```javascript
+mongos> use config
+switched to db config
+mongos> db.settings.save({_id: "chunksize", value: 2})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : "chunksize" })
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  5
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set m103-example
+        Time of Reported error:  Sat Sep 18 2021 09:53:56 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
+```
 
 If something is working, why Porter bother trying to fix it? So, for us to see some action going on, what we need to do is tell the mongos to actually do something. So I'm going to go ahead and import this other file, products part 2 that I just recently changed, so I can see some splitting going on. Once I import this data, we'll connect back to see if there is any more chunks. Right, sweet. So we're done with our imports, so let's connect back. And again, let's do our sh.status for a second. Sweet.
 
