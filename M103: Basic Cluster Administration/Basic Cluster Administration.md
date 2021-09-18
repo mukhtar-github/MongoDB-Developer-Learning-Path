@@ -6416,7 +6416,7 @@ mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
 
 ### Chunks
 
-So far, we've been briefly discussing the term chunks in a quite loose way. So let's take a few minutes to review what chunks are and what can we do with them. In a prior lecture, we've mentioned that the config servers hold the cluster metadata. Things like how many shards we have, which databases are sharded, and the configuration settings of our shard cluster. But one of the most important pieces of information that the config servers hold, is the mapping of the chunks to shards.
+So far, we've been briefly discussing the term *chunks* in a quite loose way. So let's take a few minutes to review what *chunks* are and what can we do with them. In a prior lecture, we've mentioned that the *config servers hold the cluster metadata*. Things like how many *shards we have, which databases are sharded, and the configuration settings of our shard cluster*. But one of the most important pieces of information that the *config servers hold, is the mapping of the chunks to shards*.
 
 Right, let's jump into our terminal to see this in action. If I jump into the config database and show the collections, you'll see a long list of different collections that hold information about this shard cluster. Within the chunks collection, if we find one document, we will see the definition of a chunk. In this case, we can see what's the name space that this chunk belongs to? When was this chunk last modified? Which shard holds this chunk?
 
