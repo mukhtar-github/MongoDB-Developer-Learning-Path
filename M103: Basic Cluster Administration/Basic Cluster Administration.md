@@ -6426,6 +6426,39 @@ admin   0.000GB
 config  0.001GB
 m103    0.000GB
 newDB   0.000GB
+mongos> use config
+switched to db config
+mongos> show collections
+actionlog
+changelog
+chunks
+collections
+databases
+lockpings
+locks
+migrations
+mongos
+shards
+tags
+transactions
+version
+mongos> db.chunks.findOne()
+{
+    "_id" : "config.system.sessions-_id_MinKey",
+    "lastmod" : Timestamp(1, 1),
+    "lastmodEpoch" : ObjectId("613dd6b14bfc18c75b5ad4e6"),
+    "ns" : "config.system.sessions",
+    "min" : {
+      "_id" : { "$minKey" : 1 }
+    },
+    "max" : {
+      "_id" : {
+        "id" : UUID("00400000-0000-0000-0000-000000000000")
+      }
+    },
+    "shard" : "m103-example"
+}
+
 ```
 
 But more importantly, we can see the chunk bounce the Min and max fields indicate exactly that. But let's step back a little bit. Once we add documents in our collections, these documents contain fields that we can use as shard keys. For example, if we decide to use field x as our shard key, the minute we shard our collection, we immediately define one initial chunk. This initial chunk goes from minKey to maxKey.
