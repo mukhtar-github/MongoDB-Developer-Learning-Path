@@ -6548,6 +6548,24 @@ mongos> sh.status()
 
 So, for us to see some action going on, what we need to do is tell the *mongos* to actually do something. So I'm going to go ahead and *import this other file, products part 2* that I just recently changed, so I can see some *splitting* going on. Once I *import this data*, we'll connect back to see if there is any more *chunks*. Right, sweet. So we're done with our *imports*, so let's connect back. And again, let's do our *sh.status()* for a second. Sweet.
 
+```javascript
+vagrant@vagrant:~$ vim products_2.json
+vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/db/products_2.json
+vagrant@vagrant:~$ ls
+csrs_1.conf  csrs_2.conf  csrs_3.conf  mongos.conf  node1.conf  node2.conf  node3.conf  products_2.json
+vagrant@vagrant:~$ mongoimport products_2.json --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
+2021-09-18T14:25:02.378+0000 connected to: localhost:26000
+2021-09-18T14:25:05.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:08.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:11.344+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:14.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:17.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:20.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:22.228+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
+2021-09-18T14:25:22.230+0000 Failed: Could not find host matching read preference { mode: "primary" } for set m103-example
+2021-09-18T14:25:22.231+0000 imported 1000 documents
+```
+
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
 
 Now, let's consider that the chosen shard key wasn't that good after all. Although the cardinality initially was very good, we have an abnormal high frequency of some keys over time. So let's say, for example, if 90% of our new documents have the same shard key value, this might generate an abnormal situation. What do we call jumbo chunks? Jumbo chunks can be damaging because they are chunks which are way larger than the default or defined chunk size. The minute a chunk becomes larger than the defined chunk size, they will be marked as jumbo chunks.

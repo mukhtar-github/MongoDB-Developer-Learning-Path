@@ -137,4 +137,8 @@ db.products.insert(
 
 db.products.remove()
 
-/home/mukhtar/Downloads/products.part2.json
+sudo mkdir -p /var/mongodb/db/products_2.json
+
+mongoimport products_2.json --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
+
+vim -r products_2.json
