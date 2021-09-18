@@ -2053,11 +2053,11 @@ So just to recap, in this lesson we covered *mongostat*, which gives quick stati
 
 ### Lab: Importing a Dataset
 
-#### Problem:
+#### Problem 6
 
 Import a dataset into MongoDB using mongoimport:
 
-1. Run a mongoimport command on a MongoDB instance running in the background.
+1 Run a mongoimport command on a MongoDB instance running in the background.
   The requirements for this command are:
 
 * connect to a *mongod* process running on port *27000*
@@ -2066,12 +2066,14 @@ Import a dataset into MongoDB using mongoimport:
 * use *m103-application-user* to authenticate to the database - this user has already been created
 for you on the *admin* database with password *m103-application-pass*
 
-2. Click "Run Tests" to run a test that will check *applicationData.products* for the new data. The results of these tests will let you know which steps you've yet to complete.
+2 Click "Run Tests" to run a test that will check *applicationData.products* for the new data. The results of these tests will let you know which steps you've yet to complete.
 
-#### Answer:
+#### Answer 6
 
 ```javascript
-mongoimport --port 27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin -d applicationData -c applicationData.products --file "/dataset/products.json"
+mongo --port 27000 -u m103-admin -p m103-pass --authenticationDatabase admin
+
+mongoimport --db applicationData --collection products --port 27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin --file /dataset/products.json
 ```
 
 ## Chapter 2: Replication
