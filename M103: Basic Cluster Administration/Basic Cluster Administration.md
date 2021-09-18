@@ -6504,7 +6504,7 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-To do that, what I need to do is, basically, go to my *settings collection and save a document with ID chunk size*, with the determined value that I intend the *chunk size to be, in megabytes*. Once I've done so, if I run again, *sh.status()*, I can see that nothing changed. Well, why? Well, the component responsible for the thing is the *mongos*, and since we have not given any indication or signal to *mongos* that it needs to split anything -- because no new data came in -- it will basically do absolutely nothing.
+To do that, what I need to do is, basically, go to my *settings collection and save a document with ID chunk size*, with the determined value that I intend the *chunk size to be, in megabytes*. Once I've done so, if I run again, *sh.status()*, I can see that nothing changed. Well, why? Well, the component responsible for the thing is the *mongos*, and since we have not given any indication or signal to *mongos* that it needs to split anything -- because no new data came in -- it will basically do absolutely nothing. *If something is working, why will Porter bother trying to fix it?*
 
 ```javascript
 mongos> use config
@@ -6546,7 +6546,7 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-If something is working, why Porter bother trying to fix it? So, for us to see some action going on, what we need to do is tell the mongos to actually do something. So I'm going to go ahead and import this other file, products part 2 that I just recently changed, so I can see some splitting going on. Once I import this data, we'll connect back to see if there is any more chunks. Right, sweet. So we're done with our imports, so let's connect back. And again, let's do our sh.status for a second. Sweet.
+So, for us to see some action going on, what we need to do is tell the *mongos* to actually do something. So I'm going to go ahead and *import this other file, products part 2* that I just recently changed, so I can see some *splitting* going on. Once I *import this data*, we'll connect back to see if there is any more *chunks*. Right, sweet. So we're done with our *imports*, so let's connect back. And again, let's do our *sh.status()* for a second. Sweet.
 
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
 

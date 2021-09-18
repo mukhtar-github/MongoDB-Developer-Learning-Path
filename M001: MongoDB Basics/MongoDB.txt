@@ -136,3 +136,5 @@ db.products.insert(
 )
 
 db.products.remove()
+
+/home/mukhtar/Downloads/products.part2.json
