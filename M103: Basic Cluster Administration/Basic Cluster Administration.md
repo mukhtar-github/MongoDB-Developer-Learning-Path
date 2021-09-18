@@ -6418,7 +6418,15 @@ mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
 
 So far, we've been briefly discussing the term *chunks* in a quite loose way. So let's take a few minutes to review what *chunks* are and what can we do with them. In a prior lecture, we've mentioned that the *config servers hold the cluster metadata*. Things like how many *shards we have, which databases are sharded, and the configuration settings of our shard cluster*. But one of the most important pieces of information that the *config servers hold, is the mapping of the chunks to shards*.
 
-Right, let's jump into our terminal to see this in action. If I jump into the config database and show the collections, you'll see a long list of different collections that hold information about this shard cluster. Within the chunks collection, if we find one document, we will see the definition of a chunk. In this case, we can see what's the name space that this chunk belongs to? When was this chunk last modified? Which shard holds this chunk?
+Right, let's jump into our terminal to see this in action. If I jump into the *config database and show the collections*, you'll see a long list of different *collections that hold information about this shard cluster*. Within the *chunks collection*, if we find one document, we will see the definition of a *chunk*. In this case, we can see what's the name space that this *chunk* belongs to? When was this *chunk* last modified? Which *shard holds this chunk*?
+
+```javascript
+mongos> show dbs
+admin   0.000GB
+config  0.001GB
+m103    0.000GB
+newDB   0.000GB
+```
 
 But more importantly, we can see the chunk bounce the Min and max fields indicate exactly that. But let's step back a little bit. Once we add documents in our collections, these documents contain fields that we can use as shard keys. For example, if we decide to use field x as our shard key, the minute we shard our collection, we immediately define one initial chunk. This initial chunk goes from minKey to maxKey.
 
