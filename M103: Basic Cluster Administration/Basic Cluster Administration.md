@@ -6559,6 +6559,28 @@ vagrant@vagrant:~$ mongoimport products_2.json --drop --port 26000 -u "m103-admi
 2021-09-20T19:09:01.613+0000 [################........] m103.products 989KB/1.42MB (68.2%)
 2021-09-20T19:09:03.064+0000 [########################] m103.products 1.42MB/1.42MB (100.0%)
 2021-09-20T19:09:03.066+0000 imported 8829 documents
+
+// Import and shard a collection of data on your cluster
+mongos> db.products.createIndex( { "sku": 1 } )
+{
+    "raw" : {
+      "m103-example/localhost:27011,localhost:27012,localhost:27013" : {
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+      }
+    },
+    "ok" : 1,
+    "operationTime" : Timestamp(1632166289, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1632166289, 1),
+      "signature" : {
+        "hash" : BinData(0,"IJRyQd6xkUE31uJHBN8x0tEspJ4="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
 ```
 
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
