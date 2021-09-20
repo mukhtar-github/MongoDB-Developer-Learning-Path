@@ -6595,6 +6595,46 @@ mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
       }
     }
 }
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+      "_id" : 1,
+      "minCompatibleVersion" : 5,
+      "currentVersion" : 6,
+      "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  5
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set m103-example
+        Time of Reported error:  Mon Sep 20 2021 18:53:20 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
+                m103.products
+                        shard key: { "sku" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1
+                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : { "$maxKey" : 1 } } on : m103-example Timestamp(1, 0) 
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
