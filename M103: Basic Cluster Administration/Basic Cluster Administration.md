@@ -6637,7 +6637,7 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
+Now I have a lot more *chunks*, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all *shards*. But, the good thing is that, I no longer have just *one and two chunks* spread across *two different shards*. I have around *51 chunks* right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the *number of chunks* that we can generate will be the *shard key values frequency*.
 
 Now, let's consider that the chosen shard key wasn't that good after all. Although the cardinality initially was very good, we have an abnormal high frequency of some keys over time. So let's say, for example, if 90% of our new documents have the same shard key value, this might generate an abnormal situation. What do we call jumbo chunks? Jumbo chunks can be damaging because they are chunks which are way larger than the default or defined chunk size. The minute a chunk becomes larger than the defined chunk size, they will be marked as jumbo chunks.
 
