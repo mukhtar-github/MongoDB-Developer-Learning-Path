@@ -6581,6 +6581,20 @@ mongos> db.products.createIndex( { "sku": 1 } )
       }
     }
 }
+mongos> sh.shardCollection( "m103.products", { "sku": 1 } )
+{
+    "collectionsharded" : "m103.products",
+    "collectionUUID" : UUID("1359746f-fd2e-4883-8af1-c7354a2ea3e6"),
+    "ok" : 1,
+    "operationTime" : Timestamp(1632166401, 9),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1632166401, 9),
+      "signature" : {
+        "hash" : BinData(0,"tmeuSYol2An0IE6xAdLpAtbGVko="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
 ```
 
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
