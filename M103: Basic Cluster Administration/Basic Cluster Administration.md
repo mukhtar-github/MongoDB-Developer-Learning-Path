@@ -6553,17 +6553,12 @@ vagrant@vagrant:~$ vim products_2.json
 vagrant@vagrant:~$ sudo mkdir -p /var/mongodb/db/products_2.json
 vagrant@vagrant:~$ ls
 csrs_1.conf  csrs_2.conf  csrs_3.conf  mongos.conf  node1.conf  node2.conf  node3.conf  products_2.json
-vagrant@vagrant:~$ mongoimport products_2.json --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
-2021-09-18T14:25:02.378+0000 connected to: localhost:26000
-2021-09-18T14:25:05.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:08.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:11.344+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:14.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:17.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:20.345+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:22.228+0000 [##......................] m103.products 168KB/1.42MB (11.6%)
-2021-09-18T14:25:22.230+0000 Failed: Could not find host matching read preference { mode: "primary" } for set m103-example
-2021-09-18T14:25:22.231+0000 imported 1000 documents
+vagrant@vagrant:~$ mongoimport products_2.json --drop --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
+2021-09-20T19:08:58.637+0000 connected to: localhost:26000
+2021-09-20T19:08:58.641+0000 dropping: m103.products
+2021-09-20T19:09:01.613+0000 [################........] m103.products 989KB/1.42MB (68.2%)
+2021-09-20T19:09:03.064+0000 [########################] m103.products 1.42MB/1.42MB (100.0%)
+2021-09-20T19:09:03.066+0000 imported 8829 documents
 ```
 
 Now I have a lot more chunks, all kind of still not very well balanced, but that's fine. It will take them some time to actually balance everything between all shards. But, the good thing is that, I no longer have just one and two chunks spread across two different shards. I have around 51 chunks right now. And if I run it again, I'll see that, eventually, the system will be balanced. Another aspect that will be important for the number of chunks that we can generate will be the shard key values frequency.
