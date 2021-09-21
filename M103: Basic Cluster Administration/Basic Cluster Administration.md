@@ -6669,7 +6669,11 @@ To summarize, the *sharded cluster balancer is responsible for evenly distributi
 
 ### Queries in a Sharded Cluster
 
-In this lesson, we're going to talk about how the mongos router does the job of routing queries across your sharded cluster. So the mongos is the principal interface point for your client applications. All queries must be redirected to the mongos. So here we have a find operation against the products collection, looking for this document where the name is how to mongos.
+In this lesson, we're going to talk about how the *mongos router* does the job of routing queries across your *sharded cluster*. So the *mongos* is the principal interface point for your client applications. All queries must be redirected to the *mongos*. So here we have a *find operation against the products collection, looking for this document where the name is how to mongo*.
+
+```javascript
+db.products.find( { "name" : "How To Mongo" } )
+```
 
 The first thing that the mongos does is determine the list of shards that must receive the query. Depending on the query predicate, the mongos as either targets every shard in the cluster or a subset of shards in the cluster. If the query predicate includes the shard key, then the mongos can specifically target only those shards that contain the shard key value or values specified in the query predicate.
 
