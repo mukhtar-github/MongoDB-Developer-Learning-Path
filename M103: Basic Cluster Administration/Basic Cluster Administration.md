@@ -6681,7 +6681,7 @@ These *targeted queries are very efficient*. If the *query predicate* does not i
 
 Whether we're doing *targeted or scatter gather queries, the mongos opens a cursor against each of the targeted shards*. Each *cursor executes the query predicate*, and returns any data returned by the *query for that shard. The mongos* now has the results from each *targeted shard. The mongos* merges all of the results together to form the total set of documents that fulfills this query, and then returns that set of documents to the client application.
 
-The mongos also has specific behavior when it comes to cursor operators, such as sore, , limit and skip. For queries where you specify a sort, the mongos pushes the sort down to each shard in the cluster and then performs a merge sort of the results. With limit, the mongos pushes the limit down to each shard in the cluster, and then reapplies that limit after merging the returned results.
+The *mongos* also has specific behavior when it comes to *cursor operators, such as sort(), limit() and skip()*. For *queries where you specify a sort(), the mongos pushes the sort down to each shard in the cluster* and then performs a *merge-sort* of the results. With *limit(), the mongos* pushes the limit down to each *shard in the cluster*, and then reapplies that limit after merging the returned results.
 
 With skip, the mongos performs the skipping on the merged set of results, and doesn't push anything down to the shard level. If you're using aggregation, there's more specific behavior depending on the pipeline you've created. Now, that is out of scope for this lesson. So, please take a look at the documentation linked below for a more complete discussion of how mongos handles routing aggregation queries.
 
