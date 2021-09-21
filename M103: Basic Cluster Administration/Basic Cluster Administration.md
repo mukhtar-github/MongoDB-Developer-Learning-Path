@@ -6651,21 +6651,9 @@ So, let's recap. *Chunks* are logical groups of documents that are based out of 
 
 So we've been talking about *sharded clusters* for a bit now. And you've heard at least a few times about this concept of *even distribution of data*. We know that a good *shard key* should contribute to how evenly *MongoDB* can distribute your data across the *shards in your cluster*. But how exactly does *MongoDB* perform that data distribution? Recall that with *sharding, MongoDB splits your sharded collections into chunks of data*.
 
-As you insert data into the collection, the number of chunks on any given shard will grow.
+As you insert data into the *collection, the number of chunks on any given shard* will grow. The *MongoDB balancer* identifies which *shards* have too many *chunks* and automatically move *chunks across shards in the sharded cluster* in an attempt to achieve *even data distribution*. Currently, the *balancer process runs on the primary member of the config server replica set*.
 
-The MongoDB balancer identifies which shards have too many chunks and automatically move chunks across shards in the sharded cluster in an attempt to achieve even data distribution.
-
-Currently, the balancer process runs on the primary member of the config server replica set.
-
-In prior versions the Mongo ES was responsible for running the balancer process.
-
-The balancer process checks the chunked distribution of data across the sharded cluster and looks for certain migration thresholds.
-
-If it detects that there is an imbalance, it starts a balancer round.
-
-The balancer can migrate chunks in parallel.
-
-A given shard cannot participate in more than one migration at a time.
+In prior versions the *MongoS* was responsible for running the *balancer process. The balancer process* checks the *chunked distribution of data across the sharded cluster* and looks for certain migration thresholds. If it detects that there is an imbalance, it starts a balancer round. The balancer can migrate chunks in parallel. A given shard cannot participate in more than one migration at a time.
 
 So take the floor of n divided by 2, where n is the number of shards, and you have the number of chunks that can be migrated in a balancer round.
 
