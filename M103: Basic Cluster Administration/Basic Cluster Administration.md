@@ -6645,4 +6645,4 @@ Now, let's consider that the chosen *shard key* wasn't that good after all. Alth
 
 > Please do consider the *frequency of our shard key*, to avoid situations like *jumbo chunks* as much as possible.
 
-So, let's recap. Chunks are logical groups of documents that are based out of the shard key key space, and have bounds associated to it. Min bound, inclusive. Max bound, exclusive. A chunk can only live at one designated shard at the time. And all documents within the bound defined by the chunk live in the same shard. Shard key cardinality frequency and configured chunk size will determine the number of chunks in your sharded collection.
+So, let's recap. *Chunks* are logical groups of documents that are based out of the *shard key* key space, and have *bounds* associated to it. *Min bound, inclusive. Max bound, exclusive. A chunk* can only live at one designated *shard* at the time. And all documents within the *bound defined by the chunk live in the same shard. Shard key cardinality, frequency, and configured chunk size will determine the number of chunks in your sharded collection*.
