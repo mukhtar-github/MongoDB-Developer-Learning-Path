@@ -6666,3 +6666,55 @@ If you stop the balancer in the middle of a round, then the balancer stops only 
 There is also a process for scheduling a *time window for when this sharded cluster balancer can run*. It does require modifying the *config database*, which is out of scope for this course. But we'll link to the tutorial below if you'd like to read up on it for yourself.
 
 To summarize, the *sharded cluster balancer is responsible for evenly distributing chunks of data across your sharded cluster*. Starting with *MongoDB 3.4, the balancer runs on the Primary member of the config server replica set*. And the *balancer process* is completely automated and requires minimal user input or guidance. There are methods for controlling it, however.
+
+### Queries in a Sharded Cluster
+
+In this lesson, we're going to talk about how the mongos router does the job of routing queries across your sharded cluster.
+
+So the mongos is the principal interface point for your client applications.
+
+All queries must be redirected to the mongos.
+
+So here we have a find operation against the products collection, looking for this document where the name is how to mongos.
+
+The first thing that the mongos does is determine the list of shards that must receive the query.
+
+Depending on the query predicate, the mongos as either targets every shard in the cluster or a subset of shards in the cluster.
+
+If the query predicate includes the shard key, then the mongos can specifically target only those shards that contain the shard key value or values specified in the query predicate.
+
+These targeted queries are very efficient.
+
+If the query predicate does not include the shard key, or has generally very wide in scope, such as a range to query that spans multiple or all shards, than the mongos has to target every shard in the cluster.
+
+These scatter gather operations can be slow, depending on factors such as the number of shards and your cluster.
+
+We're going to go into more detail on targeted versus scatter gather queries, as well as how the mongos knows who to target, in the next lesson.
+
+Whether we're doing targeted or scatter gather queries, the mongos opens a cursor against each of the targeted shards.
+
+Each cursor executes the query predicate, and returns any data returned by the query for that shard.
+
+The mongos now has the results from each targeted shard.
+
+The mongos merges all of the results together to form the total set of documents that fulfills this query, and then returns that set of documents to the client application.
+
+The mongos also has specific behavior when it comes to cursor operators, such as sore, , limit and skip.
+
+For queries where you specify a sort, the mongos pushes the sort down to each shard in the cluster and then performs a merge sort of the results.
+
+With limit, the mongos pushes the limit down to each shard in the cluster, and then reapplies that limit after merging the returned results.
+
+With skip, the mongos performs the skipping on the merged set of results, and doesn't push anything down to the shard level.
+
+If you're using aggregation, there's more specific behavior depending on the pipeline you've created.
+
+Now, that is out of scope for this lesson.
+
+So, please take a look at the documentation linked below for a more complete discussion of how mongos handles routing aggregation queries.
+
+To recap, the mongos handles all queries in a sharded cluster.
+
+For any given query, it builds a list of shards to target the query to, and merger's the results.
+
+It can also handle query modifiers such as sort, limit, and skip.
