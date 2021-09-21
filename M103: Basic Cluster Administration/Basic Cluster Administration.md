@@ -6692,3 +6692,5 @@ To recap, the *mongos handles all queries in a sharded cluster*. For any given q
 ### Targeted Queries vs Scatter Gather: Part 1
 
 In the prior lesson, we talked about how the *mongos* routes queries at a high level. We going to dig into more detail here on *Targeted Queries vs Scatter Gather* query routing. Remember that each *shard contains chunks of sharded data*, where each *chunk represents an inclusive lower bound, and an exclusive upper bound*. The *config server replica set* keeps a table of the *shard chunk* relationships.
+
+The *mongos* keeps a cached local copy of this *metadata table*. That means that each *mongos* has a map of which *shard* contains any giving *shard key value*. Briefly, *minKey* represents the lowest possible *shard key value*, think of this like *minus infinity*. While *maxKey* represents the highest possible *shard key value*. These *chunks handle catering the lower and upper boundaries of your shard key values*.
