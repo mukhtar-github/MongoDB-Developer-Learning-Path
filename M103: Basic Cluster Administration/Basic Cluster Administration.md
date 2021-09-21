@@ -6669,7 +6669,7 @@ To summarize, the *sharded cluster balancer is responsible for evenly distributi
 
 ### Queries in a Sharded Cluster
 
-In this lesson, we're going to talk about how the *mongos router* does the job of routing queries across your *sharded cluster*. So the *mongos* is the principal interface point for your client applications. All queries must be redirected to the *mongos*. So here we have a *find operation against the products collection, looking for this document where the name is how to mongo*.
+In this lesson, we're going to talk about how the *mongos router* does the job of *routing queries across your sharded cluster*. So the *mongos* is the principal interface point for your client applications. All queries must be redirected to the *mongos*. So here we have a *find operation against the products collection, looking for this document where the name is how to mongo*.
 
 ```javascript
 mongos> db.products.find( { "name" : "How To Mongo" } )
@@ -6688,3 +6688,7 @@ With *skip(), the mongos* performs the skipping on the merged set of results, an
 > At 2:17, we describe how *limit() and skip()* are handled in a *sharded cluster*. There is a specific case not mentioned. When used in conjunction with a *limit(), the mongos* will pass the limit plus the value of the *skip() to the shards* to ensure a sufficient number of documents are returned to the *mongos to apply the final limit() and skip()* successfully.
 
 To recap, the *mongos handles all queries in a sharded cluster*. For any given query, it builds a list of *shards to target the query to*, and merger's the results. It can also handle query modifiers such as *sort(), limit(), and skip()*.
+
+### Targeted Queries vs Scatter Gather: Part 1
+
+In the prior lesson, we talked about how the *mongos* routes queries at a high level. We going to dig into more detail here on *Targeted Queries vs Scatter Gather* query routing. Remember that each *shard contains chunks of sharded data*, where each *chunk represents an inclusive lower bound, and an exclusive upper bound*. The *config server replica set* keeps a table of the *shard chunk* relationships.
