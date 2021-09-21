@@ -6659,26 +6659,10 @@ So take the *floor of n divided by 2, where n is the number of shards, and you h
 
 These rounds happen consecutively until the balancer process detects that the cluster is as evenly distributed as possible. Typically, the *MongoS handles initiating a chunk split*. But the *balancer* is fully capable of performing splits. It will do so if it detects *chunks* that need to be split or as a part of defining *chunk ranges for zone sharding*. Now, *zones* are out of scope for this lesson.
 
-So just remember that the balancer can split chunks if needed. Now, there is a performance impact of migrating chunks. The balancer already has behavior built in to minimize workload disruption, such as the one chunk per shard limitation. To that end, MongoDB surfaces a number of methods for controlling the behavior of the balancer. You can start or stop the balancer at any time.
+So just remember that the *balancer can split chunks* if needed. Now, there is a performance impact of *migrating chunks. The balancer* already has behavior built in to minimize *workload disruption, such as the one chunk per shard limitation*. To that end, *MongoDB* surfaces a number of methods for controlling the behavior of the *balancer. You can start or stop the balancer at any time*.
 
-If you stop the balancer in the middle of a round, then the balancer stops only after that balancing round completes.
+If you stop the balancer in the middle of a round, then the balancer stops only after that balancing round completes. *sh.startBalancer() and stopBalancer()* allow you to set a *time limit timeout value* for how long to wait to *stop or start the balancer*. The interval defines how long the client should wait before checking the *balancer* status again. Set *balancer* state just takes a boolean and is either on or off.
 
-sh.startBalancer and stopBalancer allow you to set a time limit timeout value for how long to wait to stop or start the balancer.
+There is also a process for scheduling a time window for when this sharded cluster balancer can run. It does require modifying the config database, which is out of scope for this course. But we'll link to the tutorial below if you'd like to read up on it for yourself.
 
-The interval defines how long the client should wait before checking the balancer status again.
-
-Set balancer state just takes a boolean and is either on or off.
-
-There is also a process for scheduling a time window for when this sharded cluster balancer can run.
-
-It does require modifying the config database, which is out of scope for this course.
-
-But we'll link to the tutorial below if you'd like to read up on it for yourself.
-
-To summarize, the sharded cluster balancer is responsible for evenly distributing chunks of data across your sharded cluster.
-
-Starting with MongoDB 3.4, the balancer runs on the Primary member of the config server replica set.
-
-And the balancer process is completely automated and requires minimal user input or guidance.
-
-There are methods for controlling it, however.
+To summarize, the sharded cluster balancer is responsible for evenly distributing chunks of data across your sharded cluster. Starting with MongoDB 3.4, the balancer runs on the Primary member of the config server replica set. And the balancer process is completely automated and requires minimal user input or guidance. There are methods for controlling it, however.
