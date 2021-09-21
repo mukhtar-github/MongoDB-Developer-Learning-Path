@@ -6653,15 +6653,9 @@ So we've been talking about *sharded clusters* for a bit now. And you've heard a
 
 As you insert data into the *collection, the number of chunks on any given shard* will grow. The *MongoDB balancer* identifies which *shards* have too many *chunks* and automatically move *chunks across shards in the sharded cluster* in an attempt to achieve *even data distribution*. Currently, the *balancer process runs on the primary member of the config server replica set*.
 
-In prior versions the *MongoS* was responsible for running the *balancer process. The balancer process* checks the *chunked distribution of data across the sharded cluster* and looks for certain migration thresholds. If it detects that there is an imbalance, it starts a balancer round. The balancer can migrate chunks in parallel. A given shard cannot participate in more than one migration at a time.
+In prior versions the *MongoS* was responsible for running the *balancer process. The balancer process* checks the *chunked distribution of data across the sharded cluster* and looks for certain migration thresholds. If it detects that there is an imbalance, it starts a balancer round. The *balancer can migrate chunks in parallel*. A given *shard* cannot participate in more than one migration at a time.
 
-So take the floor of n divided by 2, where n is the number of shards, and you have the number of chunks that can be migrated in a balancer round.
-
-With this cluster, I've got three shards, so I can migrate-- at most-- one chunk at a time.
-
-If we had four shards, the balancer could migrate up to two chunks at a time.
-
-So we're going to need a second round to completely balance this cluster.
+So take the *floor of n divided by 2, where n is the number of shards, and you have the number of chunks* that can be migrated in a *balancer round*. With this *cluster, I've got three shards*, so I can *migrate -- at most-- one chunk* at a time. If we had *four shards, the balancer could migrate up to two chunks* at a time. So we're going to need a second round to completely balance this cluster.
 
 These rounds happen consecutively until the balancer process detects that the cluster is as evenly distributed as possible.
 
