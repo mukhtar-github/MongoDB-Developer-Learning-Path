@@ -6661,7 +6661,7 @@ These rounds happen consecutively until the balancer process detects that the cl
 
 So just remember that the *balancer can split chunks* if needed. Now, there is a performance impact of *migrating chunks. The balancer* already has behavior built in to minimize *workload disruption, such as the one chunk per shard limitation*. To that end, *MongoDB* surfaces a number of methods for controlling the behavior of the *balancer. You can start or stop the balancer at any time*.
 
-If you stop the balancer in the middle of a round, then the balancer stops only after that balancing round completes. *sh.startBalancer() and stopBalancer()* allow you to set a *time limit timeout value* for how long to wait to *stop or start the balancer*. The interval defines how long the client should wait before checking the *balancer* status again. Set *balancer* state just takes a boolean and is either *on or off*.
+If you stop the balancer in the middle of a round, then the balancer stops only after that balancing round completes. *sh.startBalancer(timeout, interval) and stopBalancer(timeout, interval)* allow you to set a *time limit timeout value* for how long to wait to *stop or start the balancer*. The *interval* defines how long the client should wait before checking the *balancer* status again. *sh.setBalancerState(boolean)* just takes a boolean and is either *on or off*.
 
 There is also a process for scheduling a *time window for when this sharded cluster balancer can run*. It does require modifying the *config database*, which is out of scope for this course. But we'll link to the tutorial below if you'd like to read up on it for yourself.
 
