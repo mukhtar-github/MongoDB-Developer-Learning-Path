@@ -6655,27 +6655,11 @@ As you insert data into the *collection, the number of chunks on any given shard
 
 In prior versions the *MongoS* was responsible for running the *balancer process. The balancer process* checks the *chunked distribution of data across the sharded cluster* and looks for certain migration thresholds. If it detects that there is an imbalance, it starts a balancer round. The *balancer can migrate chunks in parallel*. A given *shard* cannot participate in more than one migration at a time.
 
-So take the *floor of n divided by 2, where n is the number of shards, and you have the number of chunks* that can be migrated in a *balancer round*. With this *cluster, I've got three shards*, so I can *migrate -- at most-- one chunk* at a time. If we had *four shards, the balancer could migrate up to two chunks* at a time. So we're going to need a second round to completely balance this cluster.
+So take the *floor of n divided by 2, where n is the number of shards, and you have the number of chunks* that can be migrated in a *balancer round*. With this *cluster, I've got three shards*, so I can *migrate -- at most-- one chunk* at a time. If we had *four shards, the balancer could migrate up to two chunks* at a time. So we're going to need a *second round to completely balance this cluster*.
 
-These rounds happen consecutively until the balancer process detects that the cluster is as evenly distributed as possible.
+These rounds happen consecutively until the balancer process detects that the cluster is as evenly distributed as possible. Typically, the *MongoS handles initiating a chunk split*. But the *balancer* is fully capable of performing splits. It will do so if it detects *chunks* that need to be split or as a part of defining *chunk ranges for zone sharding*. Now, *zones* are out of scope for this lesson.
 
-Typically, the Mongo ES handles initiating a chunk split.
-
-But the balancer is fully capable of performing splits.
-
-It will do so if it detects chunks that need to be split or as a part of defining chunk ranges for zone sharding.
-
-Now, zones are out of scope for this lesson.
-
-So just remember that the balancer can split chunks if needed.
-
-Now, there is a performance impact of migrating chunks.
-
-The balancer already has behavior built in to minimize workload disruption, such as the one chunk per shard limitation.
-
-To that end, MongoDB surfaces a number of methods for controlling the behavior of the balancer.
-
-You can start or stop the balancer at any time.
+So just remember that the balancer can split chunks if needed. Now, there is a performance impact of migrating chunks. The balancer already has behavior built in to minimize workload disruption, such as the one chunk per shard limitation. To that end, MongoDB surfaces a number of methods for controlling the behavior of the balancer. You can start or stop the balancer at any time.
 
 If you stop the balancer in the middle of a round, then the balancer stops only after that balancing round completes.
 
