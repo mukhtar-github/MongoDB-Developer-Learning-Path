@@ -6695,4 +6695,6 @@ In the prior lesson, we talked about how the *mongos* routes queries at a high l
 
 The *mongos* keeps a cached local copy of this *metadata table*. That means that each *mongos* has a map of which *shard* contains any giving *shard key value*. Briefly, *minKey* represents the lowest possible *shard key value*, think of this like *minus infinity*. While *maxKey* represents the highest possible *shard key value*. These *chunks handle catering the lower and upper boundaries of your shard key values*, so that you don't have to worry about re-defining what the *lowest to highest possible shard key value* is for the collection.
 
-So when the *mongos* recieves a query whose predicate includes the *shard key, the mongos* can look at the table and know exactly what *shard* to direct that query to. The *mongos* opens the cursor against only those *shards* that can satisfy the query predicate. Because the *mongos* is totally
+So when the *mongos* recieves a query whose predicate includes the *shard key, the mongos* can look at the table and know exactly what *shard* to direct that query to. The *mongos* opens the cursor against only those *shards* that can satisfy the query predicate. Because the *mongos* is targetting the query to a subset of *shards* in the cluster, these targetted queries are generally faster than having to check in with every *shard* in the cluster.
+
+If, for example the *mongos* can satisfy the entire query by targetting a *single shard*, and the *mongos* can even bye pass the
