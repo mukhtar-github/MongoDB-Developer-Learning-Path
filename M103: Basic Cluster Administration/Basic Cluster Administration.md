@@ -6699,4 +6699,8 @@ So when the *mongos recieves a query whose predicate includes the shard key, the
 
 If, for example the *mongos* can satisfy the entire query by targetting a *single shard*, and the *mongos* can even bye-pass the merge stage and just return the results, this is particularly fast. When the *query predicate* does not include the *shard key*, then the *mongos* cannot derive exactly which *shard* satisfy the query. These *Scatter Gather* queries must necessarily ping and wait for the reply of every *shard* in the cluster, regardless if they have something to contribute towards the execution of the query or not.
 
-Depending on the number of *shards* in your cluster, the amount of network latency between *shards and mongos* and a number of other factors, these queries can be slow, that's why we advice in the *shard key* lessons to choose a *shard key* that satisfies the majority of your queries, or atleast the most common and important ones.
+Depending on the number of *shards* in your cluster, the amount of network latency between *shards and mongos* and a number of other factors, these queries can be slow, that's why we advice in the *shard key* lessons to choose a *shard key* that satisfies the majority of your queries, or atleast the most common and important ones. Now on a similar note, *ranged queries on a hashed shard key* are almost always *Scatter Gather*, because two *adjacent shard key values* are likely to be on two completely different chunks.
+
+There's a pretty low probability that the *mongos* would be able to satisfy the ranged query with a subset of *shards* withing the hashed based range query predicate. Single document queries on a *hashed shard key* can still be targetted though. One thing to emphasize, if you are using a *compound index as your shard key*, then you can specify each prefix up to the entire *shard key* and still get a target query.
+
+
