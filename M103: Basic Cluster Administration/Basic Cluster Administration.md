@@ -6851,7 +6851,7 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
 
 That means for this specific query, not only was *Mongos* able to target a *subset of shards*, it was able to retrieve the entire results set from a *single shard* without needing to merge the results. This *shards array* displays each *shard queried*, and provides the specific plan executed on that *shard* for executing the query. As you can see here, under the *winningPlan*, there is actually a *index scan* underneath, because the *shard MongoD could use the sku index* to satisfy the query.
 
-So let's try to do this again, except now, we're going to look up the name against this particular video game. So a few clear differences, for our stage, we now have shard merge. Furthermore, if you look under the shards array, we have both shard 1 and shard 2. So this is a scatter gather query, and required a merge. Remember that name isn't in our shard key, so this is necessarily a scatter gather query.
+So let's try to do this again, except now, we're going to look up the name against this particular video game. So a few clear differences, for our *stage, we now have shard merge*. Furthermore, if you look under the *shards array*, we have both *shard 1 and shard 2*. So this is a scatter gather query, and required a merge. Remember that name isn't in our shard key, so this is necessarily a scatter gather query.
 
 ```javascript
 // Scatter gather query with explain() output:
@@ -6916,24 +6916,8 @@ mongos> db.products.find( {
 }
 ```
 
-So, actually, these two queries, both sku on this value and the name on this value, were returning the same document.
+So, actually, these two queries, both *sku on this value and the name on this value*, were returning the same document. But by specifying sku instead of the name, I can get a result more quickly. Now if I know that my workload would be querying against *name 90% of the time*, then it would have been better for me to have chosen *name instead of as sku as the shard key*.
 
-But by specifying sku instead of the name, I can get a result more quickly.
+So, let's recap. Targeted queries require the shard key as part of the query predicate. For compound shard keys, it can be a prefix of the shard key up to the entire shard key. Ranged queries on the shard key may end up with similar performance to a scatter gather query, depending on how wide your range is.
 
-Now if I know that my workload would be querying against name 90% of the time, then it would have been better for me to have chosen name instead of as sku as the shard key.
-
-So, let's recap.
-
-Targeted queries require the shard key as part of the query predicate.
-
-For compound shard keys, it can be a prefix of the shard key up to the entire shard key.
-
-Ranged queries on the shard key may end up with similar performance to a scatter gather query, depending on how wide your range is.
-
-But that's only if you're using a very wide shard range, or if you have a hashed shard key.
-
-Without the shard key, the Mongols must perform a scatter gather query.
-
-This means that the Mongo must check in with every single shard in the cluster.
-
-The scatter gather queries are going to be the slowest, compared to a targeted query.
+But that's only if you're using a very wide shard range, or if you have a hashed shard key. Without the shard key, the Mongols must perform a scatter gather query. This means that the Mongo must check in with every single shard in the cluster. The scatter gather queries are going to be the slowest, compared to a targeted query.
