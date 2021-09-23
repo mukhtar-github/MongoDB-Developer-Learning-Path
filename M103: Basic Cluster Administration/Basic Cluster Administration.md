@@ -6770,7 +6770,7 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-I have to on shard 1 and 1 on shard 2. Now, I'm going to issue a find against the products collection specifying this document where sku is this value. I'm also going to add the explain query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
+I have *2 on shard 1 and 1 on shard 2*. Now, I'm going to issue a find against the *products collection* specifying this document where *sku* is this value *(1000000749)*. I'm also going to add the *explain()* query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
 
 That means for this specific query, not only was Mongos able to target a subset of shards, it was able to retrieve the entire results set from a single shard without needing to merge the results.
 
