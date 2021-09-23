@@ -6851,15 +6851,70 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
 
 That means for this specific query, not only was *Mongos* able to target a *subset of shards*, it was able to retrieve the entire results set from a *single shard* without needing to merge the results. This *shards array* displays each *shard queried*, and provides the specific plan executed on that *shard* for executing the query. As you can see here, under the *winningPlan*, there is actually a *index scan* underneath, because the *shard MongoD could use the sku index* to satisfy the query.
 
-So let's try to do this again, except now, we're going to look up the name against this particular video game.
+So let's try to do this again, except now, we're going to look up the name against this particular video game. So a few clear differences, for our stage, we now have shard merge. Furthermore, if you look under the shards array, we have both shard 1 and shard 2. So this is a scatter gather query, and required a merge. Remember that name isn't in our shard key, so this is necessarily a scatter gather query.
 
-So a few clear differences, for our stage, we now have shard merge.
-
-Furthermore, if you look under the shards array, we have both shard 1 and shard 2.
-
-So this is a scatter gather query, and required a merge.
-
-Remember that name isn't in our shard key, so this is necessarily a scatter gather query.
+```javascript
+// Scatter gather query with explain() output:
+mongos> db.products.find( {
+...   "name" : "Gods And Heroes: Rome Rising - Windows [Digital Download]" }
+... ).explain()
+{
+    "queryPlanner" : {
+      "mongosPlannerVersion" : 1,
+      "winningPlan" : {
+        "stage" : "SINGLE_SHARD",
+        "shards" : [
+          {
+            "shardName" : "m103-example",
+            "connectionString" : "m103-example/localhost:27011,localhost:27012,localhost:27013",
+            "serverInfo" : {
+              "host" : "vagrant",
+              "port" : 27012,
+              "version" : "3.6.23",
+              "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
+            },
+            "plannerVersion" : 1,
+            "namespace" : "m103.products",
+            "indexFilterSet" : false,
+            "parsedQuery" : {
+              "name" : {
+                "$eq" : "Gods And Heroes: Rome Rising - Windows [Digital Download]"
+              }
+            },
+            "winningPlan" : {
+              "stage" : "SHARDING_FILTER",
+              "inputStage" : {
+                "stage" : "COLLSCAN",
+                "filter" : {
+                  "name" : {
+                    "$eq" : "Gods And Heroes: Rome Rising - Windows [Digital Download]"
+                  }
+                },
+                "direction" : "forward"
+              }
+            },
+            "rejectedPlans" : [ ]
+          }
+        ]
+      }
+    },
+    "serverInfo" : {
+      "host" : "vagrant",
+      "port" : 26000,
+      "version" : "3.6.23",
+      "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
+    },
+    "ok" : 1,
+    "operationTime" : Timestamp(1632376831, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1632376831, 1),
+      "signature" : {
+        "hash" : BinData(0,"xL1Tl7GptC72D2UZPL5+gMcCO5E="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+```
 
 So, actually, these two queries, both sku on this value and the name on this value, were returning the same document.
 
