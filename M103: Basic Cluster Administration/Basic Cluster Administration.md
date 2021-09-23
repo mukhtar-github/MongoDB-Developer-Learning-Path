@@ -6775,7 +6775,7 @@ I have *2 on shard 1 and 1 on shard 2*. Now, I'm going to issue a find against t
 
 ```javascript
 // Targeted query with explain() output:
-mongos> db.products.find({"sku" : 1000000749 }).explain()
+mongos> db.products.find({"sku":23717762}).explain()
 {
     "queryPlanner" : {
       "mongosPlannerVersion" : 1,
@@ -6796,7 +6796,7 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
             "indexFilterSet" : false,
             "parsedQuery" : {
               "sku" : {
-                "$eq" : 1000000749
+                "$eq" : 23717762
               }
             },
             "winningPlan" : {
@@ -6820,7 +6820,7 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
                   "direction" : "forward",
                   "indexBounds" : {
                     "sku" : [
-                      "[1000000749.0, 1000000749.0]"
+                      "[23717762.0, 23717762.0]"
                     ]
                   }
                 }
@@ -6838,11 +6838,11 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
       "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
     },
     "ok" : 1,
-    "operationTime" : Timestamp(1632375730, 1),
+    "operationTime" : Timestamp(1632377991, 1),
     "$clusterTime" : {
-      "clusterTime" : Timestamp(1632375730, 1),
+      "clusterTime" : Timestamp(1632377995, 1),
       "signature" : {
-        "hash" : BinData(0,"2y6248kZu5NcQQOsAn24JywzJ2k="),
+        "hash" : BinData(0,"ofzpJyVc0plrRXdly3hNvyTIl/0="),
         "keyId" : NumberLong("7006634394848854025")
       }
     }
@@ -6914,6 +6914,14 @@ mongos> db.products.find( {
       }
     }
 }
+
+db.products.find({"sku":23717762}).pretty()
+
+db.products.find({"sku":23717762}).explain()
+
+db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).pretty()
+
+"sku":23717762,"name":"Heaven In The Room - CD"
 ```
 
 So, actually, these two queries, both *sku on this value and the name on this value*, were returning the same document. But by specifying sku instead of the name, I can get a result more quickly. Now if I know that my workload would be querying against *name 90% of the time*, then it would have been better for me to have chosen *name instead of as sku as the shard key*.
