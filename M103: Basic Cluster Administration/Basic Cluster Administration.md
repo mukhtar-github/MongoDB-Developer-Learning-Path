@@ -6771,7 +6771,7 @@ mongos> sh.status()
         {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
 ```
 
-I have *2 on shard 1 and 1 on shard 2*. Now, I'm going to issue a find against the *products collection* specifying this document where *sku* is this value *(1000000749)*. I'm also going to add the *explain()* query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
+I have *2 on shard 1 and 1 on shard 2*. Now, I'm going to issue a find against the *products collection* specifying this document where *sku* is this value *(1000000749)*. I'm also going to add the *explain()* query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have *single shard*.
 
 ```javascript
 // Targeted query with explain() output:
@@ -6849,11 +6849,7 @@ mongos> db.products.find({"sku" : 1000000749 }).explain()
 }
 ```
 
-That means for this specific query, not only was Mongos able to target a subset of shards, it was able to retrieve the entire results set from a single shard without needing to merge the results.
-
-This shards array displays each shard queried, and provides the specific plan executed on that shard for executing the query.
-
-As you can see here, under the winning plan, there is actually a index scan underneath, because the shard MongoD could use the sku index to satisfy the query.
+That means for this specific query, not only was *Mongos* able to target a *subset of shards*, it was able to retrieve the entire results set from a *single shard* without needing to merge the results. This *shards array* displays each *shard queried*, and provides the specific plan executed on that *shard* for executing the query. As you can see here, under the *winningPlan*, there is actually a *index scan* underneath, because the *shard MongoD could use the sku index* to satisfy the query.
 
 So let's try to do this again, except now, we're going to look up the name against this particular video game.
 
