@@ -6708,8 +6708,12 @@ Shard Key : { "sku" : 1, "type" : 1, "name" : 1 }
 
 // Targetable queries:
 db.products.find({ "sku" : ...})
-db.products.find({ "sku" : ..., "type" : ...})
-db.products.find({ "sku" : ..., "type" : ..., "name" : ...})
+db.products.find({ "sku" : ..., "type" : ... })
+db.products.find({ "sku" : ..., "type" : ..., "name" : ... })
+
+// Scatter-Gather queries:
+db.products.find({ "type" : ... })
+db.products.find({ "name" : ... })
 ```
 
 So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any of the *shard key prefix fields* up to the full *shard key* to perform a targetted query.
