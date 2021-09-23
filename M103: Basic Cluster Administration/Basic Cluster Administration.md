@@ -6716,4 +6716,6 @@ db.products.find({ "type" : ... })
 db.products.find({ "name" : ... })
 ```
 
-So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any of the *shard key prefix fields* up to the full *shard key* to perform a targetted query.
+So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any of the *shard key prefix fields* up to the full *shard key* to perform a targetted query. But I can't use any arbitrary field in the *shard key*. So even though *type and name* are part of the *shard key* itself, I haven't included the full prefix leading up to either of these fields, so we cannot get our targetted query.
+
+
