@@ -6722,6 +6722,54 @@ So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any 
 
 So let's take a look at how you can actually see whether or not a query is targeted, and how many *shards* were targeted. I'm using the *m103 database* here, and I'm going to show that we have our *products collection within the m103 database*. I'm running *sh.status()* to show that we have *two shards*. As you can see, *m103.products is sharded on sku, and is distributed in three chunks total*.
 
+```javascript
+mongos> use m103
+switched to db m103
+mongos> show collections
+messages
+products
+mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+   "_id" : 1,
+   "minCompatibleVersion" : 5,
+   "currentVersion" : 6,
+   "clusterId" : ObjectId("613c90dc078b9817172ec755")
+  }
+  shards:
+        {  "_id" : "m103-example",  "host" : "m103-example/localhost:27011,localhost:27012,localhost:27013",  "state" : 1 }
+  active mongoses:
+        "3.6.23" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  5
+        Last reported error:  Could not find host matching read preference { mode: "primary" } for set m103-example
+        Time of Reported error:  Thu Sep 23 2021 05:27:35 GMT+0000 (UTC)
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+                config.system.sessions
+                        shard key: { "_id" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1024
+                        too many chunks to print, use verbose if you want to force print
+        {  "_id" : "m103",  "primary" : "m103-example",  "partitioned" : true }
+                m103.products
+                        shard key: { "sku" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-example 1
+                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : { "$maxKey" : 1 } } on : m103-example Timestamp(1, 0) 
+        {  "_id" : "newDB",  "primary" : "m103-example",  "partitioned" : false }
+```
+
 I have to on shard 1 and 1 on shard 2. Now, I'm going to issue a find against the products collection specifying this document where sku is this value. I'm also going to add the explain query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
 
 That means for this specific query, not only was Mongos able to target a subset of shards, it was able to retrieve the entire results set from a single shard without needing to merge the results.
