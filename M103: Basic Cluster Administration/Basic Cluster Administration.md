@@ -6913,15 +6913,26 @@ mongos> db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).exp
     }
 }
 
-db.products.find({"sku":23717762}).pretty()
-
-db.products.find({"sku":23717762}).explain()
-
-db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).pretty()
-
-db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).explain()
-
-"sku":23717762,"name":"Heaven In The Room - CD"
+mongos> db.products.find({"sku":23717762}).pretty()
+{
+ "_id" : ObjectId("aaaa720cf29313caab8e2632"),
+ "sku" : 23717762,
+ "name" : "Heaven In The Room - CD",
+ "type" : "Music",
+ "regularPrice" : 13.99,
+ "salePrice" : 13.99,
+ "shippingWeight" : "0.25"
+}
+mongos> db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).pretty()
+{
+ "_id" : ObjectId("aaaa720cf29313caab8e2632"),
+ "sku" : 23717762,
+ "name" : "Heaven In The Room - CD",
+ "type" : "Music",
+ "regularPrice" : 13.99,
+ "salePrice" : 13.99,
+ "shippingWeight" : "0.25"
+}
 ```
 
 So, actually, these two queries, both *sku on this value and the name on this value*, were returning the same document. But by specifying sku instead of the name, I can get a result more quickly. Now if I know that my workload would be querying against *name 90% of the time*, then it would have been better for me to have chosen *name instead of as sku as the shard key*.
