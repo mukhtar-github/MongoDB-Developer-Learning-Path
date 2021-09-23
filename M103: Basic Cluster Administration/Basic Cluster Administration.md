@@ -6718,4 +6718,46 @@ db.products.find({ "name" : ... })
 
 So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any of the *shard key prefix fields* up to the full *shard key* to perform a targetted query. But I can't use any arbitrary field in the *shard key*. So even though *type and name* are part of the *shard key* itself, I haven't included the full prefix leading up to either of these fields, so we cannot get our targetted query.
 
+### Targeted Queries vs Scatter Gather: Part 2
 
+So let's take a look at how you can actually see whether or not a query is targeted, and how many *shards* were targeted. I'm using the *m103 database* here, and I'm going to show that we have our *products collection within the m103 database*. I'm running *sh.status()* to show that we have *two shards*. As you can see, *m103.products is sharded on sku, and is distributed in three chunks total*.
+
+I have to on shard 1 and 1 on shard 2. Now, I'm going to issue a find against the products collection specifying this document where sku is this value. I'm also going to add the explain query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
+
+That means for this specific query, not only was Mongos able to target a subset of shards, it was able to retrieve the entire results set from a single shard without needing to merge the results.
+
+This shards array displays each shard queried, and provides the specific plan executed on that shard for executing the query.
+
+As you can see here, under the winning plan, there is actually a index scan underneath, because the shard MongoD could use the sku index to satisfy the query.
+
+So let's try to do this again, except now, we're going to look up the name against this particular video game.
+
+So a few clear differences, for our stage, we now have shard merge.
+
+Furthermore, if you look under the shards array, we have both shard 1 and shard 2.
+
+So this is a scatter gather query, and required a merge.
+
+Remember that name isn't in our shard key, so this is necessarily a scatter gather query.
+
+So, actually, these two queries, both sku on this value and the name on this value, were returning the same document.
+
+But by specifying sku instead of the name, I can get a result more quickly.
+
+Now if I know that my workload would be querying against name 90% of the time, then it would have been better for me to have chosen name instead of as sku as the shard key.
+
+So, let's recap.
+
+Targeted queries require the shard key as part of the query predicate.
+
+For compound shard keys, it can be a prefix of the shard key up to the entire shard key.
+
+Ranged queries on the shard key may end up with similar performance to a scatter gather query, depending on how wide your range is.
+
+But that's only if you're using a very wide shard range, or if you have a hashed shard key.
+
+Without the shard key, the Mongols must perform a scatter gather query.
+
+This means that the Mongo must check in with every single shard in the cluster.
+
+The scatter gather queries are going to be the slowest, compared to a targeted query.
