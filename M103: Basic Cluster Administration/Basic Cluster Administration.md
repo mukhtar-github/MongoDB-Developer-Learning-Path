@@ -6701,6 +6701,15 @@ If, for example the *mongos* can satisfy the entire query by targetting a *singl
 
 Depending on the number of *shards* in your cluster, the amount of network latency between *shards and mongos* and a number of other factors, these queries can be slow, that's why we advice in the *shard key* lessons to choose a *shard key* that satisfies the majority of your queries, or atleast the most common and important ones. Now on a similar note, *ranged queries on a hashed shard key* are almost always *Scatter Gather*, because two *adjacent shard key values* are likely to be on two completely different chunks.
 
-There's a pretty low probability that the *mongos* would be able to satisfy the ranged query with a subset of *shards* withing the hashed based range query predicate. Single document queries on a *hashed shard key* can still be targetted though. One thing to emphasize, if you are using a *compound index as your shard key*, then you can specify each prefix up to the entire *shard key* and still get a target query.
+There's a pretty low probability that the *mongos* would be able to satisfy the ranged query with a subset of *shards* withing the hashed based range query predicate. Single document queries on a *hashed shard key* can still be targetted though. One thing to emphasize, if you are using a *compound index as your shard key*, then you can specify each prefix up to the entire *shard key* and still get a targetted query.
 
+```javascript
+Shard Key : { "sku" : 1, "type" : 1, "name" : 1 }
 
+// Targetable queries:
+db.products.find({ "sku" : ...})
+db.products.find({ "sku" : ..., "type" : ...})
+db.products.find({ "sku" : ..., "type" : ..., "name" : ...})
+```
+
+So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any of the *shard key prefix fields* up to the full *shard key* to perform a targetted query.
