@@ -6935,8 +6935,8 @@ mongos> db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).pre
 }
 ```
 
-So, actually, these two queries, both *sku on this value and the name on this value*, were returning the same document. But by specifying sku instead of the name, I can get a result more quickly. Now if I know that my workload would be querying against *name 90% of the time*, then it would have been better for me to have chosen *name instead of as sku as the shard key*.
+So, actually, these two queries, both *sku on this value and the name on this value*, were returning the same document. But by specifying *sku instead of the name*, I can get a result more quickly. Now if I know that my workload would be querying against *name 90% of the time*, then it would have been better for me to have chosen *name instead of as sku as the shard key*.
 
-So, let's recap. Targeted queries require the shard key as part of the query predicate. For compound shard keys, it can be a prefix of the shard key up to the entire shard key. Ranged queries on the shard key may end up with similar performance to a scatter gather query, depending on how wide your range is.
+So, let's recap. Targeted queries require the *shard key* as part of the query predicate. For compound *shard keys*, it can be a *prefix of the shard key up to the entire shard key*. Ranged queries on the *shard key* may end up with similar performance to a *scatter gather query*, depending on how wide your range is.
 
-But that's only if you're using a very wide shard range, or if you have a hashed shard key. Without the shard key, the Mongols must perform a scatter gather query. This means that the Mongo must check in with every single shard in the cluster. The scatter gather queries are going to be the slowest, compared to a targeted query.
+But that's only if you're using a *very wide shard range, or if you have a hashed shard key*. Without the *shard key*, the *Mongos must perform a scatter gather query*. This means that the *Mongo must check in with every single shard in the cluster. The scatter gather queries are going to be the slowest, compared to a targeted query*.
