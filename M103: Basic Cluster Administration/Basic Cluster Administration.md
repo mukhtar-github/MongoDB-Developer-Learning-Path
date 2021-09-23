@@ -6723,6 +6723,7 @@ So, let's say we have a *shard key on "sku", "type", and "name"*. I can use any 
 So let's take a look at how you can actually see whether or not a query is targeted, and how many *shards* were targeted. I'm using the *m103 database* here, and I'm going to show that we have our *products collection within the m103 database*. I'm running *sh.status()* to show that we have *two shards*. As you can see, *m103.products is sharded on sku, and is distributed in three chunks total*.
 
 ```javascript
+// Show collections in the m103 database:
 mongos> use m103
 switched to db m103
 mongos> show collections
@@ -6771,6 +6772,82 @@ mongos> sh.status()
 ```
 
 I have *2 on shard 1 and 1 on shard 2*. Now, I'm going to issue a find against the *products collection* specifying this document where *sku* is this value *(1000000749)*. I'm also going to add the *explain()* query modifier so that we can dig a little bit deeper into how we get our results. So, let's take a look here. First of all, notice for stage we have single shard.
+
+```javascript
+// Targeted query with explain() output:
+mongos> db.products.find({"sku" : 1000000749 }).explain()
+{
+    "queryPlanner" : {
+      "mongosPlannerVersion" : 1,
+      "winningPlan" : {
+        "stage" : "SINGLE_SHARD",
+        "shards" : [
+          {
+            "shardName" : "m103-example",
+            "connectionString" : "m103-example/localhost:27011,localhost:27012,localhost:27013",
+            "serverInfo" : {
+              "host" : "vagrant",
+              "port" : 27012,
+              "version" : "3.6.23",
+              "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
+            },
+            "plannerVersion" : 1,
+            "namespace" : "m103.products",
+            "indexFilterSet" : false,
+            "parsedQuery" : {
+              "sku" : {
+                "$eq" : 1000000749
+              }
+            },
+            "winningPlan" : {
+              "stage" : "FETCH",
+              "inputStage" : {
+                "stage" : "SHARDING_FILTER",
+                "inputStage" : {
+                  "stage" : "IXSCAN",
+                  "keyPattern" : {
+                    "sku" : 1
+                  },
+                  "indexName" : "sku_1",
+                  "isMultiKey" : false,
+                  "multiKeyPaths" : {
+                    "sku" : [ ]
+                  },
+                  "isUnique" : false,
+                  "isSparse" : false,
+                  "isPartial" : false,
+                  "indexVersion" : 2,
+                  "direction" : "forward",
+                  "indexBounds" : {
+                    "sku" : [
+                      "[1000000749.0, 1000000749.0]"
+                    ]
+                  }
+                }
+              }
+            },
+            "rejectedPlans" : [ ]
+          }
+        ]
+      }
+    },
+    "serverInfo" : {
+      "host" : "vagrant",
+      "port" : 26000,
+      "version" : "3.6.23",
+      "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
+    },
+    "ok" : 1,
+    "operationTime" : Timestamp(1632375730, 1),
+    "$clusterTime" : {
+      "clusterTime" : Timestamp(1632375730, 1),
+      "signature" : {
+        "hash" : BinData(0,"2y6248kZu5NcQQOsAn24JywzJ2k="),
+        "keyId" : NumberLong("7006634394848854025")
+      }
+    }
+}
+```
 
 That means for this specific query, not only was Mongos able to target a subset of shards, it was able to retrieve the entire results set from a single shard without needing to merge the results.
 
