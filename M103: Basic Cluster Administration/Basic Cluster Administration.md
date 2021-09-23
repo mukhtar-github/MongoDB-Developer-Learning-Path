@@ -6855,9 +6855,7 @@ So let's try to do this again, except now, we're going to look up the name again
 
 ```javascript
 // Scatter gather query with explain() output:
-mongos> db.products.find( {
-...   "name" : "Gods And Heroes: Rome Rising - Windows [Digital Download]" }
-... ).explain()
+mongos> db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).explain()
 {
     "queryPlanner" : {
       "mongosPlannerVersion" : 1,
@@ -6878,7 +6876,7 @@ mongos> db.products.find( {
             "indexFilterSet" : false,
             "parsedQuery" : {
               "name" : {
-                "$eq" : "Gods And Heroes: Rome Rising - Windows [Digital Download]"
+                "$eq" : "Heaven In The Room - CD"
               }
             },
             "winningPlan" : {
@@ -6887,7 +6885,7 @@ mongos> db.products.find( {
                 "stage" : "COLLSCAN",
                 "filter" : {
                   "name" : {
-                    "$eq" : "Gods And Heroes: Rome Rising - Windows [Digital Download]"
+                    "$eq" : "Heaven In The Room - CD"
                   }
                 },
                 "direction" : "forward"
@@ -6905,11 +6903,11 @@ mongos> db.products.find( {
       "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
     },
     "ok" : 1,
-    "operationTime" : Timestamp(1632376831, 1),
+    "operationTime" : Timestamp(1632378181, 1),
     "$clusterTime" : {
-      "clusterTime" : Timestamp(1632376831, 1),
+      "clusterTime" : Timestamp(1632378182, 1),
       "signature" : {
-        "hash" : BinData(0,"xL1Tl7GptC72D2UZPL5+gMcCO5E="),
+        "hash" : BinData(0,"HYQsRgmLFqbM0Yi64rtebpQScvM="),
         "keyId" : NumberLong("7006634394848854025")
       }
     }
@@ -6920,6 +6918,8 @@ db.products.find({"sku":23717762}).pretty()
 db.products.find({"sku":23717762}).explain()
 
 db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).pretty()
+
+db.products.find({ "name" : { "$eq" : "Heaven In The Room - CD" } }).explain()
 
 "sku":23717762,"name":"Heaven In The Room - CD"
 ```
