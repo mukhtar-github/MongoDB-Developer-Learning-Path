@@ -10,15 +10,7 @@ This course is seven chapters long. With each chapter, there will be a new set o
 
 The target audience -- this is a beginner's course focused on developer practices. If you're coming from an operations background, fear not, young grasshopper, we have something for you too. It is expected that you are familiar with the *MongoDB query language*. If you aren't, we recommend you taking our definitive beginner course, *M001, before attempting M121*.
 
-How does grading work?
-
-There are quizzes, labs, and a final exam.
-
-Quizzes are ungraded and exist to make sure that you're understanding the content.
-
-Your grade in the class, however, will be based on how well you do on the labs and the final exam, each of these being worth 50% of your total grade.
-
-Students with a grade of 65% or greater will receive a passing grade and will get a certificate of completion.
+How does grading work? There are quizzes, labs, and a final exam. Quizzes are ungraded and exist to make sure that you're understanding the content. Your grade in the class, however, will be based on how well you do on the labs and the final exam, each of these being worth 50% of your total grade. Students with a grade of 65% or greater will receive a passing grade and will get a certificate of completion.
 
 Finally, I'd highly encourage you to participate in the discussion forum.
 
