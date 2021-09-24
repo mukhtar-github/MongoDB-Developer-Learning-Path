@@ -4,15 +4,7 @@
 
 ### Introduction to the MongoDB Aggregation Framework
 
-Hi, I'm Nathan.
-
-Welcome to M121, the MongoDB Aggregation Framework.
-
-I'll be one of your instructors for this course.
-
-Throughout this course, we're going to discuss the aggregation framework, a key feature of MongoDB.
-
-You'll learn about expressive filtering, powerful data transformation, statistical utilities and data analysis, and how to do much more work with a single operation.
+Hi, I'm Nathan. Welcome to *M121-the MongoDB Aggregation Framework*. I'll be one of your instructors for this course. Throughout this course, we're going to discuss the *aggregation framework, a key feature of MongoDB*. You'll learn about *expressive filtering, powerful data transformation, statistical utilities and data analysis*, and how to do much more work with a single operation.
 
 This course is seven chapters long.
 
