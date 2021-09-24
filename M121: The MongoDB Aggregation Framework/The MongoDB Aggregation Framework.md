@@ -8,13 +8,7 @@ Hi, I'm Nathan. Welcome to *M121-the MongoDB Aggregation Framework*. I'll be one
 
 This course is seven chapters long. With each chapter, there will be a new set of lesson videos. After most of these lessons, there will be a quiz to assess your learning of the material. At the end of each chapter, there will be a set of related lab exercises. Let's go over a few of the course logistics.
 
-The target audience -- this is a beginner's course focused on developer practices.
-
-If you're coming from an operations background, fear not, young grasshopper, we have something for you too.
-
-It is expected that you are familiar with the MongoDB query language.
-
-If you aren't, we recommend you taking our definitive beginner course, M001, before attempting M121.
+The target audience -- this is a beginner's course focused on developer practices. If you're coming from an operations background, fear not, young grasshopper, we have something for you too. It is expected that you are familiar with the *MongoDB query language*. If you aren't, we recommend you taking our definitive beginner course, *M001, before attempting M121*.
 
 How does grading work?
 
