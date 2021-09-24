@@ -12,11 +12,7 @@ The target audience -- this is a beginner's course focused on developer practice
 
 How does grading work? There are quizzes, labs, and a final exam. Quizzes are ungraded and exist to make sure that you're understanding the content. Your grade in the class, however, will be based on how well you do on the labs and the final exam, each of these being worth 50% of your total grade. Students with a grade of 65% or greater will receive a passing grade and will get a certificate of completion.
 
-Finally, I'd highly encourage you to participate in the discussion forum.
-
-We have knowledgeable teaching assistants who are there to answer your questions.
-
-We also have your classmates who can also contribute to answering your questions and are often beneficial and knowledgeable resources.
+Finally, I'd highly encourage you to participate in the discussion forum. We have knowledgeable teaching assistants who are there to answer your questions. We also have your classmates who can also contribute to answering your questions and are often beneficial and knowledgeable resources.
 
 The labs in this course can be challenging.
 
