@@ -6,17 +6,9 @@
 
 Hi, I'm Nathan. Welcome to *M121-the MongoDB Aggregation Framework*. I'll be one of your instructors for this course. Throughout this course, we're going to discuss the *aggregation framework, a key feature of MongoDB*. You'll learn about *expressive filtering, powerful data transformation, statistical utilities and data analysis*, and how to do much more work with a single operation.
 
-This course is seven chapters long.
+This course is seven chapters long. With each chapter, there will be a new set of lesson videos. After most of these lessons, there will be a quiz to assess your learning of the material. At the end of each chapter, there will be a set of related lab exercises. Let's go over a few of the course logistics.
 
-With each chapter, there will be a new set of lesson videos.
-
-After most of these lessons, there will be a quiz to assess your learning of the material.
-
-At the end of each chapter, there will be a set of related lab exercises.
-
-Let's go over a few of the course logistics.
-
-The target audience-- this is a beginner's course focused on developer practices.
+The target audience -- this is a beginner's course focused on developer practices.
 
 If you're coming from an operations background, fear not, young grasshopper, we have something for you too.
 
