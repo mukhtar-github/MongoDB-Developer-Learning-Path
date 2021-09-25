@@ -87,9 +87,9 @@ All we have to do is *compose the pipeline*. Some key takeaways to remember. *Pi
 
 ### Aggregation Structure and Syntax
 
-Let's take a few minutes to talk about the structure and syntax of the aggregation framework. The aggregation framework has a simple and reliable structure and repeatable syntax. Pipelines may contain one or more stages. Each stage is a JSON object of key value pairs. With only a few exceptions, we can have as many stages as we like. Additionally, options may be passed in.
+Let's take a few minutes to talk about the structure and syntax of the *aggregation framework. The aggregation framework has a simple and reliable structure and repeatable syntax. Pipelines* may contain one or more stages. Each stage is a JSON object of key value pairs. With only a few exceptions, we can have as many stages as we like. Additionally, options may be passed in.
 
-For example, specifying whether to allow disk use for large aggregations, or to view the explain plan of the aggregation to see whether it is using indexes, or if the server optimized the pipeline. Let's take a look at a very simple, but very real pipeline and discuss the syntax. Here, we have a match stage that checks whether the atmoshperic composition contains oxygen or not.
+For example, specifying whether to allow disk use for *large aggregations*, or to view the explain plan of the aggregation to see whether it is using indexes, or if the server optimized the *pipeline*. Let's take a look at a very simple, but very real pipeline and discuss the syntax. Here, we have a match stage that checks whether the atmoshperic composition contains oxygen or not.
 
 And if the mean temperature falls within this range. Then, we have a project stage that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our options object. Each stage is composed of either operators or expressions. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the Aggregation Pipeline Quick Reference page that's linked below this video.
 
