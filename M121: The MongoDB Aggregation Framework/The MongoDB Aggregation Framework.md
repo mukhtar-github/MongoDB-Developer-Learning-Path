@@ -28,7 +28,7 @@ Signing up for *Atlas* is easy and free. Visit mongodb.com/cloud/atlas and click
 
 Navigate over to Enterprise and select the download that's appropriate for your operating system. Enterprise is free to test and evaluate, so we'll be using it throughout the course. While that's downloading, let's click Resources and Documentation. Click on Tutorials and click MongoDB Enterprise. Scroll down and find the tutorial for installing MongoDB Enterprise on your specific operating system.
 
-Lastly, we need to test our connection to the class Atlas cluster. Open a terminal and paste the information you find below this video. Go ahead and type show dbs to see all of the available databases available on the cluster. Typing show collections will show collections within the aggregations database. And that's it for the course prerequisites in connecting to Atlas.
+Lastly, we need to test our connection to the class *Atlas cluster*. Open a terminal and paste the information you find below this video. Go ahead and type *show dbs* to see all of the available databases available on the *cluster*. Typing *show collections* will show collections within the *aggregations database*. And that's it for the course prerequisites in connecting to *Atlas*.
 
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
@@ -39,6 +39,20 @@ connecting to: mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-s
 Implicit session: session { "id" : UUID("92791c78-1a73-4dbc-93ae-098ec37eceb8") }
 MongoDB server version: 4.2.16
 WARNING: shell and server versions do not match
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> show dbs
+100YWeatherSmall  0.128GB
+admin             0.000GB
+aggregations      0.068GB
+citibike          0.367GB
+city              0.002GB
+config            0.015GB
+coursera-agg      0.083GB
+feedback          0.000GB
+local             0.710GB
+mflix             0.449GB
+results           0.000GB
+ships             0.001GB
+video             0.513GB
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> show collections
 air_airlines
 air_alliances
