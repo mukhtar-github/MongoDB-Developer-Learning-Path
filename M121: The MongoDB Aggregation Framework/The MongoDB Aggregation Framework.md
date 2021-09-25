@@ -22,7 +22,7 @@ Before we dive into the course, let's discuss some prerequisites and walk throug
 
 This is easy to test. Visit portquiz.net:27017. You should see a page that looks a lot like this. And make sure that you see something like this here that says you've reached this page on port 27017. If you don't see this page, please contact your network administrator about opening up this port. Additionally, make sure you post in the forums so that we can help you until this issue is resolved.
 
-As you've seen myself and other instructors use new aggregation operators throughout the course, you are highly encouraged to pause the video and follow along. All collections will perform operations on will be available to you in the Class Atlas cluster. So what's Atlas? Atlas is MongoDB's cloud-hosting service. We'll let MongoDB worry about optimizing storage, security, and backing up our data for this course.
+As you've seen myself and other instructors use new aggregation operators throughout the course, you are highly encouraged to pause the video and follow along. All collections we perform operations on will be available to you in the *Class Atlas cluster*. So what's *Atlas? Atlas is MongoDB's cloud-hosting* service. We'll let *MongoDB* worry about optimizing *storage, security, and backing up our data* for this course.
 
 Signing up for Atlas is easy and free. Visit mongodb.com/cloud/atlas and click the Get Started Free button. After clicking the button, go ahead and fill out your information and click Get Started Free again. And for now, that's it. We'll be revisiting Atlas later on in the course. Next, let's ensure we have MongoDB installed. Visit mongodb.com and click the Download button.
 
