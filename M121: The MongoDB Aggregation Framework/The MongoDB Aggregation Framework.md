@@ -75,9 +75,7 @@ system.profile
 
 ### The Concept of Pipelines
 
-Pipelines.
-
-You'll hear us mention pipelines quite a bit throughout the course, so let's take a few minutes to discuss what they are. Pipelines can be thought of as a conveyor belt in a factory. Along the line, there are different assembly stations. These assembly stations are stages. Depending on what we want to accomplish, we may have only one stage, or we may have many stages.
+*Pipelines*. You'll hear us mention *pipelines* quite a bit throughout the course, so let's take a few minutes to discuss what they are. *Pipelines* can be thought of as a conveyor belt in a factory. Along the line, there are different assembly stations. These assembly stations are stages. Depending on what we want to accomplish, we may have only one stage, or we may have many stages.
 
 Pipelines work like this. Documents, represented by these squares, enter our pipeline and begin to flow into our first stage. This stage is called $match, which you'll be introduced to very soon. We set this stage up so that only red and blue squares make it through. Next, they flow through our pipeline and enter the second stage. In this example, we'll call this stage $project.
 
