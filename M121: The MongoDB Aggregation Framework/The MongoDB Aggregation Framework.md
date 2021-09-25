@@ -77,7 +77,7 @@ system.profile
 
 *Pipelines*. You'll hear us mention *pipelines* quite a bit throughout the course, so let's take a few minutes to discuss what they are. *Pipelines* can be thought of as a conveyor belt in a factory. Along the line, there are different assembly stations. These assembly stations are stages. Depending on what we want to accomplish, we may have only one stage, or we may have many stages.
 
-Pipelines work like this. Documents, represented by these squares, enter our pipeline and begin to flow into our first stage. This stage is called $match, which you'll be introduced to very soon. We set this stage up so that only red and blue squares make it through. Next, they flow through our pipeline and enter the second stage. In this example, we'll call this stage $project.
+*Pipelines* work like this. Documents, represented by these squares, enter our *pipeline* and begin to flow into our first stage. This stage is called *$match*, which you'll be introduced to very soon. We set this stage up so that only *red and blue squares* make it through. Next, they flow through our *pipeline* and enter the second stage. In this example, we'll call this stage *$project*.
 
 We set this stage up to transform our squares into circles. This is a small representation of the power the aggregation framework offers. We can transform our data in almost any way we desire. We'll be covering the $project stage in great detail in later lessons. This stage represents one of the many powerful analysis stages available, and it is called $group. Here, we have configured the stage to gather all of the documents that are flowing into it and produce a single document that gives us the ratio of red to blue circles.
 
