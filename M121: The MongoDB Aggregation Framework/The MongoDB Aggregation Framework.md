@@ -362,9 +362,12 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({ "type": { "$n
 }
 ```
 
-Let's observe this another way. First, let's count the number of documents with types that don't equal star. It should be eight, now let's see how many documents make it through our $match stage.
+Let's observe this another way. First, let's count the number of documents with types that don't equal star. It should be eight, now let's see how many documents make it through our $match stage. I'm going to use the utility station this example called count, that you'll learn about later. Here, we can see that eight documents pass through our aggregation. Sorry, Pluto. Lastly, $match does not have any mechanism for projection.
 
-I'm going to use the utility station this example called count, that you'll learn about later. Here, we can see that eight documents pass through our aggregation. Sorry, Pluto. Lastly, $match does not have any mechanism for projection.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.count({ "type": { "$ne": "Star"} })
+8
+```
 
 With find, we can do something like this if we want to project out the undescribed field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for $match. Again, we encourage you to think of $match as more of a filter than a find. Once documents are in an aggregation pipeline, and we're shaping them with new fields and new data, we'll be using $match heavily to keep filtering documents out.
 

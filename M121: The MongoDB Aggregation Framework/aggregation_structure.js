@@ -23,7 +23,7 @@ db.solarSystem.aggregate([{
 db.solarSystem.find({ "type": { "$ne": "Star" } }).pretty();
 
 // count the number of matching documents
-db.solarSystem.count();
+db.solarSystem.count({ "type": { "$ne": "Star"} });
 
 // using $count
 db.solarSystem.aggregate([{
