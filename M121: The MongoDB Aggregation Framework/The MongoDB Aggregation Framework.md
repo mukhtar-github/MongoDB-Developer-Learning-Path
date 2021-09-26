@@ -116,7 +116,7 @@ And if the *mean temperature* falls within this range. Then, we have a *project 
 
 Throughout the course, we'll be using the terms *operator and expression*, and it's vital that you can quickly access the documentation for these. So what's an *operator*? For this course, when we say *operators, we mean either query operators or aggregation stages*. In this example, *$match and $project are aggregation operators, and $in, $gte, and $lte, are query operators*.
 
-As a general rule, operators always appear in the key position of a document. $match is a little special and we'll learn about it later. What's an expression? Expressions act a lot like functions. We provide arguments and they provide a computed output. And just like functions, expressions can be composed to form powerful new data transformations. MongoDB provides expressions for working with and producing values for many types of values.
+As a general rule, *operators* always appear in the key position of a document. *$match* is a little special and we'll learn about it later. What's an *expression? Expressions* act a lot like functions. We provide *arguments and they provide a computed output*. And just like f*unctions, expressions* can be composed to form powerful new data transformations. *MongoDB* provides expressions for working with and producing values for many types of values.
 
 In the project stage, $gt is an expression. And its arguments are supplied in ths array. This $number of of moons, surrounded by the quotes, is also an expression that you'll learn about in a moment. An easy way to remember how to use expressions is that it will always appear in a value position. Let's run this now to see the output. Here, we see the result of the calculated field.
 
