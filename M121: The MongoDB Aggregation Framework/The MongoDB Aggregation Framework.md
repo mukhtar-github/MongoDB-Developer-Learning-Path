@@ -140,6 +140,12 @@ And there we go. The *aggregation framework structure and syntax*. We highly rec
 
 Now that we've discussed the concept of what *pipelines* are, and have given you an overview of *aggregation, and structure, and syntax*, it's time we learn about one of the most important stages, *$match. The $match* state is vital to a successful and performing *pipeline*. It should come as early as possible. And you are free to use as many *$match changes as necessary in your pipeline*.
 
+```javascript
+db.solarSystem.aggregate([{
+  "$match": { }
+}])
+```
+
 Here is a basic syntax for $match. Since it is an aggregation operator, we prepend a dollar sign to the name. Again, $match may be used multiple times. And virtually every other stage can be used after it, with a few exceptions that we'll cover later in the course. Instrumental in understanding $match and the context of an aggregation pipeline, I invite you to think of $match as a filter, rather than a find.
 
 We configure the filters in our $match stage. And as documents flow in, only those that meet our criteria are passed further in the pipeline. Here, our $match stage will only let circles and stars through. $match uses standard MongoDB read operation query syntax. We can perform matches based on comparison, logic, arrays, and much more. The only limitations are, we can't use the $where operator.
