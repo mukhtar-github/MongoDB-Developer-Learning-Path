@@ -146,11 +146,11 @@ db.solarSystem.aggregate([{
 }])
 ```
 
-Here is a basic syntax for $match. Since it is an aggregation operator, we prepend a dollar sign to the name. Again, $match may be used multiple times. And virtually every other stage can be used after it, with a few exceptions that we'll cover later in the course. Instrumental in understanding $match and the context of an aggregation pipeline, I invite you to think of $match as a filter, rather than a find.
+Here is a basic *syntax for $match*. Since it is an *aggregation operator*, we prepend a dollar sign to the name. Again, *$match* may be used multiple times. And virtually every other stage can be used after it, with a few exceptions that we'll cover later in the course. Instrumental in understanding *$match and the context of an aggregation pipeline, I invite you to think of $match as a filter, rather than a find*.
 
-We configure the filters in our $match stage. And as documents flow in, only those that meet our criteria are passed further in the pipeline. Here, our $match stage will only let circles and stars through. $match uses standard MongoDB read operation query syntax. We can perform matches based on comparison, logic, arrays, and much more. The only limitations are, we can't use the $where operator.
+We configure the filters in our *$match stage*. And as documents flow in, only those that meet our criteria are passed further in the *pipeline. Here, our $match stage will only let circles and stars through. $match uses standard MongoDB read operation query syntax*. We can perform matches based on *comparison, logic, arrays*, and much more. The only limitations are, we can't use the *$where* operator.
 
-And if we want to use a $test operator, the $match stage must be the first stage in a pipeline. If $match is the first stage, it can take advantage of indexes, which increases the speed of our queries. Again, $match should come early in our pipelines. As a reminder and for reference, you can find a link to this page just below the video. We encourage you to bookmark this page for future reference.
+And if we want to use a *$test* operator, the *$match stage* must be the first stage in a *pipeline*. If *$match* is the first stage, it can take advantage of *indexes, which increases the speed of our queries. Again, $match should come early in our pipelines*. As a reminder and for reference, you can find a link to this page just below the video. We encourage you to bookmark this page for future reference.
 
 Here's an example of $match in use. If I ask you the following aggregation, which filters the solar system collection, allowing only documents with types that don't equal star through, I can see that I get the results I expected. To show that $match uses the MongoDB query syntax, let's use find to see if we get identical results. The same results. Let's observe this another way.
 
