@@ -13,11 +13,11 @@ db.solarSystem.aggregate([{
   }], { "allowDiskUse": true});
 
 
-  
+
   // $match all celestial bodies, not equal to Star
 db.solarSystem.aggregate([{
   "$match": { "type": { "$ne": "Star" } }
-}]).pretty()
+}]).pretty();
 
 // same query using find command
 db.solarSystem.find({ "type": { "$ne": "Star" } }).pretty();
