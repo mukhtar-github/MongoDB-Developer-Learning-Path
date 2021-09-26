@@ -133,3 +133,85 @@ User Variable: "$$foo"
 The first is a *field path* expression and it's used to access the value of a *field* in the document, like number of moves in the first example. The second, with two dollar signs followed by an *uppercase* word, is a *system level variable. $$current* refers to the current document. And you can find the meaning of others on the quick reference page. The last with two dollar signs followed by a lowercase word is a *user variable*. Some expressions let us temporarily bind a value to a name, or provide us a special name, to access some data.
 
 And there we go. The *aggregation framework structure and syntax*. We highly recommend using additive has bracket matching while constructing your pipelines to make noticing errors easier. There's just a few things to remember. *Pipelines are always an array of one or more stages. Stages are composed of one or more aggregation operators or expressions. Expressions may take a single argument or an array of arguments*. See you in the next lesson.
+
+## Chapter 1: Basic Aggregation - $match and $project
+
+### $match: Filtering documents
+
+Now that we've discussed the concept of what pipelines are, and have given you an overview of aggregation, and structure, and syntax, it's time we learn about one of the most important stages, $match.
+
+The $match state is vital to a successful and performing pipeline.
+
+He should come as early as possible.
+
+And you were free to use as many $match changes as necessary in your pipeline.
+
+Here is a basic syntax for $match.
+
+Since it is an aggregation operator, we prepend a dollar sign to the name.
+
+Again, $match may be used multiple times.
+
+And virtually every other stage can be used after it, with a few exceptions that we'll cover later in the course.
+
+Instrumental in understanding $match and the context of an aggregation pipeline, I invite you to think of $match as a filter, rather than a find.
+
+We configure the filters in our $match stage.
+
+And as documents flow in, only those that meet our criteria are passed further in the pipeline.
+
+Here, our $match stage will only let circles and stars through.
+
+$match uses standard MongoDB read operation query syntax.
+
+We can perform matches based on comparison, logic, arrays, and much more.
+
+The only limitations are, we can't use the $where operator.
+
+And if we want to use a $test operator, the $match stage must be the first stage in a pipeline.
+
+If $match is the first stage, it can take advantage of indexes, which increases the speed of our queries.
+
+Again, $match should come early in our pipelines.
+
+As a reminder and for reference, you can find a link to this page just below the video.
+
+We encourage you to bookmark this page for future reference.
+
+Here's an example of $match in use.
+
+If I ask you the following aggregation, which filters the solar system collection, allowing only documents with types that don't equal star through, I can see that I get the results I expected.
+
+To show that $match uses the MongoDB query syntax, let's use find to see if we get identical results.
+
+The same results.
+
+Let's observe this another way.
+
+First, let's count the number of documents with types that don't equal star.
+
+It should be eight, now let's see how many documents make it through our $match stage.
+
+I'm going to use the utility station this example called count, that you'll learn about later.
+
+Here, we can see that eight documents pass through our aggregation.
+
+Sorry, Pluto.
+
+Lastly, $match does not have any mechanism for projection.
+
+With find, we can do something like this if we want to project out the undescribed field.
+
+Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more.
+
+And that's it for $match.
+
+Again, we encourage you to think of $match as more of a filter than a find.
+
+Once documents are in an aggregation pipeline, and we're shaping them with new fields and new data, we'll be using $match heavily to keep filtering documents out.
+
+Some key things to remember.
+
+A $match stage may contain a $text query operator, but it must be the first stage in the pipeline.
+
+$match come early in an aggregation pipeline, you cannot use $where with match, and $match uses the same query syntax as find.
