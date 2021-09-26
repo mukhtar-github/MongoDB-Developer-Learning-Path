@@ -152,7 +152,7 @@ We configure the filters in our *$match stage*. And as documents flow in, only t
 
 And if we want to use a *$test* operator, the *$match stage* must be the first stage in a *pipeline*. If *$match* is the first stage, it can take advantage of *indexes, which increases the speed of our queries. Again, $match should come early in our pipelines*. As a reminder and for reference, you can find a link to this page just below the video. We encourage you to bookmark this page for future reference.
 
-Here's an example of *$match* in use. If I ask you the following *aggregation*, which filters the solar system collection, allowing only documents with types that don't equal *star* through, I can see that I get the results I expected. To show that *$match uses the MongoDB query syntax*, let's use *find* to see if we get identical results. The same results. Let's observe this another way.
+Here's an example of *$match* in use. If I ask you the following *aggregation*, which filters the solar system collection, allowing only documents with types that don't equal *star* through, I can see that I get the results I expected.
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
@@ -258,7 +258,113 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 } ...
 ```
 
-First, let's count the number of documents with types that don't equal star. It should be eight, now let's see how many documents make it through our $match stage. I'm going to use the utility station this example called count, that you'll learn about later. Here, we can see that eight documents pass through our aggregation. Sorry, Pluto. Lastly, $match does not have any mechanism for projection.
+To show that *$match uses the MongoDB query syntax*, let's use *find* to see if we get identical results. The same results.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({ "type": { "$ne": "Star" } }).pretty()
+{
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d54"),
+        "name" : "Earth",
+        "type" : "Terrestrial planet",
+        "orderFromSun" : 3,
+        "radius" : {
+            "value" : 6378.137,
+            "units" : "km"
+        },
+        "mass" : {
+            "value" : 5.9723e+24,
+            "units" : "kg"
+        },
+        "sma" : {
+            "value" : 149600000,
+            "units" : "km"
+        },
+        "orbitalPeriod" : {
+            "value" : 1,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0167,
+        "meanOrbitalVelocity" : {
+            "value" : 29.78,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 1,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 23.45,
+            "units" : "degrees"
+        },
+        "meanTemperature" : 15,
+        "gravity" : {
+            "value" : 9.8,
+            "units" : "m/s^2"
+        },
+        "escapeVelocity" : {
+            "value" : 11.18,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 5.52,
+        "atmosphericComposition" : "N2+O2",
+        "numberOfMoons" : 1,
+        "hasRings" : false,
+        "hasMagneticField" : true
+}
+{
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d59"),
+        "name" : "Neptune",
+        "type" : "Gas giant",
+        "orderFromSun" : 8,
+        "radius" : {
+            "value" : 24765,
+            "units" : "km"
+        },
+        "mass" : {
+            "value" : 1.02413e+26,
+            "units" : "kg"
+        },
+        "sma" : {
+            "value" : 4495060000,
+            "units" : "km"
+        },
+        "orbitalPeriod" : {
+            "value" : 164.79,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0113,
+        "meanOrbitalVelocity" : {
+            "value" : 5.43,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 0.72,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 28.8,
+            "units" : "degrees"
+        },
+        "meanTemperature" : -210,
+        "gravity" : {
+            "value" : 11.15,
+            "units" : "m/s^2"
+        },
+        "escapeVelocity" : {
+            "value" : 23.5,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 1.638,
+        "atmosphericComposition" : "H2+He",
+        "numberOfMoons" : 14,
+        "hasRings" : true,
+        "hasMagneticField" : true
+}
+```
+
+Let's observe this another way. First, let's count the number of documents with types that don't equal star. It should be eight, now let's see how many documents make it through our $match stage.
+
+I'm going to use the utility station this example called count, that you'll learn about later. Here, we can see that eight documents pass through our aggregation. Sorry, Pluto. Lastly, $match does not have any mechanism for projection.
 
 With find, we can do something like this if we want to project out the undescribed field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for $match. Again, we encourage you to think of $match as more of a filter than a find. Once documents are in an aggregation pipeline, and we're shaping them with new fields and new data, we'll be using $match heavily to keep filtering documents out.
 
