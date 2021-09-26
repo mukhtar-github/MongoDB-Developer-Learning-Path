@@ -97,19 +97,19 @@ db.userColl.aggregate([{stage 1}, {stage 2}, {...stage N}], {options})
 For example, specifying whether to allow disk use for *large aggregations*, or to view the *explain plan of the aggregation to see whether it is using indexes*, or if the *server optimized the pipeline*. Let's take a look at a very simple, but very real *pipeline* and discuss the syntax. Here, we have a *match stage* that checks whether the *atmoshperic composition* contains *oxygen* or not.
 
 ```javascript
-db.solarSystem.aggregate([{
-    $match: {
-        atmosphericComposition: {$in: [/02/]},
-        meanTemperature: {$gte: -40, $lte: 40}
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
+    "$match": {
+        "atmosphericComposition": { "$in": [/O2/] },
+            "meanTemperature": { $gte: -40, "$lte": 40 }
+        }
+    }, {
+    "$project": {
+        "_id": 0,
+        "name": 1,
+        "hasMoons": { "$gt": ["$numberOfMoons", 0] }
     }
-}, {
-    $project: {
-        _id: 0,
-        name: 1,
-        hasMoons: {$gt: ["$numberOfMoons", 0]}
-    }
-}, {allowDiskUse: true}]
-)
+    }], { "allowDiskUse": true});
+{ "name" : "Earth", "hasMoons" : true }
 ```
 
 And if the *mean temperature* falls within this range. Then, we have a *project stage* that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our *options object - {allowDiskUse: true}*. Each stage is composed of either *operators or expressions*. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the *Aggregation Pipeline* Quick Reference page that's linked below this video.
@@ -118,7 +118,7 @@ Throughout the course, we'll be using the terms *operator and expression*, and i
 
 As a general rule, *operators* always appear in the key position of a document. *$match* is a little special and we'll learn about it later. What's an *expression? Expressions* act a lot like functions. We provide *arguments and they provide a computed output*. And just like f*unctions, expressions* can be composed to form powerful new data transformations. *MongoDB* provides expressions for working with and producing values for many types of values.
 
-In the project stage, $gt is an expression. And its arguments are supplied in ths array. This $number of of moons, surrounded by the quotes, is also an expression that you'll learn about in a moment. An easy way to remember how to use expressions is that it will always appear in a value position. Let's run this now to see the output. Here, we see the result of the calculated field.
+In the *project stage, $gt is an expression*. And its *arguments are supplied in this array*. This *$numberOfMoons*, surrounded by the quotes, is also an *expression* that you'll learn about in a moment. An easy way to remember how to use *expressions is that it will always appear in a value position*. Let's run this now to see the output. Here, we see the result of the calculated field.
 
 It looks like Earth isn't the only planet that has oxygen. It's a relatively comfortable temperature and it does indeed have moons. One more important thing to cover. We may encounter syntax like this. The first is a field path expression and it's used to access the value of a field in the document, like number of moves in the first example. The second, with two dollar signs followed by an uppercase word, is a system level variable.
 
