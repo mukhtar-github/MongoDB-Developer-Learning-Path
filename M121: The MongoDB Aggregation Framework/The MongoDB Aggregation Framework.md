@@ -138,7 +138,7 @@ And there we go. The *aggregation framework structure and syntax*. We highly rec
 
 ### $match: Filtering documents
 
-Now that we've discussed the concept of what pipelines are, and have given you an overview of aggregation, and structure, and syntax, it's time we learn about one of the most important stages, $match. The $match state is vital to a successful and performing pipeline. He should come as early as possible. And you were free to use as many $match changes as necessary in your pipeline.
+Now that we've discussed the concept of what *pipelines* are, and have given you an overview of *aggregation, and structure, and syntax*, it's time we learn about one of the most important stages, *$match. The $match* state is vital to a successful and performing *pipeline*. It should come as early as possible. And you are free to use as many *$match changes as necessary in your pipeline*.
 
 Here is a basic syntax for $match. Since it is an aggregation operator, we prepend a dollar sign to the name. Again, $match may be used multiple times. And virtually every other stage can be used after it, with a few exceptions that we'll cover later in the course. Instrumental in understanding $match and the context of an aggregation pipeline, I invite you to think of $match as a filter, rather than a find.
 
