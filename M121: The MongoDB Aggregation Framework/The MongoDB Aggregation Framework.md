@@ -94,7 +94,7 @@ Let's take a few minutes to talk about the structure and syntax of the *aggregat
 db.userColl.aggregate([{stage 1}, {stage 2}, {...stage N}], {options})
 ```
 
-For example, specifying whether to allow disk use for *large aggregations*, or to view the explain plan of the aggregation to see whether it is using indexes, or if the server optimized the *pipeline*. Let's take a look at a very simple, but very real pipeline and discuss the syntax. Here, we have a match stage that checks whether the atmoshperic composition contains oxygen or not.
+For example, specifying whether to allow disk use for *large aggregations*, or to view the *explain plan of the aggregation to see whether it is using indexes*, or if the *server optimized the pipeline*. Let's take a look at a very simple, but very real *pipeline* and discuss the syntax. Here, we have a *match stage* that checks whether the atmoshperic composition contains *oxygen* or not.
 
 And if the mean temperature falls within this range. Then, we have a project stage that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our options object. Each stage is composed of either operators or expressions. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the Aggregation Pipeline Quick Reference page that's linked below this video.
 
