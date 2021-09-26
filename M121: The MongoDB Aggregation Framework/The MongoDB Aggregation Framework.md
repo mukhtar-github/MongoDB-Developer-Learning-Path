@@ -96,6 +96,22 @@ db.userColl.aggregate([{stage 1}, {stage 2}, {...stage N}], {options})
 
 For example, specifying whether to allow disk use for *large aggregations*, or to view the *explain plan of the aggregation to see whether it is using indexes*, or if the *server optimized the pipeline*. Let's take a look at a very simple, but very real *pipeline* and discuss the syntax. Here, we have a *match stage* that checks whether the atmoshperic composition contains *oxygen* or not.
 
+```javascript
+db.solarSystem.aggregate([{
+    $match: {
+        atmosphericComposition: {$in: [/02/]},
+        meanTemperature: {$gte: -40, $lte: 40}
+    }
+}, {
+    $project: {
+        _id: 0,
+        name: 1,
+        hasMoons: {$gt: ["numberOfMoons", 0]}
+    }
+}, {allowDiskUse: true}]
+)
+```
+
 And if the mean temperature falls within this range. Then, we have a project stage that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our options object. Each stage is composed of either operators or expressions. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the Aggregation Pipeline Quick Reference page that's linked below this video.
 
 Throughout the course, we'll be using the terms operator and expression, and it's vital that you can quickly access the documentation for these. So what's an operator? For this course, when we say operators, we mean either query operators or aggregation stages. In this example, $match and $project are aggregation operators, and $in, $gte, and $lte, are query operators.
