@@ -87,7 +87,12 @@ All we have to do is *compose the pipeline*. Some key takeaways to remember. *Pi
 
 ### Aggregation Structure and Syntax
 
-Let's take a few minutes to talk about the structure and syntax of the *aggregation framework. The aggregation framework has a simple and reliable structure and repeatable syntax. Pipelines* may contain one or more stages. Each stage is a JSON object of key value pairs. With only a few exceptions, we can have as many stages as we like. Additionally, options may be passed in.
+Let's take a few minutes to talk about the structure and syntax of the *aggregation framework. The aggregation framework has a simple and reliable structure and repeatable syntax. Pipelines* may contain *one or more stages*. Each *stage is a JSON object of key value pairs*. With only a few exceptions, we can have as many *stages* as we like. Additionally, options may be passed in.
+
+```javascript
+// Pipeline Stages
+db.userColl.aggregate([{stage 1}, {stage 2}, {...stage N}], {options})
+```
 
 For example, specifying whether to allow disk use for *large aggregations*, or to view the explain plan of the aggregation to see whether it is using indexes, or if the server optimized the *pipeline*. Let's take a look at a very simple, but very real pipeline and discuss the syntax. Here, we have a match stage that checks whether the atmoshperic composition contains oxygen or not.
 
