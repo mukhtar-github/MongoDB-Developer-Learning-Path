@@ -94,7 +94,7 @@ Let's take a few minutes to talk about the structure and syntax of the *aggregat
 db.userColl.aggregate([{stage 1}, {stage 2}, {...stage N}], {options})
 ```
 
-For example, specifying whether to allow disk use for *large aggregations*, or to view the *explain plan of the aggregation to see whether it is using indexes*, or if the *server optimized the pipeline*. Let's take a look at a very simple, but very real *pipeline* and discuss the syntax. Here, we have a *match stage* that checks whether the atmoshperic composition contains *oxygen* or not.
+For example, specifying whether to allow disk use for *large aggregations*, or to view the *explain plan of the aggregation to see whether it is using indexes*, or if the *server optimized the pipeline*. Let's take a look at a very simple, but very real *pipeline* and discuss the syntax. Here, we have a *match stage* that checks whether the *atmoshperic composition* contains *oxygen* or not.
 
 ```javascript
 db.solarSystem.aggregate([{
@@ -106,15 +106,15 @@ db.solarSystem.aggregate([{
     $project: {
         _id: 0,
         name: 1,
-        hasMoons: {$gt: ["numberOfMoons", 0]}
+        hasMoons: {$gt: ["$numberOfMoons", 0]}
     }
 }, {allowDiskUse: true}]
 )
 ```
 
-And if the mean temperature falls within this range. Then, we have a project stage that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our options object. Each stage is composed of either operators or expressions. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the Aggregation Pipeline Quick Reference page that's linked below this video.
+And if the *mean temperature* falls within this range. Then, we have a *project stage* that reshapes the document and calculates the new value. More on this in a moment. Lastly, this is our *options object - {allowDiskUse: true}*. Each stage is composed of either *operators or expressions*. As we continue through the course, you'll be introduced to many of these. Make sure you bookmark the *Aggregation Pipeline* Quick Reference page that's linked below this video.
 
-Throughout the course, we'll be using the terms operator and expression, and it's vital that you can quickly access the documentation for these. So what's an operator? For this course, when we say operators, we mean either query operators or aggregation stages. In this example, $match and $project are aggregation operators, and $in, $gte, and $lte, are query operators.
+Throughout the course, we'll be using the terms *operator and expression*, and it's vital that you can quickly access the documentation for these. So what's an *operator*? For this course, when we say *operators, we mean either query operators or aggregation stages*. In this example, *$match and $project are aggregation operators, and $in, $gte, and $lte, are query operators*.
 
 As a general rule, operators always appear in the key position of a document. $match is a little special and we'll learn about it later. What's an expression? Expressions act a lot like functions. We provide arguments and they provide a computed output. And just like functions, expressions can be composed to form powerful new data transformations. MongoDB provides expressions for working with and producing values for many types of values.
 

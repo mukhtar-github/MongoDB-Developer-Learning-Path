@@ -106,7 +106,6 @@ about to fork child process, waiting until server is ready for connections.
 forked process: 1494
 child process started successfully, parent exiting
 
-
 rm -r repl_set
 rmdir (filename)
 mongos> cls -- for clear screen
@@ -143,6 +142,5 @@ mongoimport products_2.json --drop --port 26000 -u "m103-admin" -p "m103-pass" -
 
 vim -r products_2.json
 
-
-
+***
 mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
