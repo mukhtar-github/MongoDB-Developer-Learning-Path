@@ -378,6 +378,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "planets" : 8 }
 ```
 
-With *find*, we can do something like this if we want to project out the undescribed field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for $match. Again, we encourage you to think of $match as more of a filter than a find. Once documents are in an aggregation pipeline, and we're shaping them with new fields and new data, we'll be using $match heavily to keep filtering documents out.
+With *find*, we can do something like this if we want to project out the (_id) field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for *$match*. Again, we encourage you to think of *$match* as more of a *filter than a find*. Once documents are in an *aggregation pipeline*, and we're shaping them with new *fields and new data*, we'll be using *$match* heavily to keep filtering documents out.
 
-Some key things to remember. A $match stage may contain a $text query operator, but it must be the first stage in the pipeline. $match come early in an aggregation pipeline, you cannot use $where with match, and $match uses the same query syntax as find.
+Some key things to remember. A *$match stage may contain a $text query operator*, but it must be the first stage in the *pipeline. $match come early in an aggregation pipeline, you cannot use $where with match, and $match uses the same query syntax* as find.
