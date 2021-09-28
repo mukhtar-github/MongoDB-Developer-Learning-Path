@@ -359,7 +359,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({ "type": { "$n
         "numberOfMoons" : 14,
         "hasRings" : true,
         "hasMagneticField" : true
-}
+} ...
 ```
 
 Let's observe this another way. First, let's *count the number of documents with types that don't equal star*. It should be *eight*, now let's see how many documents make it through our *$match stage*. I'm going to use the utility station this example called *count*, that you'll learn about later. Here, we can see that *eight documents pass through our aggregation*. Sorry, *Pluto. Lastly, $match* does not have any mechanism for projection.
@@ -378,6 +378,59 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "planets" : 8 }
 ```
 
-With *find*, we can do something like this if we want to project out the (_id) field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for *$match*. Again, we encourage you to think of *$match* as more of a *filter than a find*. Once documents are in an *aggregation pipeline*, and we're shaping them with new *fields and new data*, we'll be using *$match* heavily to keep filtering documents out.
+With *find*, we can do something like this if we want to project out the (_id) field. Although this may seem like a limitation, we will soon learn about a powerful stage that allows us to do this and much, much more. And that's it for *$match*. Again, we encourage you to think of *$match* as more of a *filter than a find*.
 
-Some key things to remember. A *$match stage may contain a $text query operator*, but it must be the first stage in the *pipeline. $match come early in an aggregation pipeline, you cannot use $where with match, and $match uses the same query syntax* as find.
+```javascript
+// matching on value, and removing ``_id`` from projected document
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({"name": "Earth"}, {"_id": 0}).pretty()
+{
+        "name" : "Earth",
+        "type" : "Terrestrial planet",
+        "orderFromSun" : 3,
+        "radius" : {
+            "value" : 6378.137,
+            "units" : "km"
+        },
+        "mass" : {
+            "value" : 5.9723e+24,
+            "units" : "kg"
+        },
+        "sma" : {
+            "value" : 149600000,
+            "units" : "km"
+        },
+        "orbitalPeriod" : {
+            "value" : 1,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0167,
+        "meanOrbitalVelocity" : {
+            "value" : 29.78,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 1,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 23.45,
+            "units" : "degrees"
+        },
+        "meanTemperature" : 15,
+        "gravity" : {
+            "value" : 9.8,
+            "units" : "m/s^2"
+        },
+        "escapeVelocity" : {
+            "value" : 11.18,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 5.52,
+        "atmosphericComposition" : "N2+O2",
+        "numberOfMoons" : 1,
+        "hasRings" : false,
+        "hasMagneticField" : true
+}
+```
+
+Once documents are in an *aggregation pipeline*, and we're shaping them with new *fields and new data*, we'll be using *$match* heavily to keep filtering documents out. Some key things to remember. A *$match stage may contain a $text query operator*, but it must be the first stage in the *pipeline. $match come early in an aggregation pipeline, you cannot use $where with match, and $match uses the same query syntax* as find.
