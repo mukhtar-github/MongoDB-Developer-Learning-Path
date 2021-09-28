@@ -437,12 +437,93 @@ Once documents are in an *aggregation pipeline*, and we're shaping them with new
 
 ### Basic Aggregation - $match and $project
 
-### Lab - $match
+### Lab - $match 1
 
-For this course, you will need to create m121 directory in your system.
+For this course, you will need to create *m121* directory in your system.
 
-Please navigate to the m121 directory from your terminal and then connect to the class Atlas cluster through the mongo shell using the following connection string:
+Please navigate to the *m121* directory from your terminal and then connect to the class Atlas cluster through the mongo shell using the following connection string:
 
 ```javascript
 mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
+```
+
+The above connection string will connect you to the aggregations database. You can verify it by running the following command in the *mongo shell*:
+
+```javascript
+db
+```
+
+**Note**: You will have access to the **aggregations** database. The **m121** user only has permission to access this database in the cluster.
+
+After connecting to the cluster, ensure you can see the movies collection by typing **show collections** and then run the command **db.movies.findOne()**. Take a moment to familiarize yourself with the schema.
+
+Once you have familiarized yourself with the schema, continue to the next tab.
+
+#### Answer 1
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~$ cd /var/m121
+mukhtar@mukhtar-Aspire-ES1-431:/var/m121$ mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
+{"t":{"$date":"2021-09-28T03:47:36.391Z"},"s":"W",  "c":"CONTROL",  "id":23321,   "ctx":"main","msg":"Option: This name is deprecated. Please use the preferred name instead.","attr":{"deprecatedName":"ssl","preferredName":"tls"}}
+MongoDB shell version v4.4.9
+connecting to: mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?authSource=admin&compressors=disabled&gssapiServiceName=mongodb&replicaSet=Cluster0-shard-0
+{"t":{"$date":"2021-09-28T03:47:37.945Z"},"s":"W",  "c":"NETWORK",  "id":23019,   "ctx":"ReplicaSetMonitor-TaskExecutor","msg":"DNS resolution while connecting to peer was slow","attr":{"peer":"cluster0-shard-00-00-jxeqq.mongodb.net:27017","durationMillis":1027}}
+Implicit session: session { "id" : UUID("7ffde0a0-ab98-4db2-85cd-8e0ae627abd9") }
+MongoDB server version: 4.2.16
+WARNING: shell and server versions do not match
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db
+aggregations
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> show collections
+air_airlines
+air_alliances
+air_routes
+bronze_banking
+child_reference
+customers
+employees
+exoplanets
+gold_banking
+icecream_data
+movies
+nycFacilities
+parent_reference
+silver_banking
+solarSystem
+stocks
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.findOne()
+{
+        "_id" : ObjectId("573a1390f29313caabcd4192"),
+        "title" : "The Conjuring of a Woman at the House of Robert Houdin",
+        "year" : 1896,
+        "runtime" : 1,
+        "cast" : [
+            "Jeanne d'Alcy",
+            "Georges M�li�s"
+        ],
+        "plot" : "A woman disappears on stage.",
+        "fullplot" : "An elegantly dressed man enters through a stage door onto a set with decorated back screen, a chair and small table. He brings a well-dressed women through the door, spreads a newspaper on the floor, and places the chair on it. She sits and fans herself; he covers her with a diaphanous cloth. She disappears; he tries to conjure her back with incomplete results. Can he go beyond the bare bones of a conjuring trick and succeed in the complete reconstitution of a the lady?",
+        "lastupdated" : "2015-08-26 00:05:55.493000000",
+        "type" : "movie",
+        "directors" : [
+            "Georges M�li�s"
+        ],
+        "imdb" : {
+            "rating" : 6.3,
+            "votes" : 759,
+            "id" : 75
+        },
+        "countries" : [
+            "France"
+        ],
+        "genres" : [
+            "Short"
+        ],
+        "tomatoes" : {
+            "viewer" : {
+                "rating" : 3.7,
+                "numReviews" : 59
+            },
+            "lastUpdated" : ISODate("2015-09-11T17:46:29Z")
+        }
+}
 ```
