@@ -561,3 +561,19 @@ What is the answer?
 
 #### Answer 1
 
+```javascript
+var pipeline = [ { 
+    $match: { 
+       "imdb" : {
+            "rating" : { "$gte": 7}
+        },
+        "genres" : [
+            {"$ne": "Crime", "Horror"}
+        ],
+        "rated" : { "$eq": "PG", "G" },
+        "languages" : [ 
+            { "$eq": "English", "Japanese"} 
+        ],
+    } 
+} ]
+```
