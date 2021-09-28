@@ -152,3 +152,4 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ vim validateLab2.js
 mukhtar@mukhtar-Aspire-ES1-431:~$ sudo mkdir -p /var/m121/validateLab2.js
 mukhtar@mukhtar-Aspire-ES1-431:~$ cat /var/m121/validateLab1.js
 cat: /var/m121/validateLab1.js: Is a directory
+cd /var/m121
