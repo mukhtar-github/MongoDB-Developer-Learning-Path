@@ -546,3 +546,18 @@ var pipeline = [ { $match: { ... } } ]
 * Download the **m121/chapter1.zip** handout with this lab. Unzip the downloaded folder and copy its contents to the **m121** directory.
 
 * Load **validateLab1.js** into **mongo** shell
+
+```javascript
+load('validateLab1.js')
+```
+
+* And run the **validateLab1** validation method
+
+```javascript
+validateLab1(pipeline)
+```
+
+What is the answer?
+
+#### Answer 1
+
