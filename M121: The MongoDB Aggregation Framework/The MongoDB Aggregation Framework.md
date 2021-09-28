@@ -459,8 +459,6 @@ After connecting to the cluster, ensure you can see the movies collection by typ
 
 Once you have familiarized yourself with the schema, continue to the next tab.
 
-#### Answer 1
-
 ```javascript
 mukhtar@mukhtar-Aspire-ES1-431:~$ cd /var/m121
 mukhtar@mukhtar-Aspire-ES1-431:/var/m121$ mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
@@ -527,3 +525,12 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.findOne()
         }
 }
 ```
+
+#### Problem 1
+
+Help MongoDB pick a movie our next movie night! Based on employee polling, we've decided that potential movies must meet the following criteria.
+
+* **imdb**.rating is at least 7
+* **genres** does not contain "Crime" or "Horror"
+* **rated** is either "PG" or "G"
+* **languages** contains "English" and "Japanese"
