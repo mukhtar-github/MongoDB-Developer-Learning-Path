@@ -534,3 +534,15 @@ Help MongoDB pick a movie our next movie night! Based on employee polling, we've
 * **genres** does not contain "Crime" or "Horror"
 * **rated** is either "PG" or "G"
 * **languages** contains "English" and "Japanese"
+
+Assign the aggregation to a variable named pipeline, like:
+
+```javascript
+var pipeline = [ { $match: { ... } } ]
+```
+
+* As a hint, your aggregation should return 23 documents. You can verify this by typing **db.movies.aggregate(pipeline).itcount()**
+
+* Download the **m121/chapter1.zip** handout with this lab. Unzip the downloaded folder and copy its contents to the **m121** directory.
+
+* Load **validateLab1.js** into **mongo** shell
