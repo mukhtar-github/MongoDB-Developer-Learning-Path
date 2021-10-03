@@ -562,21 +562,15 @@ What is the answer?
 #### Answer 1
 
 ```javascript
-var pipeline = [{ 
-    $match: {
-        "imdb.rating" : { "$gte": 7},
-        "genres" : { "$nin": ["Crime", "Horror"] },
-        "rated" : { "$in": ["PG", "G"] },
-        "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
-    } 
-} ]
-db.movies.aggregate([{ 
-    $match: {
-        "imdb.rating" : { "$gte": 7},
-        "genres" : { "$nin": ["Crime", "Horror"] },
-        "rated" : { "$in": ["PG", "G"] },
-        "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
-    } 
-} ]).itcount()
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [{ 
+...     $match: {
+...         "imdb.rating" : { "$gte": 7},
+...         "genres" : { "$nin": ["Crime", "Horror"] },
+...         "rated" : { "$in": ["PG", "G"] },
+...         "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
+...     } 
+... } ]
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline).itcount()
+23
 
 ```
