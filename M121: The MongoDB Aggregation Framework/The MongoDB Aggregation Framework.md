@@ -568,11 +568,11 @@ var pipeline = [ {
             "rating" : { "$gte": 7}
         },
         "genres" : [
-            {"$ne": "Crime", "Horror"}
+            {"$nor": "Crime", "Horror"}
         ],
-        "rated" : { "$eq": "PG", "G" },
+        "rated" : { "$or": "PG", "G" },
         "languages" : [ 
-            { "$eq": "English", "Japanese"} 
+            { "$and": "English", "Japanese"} 
         ],
     } 
 } ]
