@@ -562,18 +562,21 @@ What is the answer?
 #### Answer 1
 
 ```javascript
-var pipeline = [ { 
-    $match: { 
-       "imdb" : {
-            "rating" : { "$gte": 7}
-        },
-        "genres" : [
-            {"$nor": "Crime", "Horror"}
-        ],
-        "rated" : { "$or": "PG", "G" },
-        "languages" : [ 
-            { "$and": "English", "Japanese"} 
-        ],
+var pipeline = [{ 
+    $match: {
+        "imdb.rating" : { "$gte": 7},
+        "genres" : { "$nin": ["Crime", "Horror"] },
+        "rated" : { "$in": ["PG", "G"] },
+        "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
     } 
 } ]
+db.movies.aggregate([{ 
+    $match: {
+        "imdb.rating" : { "$gte": 7},
+        "genres" : { "$nin": ["Crime", "Horror"] },
+        "rated" : { "$in": ["PG", "G"] },
+        "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
+    } 
+} ]).itcount()
+
 ```
