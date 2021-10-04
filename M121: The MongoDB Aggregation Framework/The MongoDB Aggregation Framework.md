@@ -582,3 +582,10 @@ Answer is 15
 
 THe next stage  we will learn about is *$project*, like *$match*, it is a vital stage to thoroughly understand to be successful with the aggregation framework. Please don't think of *$project* like the *projection* functionality available with the *find()* query operator. While it is true, *$project* is much more. Not only can we selectively remove and retain fields, we can re-assign exiisting field values and derive entirely new fields.
 
+A common method or function available in many programming languages is *$map*. It is a higher order function that applies some transformation among a collection. If *$match* is like a filter method, *$project* is like *$map*. Here is the basic syntax for *$project*.
+
+```javascript
+db.solarSystem.aggregate([{ "$project": {...} }])
+```
+
+We append a *$* sign to signify that it is an *aggregation* operator, then open up with a curly brace and close with a curly brace. Between the two braces is where we use aggregation* expressions and perform field logic.
