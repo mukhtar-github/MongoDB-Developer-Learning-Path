@@ -588,4 +588,19 @@ A common method or function available in many programming languages is *$map*. I
 db.solarSystem.aggregate([{ "$project": {...} }])
 ```
 
-We append a *$* sign to signify that it is an *aggregation* operator, then open up with a curly brace and close with a curly brace. Between the two braces is where we use aggregation* expressions and perform field logic.
+We append a *$* sign to signify that it is an *aggregation* operator, then open up with a curly brace and close with a curly brace. Between the two braces is where we use *aggregation* expressions and perform field logic. More on that soon. Here is how we'd specify values to remove and retain, just like the *projection* functionality available with the *find* query operator.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1 } }])
+{ "name" : "Earth" }
+{ "name" : "Neptune" }
+{ "name" : "Uranus" }
+{ "name" : "Saturn" }
+{ "name" : "Jupiter" }
+{ "name" : "Venus" }
+{ "name" : "Mercury" }
+{ "name" : "Sun" }
+{ "name" : "Mars" }
+```
+
+This specifies that we wish to remove the *_id* and retain the *name* field
