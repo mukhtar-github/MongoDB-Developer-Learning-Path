@@ -641,4 +641,17 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "name" : "Mars", "gravity" : { "value" : 3.71 } }
 ```
 
-There, the data we wanted. *$project* is already showing to be pretty useful, but so far it appears to be identical to *projection* available with the *find* query operator. Let's start exploring what makes *$project* so powerful.
+There, the data we wanted. *$project* is already showing to be pretty useful, but so far it appears to be identical to *projection* available with the *find* query operator. Let's start exploring what makes *$project* so powerful. Instead of just returning a subdocument with just the value field, let's directly assign the value to the *gravity* field.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1, gravity: "$gravity.value" } }])
+{ "name" : "Earth", "gravity" : 9.8 }
+{ "name" : "Neptune", "gravity" : 11.15 }
+{ "name" : "Uranus", "gravity" : 8.87 }
+{ "name" : "Saturn", "gravity" : 10.44 }
+{ "name" : "Jupiter", "gravity" : 24.79 }
+{ "name" : "Venus", "gravity" : 8.87 }
+{ "name" : "Mercury", "gravity" : 3.24 }
+{ "name" : "Sun", "gravity" : 274 }
+{ "name" : "Mars", "gravity" : 3.71 }
+```
