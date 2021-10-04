@@ -617,3 +617,5 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d51"), "name" : "Sun", "gravity" : { "value" : 274, "units" : "m/s^2" } }
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d55"), "name" : "Mars", "gravity" : { "value" : 3.71, "units" : "m/s^2" } }
 ```
+
+And ofcourse, an exception. Here we can say we're getting *name* and the *gravity* field, but we're also getting the *_id* field. The *_id* is the only field that we must explicitly remove.
