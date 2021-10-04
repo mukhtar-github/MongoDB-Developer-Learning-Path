@@ -577,3 +577,7 @@ true
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> validateLab1(pipeline)
 Answer is 15
 ```
+
+### Shaping documents with $project
+
+THe next stage  we will learn about is *$project*, like *$match*, it is a vital stage to thoroughly understand to be successful with the aggregation framework. Please don't think of *$project* like the *projection* functionality available with the *find()* query operator. While it is true, *$project* is much more.
