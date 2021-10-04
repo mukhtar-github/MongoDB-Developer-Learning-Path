@@ -572,5 +572,8 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [{
 ... } ]
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline).itcount()
 23
-
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> load("/home/mukhtar/Documents/validateLab1.js")
+true
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> validateLab1(pipeline)
+Answer is 15
 ```
