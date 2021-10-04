@@ -618,4 +618,26 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d55"), "name" : "Mars", "gravity" : { "value" : 3.71, "units" : "m/s^2" } }
 ```
 
-And ofcourse, an exception. Here we can say we're getting *name* and the *gravity* field, but we're also getting the *_id* field. The *_id* is the only field that we must explicitly remove.
+And ofcourse, an exception. Here we can say we're getting *name* and the *gravity* field, but we're also getting the *_id* field. The *_id* is the only field that we must explicitly remove. All others will be removed when we specify at least one field to retain. Also, it looks like who ever puts this data together used the international system of units, so let's also just get the value.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1, gravity.value: 1 } }])
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:66
+```
+
+An error. One thing to keep in mind, once we start diving into documents selecting on subfields, we must surround our arguments with quotes.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1, "gravity.value": 1 } }])
+{ "name" : "Earth", "gravity" : { "value" : 9.8 } }
+{ "name" : "Neptune", "gravity" : { "value" : 11.15 } }
+{ "name" : "Uranus", "gravity" : { "value" : 8.87 } }
+{ "name" : "Saturn", "gravity" : { "value" : 10.44 } }
+{ "name" : "Jupiter", "gravity" : { "value" : 24.79 } }
+{ "name" : "Venus", "gravity" : { "value" : 8.87 } }
+{ "name" : "Mercury", "gravity" : { "value" : 3.24 } }
+{ "name" : "Sun", "gravity" : { "value" : 274 } }
+{ "name" : "Mars", "gravity" : { "value" : 3.71 } }
+```
+
