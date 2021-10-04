@@ -580,4 +580,5 @@ Answer is 15
 
 ### Shaping documents with $project
 
-THe next stage  we will learn about is *$project*, like *$match*, it is a vital stage to thoroughly understand to be successful with the aggregation framework. Please don't think of *$project* like the *projection* functionality available with the *find()* query operator. While it is true, *$project* is much more.
+THe next stage  we will learn about is *$project*, like *$match*, it is a vital stage to thoroughly understand to be successful with the aggregation framework. Please don't think of *$project* like the *projection* functionality available with the *find()* query operator. While it is true, *$project* is much more. Not only can we selectively remove and retain fields, we can re-assign exiisting field values and derive entirely new fields.
+
