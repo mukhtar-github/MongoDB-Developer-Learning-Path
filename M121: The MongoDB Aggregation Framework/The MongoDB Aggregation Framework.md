@@ -655,3 +655,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "name" : "Sun", "gravity" : 274 }
 { "name" : "Mars", "gravity" : 3.71 }
 ```
+
