@@ -686,4 +686,42 @@ Let's have a bit of fun and use the *aggregation* framework to calculate a value
 
 We'll cover *expresions* in much greater detail shortly, but I'm going to break this down since this is our first time of seeing it, and the syntax can catch people off guard. I weigh about *86* kilograms. Looking at the previous results, it looks like I devide the gravity of a body by the gravity of Earth and then multiply that value by my weight, I can find out how much I'd weigh on every main body.
 
-I'm going to have to use an expression to accomplish this. The first expression I'm going to use is the *$multiply* arithmetic expression. *$multiply* takes an array of values and multiplies them together. So I know, I need to multiply my weight times the ratio of a specific planet's gravity devided by the Earth's gravity.
+I'm going to have to use an expression to accomplish this. The first expression I'm going to use is the *$multiply* arithmetic expression. *$multiply* takes an array of values and multiplies them together. So I know, I need to multiply my weight times the ratio of a specific planet's gravity divided by the Earth's gravity. That will look something like this.
+
+```javascript
+{ $multiply: [ gravityRatio, 86] }
+```
+
+I know my weight is about *86* kilograms, so I can just hard code that for now. To calculate the gravity ratio, I 'll need to use the *$divide* arithmetic expression.
+
+```javascript
+{ $$divide: [ "gravity.value", gravityOfEarth ] }
+```
+
+*$divide* takes an array of two values and divides the fisrt by the second. Within *$devide*, I 'll need to reference the information at the value subfeild within gravity. Let's see what this will look like.
+
+```javascript
+{ $$divide: [ "gravity.value", 9.8 ] }
+```
+
+Here we're using a field path expression to refer to information within the document, specifically the information found at the value field within the gravity field. I know the gravity of Earth is around *9.8* meters per second-per second, so I'll just hard code that in. So putting it all together, we have the following.
+
+```javascript
+// creating a new field ``myWeight`` using expressions
+db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "myWeight": { "$multiply": [ { "$divide": [ "$gravity.value", 9.8 ] }, 86 ] } }}]);
+```
+
+All of this is assigned to a new field we create called *myWeight*.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "myWeight": { "$multiply": [ { "$divide": [ "$gravity.value", 9.8 ] }, 86 ] } }}])
+{ "name" : "Earth", "myWeight" : 86 }
+{ "name" : "Neptune", "myWeight" : 97.8469387755102 }
+{ "name" : "Uranus", "myWeight" : 77.83877551020407 }
+{ "name" : "Saturn", "myWeight" : 91.61632653061224 }
+{ "name" : "Jupiter", "myWeight" : 217.54489795918363 }
+{ "name" : "Venus", "myWeight" : 77.83877551020407 }
+{ "name" : "Mercury", "myWeight" : 28.432653061224492 }
+{ "name" : "Sun", "myWeight" : 2404.4897959183672 }
+{ "name" : "Mars", "myWeight" : 32.55714285714286 }
+```
