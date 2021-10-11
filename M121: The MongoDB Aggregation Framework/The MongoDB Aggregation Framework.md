@@ -591,6 +591,7 @@ db.solarSystem.aggregate([{ "$project": {...} }])
 We append a *$* sign to signify that it is an *aggregation* operator, then open up with a curly brace and close with a curly brace. Between the two braces is where we use *aggregation* expressions and perform field logic. More on that soon. Here is how we'd specify values to remove and retain, just like the *projection* functionality available with the *find* query operator.
 
 ```javascript
+// project ``name`` and remove ``_id``
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1 } }])
 { "name" : "Earth" }
 { "name" : "Neptune" }
@@ -606,6 +607,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 This specifies that we wish to remove the *_id* and retain the *name* field. Notice that since we have specified a value to retain, we must specify each value we wish to retain. Let's also keep the *gravity* field so we can see some difference in real data.
 
 ```javascript
+// project ``name`` and ``gravity`` fields, including default ``_id``
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { name: 1, gravity: 1 } }])
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d54"), "name" : "Earth", "gravity" : { "value" : 9.8, "units" : "m/s^2" } }
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d59"), "name" : "Neptune", "gravity" : { "value" : 11.15, "units" : "m/s^2" } }
@@ -629,6 +631,7 @@ uncaught exception: SyntaxError: missing : after property id :
 An error. One thing to keep in mind, once we start diving into documents selecting on subfields, we must surround our arguments with quotes.
 
 ```javascript
+// using dot-notation to express the projection fields
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1, "gravity.value": 1 } }])
 { "name" : "Earth", "gravity" : { "value" : 9.8 } }
 { "name" : "Neptune", "gravity" : { "value" : 11.15 } }
@@ -644,6 +647,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 There, the data we wanted. *$project* is already showing to be pretty useful, but so far it appears to be identical to *projection* available with the *find* query operator. Let's start exploring what makes *$project* so powerful. Instead of just returning a subdocument with just the value field, let's directly assign the value to the *gravity* field.
 
 ```javascript
+// reassing ``gravity`` field with value from ``gravity.value`` embeded field
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$project": { _id: 0, name: 1, gravity: "$gravity.value" } }])
 { "name" : "Earth", "gravity" : 9.8 }
 { "name" : "Neptune", "gravity" : 11.15 }
@@ -656,4 +660,20 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "name" : "Mars", "gravity" : 3.71 }
 ```
 
-Here, we can see that we are indeed reassigning the gravity field to now contain the information that was available at *gravity.value*. We're prepending *gravity.value* with a dollar sign. This is one of the many *aggregation expressions*, and we're directing the **aggregation framework* to look for and fetch the information in the document at *gravity.value*, or a *field path expression*
+Here, we can see that we are indeed reassigning the gravity field to now contain the information that was available at *gravity.value*. We're prepending *gravity.value* with a dollar sign. This is one of the many *aggregation expressions*, and we're directing the **aggregation framework* to look for and fetch the information in the document at *gravity.value*, or a *field path expression*.
+
+AAs discussed in the *aggregation structure and syntax* lesson, this is one of the ways we reference documents for information. We can also create a new field called *surfaceGravity*.
+
+```javascript
+// creating a document new field ``surfaceGravity``
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "surfaceGravity": "$gravity.value" }}])
+{ "name" : "Earth", "surfaceGravity" : 9.8 }
+{ "name" : "Neptune", "surfaceGravity" : 11.15 }
+{ "name" : "Uranus", "surfaceGravity" : 8.87 }
+{ "name" : "Saturn", "surfaceGravity" : 10.44 }
+{ "name" : "Jupiter", "surfaceGravity" : 24.79 }
+{ "name" : "Venus", "surfaceGravity" : 8.87 }
+{ "name" : "Mercury", "surfaceGravity" : 3.24 }
+{ "name" : "Sun", "surfaceGravity" : 274 }
+{ "name" : "Mars", "surfaceGravity" : 3.71 }
+```
