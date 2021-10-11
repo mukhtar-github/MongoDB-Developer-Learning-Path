@@ -662,7 +662,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 
 Here, we can see that we are indeed reassigning the gravity field to now contain the information that was available at *gravity.value*. We're prepending *gravity.value* with a dollar sign. This is one of the many *aggregation expressions*, and we're directing the **aggregation framework* to look for and fetch the information in the document at *gravity.value*, or a *field path expression*.
 
-AAs discussed in the *aggregation structure and syntax* lesson, this is one of the ways we reference documents for information. We can also create a new field called *surfaceGravity*.
+AAs discussed in the *aggregation structure and syntax* lesson, this is one of the ways we reference documents for information. We can also create a new field called *surfaceGravity*. This isn't just renaming the *gravity* field. It's creating an entirely new field. Very powerful. And we'll be using this functionality a lot through the course.
 
 ```javascript
 // creating a document new field ``surfaceGravity``
@@ -677,3 +677,5 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 { "name" : "Sun", "surfaceGravity" : 274 }
 { "name" : "Mars", "surfaceGravity" : 3.71 }
 ```
+
+Let's have a bit of fun and use the *aggregation* framework to calculate a value. I'd like to see what my weight would be on each main body in the solar system.
