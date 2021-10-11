@@ -726,4 +726,11 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 { "name" : "Mars", "myWeight" : 32.55714285714286 }
 ```
 
-Awesome. We can see I'd weigh about *32.5* kilograms on *Mars* and *2404* kilograms on the *Sun*.
+Awesome. We can see I'd weigh about *32.5* kilograms on *Mars* and *2404* kilograms on the *Sun*. We're begining to see the power of *$project*. *$project* is a powerful stage of the *aggregation framework*. Not only can we remove and retain fields, we can derive new fields and reassign existing fields. *$project* may be used as many times as desired within the *aggregation pipeline*, and it should be used aggressively to trim data out of documents, that isn't required, in order to keep our *pipelines* performant.
+
+Some key things to remember.
+
+* Once we specify one field to retain, we must specify all fields we want to retain. *_id* field is the exception to this.
+* Beyond simple removing and retaining fields, *$project* let us add new fields.
+* *$project* can be used as many times as required within an *aggregation pipeline*.
+* And finally, *$project* can be used to reassign values to existing field names and to derive entirely new fields.
