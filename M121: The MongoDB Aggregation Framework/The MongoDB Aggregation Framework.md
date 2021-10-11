@@ -695,13 +695,13 @@ I'm going to have to use an expression to accomplish this. The first expression 
 I know my weight is about *86* kilograms, so I can just hard code that for now. To calculate the gravity ratio, I 'll need to use the *$divide* arithmetic expression.
 
 ```javascript
-{ $$divide: [ "gravity.value", gravityOfEarth ] }
+{ $divide: [ "gravity.value", gravityOfEarth ] }
 ```
 
 *$divide* takes an array of two values and divides the fisrt by the second. Within *$devide*, I 'll need to reference the information at the value subfeild within gravity. Let's see what this will look like.
 
 ```javascript
-{ $$divide: [ "gravity.value", 9.8 ] }
+{ $divide: [ "gravity.value", 9.8 ] }
 ```
 
 Here we're using a field path expression to refer to information within the document, specifically the information found at the value field within the gravity field. I know the gravity of Earth is around *9.8* meters per second-per second, so I'll just hard code that in. So putting it all together, we have the following.
@@ -725,3 +725,5 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 { "name" : "Sun", "myWeight" : 2404.4897959183672 }
 { "name" : "Mars", "myWeight" : 32.55714285714286 }
 ```
+
+Awesome. We can see I'd weigh about *32.5* kilograms on *Mars* and *2404* kilograms on the *Sun*.
