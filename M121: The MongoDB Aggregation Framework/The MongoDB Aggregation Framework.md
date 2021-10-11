@@ -678,4 +678,10 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 { "name" : "Mars", "surfaceGravity" : 3.71 }
 ```
 
-Let's have a bit of fun and use the *aggregation* framework to calculate a value. I'd like to see what my weight would be on each main body in the solar system.
+Let's have a bit of fun and use the *aggregation* framework to calculate a value. I'd like to see what my weight would be on each main body in the solar system. I'm going to hava to use an expression to accomplish this.
+
+```javascript
+{ $multiply: [ gravityRatio, weightOnEarth ] }
+```
+
+We'll cover *expresions* in much greater detail shortly, but I'm going to break this down since this is our first time of seeing it, and the syntax can catch people off guard.
