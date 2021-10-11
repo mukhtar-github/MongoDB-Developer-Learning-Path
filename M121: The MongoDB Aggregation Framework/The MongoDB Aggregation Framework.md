@@ -686,4 +686,4 @@ Let's have a bit of fun and use the *aggregation* framework to calculate a value
 
 We'll cover *expresions* in much greater detail shortly, but I'm going to break this down since this is our first time of seeing it, and the syntax can catch people off guard. I weigh about *86* kilograms. Looking at the previous results, it looks like I devide the gravity of a body by the gravity of Earth and then multiply that value by my weight, I can find out how much I'd weigh on every main body.
 
-I'm going to have to use an expression to accomplish this. The first expression I'm going to use is the *$multiply* arithmetic expression.
+I'm going to have to use an expression to accomplish this. The first expression I'm going to use is the *$multiply* arithmetic expression. *$multiply* takes an array of values and multiplies them together. So I know, I need to multiply my weight times the ratio of a specific planet's gravity devided by the Earth's gravity.
