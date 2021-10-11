@@ -656,3 +656,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{ "$proje
 { "name" : "Mars", "gravity" : 3.71 }
 ```
 
+Here, we can see that we are indeed reassigning the gravity field to now contain the information that was available at *gravity.value*.
