@@ -771,9 +771,5 @@ var pipeline = [{
         "rated" : { "$in": ["PG", "G"] },
         "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
     } 
-}, { 
-    $project: {
-
-    }
-}]
+}, { $project: { "title" : 1, "rated" : 1 }}]
 ```
