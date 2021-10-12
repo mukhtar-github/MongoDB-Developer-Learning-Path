@@ -764,12 +764,16 @@ What is the answer?
 #### Answer 2
 
 ```javascript
-var pipeline = [{ 
-    $match: {
-        "imdb.rating" : { "$gte": 7},
-        "genres" : { "$nin": ["Crime", "Horror"] },
-        "rated" : { "$in": ["PG", "G"] },
-        "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
-    } 
-}, { $project: { "title" : 1, "rated" : 1 } }]
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [{ 
+...     $match: {
+...         "imdb.rating" : { "$gte": 7},
+...         "genres" : { "$nin": ["Crime", "Horror"] },
+...         "rated" : { "$in": ["PG", "G"] },
+...         "$and" : [ { "languages": "English"}, {"languages": "Japanese" } ]
+...     } 
+... }, { $project: { "_id": 0, "title" : 1, "rated" : 1 } }]
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> load("/home/mukhtar/Documents/validateLab2.js")
+true
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> validateLab2(pipeline)
+Answer is 15
 ```
