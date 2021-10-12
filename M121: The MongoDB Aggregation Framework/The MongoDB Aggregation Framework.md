@@ -734,3 +734,31 @@ Some key things to remember.
 * Beyond simple removing and retaining fields, *$project* let us add new fields.
 * *$project* can be used as many times as required within an *aggregation pipeline*.
 * And finally, *$project* can be used to reassign values to existing field names and to derive entirely new fields.
+
+### Lab - Changing Document Shape with $project
+
+#### Problem 2
+
+Our first movie night was a success. Unfortunately, our ISP called to let us know we're close to our bandwidth quota, but we need another movie recommendation!
+
+Using the same *$match* stage from the previous lab, add a *$project* stage to only display the title and film rating (*title* and *rated* fields).
+
+* Assign the results to a variable called *pipeline*.
+
+```javascript
+var pipeline = [{ $match: {. . .} }, { $project: { . . . } }]
+```
+
+* Load *validateLab2.js* which was included in the same handout as *validateLab1.js* and execute *validateLab2(pipeline)*?
+
+```javascript
+load('./validateLab2.js')
+```
+
+* And run the *validateLab2* validation method
+
+```javascript
+validateLab2(pipeline)
+```
+
+What is the answer?
