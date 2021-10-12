@@ -138,7 +138,7 @@ And there we go. The *aggregation framework structure and syntax*. We highly rec
 
 ### $match: Filtering documents
 
-Now that we've discussed the concept of what *pipelines* are, and have given you an overview of *aggregation, and structure, and syntax*, it's time we learn about one of the most important stages, *$match. The $match* state is vital to a successful and performing *pipeline*. It should come as early as possible. And you are free to use as many *$match changes as necessary in your pipeline*.
+Now that we've discussed the concept of what *pipelines* are, and have given you an overview of *aggregation, and structure, and syntax*, it's time we learn about one of the most important stages, *$match. The $match* stage is vital to a successful and performing *pipeline*. It should come as early as possible. And you are free to use as many *$match changes as necessary in your pipeline*.
 
 ```javascript
 db.solarSystem.aggregate([{
@@ -362,7 +362,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({ "type": { "$n
 } ...
 ```
 
-Let's observe this another way. First, let's *count the number of documents with types that don't equal star*. It should be *eight*, now let's see how many documents make it through our *$match stage*. I'm going to use the utility station this example called *count*, that you'll learn about later. Here, we can see that *eight documents pass through our aggregation*. Sorry, *Pluto. Lastly, $match* does not have any mechanism for projection.
+Let's observe this another way. First, let's *count the number of documents with types that don't equal star*. It should be *eight*, now let's see how many documents make it through our *$match stage*. I'm going to use the utility station in this example called *count*, that you'll learn about later. Here, we can see that *eight documents pass through our aggregation*. Sorry, *Pluto. Lastly, $match* does not have any mechanism for projection.
 
 ```javascript
 // count the number of matching documents
