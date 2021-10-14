@@ -941,21 +941,9 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline).itcou
 
 ### $addFields and how it is similar to $project
 
-Let's now discuss another transformative stage, $addFields.
+Let's now discuss another transformative stage, *$addFields*. *$addFields* is extremely similar to *$project*, with one key difference. As the name applies, *$addFields* adds fields to a document. While with *$project*, we can selectively remove and retain fields, *$addFields* only allows you to modify the incoming pipeline documents with new computed fields or to modify existing fields.
 
-$addFields is extremely similar to $project, with one key difference.
-
-As the name applies, $addFields adds fields to a document.
-
-While with $project, we can selectively remove and retain fields, $addFields only allows you to modify the incoming pipeline documents with new computed fields or to modify existing fields.
-
-Oftentimes, we will want to derive a new field or change existing fields, and the requirement in $project that once we perform a transformation or retain a field then we must specify all fields we wish to retain can become tedious.
-
-Let's look at an example.
-
-First, we'll look at $project.
-
-Let's just extract the data from the gravity.value field and reassign it to the top level, gravity field.
+Oftentimes, we will want to derive a new field or change existing fields, and the requirement in *$project* that once we perform a transformation or retain a field then we must specify all fields we wish to retain can become tedious. Let's look at an example. First, we'll look at *$project*. Let's just extract the data from the *gravity.value* field and reassign it to the top level, *gravity* field.
 
 As expected, we can get the results back with the _id field and the gravity field we just calculated.
 
