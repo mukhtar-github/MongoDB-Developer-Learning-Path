@@ -899,3 +899,40 @@ db.movies.aggregate([
   {...$stageN}
 ]).itcount()
 ```
+
+How many movies are "labors of love"?
+
+#### Answer4
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [
+... { $match: { 
+...     "writers" : { $elemMatch: { $exists: true } }, 
+... "cast" : { $elemMatch: { $exists: true } },
+... "directors" : { $elemMatch: { $exists: true } } 
+... }
+... },
+... { $project : {
+...     "writers" : {
+...     $map : { 
+... input: "$writers",
+...                 as: "writer",
+...                 in: { 
+...     $arrayElemAt: [
+...     { $split: [ "$$writer", " (" ] },
+...                         0
+...                     ]}
+... }
+...         },
+... "cast" : 1,
+...     "directors" : 1 
+... }
+... },
+... { $project: 
+...     { "laborOfLove": { $gt: [ { $size: { $setIntersection: ["$writers", "$cast", "$directors"] } }, 0 ] } }
+... },
+...     { $match : { "laborOfLove" : true } }
+... ];
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline).itcount();
+1596
+```
