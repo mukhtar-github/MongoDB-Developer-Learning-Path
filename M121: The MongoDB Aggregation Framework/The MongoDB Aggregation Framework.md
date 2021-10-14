@@ -958,7 +958,110 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d55"), "gravity" : 3.71 }
 ```
 
-As expected, we can get the results back with the *_id* field and the *gravity* field we just calculated. Now let's remove the *_id* field and add the name field for easier reference. All right, this is pretty good. But what if we also want to keep the temperature, density, mass, radius, and SMA fields? As we can see, in order to keep the information we want, we had to be explicit, specifying which fields to retain along with performing our transformations.
+As expected, we can get the results back with the *_id* field and the *gravity* field we just calculated. Now let's remove the *_id* field and add the *name* field for easier reference.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "gravity": "$gravity.value" } }]).pretty();
+{ "name" : "Earth", "gravity" : 9.8 }
+{ "name" : "Neptune", "gravity" : 11.15 }
+{ "name" : "Uranus", "gravity" : 8.87 }
+{ "name" : "Saturn", "gravity" : 10.44 }
+{ "name" : "Jupiter", "gravity" : 24.79 }
+{ "name" : "Venus", "gravity" : 8.87 }
+{ "name" : "Mercury", "gravity" : 3.24 }
+{ "name" : "Sun", "gravity" : 274 }
+{ "name" : "Mars", "gravity" : 3.71 }
+```
+
+All right, this is pretty good. But what if we also want to keep the *temperature, density, mass, radius, and SMA* fields?
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
+... {"$project":{
+...     "_id": 0,
+...     "name": 1,
+...     "gravity": "$gravity.value",
+...     "meanTemperature": 1,
+...     "density": 1,
+...     "mass": "$mass.value",
+...     "radius": "$radius.value",
+...     "sma": "$sma.value" }
+... }]).pretty();
+{
+        "name" : "Earth",
+        "meanTemperature" : 15,
+        "gravity" : 9.8,
+        "mass" : 5.9723e+24,
+        "radius" : 6378.137,
+        "sma" : 149600000
+    }
+    {
+        "name" : "Neptune",
+        "meanTemperature" : -210,
+        "gravity" : 11.15,
+        "mass" : 1.02413e+26,
+        "radius" : 24765,
+        "sma" : 4495060000
+    }
+    {
+        "name" : "Uranus",
+        "meanTemperature" : -200,
+        "gravity" : 8.87,
+        "mass" : 8.6813e+25,
+        "radius" : 25559,
+        "sma" : 2872460000
+    }
+    {
+        "name" : "Saturn",
+        "meanTemperature" : -170,
+        "gravity" : 10.44,
+        "mass" : 5.6834e+26,
+        "radius" : 60268,
+        "sma" : 1433530000
+    }
+    {
+        "name" : "Jupiter",
+        "meanTemperature" : -150,
+        "gravity" : 24.79,
+        "mass" : 1.89819e+27,
+        "radius" : 71492,
+        "sma" : 778570000
+    }
+    {
+        "name" : "Venus",
+        "meanTemperature" : 465,
+        "gravity" : 8.87,
+        "mass" : 4.8675e+24,
+        "radius" : 6051.8,
+        "sma" : 108210000
+    }
+    {
+        "name" : "Mercury",
+        "meanTemperature" : 125,
+        "gravity" : 3.24,
+        "mass" : 3.3e+23,
+        "radius" : 4879,
+        "sma" : 57910000
+    }
+    {
+        "name" : "Sun",
+        "meanTemperature" : 5600,
+        "gravity" : 274,
+        "mass" : 1.9885e+30,
+        "radius" : 695700,
+        "sma" : 0
+    }
+    {
+        "name" : "Mars",
+        "meanTemperature" : -53,
+        "gravity" : 3.71,
+        "mass" : 6.4171e+23,
+        "radius" : 3396.2,
+        "sma" : 227920000
+}
+```
+
+As we can see, in order to keep the information we want, we had to be explicit, specifying which fields to retain along with performing our transformations.
 
 As said, this can become tedious. In comes $addFields. If we substitute $addFields for $project and execute the following pipeline, we can see that we indeed performed the desired transformations. However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
 
