@@ -795,23 +795,24 @@ db.movies.aggregate([...]).itcount()
 #### Answer 3
 
 ```javascript
-db.movies.aggregate([{$project:{"_id":0,“title1”:{$size:{$split:[“title”," "]}}},{$match:{“title1”:1}}]).itcount()
-
-
-
-
-
-
-
-db.movies.aggregate([
-{
-$project:{"_id":0,“title1”:{$size:{$split:[“title”," "]}}
-},{
-$match:{“title1”:1}
-}
-]);
-
-{$project:{_id:0, title:1, splitTitleSize:{$size:{$split:["$title", " “]}}}},
-{$match:{”splitTitleSize":1}}
-])
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [
+... { $project : 
+...         { "titleWords" : 
+...     { $size : 
+...     { $split : [ "$title" , " " ] }
+... } 
+... }
+... },
+...     { $match : { "titleWords" : 1 } }
+... ];
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline).itcount();
+8066
 ```
+
+### Optional Lab - Expressions with $project
+
+This lab will have you work with data within arrays, a common operation.
+
+Specifically, one of the arrays you'll work with is **writers**, from the **movies** collection.
+
+There are times when we want to make sure that the field is an array, and that it is not empty. We can do this within **$match**.
