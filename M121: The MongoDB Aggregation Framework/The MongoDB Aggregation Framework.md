@@ -946,6 +946,7 @@ Let's now discuss another transformative stage, *$addFields*. *$addFields* is ex
 Oftentimes, we will want to derive a new field or change existing fields, and the requirement in *$project* that once we perform a transformation or retain a field then we must specify all fields we wish to retain can become tedious. Let's look at an example. First, we'll look at *$project*. Let's just extract the data from the *gravity.value* field and reassign it to the top level, *gravity* field.
 
 ```javascript
+// reassign ``gravity`` field value
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$project": { "gravity": "$gravity.value" } }]).pretty();
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d54"), "gravity" : 9.8 }
 { "_id" : ObjectId("59a06674c8df9f3cd2ee7d59"), "gravity" : 11.15 }
@@ -961,6 +962,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 As expected, we can get the results back with the *_id* field and the *gravity* field we just calculated. Now let's remove the *_id* field and add the *name* field for easier reference.
 
 ```javascript
+// adding ``name`` and removing ``_id`` from projection
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "gravity": "$gravity.value" } }]).pretty();
 { "name" : "Earth", "gravity" : 9.8 }
 { "name" : "Neptune", "gravity" : 11.15 }
@@ -976,6 +978,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{"$projec
 All right, this is pretty good. But what if we also want to keep the *temperature, density, mass, radius, and SMA* fields?
 
 ```javascript
+// adding more fields to the projected document
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
 ... {"$project":{
 ...     "_id": 0,
@@ -1063,6 +1066,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
 
 As we can see, in order to keep the information we want, we had to be explicit, specifying which fields to retain along with performing our transformations.
 
-As said, this can become tedious. In comes $addFields. If we substitute $addFields for $project and execute the following pipeline, we can see that we indeed performed the desired transformations. However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
+As said, this can become tedious. In comes *$addFields*. If we substitute *$addFields* for *$project* and execute the following pipeline, we can see that we indeed performed the desired transformations. However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
 
 In this example, with *$project*, we are selecting the fields that we wish to retain, and in *$addFields*, we are performing our transformation on those pre-selected fields. There is no need to go one by one and remove or retain fields while performing our transformations. This is a style choice and can prevent having to repeatedly specify which fields to retain in larger pipelines when performing many various calculations. Let's see it in action. As we can see, we will retain the specified fields and perform the specified transformation.
