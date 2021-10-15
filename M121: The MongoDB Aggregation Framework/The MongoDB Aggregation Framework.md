@@ -1228,4 +1228,86 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
 
 However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
 
+```javascript
+// combining ``$project`` with ``$addFields``
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
+... {"$project": {
+...     "_id": 0,
+...     "name": 1,
+...     "gravity": 1,
+...     "mass": 1,
+...     "radius": 1,
+...     "sma": 1}
+... },
+... {"$addFields": {
+...     "gravity": "$gravity.value",
+...     "mass": "$mass.value",
+...     "radius": "$radius.value",
+...     "sma": "$sma.value"
+... }}]).pretty();
+    {
+        "name" : "Earth",
+        "radius" : 6378.137,
+        "mass" : 5.9723e+24,
+        "sma" : 149600000,
+        "gravity" : 9.8
+    }
+    {
+        "name" : "Neptune",
+        "radius" : 24765,
+        "mass" : 1.02413e+26,
+        "sma" : 4495060000,
+        "gravity" : 11.15
+    }
+    {
+        "name" : "Uranus",
+        "radius" : 25559,
+        "mass" : 8.6813e+25,
+        "sma" : 2872460000,
+        "gravity" : 8.87
+    }
+    {
+        "name" : "Saturn",
+        "radius" : 60268,
+        "mass" : 5.6834e+26,
+        "sma" : 1433530000,
+        "gravity" : 10.44
+    }
+    {
+        "name" : "Jupiter",
+        "radius" : 71492,
+        "mass" : 1.89819e+27,
+        "sma" : 778570000,
+        "gravity" : 24.79
+    }
+    {
+        "name" : "Venus",
+        "radius" : 6051.8,
+        "mass" : 4.8675e+24,
+        "sma" : 108210000,
+        "gravity" : 8.87
+    }
+    {
+        "name" : "Mercury",
+        "radius" : 4879,
+        "mass" : 3.3e+23,
+        "sma" : 57910000,
+        "gravity" : 3.24
+    }
+    {
+        "name" : "Sun",
+        "radius" : 695700,
+        "mass" : 1.9885e+30,
+        "sma" : 0,
+        "gravity" : 274
+    }
+    {
+        "name" : "Mars",
+        "radius" : 3396.2,
+        "mass" : 6.4171e+23,
+        "sma" : 227920000,
+        "gravity" : 3.71
+    }
+```
+
 In this example, with *$project*, we are selecting the fields that we wish to retain, and in *$addFields*, we are performing our transformation on those pre-selected fields. There is no need to go one by one and remove or retain fields while performing our transformations. This is a style choice and can prevent having to repeatedly specify which fields to retain in larger pipelines when performing many various calculations. Let's see it in action. As we can see, we will retain the specified fields and perform the specified transformation.
