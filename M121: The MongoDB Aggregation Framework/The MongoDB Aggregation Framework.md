@@ -1328,20 +1328,4 @@ Well, we got a ton of results, so we can see it works. However, it's not very us
 
 Lastly, *distanceMultiplier* is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data. So let's clean up our aggregation and fetch useful results. I'd like to find the five nearest hospitals to the *MongoDB* headquarters. Here I've added the optional query field and specified that it should be type "Hospital". And here I've added the optional limit field and specified it as 5.
 
-Much better.
-
-We got the five nearest places that matched hospital.
-
-And we could see that our distance is in meters.
-
-And that's it for $geoNear.
-
-There's just a few things to remember.
-
-The collection can have one and only one 2dsphere index.
-
-If using 2dsphere, the distance is returned in meters.
-
-If using legacy coordinates, the distance is returned in radians.
-
-And $geoNear must be the first stage in an aggregation pipeline.
+Much better. We got the five nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using legacy coordinates, the distance is returned in radians. And *$geoNear* must be the first stage in an aggregation pipeline.
