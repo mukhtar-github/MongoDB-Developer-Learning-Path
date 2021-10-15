@@ -1318,47 +1318,13 @@ Let's take a break from transformation for a moment and discuss a useful utility
 
 So if we already have *$near* operator available for find operations, why do we need an aggregation stage like *$geoNear*? *$geoNear* can be used on charted collections, whereas *$near* can't. Additionally, any query using *$near* cannot use other special indexes, like *$text*, for example. One last thing, *$geoNear* requires that the collection we're performing our aggregations on to have one and only one *geoindex*.
 
-Here is the structuring arguments for *$geoNear*.
+Here is the structuring arguments for *$geoNear*. As we can see, it can take a lot of arguments, though only if you're required. Required arguments are *near, distanceField, and spherical*. *Near* is the point we'd like to search near. Results will be ordered from closest to furthest from this location. *distanceField* is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
 
-As we can see, it can take a lot of arguments, though only if you're required.
+*Spherical* is the last required argument. Specify true if the index is a *2dsphere*, otherwise false. During this lesson, we'll be using a *2dsphere* index. Let's go ahead and execute a *$geoNear* aggregation. I'm going to search for locations near the *MongoDB* headquarters in New York City. Here I've specified my three required arguments -- *near, distanceField, and spherical*.
 
-Required arguments are near, distanceField, and spherical.
+Well, we got a ton of results, so we can see it works. However, it's not very useful in its current state. Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted. *minDistance and maxDistance* specify the closest and furthest results we want. Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
 
-Near is the point we'd like to search near.
-
-Results will be ordered from closest to furthest from this location.
-
-distanceField is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
-
-Spherical is the last required argument.
-
-Specify true if the index is a 2dsphere, otherwise false.
-
-During this lesson, we'll be using a 2dsphere index.
-
-Let's go ahead and execute a $geoNear aggregation.
-
-I'm going to search for locations near the MongoDB headquarters in New York City.
-
-Here I've specified my three required arguments-- near, distanceField, and spherical.
-
-Well, we got a ton of results, so we can see it works.
-
-However, it's not very useful in its current state.
-
-Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted.
-
-minDistance and maxDistance specify the closest and furthest results we want.
-
-Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
-
-includeLocs would allow us to show what location was used in the document if it has more than one location.
-
-For our dataset, this isn't necessary, as each document only has one location.
-
-And remember, $geoNear requires that we have exactly one 2dsphere index in the collection.
-
-Limit and num are functionally identical and are used to limit the number of documents returned.
+*includeLocs* would allow us to show what location was used in the document if it has more than one location. For our dataset, this isn't necessary, as each document only has one location. And remember, *$geoNear* requires that we have exactly one *2dsphere* index in the collection. *Limit and num* are functionally identical and are used to limit the number of documents returned.
 
 Lastly, distanceMultiplier is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data.
 
