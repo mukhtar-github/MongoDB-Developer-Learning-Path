@@ -1326,13 +1326,7 @@ Well, we got a ton of results, so we can see it works. However, it's not very us
 
 *includeLocs* would allow us to show what location was used in the document if it has more than one location. For our dataset, this isn't necessary, as each document only has one location. And remember, *$geoNear* requires that we have exactly one *2dsphere* index in the collection. *Limit and num* are functionally identical and are used to limit the number of documents returned.
 
-Lastly, distanceMultiplier is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data.
-
-So let's clean up our aggregation and fetch useful results.
-
-I'd like to find the five nearest hospitals to the MongoDB headquarters.
-
-Here I've added the optional query field and specified that it should be type "Hospital." And here I've added the optional limit field and specified it as 5.
+Lastly, *distanceMultiplier* is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data. So let's clean up our aggregation and fetch useful results. I'd like to find the five nearest hospitals to the *MongoDB* headquarters. Here I've added the optional query field and specified that it should be type "Hospital". And here I've added the optional limit field and specified it as 5.
 
 Much better.
 
