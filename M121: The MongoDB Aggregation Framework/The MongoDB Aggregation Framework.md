@@ -1311,3 +1311,89 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
         "gravity" : 3.71
     }
 ```
+
+### geoNear Stage
+
+Let's take a break from transformation for a moment and discuss a useful utility stage if we work would GeoJSON data-- $geoNear.
+
+$geoNear is the aggregation framework solution to performing geoqueries within the aggregation pipeline.
+
+Within a pipeline, $geoNear must be the first stage in a pipeline.
+
+Also of note, we cannot use the $near predicate in the query field, though it wouldn't really make much sense to do so.
+
+So if we already have $near operator available for find operations, why do we need an aggregation stage like $geoNear?
+
+$geoNear can be used on charted collections, whereas $near can't.
+
+Additionally, any query using $near cannot use other special indexes, like $text, for example.
+
+One last thing, $geoNear requires that the collection we're performing our aggregations on to have one and only one geoindex.
+
+Here is the structuring arguments for $geoNear.
+
+As we can see, it can take a lot of arguments, though only if you're required.
+
+Required arguments are near, distanceField, and spherical.
+
+Near is the point we'd like to search near.
+
+Results will be ordered from closest to furthest from this location.
+
+distanceField is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
+
+Spherical is the last required argument.
+
+Specify true if the index is a 2dsphere, otherwise false.
+
+During this lesson, we'll be using a 2dsphere index.
+
+Let's go ahead and execute a $geoNear aggregation.
+
+I'm going to search for locations near the MongoDB headquarters in New York City.
+
+Here I've specified my three required arguments-- near, distanceField, and spherical.
+
+Well, we got a ton of results, so we can see it works.
+
+However, it's not very useful in its current state.
+
+Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted.
+
+minDistance and maxDistance specify the closest and furthest results we want.
+
+Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
+
+includeLocs would allow us to show what location was used in the document if it has more than one location.
+
+For our dataset, this isn't necessary, as each document only has one location.
+
+And remember, $geoNear requires that we have exactly one 2dsphere index in the collection.
+
+Limit and num are functionally identical and are used to limit the number of documents returned.
+
+Lastly, distanceMultiplier is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data.
+
+So let's clean up our aggregation and fetch useful results.
+
+I'd like to find the five nearest hospitals to the MongoDB headquarters.
+
+Here I've added the optional query field and specified that it should be type "Hospital." And here I've added the optional limit field and specified it as 5.
+
+Much better.
+
+We got the five nearest places that matched hospital.
+
+And we could see that our distance is in meters.
+
+And that's it for $geoNear.
+
+There's just a few things to remember.
+
+The collection can have one and only one 2dsphere index.
+
+If using 2dsphere, the distance is returned in meters.
+
+If using legacy coordinates, the distance is returned in radians.
+
+And $geoNear must be the first stage in an aggregation pipeline.
