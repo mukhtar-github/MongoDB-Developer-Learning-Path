@@ -1064,8 +1064,168 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
 }
 ```
 
-As we can see, in order to keep the information we want, we had to be explicit, specifying which fields to retain along with performing our transformations.
+As we can see, in order to keep the information we want, we had to be explicit, specifying which fields to retain along with performing our transformations. As said, this can become tedious. In comes *$addFields*. If we substitute *$addFields* for *$project* and execute the following pipeline, we can see that we indeed performed the desired transformations.
 
-As said, this can become tedious. In comes *$addFields*. If we substitute *$addFields* for *$project* and execute the following pipeline, we can see that we indeed performed the desired transformations. However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
+```javascript
+// using ``$addFields`` to generate the new computed field values
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
+... {"$addFields":{
+...     "gravity": "$gravity.value",
+...     "mass": "$mass.value",
+...     "radius": "$radius.value",
+...     "sma": "$sma.value"}
+... }]).pretty();
+    {
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d54"),
+        "name" : "Earth",
+        "type" : "Terrestrial planet",
+        "orderFromSun" : 3,
+        "radius" : 6378.137,
+        "mass" : 5.9723e+24,
+        "sma" : 149600000,
+        "orbitalPeriod" : {
+            "value" : 1,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0167,
+        "meanOrbitalVelocity" : {
+            "value" : 29.78,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 1,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 23.45,
+            "units" : "degrees"
+        },
+        "meanTemperature" : 15,
+        "gravity" : 9.8,
+        "escapeVelocity" : {
+            "value" : 11.18,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 5.52,
+        "atmosphericComposition" : "N2+O2",
+        "numberOfMoons" : 1,
+        "hasRings" : false,
+        "hasMagneticField" : true
+    }
+    {
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d59"),
+        "name" : "Neptune",
+        "type" : "Gas giant",
+        "orderFromSun" : 8,
+        "radius" : 24765,
+        "mass" : 1.02413e+26,
+        "sma" : 4495060000,
+        "orbitalPeriod" : {
+            "value" : 164.79,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0113,
+        "meanOrbitalVelocity" : {
+            "value" : 5.43,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 0.72,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 28.8,
+            "units" : "degrees"
+        },
+        "meanTemperature" : -210,
+        "gravity" : 11.15,
+        "escapeVelocity" : {
+            "value" : 23.5,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 1.638,
+        "atmosphericComposition" : "H2+He",
+        "numberOfMoons" : 14,
+        "hasRings" : true,
+        "hasMagneticField" : true
+    }
+    {
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d58"),
+        "name" : "Uranus",
+        "type" : "Gas giant",
+        "orderFromSun" : 7,
+        "radius" : 25559,
+        "mass" : 8.6813e+25,
+        "sma" : 2872460000,
+        "orbitalPeriod" : {
+            "value" : 84.01,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0457,
+        "meanOrbitalVelocity" : {
+            "value" : 6.8,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 0.72,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 97.77,
+            "units" : "degrees"
+        },
+        "meanTemperature" : -200,
+        "gravity" : 8.87,
+        "escapeVelocity" : {
+            "value" : 21.3,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 1.271,
+        "atmosphericComposition" : "H2+He",
+        "numberOfMoons" : 27,
+        "hasRings" : true,
+        "hasMagneticField" : true
+    }
+    {
+        "_id" : ObjectId("59a06674c8df9f3cd2ee7d57"),
+        "name" : "Saturn",
+        "type" : "Gas giant",
+        "orderFromSun" : 6,
+        "radius" : 60268,
+        "mass" : 5.6834e+26,
+        "sma" : 1433530000,
+        "orbitalPeriod" : {
+            "value" : 29.457,
+            "units" : "years"
+        },
+        "eccentricity" : 0.0566,
+        "meanOrbitalVelocity" : {
+            "value" : 9.68,
+            "units" : "km/sec"
+        },
+        "rotationPeriod" : {
+            "value" : 0.445,
+            "units" : "days"
+        },
+        "inclinationOfAxis" : {
+            "value" : 26.73,
+            "units" : "degrees"
+        },
+        "meanTemperature" : -170,
+        "gravity" : 10.44,
+        "escapeVelocity" : {
+            "value" : 35.5,
+            "units" : "km/sec"
+        },
+        "meanDensity" : 0.687,
+        "atmosphericComposition" : "H2+He",
+        "numberOfMoons" : 62,
+        "hasRings" : true,
+        "hasMagneticField" : true
+    }
+
+```
+
+However, we do not remove any fields from the original document. Instead, we append new transformation fields to the document. OK. One last example. By combining *$project* with *$addFields*, we remove the annoyance of explicitly needing to remove or retain fields.
 
 In this example, with *$project*, we are selecting the fields that we wish to retain, and in *$addFields*, we are performing our transformation on those pre-selected fields. There is no need to go one by one and remove or retain fields while performing our transformations. This is a style choice and can prevent having to repeatedly specify which fields to retain in larger pipelines when performing many various calculations. Let's see it in action. As we can see, we will retain the specified fields and perform the specified transformation.
