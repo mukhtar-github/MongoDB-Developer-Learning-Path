@@ -1314,9 +1314,24 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([
 
 ### geoNear Stage
 
-Let's take a break from transformation for a moment and discuss a useful utility stage if we work would *GeoJSON* data-- *$geoNear*. *$geoNear* is the aggregation framework solution to performing geoqueries within the aggregation pipeline. Within a pipeline, *$geoNear* must be the first stage in a pipeline. Also of note, we cannot use the $near predicate in the query field, though it wouldn't really make much sense to do so.
+Let's take a break from transformation for a moment and discuss a useful utility stage if we work would *GeoJSON* data -- *$geoNear*. *$geoNear* is the aggregation framework solution to performing *geoqueries* within the aggregation pipeline. Within a pipeline, *$geoNear* must be the first stage in a pipeline. Also of note, we cannot use the $near predicate in the query field, though it wouldn't really make much sense to do so.
 
-So if we already have *$near* operator available for find operations, why do we need an aggregation stage like *$geoNear*? *$geoNear* can be used on charted collections, whereas *$near* can't. Additionally, any query using *$near* cannot use other special indexes, like *$text*, for example. One last thing, *$geoNear* requires that the collection we're performing our aggregations on to have one and only one *geoindex*.
+So if we already have *$near* operator available for *find* operations, why do we need an aggregation stage like *$geoNear*? *$geoNear* can be used on *charted* collections, whereas *$near* can't. Additionally, any query using *$near* cannot use other special indexes, like *$text*, for example. One last thing, *$geoNear* requires that the collection we're performing our aggregations on to have one and only one *geoindex*.
+
+```javascript
+$geoNear: {
+    near: <required, the location to search near>,
+    distaceField: <required, field to insert in returned documents>,
+    minDistance: <optional, in meters>,
+    maxDistance: <optional, in meters>,
+    query: <optional, allows querying source documents>,
+    includeLocs: <optional, used to identify which location was used>,
+    limit: <optional, the maximum number of documents to return>,
+    num: <optional, same as limit>,
+    spherical: <required, required to signal whether using a 2dsphere index>,
+    distanceMultiplier: <optional,the factor to multiply all distance>
+}
+```
 
 Here is the structuring arguments for *$geoNear*. As we can see, it can take a lot of arguments, though only if you're required. Required arguments are *near, distanceField, and spherical*. *Near* is the point we'd like to search near. Results will be ordered from closest to furthest from this location. *distanceField* is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
 
