@@ -1333,11 +1333,144 @@ $geoNear: {
 }
 ```
 
-Here is the structuring arguments for *$geoNear*. As we can see, it can take a lot of arguments, though only if you're required. Required arguments are *near, distanceField, and spherical*. *Near* is the point we'd like to search near. Results will be ordered from closest to furthest from this location. *distanceField* is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
+Here is the structuring arguments for *$geoNear*. As we can see, it can take a lot of arguments, though only if you're required. Required arguments are *near, distanceField, and spherical*. *Near* is the point we'd like to search near. Results will be ordered from closest to farthest from this location. *distanceField* is the argument we supply that will be inserted into returned documents, giving us the distance from location to the location we specified in near.
 
-*Spherical* is the last required argument. Specify true if the index is a *2dsphere*, otherwise false. During this lesson, we'll be using a *2dsphere* index. Let's go ahead and execute a *$geoNear* aggregation. I'm going to search for locations near the *MongoDB* headquarters in New York City. Here I've specified my three required arguments -- *near, distanceField, and spherical*.
+*Spherical* is the last required argument. Specify true if the index is a *2dsphere*, otherwise false. During this lesson, we'll be using a *2dsphere* index. Let's go ahead and execute a *$geoNear* aggregation. I'm going to search for locations near the *MongoDB* headquarters in New York City.
 
-Well, we got a ton of results, so we can see it works. However, it's not very useful in its current state. Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted. *minDistance and maxDistance* specify the closest and furthest results we want. Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([
+...   {
+...     "$geoNear": {
+...       "near": {
+...         "type": "Point",
+...         "coordinates": [-73.98769766092299, 40.757345233626594]
+...       },
+...       "distanceField": "distanceFromMongoDB",
+...       "spherical": true
+...     }
+...   }
+... ]).pretty();
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef39f9a"),
+        "name" : "Advance Parking LLC",
+        "address" : {
+            "number" : "249",
+            "street" : "West   43 Street",
+            "city" : "New York",
+            "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.988248,
+                40.757715
+            ]
+        },
+        "domain" : "Core Infrastructure and Transportation",
+        "group" : "Transportation",
+        "specialty" : "Parking Lots and Garages",
+        "type" : "Commercial Garage",
+        "distanceFromMongoDB" : 62.03048232300762
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef38b72"),
+        "name" : "Lubovitch Dance Foundation, Inc.",
+        "address" : {
+            "number" : "229",
+            "street" : "West   42 Street",
+            "city" : "New York",
+            "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.988077,
+                40.756827
+            ]
+        },
+        "domain" : "Libraries and Cultural Programs",
+        "group" : "Cultural Institutions",
+        "specialty" : "Other Cultural Institutions",
+        "type" : "Dance",
+        "distanceFromMongoDB" : 65.96356009175788
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3a32b"),
+        "name" : "Threshold Dance Projects, Inc.",
+        "address" : {
+            "number" : "229",
+            "street" : "West   42 Street",
+            "city" : "New York",
+            "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.988077,
+                40.756827
+            ]
+        },
+        "domain" : "Libraries and Cultural Programs",
+        "group" : "Cultural Institutions",
+        "specialty" : "Other Cultural Institutions",
+        "type" : "Dance",
+        "distanceFromMongoDB" : 65.96356009175788
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3c3da"),
+        "name" : "Parsons Dance Foundation",
+        "address" : {
+            "number" : "229",
+            "street" : "West   42 Street",
+            "city" : "New York",
+            "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.988077,
+                40.756827
+            ]
+        },
+        "domain" : "Libraries and Cultural Programs",
+        "group" : "Cultural Institutions",
+        "specialty" : "Other Cultural Institutions",
+        "type" : "Dance",
+        "distanceFromMongoDB" : 65.96356009175788
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3e222"),
+        "name" : "New 42nd Street, Inc.",
+        "address" : {
+            "number" : "229",
+            "street" : "West   42 Street",
+            "city" : "New York",
+            "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.988077,
+                40.756827
+            ]
+        },
+        "domain" : "Libraries and Cultural Programs",
+        "group" : "Cultural Institutions",
+        "specialty" : "Other Cultural Institutions",
+        "type" : "Theater",
+        "distanceFromMongoDB" : 65.96356009175788
+    }
+Type "it" for more
+```
+
+Here I've specified my three required arguments -- *near, distanceField, and spherical*. Well, we got a ton of results, so we can see it works. However, it's not very useful in its current state. Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted. *minDistance and maxDistance* specify the closest and furthest results we want.
+
+Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
 
 *includeLocs* would allow us to show what location was used in the document if it has more than one location. For our dataset, this isn't necessary, as each document only has one location. And remember, *$geoNear* requires that we have exactly one *2dsphere* index in the collection. *Limit and num* are functionally identical and are used to limit the number of documents returned.
 
