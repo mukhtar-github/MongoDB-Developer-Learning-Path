@@ -1608,3 +1608,87 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([{
 ```
 
 We got the *five* nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using *legacy* coordinates, the distance is returned in radians. > And *$geoNear* must be the first stage in an aggregation pipeline.
+
+### Cursor-like stages: Part 1
+
+It is time we discuss some useful utility stages, what we call cursor-like stages.
+
+These stages are sort, skip, limit, and counts.
+
+And they have an equivalent in our query language as a cursor method.
+
+Let's have a look.
+
+After connecting to my aggregations database, I can express this simple query on solar system where I am going to find all my documents.
+
+This is a full collection scan.
+
+and only projecting out the name, number of Moons, and keeping out the _id.
+
+If I do this, I can see all the results of my collection, only exposing the name, number of Moons per each one of the documents.
+
+Sweet, this works well.
+
+The other thing I can do is basically call count.
+
+Now this will count the full amount of documents returned by the query.
+
+Here, I can see that I have on my solar system nine documents.
+
+Another thing that I can do is basically skip five documents.
+
+And if execute this query, I can see that a skipped a few first documents.
+
+Now if you are wondering why did I get this order, why did I skip those previous five documents and not others, if I do not specify a sorting operation or a sorting of my cursor, I will get from MongoDB the order by which the documents are inserted in the collection, what we call the natural order of the collection.
+
+So in this case, I'm going to skip the five first elements that have been inserted into this collection.
+
+The following method will be limit, where I can specify the number of documents that I'm going to return.
+
+And again, following the exactly same sorting order, which in this case is going to be my natural insert sorting order on our solar system collection, I'll get the Sun, Mercury, Venus, Earth, and Mars, which are the five first documents of my collection.
+
+And lastly, I can also specify a sort for the result set of my collection.
+
+Here, I'm going to find everything.
+
+But instead of giving back the order by which documents are inserted in the collection, I'm going to sort the result set based on the number of Moons that each one of these documents contain.
+
+Minus 1 specifies the order.
+
+And in this case, it will be descending.
+
+So as we can see, we are going to get, first, the ones that have more Moons to the ones that have less Moons.
+
+Now we've seen the cursor methods, but we also have stages that execute exactly the same kind of functionality.
+
+We have $limit, $skip, $count, and $sort.
+
+They will vary a little bit on the syntax, where limit will take an integer, skip will take also an integer, specifying the number of limit documents and the number of skip documents.
+
+Count, on the other hand, we will need to specify a field where we want to collect the count value.
+
+And sort, we need to specify the keys and the order by which we want our result sets of the pipeline to be sorted.
+
+Let's see some of this in action.
+
+Now to mimic exactly the same operation as before in our find command, I'm going to execute the project of name and number of Moons, excluding _id, exactly the same operation as before.
+
+And in this case, given the pipeline that I'm executing and given the documents that this aggregation pipeline will provide, I will add a limit stage to my pipe, saying, I only want the first five documents coming from this project stage.
+
+And as expected, I get the same results as I would if I would limit on a find operation.
+
+The following stage will be skip.
+
+And again, given the results incoming from the project stage, I will skip only one.
+
+In this case, I'm going to skip the Sun.
+
+So how do I know that I'm going to skip the Sun?
+
+Well basically, the order by which I'm going to get the results into the project is the natural order, exactly in the same way as we've seen before.
+
+The project will filter out only the fields that I'm interested on and pass along that to the skip stage.
+
+Skip, by skipping up one, I'm going to be skipping the Sun.
+
+As you can see here, all different celestial bodies will be reported back in my results, except for the Sun, which is the first element, the one that I'm skipping in the pipeline.
