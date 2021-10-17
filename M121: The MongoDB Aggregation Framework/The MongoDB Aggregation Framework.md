@@ -1611,19 +1611,7 @@ We got the *five* nearest places that matched hospital. And we could see that ou
 
 ### Cursor-like stages: Part 1
 
-It is time we discuss some useful utility stages, what we call cursor-like stages.
-
-These stages are sort, skip, limit, and counts.
-
-And they have an equivalent in our query language as a cursor method.
-
-Let's have a look.
-
-After connecting to my aggregations database, I can express this simple query on solar system where I am going to find all my documents.
-
-This is a full collection scan.
-
-and only projecting out the name, number of Moons, and keeping out the _id.
+It is time we discuss some useful utility stages, what we call *cursor-like* stages. These stages are *sort, skip, limit, and counts*. And they have an equivalent in our query language as a cursor method. Let's have a look. After connecting to my aggregations database, I can express this simple query on solar system where I am going to find all my documents. This is a full collection scan. and only projecting out the name, number of Moons, and keeping out the _id.
 
 If I do this, I can see all the results of my collection, only exposing the name, number of Moons per each one of the documents.
 
