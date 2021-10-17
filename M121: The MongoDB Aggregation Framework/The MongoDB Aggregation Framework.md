@@ -1637,9 +1637,16 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, 
 
 Here, I can see that I have on my *solar system* **nine** documents. Another thing that I can do is basically *skip* five documents.
 
-And if execute this query, I can see that a skipped a few first documents.
+```javascript
+// skip documents
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, "name": 1, "numberOfMoons": 1}).skip(5).pretty();
+{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Sun", "numberOfMoons" : 0 }
+{ "name" : "Mars", "numberOfMoons" : 2 }
+```
 
-Now if you are wondering why did I get this order, why did I skip those previous five documents and not others, if I do not specify a sorting operation or a sorting of my cursor, I will get from MongoDB the order by which the documents are inserted in the collection, what we call the natural order of the collection.
+And if I execute this query, I can see that it skipped a few first documents. Now if you are wondering why did I get this order, why did I skip those previous five documents and not others. If I do not specify a *sorting* operation or a sorting of my *cursor*, I will get from *MongoDB* the order by which the documents are inserted in the collection, what we call the *natural order* of the collection.
 
 So in this case, I'm going to skip the five first elements that have been inserted into this collection.
 
