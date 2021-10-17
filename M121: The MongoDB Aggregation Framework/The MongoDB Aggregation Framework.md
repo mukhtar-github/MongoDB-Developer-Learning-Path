@@ -1660,7 +1660,21 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, 
 
 The following method will be *limit*, where I can specify the number of documents that I'm going to return. And again, following the exactly same sorting order, which in this case, is going to be my natural insert sorting order on our solar system collection. I'll get the *Sun, Mercury, Venus, Earth, and Mars*, which are the five first documents of my collection.
 
-And lastly, I can also specify a sort for the result set of my collection. Here, I'm going to find everything. But instead of giving back the order by which documents are inserted in the collection, I'm going to sort the result set based on the number of Moons that each one of these documents contain. Minus 1 specifies the order.     And in this case, it will be descending.
+And lastly, I can also specify a *sort* for the result set of my collection. Here, I'm going to find everything. But instead of giving back the order by which documents are inserted in the collection, I'm going to sort the result set based on the *number of Moons* that each one of these documents contain. *Minus 1* specifies the order. And in this case, it will be descending.
+
+```javascript
+// sort documents
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, { "_id": 0, "name": 1, "numberOfMoons": 1 }).sort( {"numberOfMoons": -1 } ).pretty();
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Mars", "numberOfMoons" : 2 }
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Sun", "numberOfMoons" : 0 }
+```
 
 So as we can see, we are going to get, first, the ones that have more Moons to the ones that have less Moons.
 
