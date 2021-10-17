@@ -1646,23 +1646,21 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, 
 { "name" : "Mars", "numberOfMoons" : 2 }
 ```
 
-And if I execute this query, I can see that it skipped a few first documents. Now if you are wondering why did I get this order, why did I skip those previous five documents and not others. If I do not specify a *sorting* operation or a sorting of my *cursor*, I will get from *MongoDB* the order by which the documents are inserted in the collection, what we call the *natural order* of the collection.
+And if I execute this query, I can see that it skipped a few first documents. Now if you are wondering why did I get this order, why did I skip those previous five documents and not others. If I do not specify a *sorting* operation or a sorting of my *cursor*, I will get from *MongoDB* the order by which the documents are inserted in the collection, what we call the *natural order* of the collection. So in this case, I'm going to *skip* the five first elements that have been inserted into this collection.
 
-So in this case, I'm going to skip the five first elements that have been inserted into this collection.
+```javascript
+// limit documents
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, "name": 1, "numberOfMoons": 1}).limit(5).pretty();
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
+```
 
-The following method will be limit, where I can specify the number of documents that I'm going to return.
+The following method will be *limit*, where I can specify the number of documents that I'm going to return. And again, following the exactly same sorting order, which in this case, is going to be my natural insert sorting order on our solar system collection. I'll get the *Sun, Mercury, Venus, Earth, and Mars*, which are the five first documents of my collection.
 
-And again, following the exactly same sorting order, which in this case is going to be my natural insert sorting order on our solar system collection, I'll get the Sun, Mercury, Venus, Earth, and Mars, which are the five first documents of my collection.
-
-And lastly, I can also specify a sort for the result set of my collection.
-
-Here, I'm going to find everything.
-
-But instead of giving back the order by which documents are inserted in the collection, I'm going to sort the result set based on the number of Moons that each one of these documents contain.
-
-Minus 1 specifies the order.
-
-And in this case, it will be descending.
+And lastly, I can also specify a sort for the result set of my collection. Here, I'm going to find everything. But instead of giving back the order by which documents are inserted in the collection, I'm going to sort the result set based on the number of Moons that each one of these documents contain. Minus 1 specifies the order.     And in this case, it will be descending.
 
 So as we can see, we are going to get, first, the ones that have more Moons to the ones that have less Moons.
 
