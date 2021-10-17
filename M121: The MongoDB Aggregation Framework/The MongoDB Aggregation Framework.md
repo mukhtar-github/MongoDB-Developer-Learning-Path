@@ -1615,20 +1615,27 @@ It is time we discuss some useful utility stages, what we call *cursor-like* sta
 
 ```javascript
 // project fields ``numberOfMoons`` and ``name``
-db.solarSystem.find({}, {"_id": 0, "name": 1, "numberOfMoons": 1}).pretty();
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, "name": 1, "numberOfMoons": 1}).pretty();
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
+{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Sun", "numberOfMoons" : 0 }
+{ "name" : "Mars", "numberOfMoons" : 2 }
 ```
 
-If I do this, I can see all the results of my collection, only exposing the name, number of Moons per each one of the documents.
+If I do this, I can see all the results of my collection, only exposing the *name*, *number of Moons* per each one of the documents. Sweet, this works well. The other thing I can do is basically call *count*. Now this will count the full amount of documents returned by the query.
 
-Sweet, this works well.
+```javascript
+// count the number of documents
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, {"_id": 0, "name": 1, "numberOfMoons": 1}).count();
+9
+```
 
-The other thing I can do is basically call count.
-
-Now this will count the full amount of documents returned by the query.
-
-Here, I can see that I have on my solar system nine documents.
-
-Another thing that I can do is basically skip five documents.
+Here, I can see that I have on my *solar system* **nine** documents. Another thing that I can do is basically *skip* five documents.
 
 And if execute this query, I can see that a skipped a few first documents.
 
