@@ -1676,21 +1676,9 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.find({}, { "_id": 0,
 { "name" : "Sun", "numberOfMoons" : 0 }
 ```
 
-So as we can see, we are going to get, first, the ones that have more Moons to the ones that have less Moons.
+So as we can see, we are going to get, first, the ones that have *more Moons* to the ones that have *less Moons*. Now we've seen the *cursor* methods, but we also have stages that execute exactly the same kind of functionality. We have *$limit, $skip, $count, and $sort*. They will vary a little bit on the syntax, where *limit* will take an integer, *skip* will take also an integer, specifying the number of *limit* documents and the number of *skip* documents.
 
-Now we've seen the cursor methods, but we also have stages that execute exactly the same kind of functionality.
-
-We have $limit, $skip, $count, and $sort.
-
-They will vary a little bit on the syntax, where limit will take an integer, skip will take also an integer, specifying the number of limit documents and the number of skip documents.
-
-Count, on the other hand, we will need to specify a field where we want to collect the count value.
-
-And sort, we need to specify the keys and the order by which we want our result sets of the pipeline to be sorted.
-
-Let's see some of this in action.
-
-Now to mimic exactly the same operation as before in our find command, I'm going to execute the project of name and number of Moons, excluding _id, exactly the same operation as before.
+*Count*, on the other hand, we will need to specify a field where we want to collect the *count* value. And *sort*, we need to specify the *keys* and the order by which we want our result sets of the pipeline to be sorted. Let's see some of this in action. Now to mimic exactly the same operation as before in our find command, I'm going to execute the project of name and number of Moons, excluding _id, exactly the same operation as before.
 
 And in this case, given the pipeline that I'm executing and given the documents that this aggregation pipeline will provide, I will add a limit stage to my pipe, saying, I only want the first five documents coming from this project stage.
 
