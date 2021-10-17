@@ -123,17 +123,16 @@ db.nycFacilities.aggregate([
 ]).pretty();
 
 // include ``limit`` to results
-db.nycFacilities.aggregate([
-  {
-    $geoNear: {
-      near: {
-        type: "Point",
+db.nycFacilities.aggregate([{
+  $geoNear: {
+    near: {
+      type: "Point",
         coordinates: [-73.98769766092299, 40.757345233626594]
       },
       distanceField: "distanceFromMongoDB",
       spherical: true,
       query: { type: "Hospital" },
-      limit: 5
     }
-  }
+  },
+  { $limit: 5 }
 ]).pretty();

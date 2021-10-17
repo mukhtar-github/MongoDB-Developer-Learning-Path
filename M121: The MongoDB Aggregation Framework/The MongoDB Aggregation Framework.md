@@ -1607,4 +1607,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([{
     }
 ```
 
-We got the *five* nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using legacy coordinates, the distance is returned in radians. And *$geoNear* must be the first stage in an aggregation pipeline.
+We got the *five* nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using *legacy* coordinates, the distance is returned in radians. > And *$geoNear* must be the first stage in an aggregation pipeline.
