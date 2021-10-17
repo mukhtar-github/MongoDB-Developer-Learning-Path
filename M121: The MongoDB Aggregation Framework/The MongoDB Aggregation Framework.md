@@ -1338,6 +1338,7 @@ Here is the structuring arguments for *$geoNear*. As we can see, it can take a l
 *Spherical* is the last required argument. Specify true if the index is a *2dsphere*, otherwise false. During this lesson, we'll be using a *2dsphere* index. Let's go ahead and execute a *$geoNear* aggregation. I'm going to search for locations near the *MongoDB* headquarters in New York City.
 
 ```javascript
+// using ``$geoNear`` stage
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([
 ...   {
 ...     "$geoNear": {
@@ -1468,10 +1469,28 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([
 Type "it" for more
 ```
 
-Here I've specified my three required arguments -- *near, distanceField, and spherical*. Well, we got a ton of results, so we can see it works. However, it's not very useful in its current state. Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted. *minDistance and maxDistance* specify the closest and furthest results we want.
+Here I've specified my three required arguments -- *near, distanceField, and spherical*. Well, we got a ton of results, so we can see it works. However, it's not very useful in its current state. Let's look at those optional arguments in greater detail to learn how to make this aggregation much more targeted. *minDistance and maxDistance* specify the closest and furthest results we want. Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match.
 
-Query allows us to specify conditions that each document must meet, and uses the same query operator syntax as match. *includeLocs* would allow us to show what location was used in the document if it has more than one location. For our dataset, this isn't necessary, as each document only has one location. And remember, *$geoNear* requires that we have exactly one *2dsphere* index in the collection.
+*includeLocs* would allow us to show what location was used in the document if it has more than one location. For our dataset, this isn't necessary, as each document only has one location. And remember, *$geoNear* requires that we have exactly one *2dsphere* index in the collection. *Limit and num* are functionally identical and are used to limit the number of documents returned.
 
-*Limit and num* are functionally identical and are used to limit the number of documents returned. Lastly, *distanceMultiplier* is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data. So let's clean up our aggregation and fetch useful results. I'd like to find the five nearest hospitals to the *MongoDB* headquarters. Here I've added the optional query field and specified that it should be type "Hospital".
+Lastly, *distanceMultiplier* is used to convert distance results from radians into whatever unit we need, should we be using legacy geospatial data. So let's clean up our aggregation and fetch useful results. I'd like to find the *five* nearest hospitals to the *MongoDB* headquarters. Here I've added the optional *query* field and specified that it should be *type "Hospital"*. And here I've added the optional *limit* field and specified it as *5*. Much better.
 
-And here I've added the optional limit field and specified it as *5*. Much better. We got the five nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using legacy coordinates, the distance is returned in radians. And *$geoNear* must be the first stage in an aggregation pipeline.
+```javascript
+// include ``limit`` to results
+db.nycFacilities.aggregate([
+  {
+    $geoNear: {
+      near: {
+        type: "Point",
+        coordinates: [-73.98769766092299, 40.757345233626594]
+      },
+      distanceField: "distanceFromMongoDB",
+      spherical: true,
+      query: { type: "Hospital" },
+      limit: 5
+    }
+  }
+]).pretty();
+```
+
+We got the *five* nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using legacy coordinates, the distance is returned in radians. And *$geoNear* must be the first stage in an aggregation pipeline.
