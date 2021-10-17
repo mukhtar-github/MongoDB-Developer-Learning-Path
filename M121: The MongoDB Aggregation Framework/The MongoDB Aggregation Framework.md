@@ -1477,20 +1477,134 @@ Lastly, *distanceMultiplier* is used to convert distance results from radians in
 
 ```javascript
 // include ``limit`` to results
-db.nycFacilities.aggregate([
-  {
-    $geoNear: {
-      near: {
-        type: "Point",
-        coordinates: [-73.98769766092299, 40.757345233626594]
-      },
-      distanceField: "distanceFromMongoDB",
-      spherical: true,
-      query: { type: "Hospital" },
-      limit: 5
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([{
+...   $geoNear: {
+...     near: {
+...       type: "Point",
+...         coordinates: [-73.98769766092299, 40.757345233626594]
+...       },
+...       distanceField: "distanceFromMongoDB",
+...       spherical: true,
+...       query: { type: "Hospital" },
+...     }
+...   },
+...   { $limit: 5 }
+... ]).pretty();
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef39c74"),
+        "name" : "Mount Sinai West",
+        "address" : {
+            "number" : "1000",
+            "street" : "10 Avenue",
+            "city" : "New York",
+            "zipcode" : "10019"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.986799,
+                40.769664
+            ]
+        },
+        "domain" : "Health and Human Services",
+        "group" : "Health Care",
+        "specialty" : "Hospitals and Clinics",
+        "type" : "Hospital",
+        "distanceFromMongoDB" : 1373.402525696724
     }
-  }
-]).pretty();
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef37254"),
+        "name" : "NYU Hospitals Center",
+        "address" : {
+            "number" : "550",
+            "street" : "1 Avenue",
+            "city" : "New York",
+            "zipcode" : "10016"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.973621,
+                40.741474
+            ]
+        },
+        "domain" : "Health and Human Services",
+        "group" : "Health Care",
+        "specialty" : "Hospitals and Clinics",
+        "type" : "Hospital",
+        "distanceFromMongoDB" : 2128.5451518719083
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3cbd8"),
+        "name" : "Bellevue Hospital Center",
+        "address" : {
+            "number" : "462",
+            "street" : "1 Avenue",
+            "city" : "New York",
+            "zipcode" : "10016"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.975119,
+                40.739106
+            ]
+        },
+        "domain" : "Health and Human Services",
+        "group" : "Health Care",
+        "specialty" : "Hospitals and Clinics",
+        "type" : "Hospital",
+        "distanceFromMongoDB" : 2290.787247189754
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef362b6"),
+        "name" : "Belvue Hosp Ctr/CUNY/Ocme/Ems",
+        "address" : {
+            "number" : "430",
+            "street" : "1 Avenue",
+            "city" : "New York",
+            "zipcode" : "10016"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.975927,
+                40.737953
+            ]
+        },
+        "domain" : "Health and Human Services",
+        "group" : "Health Care",
+        "specialty" : "Hospitals and Clinics",
+        "type" : "Hospital",
+        "distanceFromMongoDB" : 2376.0197324860424
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3ca8d"),
+        "name" : "Belvue Hosp Ctr/CUNY/Ocme/Ems",
+        "address" : {
+            "number" : "430",
+            "street" : "1 Avenue",
+            "city" : "New York",
+            "zipcode" : "10016"
+        },
+        "borough" : "Manhattan",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.975927,
+                40.737953
+            ]
+        },
+        "domain" : "Health and Human Services",
+        "group" : "Health Care",
+        "specialty" : "Hospitals and Clinics",
+        "type" : "Hospital",
+        "distanceFromMongoDB" : 2376.0197324860424
+    }
 ```
 
 We got the *five* nearest places that matched hospital. And we could see that our distance is in meters. And that's it for *$geoNear*. There's just a few things to remember. The collection can have one and only one *2dsphere* index. If using *2dsphere*, the distance is returned in meters. If using legacy coordinates, the distance is returned in radians. And *$geoNear* must be the first stage in an aggregation pipeline.
