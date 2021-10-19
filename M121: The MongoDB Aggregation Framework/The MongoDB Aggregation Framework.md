@@ -1821,8 +1821,20 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Venus", "numberOfMoons" : 0, "hasMagneticField" : false }
 ```
 
-Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
+Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default. To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results.
 
-To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results. So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods.
+```javascript
+// setting ``allowDiskUse`` option
+db.solarSystem.aggregate([{
+  "$project": {
+    "_id": 0,
+    "name": 1,
+    "hasMagneticField": 1,
+    "numberOfMoons": 1
+  }
+}, {
+  "$sort": { "hasMagneticField": -1, "numberOfMoons": -1 }
+}], { "allowDiskUse": true }).pretty();
+```
 
-So we can take advantage of indexes if it's near the beginning of our pipeline, and before a project group or unwind stages. By default, the $source will only take up to 100 megabytes of RAM. For more than that, we will need to provide the allowDiskUse option as equal true to our pipeline. If we do not do so, the operation will be terminated on the server. And that's all we have for you in cursor-like stages of the hour aggregation pipeline.
+So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods. So we can take advantage of indexes if it's near the beginning of our pipeline, and before a project group or unwind stages. By default, the $source will only take up to 100 megabytes of RAM. For more than that, we will need to provide the allowDiskUse option as equal true to our pipeline. If we do not do so, the operation will be terminated on the server. And that's all we have for you in cursor-like stages of the hour aggregation pipeline.
