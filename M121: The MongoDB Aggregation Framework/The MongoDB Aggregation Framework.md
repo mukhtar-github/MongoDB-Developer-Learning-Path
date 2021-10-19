@@ -1758,6 +1758,18 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 Now for this particular pipeline here, where the end result is going to be the *count* of the number of documents, which have a type of *terrestrial planet*, the *project* stage here is a little bit of an annoyance. It doesn't really interfere with the end result of the pipeline. So if we would just remove it, and we just have a match and then count, we can see that I get exactly the same execution in exactly the same results, having or not a *project* in between the *match* and the *count*.
 
+```javascript
+// removing ``$project`` stage since it does not interfere with our count
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
+...   "$match": {
+...     "type": "Terrestrial planet"
+...   }
+... }, {
+...   "$count": "terrestrial planets"
+... }]).pretty();
+{ "terrestrial planets" : 4 }
+```
+
 Lastly, let's look at the sort. Sort needs to be supplied with the field we want to sort on. In this case, if I'm going a project, name, and number of moons, I can sort on the fields that I'm collecting from the incoming pipeline. So in this case, if I want to sort on the number of moons descending, I'll get the results as expected, where I get the planet which has more moons first, and on that order to till ones that have absolutely no moons-- like sun, Mercury, and Venus-- poor guys.
 
 An important aspect to refer to here is that the sort stage is not limited to just one single field. You will operate on multiple different fields in combination, as we would do in normal queries and find operations, if you want to sort first on one field and then on another, that is totally possible in the aggregation pipeline stage as well. So let's say here, for example, that I have this different project where I'm going to project as well, apart from name and number of moons, the field has magnetic field, which is a pulling field.
