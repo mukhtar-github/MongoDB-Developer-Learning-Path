@@ -1690,7 +1690,8 @@ $sort: { <field we want to sort on>: <integer, direction to sort> }
 
 They will vary a little bit on the syntax, where *limit* will take an integer, *skip* will take also an integer, specifying the number of *limit* documents and the number of *skip* documents. *Count*, on the other hand, we will need to specify a field where we want to collect the *count* value. And *sort*, we need to specify the *keys* and the order by which we want our result sets of the pipeline to be sorted.
 
-Let's see some of this in action. Now to mimic exactly the same operation as before in our *find* command, I'm going to execute the *project* of *name* and *number of Moons*, excluding *_id*, exactly the same operation as before. And in this case, given the pipeline that I'm executing and given the documents that this aggregation pipeline will provide, I will add a *limit* stage to my pipe, saying, I only want the *first five* documents coming from this project stage.
+Let's see some of this in action. Now to mimic exactly the same operation as before in our *find* command, I'm going to execute the *project* of *name* and *number of Moons*, excluding *_id*, exactly the same operation as before. And in this case, given the pipeline that I'm executing and given the documents that this aggregation pipeline will provide, I will add a *limit* stage to my pipe, saying, I only want the *first five* documents coming from this project stage. And as expected, I get the same results as I would if I would limit on a *find* operation.
+
 
 ```javascript
 // ``$limit`` stage
@@ -1709,20 +1710,19 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Jupiter", "numberOfMoons" : 67 }
 ```
 
-And as expected, I get the same results as I would if I would limit on a find operation.
+The following stage will be *skip*. And again, given the results incoming from the *project* stage, I will *skip* only one. In this case, I'm going to *skip* the *Sun*. So how do I know that I'm going to *skip* the *Sun*? Well basically, the order by which I'm going to get the results into the *project* is the natural order, exactly in the same way as we've seen before. The *project* will filter out only the fields that I'm interested on and pass along that to the *skip* stage. *Skip*, by skipping up one, I'm going to be skipping the *Sun*.
 
-The following stage will be skip.
-
-And again, given the results incoming from the project stage, I will skip only one.
-
-In this case, I'm going to skip the Sun.
-
-So how do I know that I'm going to skip the Sun?
-
-Well basically, the order by which I'm going to get the results into the project is the natural order, exactly in the same way as we've seen before.
-
-The project will filter out only the fields that I'm interested on and pass along that to the skip stage.
-
-Skip, by skipping up one, I'm going to be skipping the Sun.
+```javascript
+// ``skip`` stage
+db.solarSystem.aggregate([{
+  "$project": {
+    "_id": 0,
+    "name": 1,
+    "numberOfMoons": 1
+  }
+}, {
+  "$skip": 1
+}]).pretty();
+```
 
 As you can see here, all different celestial bodies will be reported back in my results, except for the Sun, which is the first element, the one that I'm skipping in the pipeline.
