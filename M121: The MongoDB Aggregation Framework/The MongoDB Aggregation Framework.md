@@ -1736,24 +1736,25 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 We also have our *count* stage. The *count* stage counts all incoming documents. The argument to *count* is the field name on which we are going to collect that *count* value. In a document of the results. In this case, I'm going to filter our collection so we only look at documents that are in *terrestrial planets*. Here we are specifying that match where the type of the document will have the value *terrestrial planet*.
 
+Then, from there results from *match* which are then dispatched to the *project* stage, I'm going to filter only *name* and *number of moons*, removing *ID*, as we've done before. And from all of the documents coming from the pipeline I'm then going to *count* them. The *count* will give me back a result document, which has a field that I specified here, *terrestrial planets*, which contains the value of number of documents that are of type *terrestrial planets*.
+
 ```javascript
 // ``$count`` stage
-db.solarSystem.aggregate([{
-  "$match": {
-    "type": "Terrestrial planet"
-  }
-}, {
-  "$project": {
-    "_id": 0,
-    "name": 1,
-    "numberOfMoons": 1
-  }
-}, {
-  "$count": "terrestrial planets"
-}]).pretty();
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
+...   "$match": {
+...     "type": "Terrestrial planet"
+...   }
+... }, {
+...   "$project": {
+...     "_id": 0,
+...     "name": 1,
+...     "numberOfMoons": 1
+...   }
+... }, {
+...   "$count": "terrestrial planets"
+... }]).pretty();
+{ "terrestrial planets" : 4 }
 ```
-
-Then, from there results from *match* which are then dispatched to the *project* stage, I'm going to filter only *name* and *number of moons*, removing *ID*, as we've done before. And from all of the documents coming from the pipeline I'm then going to *count* them. The *count* will give me back a result document, which has a field that I specified here, *terrestrial planets*, which contains the value of number of documents that are of type *terrestrial planets*.
 
 Now for this particular pipeline here, where the end result is going to be the count of the number of documents, which have a type of terrestrial planet, the project stage here is a little bit of an annoyance. It doesn't really interfere with the end result of the pipeline. So if we would just remove it, and we just have a match and then count, we can see that I get exactly the same execution in exactly the same results, having or not a project in between the match and the count.
 
