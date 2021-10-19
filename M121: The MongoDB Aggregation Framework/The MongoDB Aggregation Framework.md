@@ -1821,7 +1821,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Venus", "numberOfMoons" : 0, "hasMagneticField" : false }
 ```
 
-So first I'm going to have all the ones that has magnetic field is equal to true. And then after that I'm going to search on the number of moons for the results. Now if sort is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
+So first I'm going to have all the ones that *hasMagneticField* is equal to *true*. And then after that I'm going to *sort* on the *numberOfMoons* for the result set. Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
 
 To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results. So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods.
 
