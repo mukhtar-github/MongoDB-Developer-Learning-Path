@@ -1714,15 +1714,23 @@ The following stage will be *skip*. And again, given the results incoming from t
 
 ```javascript
 // ``skip`` stage
-db.solarSystem.aggregate([{
-  "$project": {
-    "_id": 0,
-    "name": 1,
-    "numberOfMoons": 1
-  }
-}, {
-  "$skip": 1
-}]).pretty();
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
+...   "$project": {
+...     "_id": 0,
+...     "name": 1,
+...     "numberOfMoons": 1
+...   }
+... }, {
+...   "$skip": 1
+... }]).pretty();
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
+{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Sun", "numberOfMoons" : 0 }
+{ "name" : "Mars", "numberOfMoons" : 2 }
 ```
 
 As you can see here, all different celestial bodies will be reported back in my results, except for the Sun, which is the first element, the one that I'm skipping in the pipeline.
