@@ -1734,7 +1734,24 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 ### Cursor-like stages: Part 2
 
-We also have our count stage. The count stage counts all incoming documents. The argument to count is the field name on which we are going to collect that count value. In a document of the results. In this case, I'm going to filter our collection so we only look at documents that are in terrestrial planets. Here we are specifying that match where the type of the document will have the value terrestrial planet.
+We also have our *count* stage. The *count* stage counts all incoming documents. The argument to *count* is the field name on which we are going to collect that *count* value. In a document of the results. In this case, I'm going to filter our collection so we only look at documents that are in terrestrial planets. Here we are specifying that match where the type of the document will have the value terrestrial planet.
+
+```javascript
+// ``$count`` stage
+db.solarSystem.aggregate([{
+  "$match": {
+    "type": "Terrestrial planet"
+  }
+}, {
+  "$project": {
+    "_id": 0,
+    "name": 1,
+    "numberOfMoons": 1
+  }
+}, {
+  "$count": "terrestrial planets"
+}]).pretty();
+```
 
 Then, from there results from match which are then dispatched to the project stage, I'm going to filter only name and number of moons, removing ID, as we've done before. And from all of the documents coming from the pipeline I'm then going to count them. The count will give me back a result document, which has a field that I specified here, terrestrial planets, which contains the value of number of documents that are of type terrestrial planets.
 
