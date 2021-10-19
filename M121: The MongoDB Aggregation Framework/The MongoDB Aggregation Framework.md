@@ -1796,7 +1796,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 An important aspect to refer to here is that the *sort* stage is not limited to just *one single* field. You will operate on multiple different fields in combination, as we would do in *normal* queries and *find* operations, if you want to *sort* first on one field and then on another, that is totally possible in the aggregation pipeline stage as well. So let's say here, for example, that I have this different *project* where I'm going to *project* as well, apart from *name* and *number of moons*, the field *hasMagneticField*, which is a *boolean* field.
 
-In the *sort* stage, I can specify that I want to *sort* on *hasMagneticField*, descending, and *numberOfMoons* descending. By executing this specific query, we get a very similar result as before, where are we going to have *Jupiter, Saturn, Uranus*, and so on. The only difference is that, for example, *sun and Mercury* will come before *Mars*. So how is that possible? Well, the result is being *sorted* first on the field *hasMagneticField* equals *true*, and then on *numberOfMoons*.
+In the *sort* stage, I can specify that I want to *sort* on *hasMagneticField*, descending, and *numberOfMoons* descending. By executing this specific query, we get a very similar result as before, where are we going to have *Jupiter, Saturn, Uranus*, and so on. The only difference is that, for example, *sun and Mercury* will come before *Mars*. So how is that possible? Well, the result is being *sorted* first on the field *hasMagneticField* equals *true*, and then on *numberOfMoons*. So first I'm going to have all the ones that *hasMagneticField* is equal to *true*. And then after that I'm going to *sort* on the *numberOfMoons* for the result set.
 
 ```javascript
 // sorting on more than one field
@@ -1821,7 +1821,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Venus", "numberOfMoons" : 0, "hasMagneticField" : false }
 ```
 
-So first I'm going to have all the ones that *hasMagneticField* is equal to *true*. And then after that I'm going to *sort* on the *numberOfMoons* for the result set. Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
+Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
 
 To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results. So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods.
 
