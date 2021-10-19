@@ -1710,7 +1710,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Jupiter", "numberOfMoons" : 67 }
 ```
 
-The following stage will be *skip*. And again, given the results incoming from the *project* stage, I will *skip* only one. In this case, I'm going to *skip* the *Sun*. So how do I know that I'm going to *skip* the *Sun*? Well basically, the order by which I'm going to get the results into the *project* is the natural order, exactly in the same way as we've seen before. The *project* will filter out only the fields that I'm interested on and pass along that to the *skip* stage. *Skip*, by skipping up one, I'm going to be skipping the *Sun*.
+The following stage will be *skip*. And again, given the results incoming from the *project* stage, I will *skip* only one. In this case, I'm going to *skip* the *Earth*. So how do I know that I'm going to *skip* the *Earth*? Well basically, the order by which I'm going to get the results into the *project* is the natural order, exactly in the same way as we've seen before. The *project* will filter out only the fields that I'm interested on and pass along that to the *skip* stage. *Skip*, by skipping up one, I'm going to be skipping the *Earth*.
 
 ```javascript
 // ``skip`` stage
