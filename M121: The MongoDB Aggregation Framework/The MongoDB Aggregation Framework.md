@@ -1692,7 +1692,6 @@ They will vary a little bit on the syntax, where *limit* will take an integer, *
 
 Let's see some of this in action. Now to mimic exactly the same operation as before in our *find* command, I'm going to execute the *project* of *name* and *number of Moons*, excluding *_id*, exactly the same operation as before. And in this case, given the pipeline that I'm executing and given the documents that this aggregation pipeline will provide, I will add a *limit* stage to my pipe, saying, I only want the *first five* documents coming from this project stage. And as expected, I get the same results as I would if I would limit on a *find* operation.
 
-
 ```javascript
 // ``$limit`` stage
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
@@ -1735,76 +1734,20 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 ### Cursor-like stages: Part 2
 
-We also have our count stage.
+We also have our count stage. The count stage counts all incoming documents. The argument to count is the field name on which we are going to collect that count value. In a document of the results. In this case, I'm going to filter our collection so we only look at documents that are in terrestrial planets. Here we are specifying that match where the type of the document will have the value terrestrial planet.
 
-The count stage counts all incoming documents.
+Then, from there results from match which are then dispatched to the project stage, I'm going to filter only name and number of moons, removing ID, as we've done before. And from all of the documents coming from the pipeline I'm then going to count them. The count will give me back a result document, which has a field that I specified here, terrestrial planets, which contains the value of number of documents that are of type terrestrial planets.
 
-The argument to count is the field name on which we are going to collect that count value.
+Now for this particular pipeline here, where the end result is going to be the count of the number of documents, which have a type of terrestrial planet, the project stage here is a little bit of an annoyance. It doesn't really interfere with the end result of the pipeline. So if we would just remove it, and we just have a match and then count, we can see that I get exactly the same execution in exactly the same results, having or not a project in between the match and the count.
 
-In a document of the results.
+Lastly, let's look at the sort. Sort needs to be supplied with the field we want to sort on. In this case, if I'm going a project, name, and number of moons, I can sort on the fields that I'm collecting from the incoming pipeline. So in this case, if I want to sort on the number of moons descending, I'll get the results as expected, where I get the planet which has more moons first, and on that order to till ones that have absolutely no moons-- like sun, Mercury, and Venus-- poor guys.
 
-In this case, I'm going to filter our collection so we only look at documents that are in terrestrial planets.
+An important aspect to refer to here is that the sort stage is not limited to just one single field. You will operate on multiple different fields in combination, as we would do in normal queries and find operations, if you want to sort first on one field and then on another, that is totally possible in the aggregation pipeline stage as well. So let's say here, for example, that I have this different project where I'm going to project as well, apart from name and number of moons, the field has magnetic field, which is a pulling field.
 
-Here we are specifying that match where the type of the document will have the value terrestrial planet.
+In the third stage, I can specify that I want to sort on as magnetic field, descending, and number of moons descending. By executing this specific query, we get a very similar result as before, where are we going to have Jupiter, Saturn, Uranus, and so on. The only difference is that, for example, sun and Mercury will come before Mars. So how is that possible? Well, the result is being sorted first on the field as magnetic field equals true, and then on the number of moons.
 
-Then, from there results from match which are then dispatched to the project stage, I'm going to filter only name and number of moons, removing ID, as we've done before.
+So first I'm going to have all the ones that has magnetic field is equal to true. And then after that I'm going to search on the number of moons for the results. Now if sort is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
 
-And from all of the documents coming from the pipeline I'm then going to count them.
+To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results. So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods.
 
-The count will give me back a result document, which has a field that I specified here, terrestrial planets, which contains the value of number of documents that are of type terrestrial planets.
-
-Now for this particular pipeline here, where the end result is going to be the count of the number of documents, which have a type of terrestrial planet, the project stage here is a little bit of an annoyance.
-
-It doesn't really interfere with the end result of the pipeline.
-
-So if we would just remove it, and we just have a match and then count, we can see that I get exactly the same execution in exactly the same results, having or not a project in between the match and the count.
-
-Lastly, let's look at the sort.
-
-Sort needs to be supplied with the field we want to sort on.
-
-In this case, if I'm going a project, name, and number of moons, I can sort on the fields that I'm collecting from the incoming pipeline.
-
-So in this case, if I want to sort on the number of moons descending, I'll get the results as expected, where I get the planet which has more moons first, and on that order to till ones that have absolutely no moons-- like sun, Mercury, and Venus-- poor guys.
-
-An important aspect to refer to here is that the sort stage is not limited to just one single field.
-
-You will operate on multiple different fields in combination, as we would do in normal queries and find operations, if you want to sort first on one field and then on another, that is totally possible in the aggregation pipeline stage as well.
-
-So let's say here, for example, that I have this different project where I'm going to project as well, apart from name and number of moons, the field has magnetic field, which is a pulling field.
-
-In the third stage, I can specify that I want to sort on as magnetic field, descending, and number of moons descending.
-
-By executing this specific query, we get a very similar result as before, where are we going to have Jupiter, Saturn, Uranus, and so on.
-
-The only difference is that, for example, sun and Mercury will come before Mars.
-
-So how is that possible?
-
-Well, the result is being sorted first on the field as magnetic field equals true, and then on the number of moons.
-
-So first I'm going to have all the ones that has magnetic field is equal to true.
-
-And then after that I'm going to search on the number of moons for the results.
-
-Now if sort is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes.
-
-Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server.
-
-Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default.
-
-To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function.
-
-By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results.
-
-So in short, $sort, $skip, $limits, and $count are functionally equivalent to the similar named cursor methods.
-
-So we can take advantage of indexes if it's near the beginning of our pipeline, and before a project group or unwind stages.
-
-By default, the $source will only take up to 100 megabytes of RAM.
-
-For more than that, we will need to provide the allowDiskUse option as equal true to our pipeline.
-
-If we do not do so, the operation will be terminated on the server.
-
-And that's all we have for you in cursor-like stages of the hour aggregation pipeline.
+So we can take advantage of indexes if it's near the beginning of our pipeline, and before a project group or unwind stages. By default, the $source will only take up to 100 megabytes of RAM. For more than that, we will need to provide the allowDiskUse option as equal true to our pipeline. If we do not do so, the operation will be terminated on the server. And that's all we have for you in cursor-like stages of the hour aggregation pipeline.
