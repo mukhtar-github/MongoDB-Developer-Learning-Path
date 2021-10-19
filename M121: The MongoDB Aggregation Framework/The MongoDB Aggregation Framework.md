@@ -1796,7 +1796,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 
 An important aspect to refer to here is that the *sort* stage is not limited to just *one single* field. You will operate on multiple different fields in combination, as we would do in *normal* queries and *find* operations, if you want to *sort* first on one field and then on another, that is totally possible in the aggregation pipeline stage as well. So let's say here, for example, that I have this different *project* where I'm going to *project* as well, apart from *name* and *number of moons*, the field *hasMagneticField*, which is a *boolean* field.
 
-In the *sort* stage, I can specify that I want to *sort* on *hasMagneticField*, descending, and *numberOfMoons* descending. By executing this specific query, we get a very similar result as before, where are we going to have *Jupiter, Saturn, Uranus*, and so on. The only difference is that, for example, *sun and Mercury* will come before *Mars*. So how is that possible? Well, the result is being sorted first on the field as magnetic field equals true, and then on the number of moons.
+In the *sort* stage, I can specify that I want to *sort* on *hasMagneticField*, descending, and *numberOfMoons* descending. By executing this specific query, we get a very similar result as before, where are we going to have *Jupiter, Saturn, Uranus*, and so on. The only difference is that, for example, *sun and Mercury* will come before *Mars*. So how is that possible? Well, the result is being *sorted* first on the field *hasMagneticField* equals *true*, and then on *numberOfMoons*.
 
 ```javascript
 // sorting on more than one field
