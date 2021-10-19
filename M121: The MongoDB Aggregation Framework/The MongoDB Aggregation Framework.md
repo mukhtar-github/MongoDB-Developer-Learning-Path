@@ -1694,14 +1694,19 @@ Let's see some of this in action. Now to mimic exactly the same operation as bef
 
 ```javascript
 // ``$limit`` stage
-db.solarSystem.aggregate([{
-  "$project": {
-    "_id": 0,
-    "name": 1,
-    "numberOfMoons": 1
-  }
-},
-{ "$limit": 5  }]).pretty();
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
+...   "$project": {
+...     "_id": 0,
+...     "name": 1,
+...     "numberOfMoons": 1
+...   }
+... },
+... { "$limit": 5  }]).pretty();
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
 ```
 
 And as expected, I get the same results as I would if I would limit on a find operation.
