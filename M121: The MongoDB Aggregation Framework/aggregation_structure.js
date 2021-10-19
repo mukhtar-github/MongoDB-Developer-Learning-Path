@@ -236,3 +236,11 @@ db.solarSystem.aggregate([{
 }, {
   "$sort": { "hasMagneticField": -1, "numberOfMoons": -1 }
 }], { "allowDiskUse": true }).pretty();
+
+
+
+
+// **m121/sample_stage.js**
+
+// sampling 200 documents of collection ``nycFacilities``
+db.nycFacilities.aggregate([{"$sample": { "size": 200 }}]).pretty();

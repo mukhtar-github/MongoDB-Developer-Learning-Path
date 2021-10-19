@@ -1838,3 +1838,39 @@ db.solarSystem.aggregate([{
 ```
 
 So in short, *$sort, $skip, $limits, and $count* are functionally equivalent to the similar *named cursor* methods. So we can take advantage of *indexes*, if it's *near the beginning* of our pipeline, and before a *project group or unwind* stages. By default, the *$sort* stage will only take up to *100 megabytes of RAM*. For more than that, we will need to provide the *allowDiskUse* option as equal *true* to our pipeline. If we do not do so, the operation will be terminated on the server. And that's all we have for you in *cursor-like stages* of the *aggregation pipeline*.
+
+### $sample Stage
+
+Another very useful utility stage is $sample.
+
+$sample will select a set of random documents from a collection in one of two ways.
+
+The first method is if the size that we are specifying, the N number of documents that we want our sample to be looking like, if it's less than 5% of the number of documents in our source collection, and the source collection has more than 100 documents, and $sample is the first stage, then a pseudo-random cursor will select the specific number of documents to be passed on.
+
+If all other conditions, and let's recap them very quickly, if N is more than 5% or the source collection has less than 100 documents, or if sample is not the first stage, if any of these conditions does not apply, then what is done is a in-memory random sort and select the specific number of documents that we specify as the size.
+
+Now this sort will be subjected to the same memory restrictions as the sort stage of our aggregation pipeline.
+
+So let's see some of this in action.
+
+In my database, I will have a NYC facilities collection.
+
+This collection contains more than 100 documents.
+
+The sample size is greater than 5% of the total amount of documents.
+
+And the sample stage is the first of my pipeline.
+
+Therefore, the pseudo-random operation will apply.
+
+When I run this pipeline, we can see that we got randomly selected documents from our collection.
+
+Now $sample is very useful when working with large collections.
+
+And we only want a limited amount of documents to operate with.
+
+They can be useful to do an initial analysis or to do some sampling on the result set that we might be interested to work with.
+
+It can be used to fetch documents in a random fashion for features such as random user search in a collection, or when we want to seed some random object for some computation, or when we want aleatory data for our data set.
+
+And this is all we have for you on $sample.
