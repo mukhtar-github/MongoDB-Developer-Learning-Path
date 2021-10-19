@@ -1821,7 +1821,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.solarSystem.aggregate([{
 { "name" : "Venus", "numberOfMoons" : 0, "hasMagneticField" : false }
 ```
 
-Now if *sort* is near the beginning of our pipeline, in place before a project, and unwinds in the group stage, it can take advantage of indexes. Otherwise, this sort stage will perform an in-memory sort, , which will greatly increase the memory consumption of our server. Sort operations within that vision pipeline are limited to 100 megabytes of RAM by default. To allow handling larger data sets, we need to allow DiskUse, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of 100 megabytes of memory required to do a sort using disk to help us sort out the results.
+Now if *sort* is near the beginning of our pipeline, in place before a *project*, and unwinds in the *group* stage, it can take advantage of *indexes*. Otherwise, this *sort* stage will perform an *in-memory sort*, which will greatly increase the *memory consumption* of our server. *Sort* operations within that vision pipeline are limited to *100 megabytes of RAM* by default. To allow handling *larger data sets*, we need to *allowDiskUse*, which is an aggregation pipeline option that we can provide to the aggregate function. By doing so, we will be performing the excess of *100 megabytes* of memory required to do a *sort* using *disk* to help us *sort* out the results.
 
 ```javascript
 // setting ``allowDiskUse`` option
