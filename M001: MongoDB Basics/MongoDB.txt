@@ -153,3 +153,17 @@ mukhtar@mukhtar-Aspire-ES1-431:~$ sudo mkdir -p /var/m121/validateLab2.js
 mukhtar@mukhtar-Aspire-ES1-431:~$ cat /var/m121/validateLab1.js
 cat: /var/m121/validateLab1.js: Is a directory
 cd /var/m121
+
+
+sudo vim /etc/environment
+source /etc/environment
+echo $JAVA_HOME
+sudo mkdir -p /etc/environment
+vim -r /etc/environment
+:term
+Ctrl-W N
+
+:vert term
+:set makeprg=javac\ -g\ /etc/environment
+:copen
+=expand('%:r') => brings out current file name
