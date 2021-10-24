@@ -1850,25 +1850,15 @@ WHEN:
     Source Collection has >= 100 documents AND $sample is the first stage
 ```
 
-If all other conditions, and let's recap them very quickly, if N is more than 5% or the source collection has less than 100 documents, or if sample is not the first stage, if any of these conditions does not apply, then what is done is a in-memory random sort and select the specific number of documents that we specify as the size.
+If all other conditions, and let's recap them very quickly, if N is more than 5% or the source collection has less than 100 documents, or if sample is not the first stage, if any of these conditions does not apply, then what is done is a in-memory random sort and select the specific number of documents that we specify as the size. Now this sort will be subjected to the same memory restrictions as the sort stage of our aggregation pipeline.
 
-Now this sort will be subjected to the same memory restrictions as the sort stage of our aggregation pipeline.
+```javascript
+    {$sample: {size: < N, how many documents> } }
+WHEN:
+    All other conditions
+```
 
-So let's see some of this in action.
-
-In my database, I will have a NYC facilities collection.
-
-This collection contains more than 100 documents.
-
-The sample size is greater than 5% of the total amount of documents.
-
-And the sample stage is the first of my pipeline.
-
-Therefore, the pseudo-random operation will apply.
-
-When I run this pipeline, we can see that we got randomly selected documents from our collection.
-
-Now $sample is very useful when working with large collections.
+So let's see some of this in action. In my database, I will have a NYC facilities collection. This collection contains more than 100 documents. The sample size is greater than 5% of the total amount of documents. And the sample stage is the first of my pipeline. Therefore, the pseudo-random operation will apply. When I run this pipeline, we can see that we got randomly selected documents from our collection. Now $sample is very useful when working with large collections.
 
 And we only want a limited amount of documents to operate with.
 
