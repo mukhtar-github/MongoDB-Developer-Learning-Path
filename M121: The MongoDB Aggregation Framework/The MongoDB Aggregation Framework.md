@@ -1841,11 +1841,14 @@ So in short, *$sort, $skip, $limits, and $count* are functionally equivalent to 
 
 ### $sample Stage
 
-Another very useful utility stage is $sample.
+Another very useful utility stage is *$sample*. *$sample* will select a set of random documents from a collection in one of two ways. The *first method* is, if the *size* that we are specifying, the *N number* of documents that we want our sample to be looking like. If it's less than *5%* of the number of documents in our *source collection*, and the *source collection* has more than *100 documents*, and *$sample* is the *first stage*, then a *pseudo-random cursor* will select the specific number of documents to be passed on.
 
-$sample will select a set of random documents from a collection in one of two ways.
-
-The first method is if the size that we are specifying, the N number of documents that we want our sample to be looking like, if it's less than 5% of the number of documents in our source collection, and the source collection has more than 100 documents, and $sample is the first stage, then a pseudo-random cursor will select the specific number of documents to be passed on.
+```javascript
+    {$sample: {size: < N, how many documents> } }
+WHEN:
+    N <= 5% of number of documents in source collection AND
+    Source Collection has >= 100 documents AND $sample is the first stage
+```
 
 If all other conditions, and let's recap them very quickly, if N is more than 5% or the source collection has less than 100 documents, or if sample is not the first stage, if any of these conditions does not apply, then what is done is a in-memory random sort and select the specific number of documents that we specify as the size.
 
