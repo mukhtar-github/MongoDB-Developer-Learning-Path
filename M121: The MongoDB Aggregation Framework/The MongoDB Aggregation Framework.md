@@ -2100,3 +2100,137 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> var result = db.movies.aggregate(pi
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> print("Result: " + result);
 Result: The Christmas Tree
 ```
+
+## Chapter 3: Core Aggregation - Combining Information
+
+### The $group Stage
+
+The next stage we'll learn about is the $group stage.
+
+Key to our comprehension of group is to understand the one required argument-- the _id field of this stage.
+
+The expression or expressions we specify to _id becomes the criteria the group stage uses to categorize and bundle documents together.
+
+In this picture, we're grouping coins based on their denomination, so the expression specified to _id would be the denomination field path.
+
+Let's see this in action using real data.
+
+All right, let's group documents in our movies collection based on the value they have in their year field.
+
+By grouping, we can see we have fundamentally changed the structure of the resulting documents.
+
+Group matched them based on the value of the year field.
+
+Documents with identical values got bundled together, and each unique value produced an output document that shows us the values or value we grouped on.
+
+By itself, this may or may not be useful depending on the use case, and just grouping on one expression is functionally equivalent to using the distinct command.
+
+Let's explore the other powerful feature of the group stage-- the ability to use aggregation accumulator expressions.
+
+We can specify additional fields we want to calculate in the group stage, and as many as we're required to accomplish our goal.
+
+Here we are going to group on the value of year, as before.
+
+We also calculate a new field called num_films_in_year using the $sum accumulator expression.
+
+Each time group categorizes a document for us, the sum expression gets called.
+
+Since we specified a value of 1, each matching document is going to sum 1 to the value of num_films_in_year.
+
+Let's see it in action.
+
+The same results as before, with the addition of the num_films_in_year field.
+
+We can see that there was only one document with a value 1874 in the year field, while there were 2,058 documents with the value 2014.
+
+Quite a busy year.
+
+Let's perform the same aggregation with the source stage appended to the end to order our results.
+
+Great.
+
+We can start to get an indication that as a year value increases, we have more documents in our collection.
+
+This brings up an important point about the expression we specified _id.
+
+Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
+
+Let's look at an example.
+
+Here we're using the size expression to get the value of the directors array.
+
+I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error.
+
+So if directors is an array, return the size of directors.
+
+Otherwise, 0.
+
+As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together.
+
+All documents without director information or with an empty array for directors will be grouped as well.
+
+We call the field numDirectors, but could have given it any name we wanted.
+
+When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match.
+
+We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group.
+
+Again, we could have specified any name for numFilms or averageMetacritic.
+
+Lastly, we'll just sort the documents in descending order.
+
+Let's see it in action.
+
+Wow, a film with 44 directors, but the average metacritic is null.
+
+Let's explore this by looking at the document.
+
+All right, scanning the document, we can see that the metacritic field is missing entirely.
+
+This illustrates an important concept.
+
+It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all.
+
+Accumulator expressions will ignore documents with a value at the specified field that isn't of the type the expression expects, or if the value is missing.
+
+If all documents encountered have an incorrect data type or a missing value for the desired field, the expression will result in null.
+
+OK, we're gaining a good understanding of how both the expressions applied to the _id groups documents, and how expressions specified to our accumulators work.
+
+But what if we wanted to group all documents, rather than just a subset?
+
+By convention, we specify null-- or an empty string-- as the argument to _id.
+
+Before we run this pipeline, let's set an expectation.
+
+I expect the value of count to be equal to the number of documents in the movies collection.
+
+Let's test.
+
+All right, 44,497.
+
+And the total number of documents?
+
+Again 44,497.
+
+An exact match.
+
+Rather than duplicating functionality in a very unoptimized way, let's do something that is useful for all documents.
+
+Let's calculate the average metacritic rating.
+
+Here, we use a match stage to filter documents out with a metacritic that isn't greater than or equal to 0.
+
+Documents missing metacritic information, or with a non-numeric value at that field won't make it through.
+
+And we can assume the average metacritic rating among all documents that had metacritic information is around 56.93.
+
+And that covers the group stage.
+
+Let's summarize.
+
+_id is where we specify what incoming documents should be grouped on.
+
+We can use all accumulator expressions within group.
+
+Group can be used multiple times within a pipeline, and it may be necessary to sanitize incoming data.

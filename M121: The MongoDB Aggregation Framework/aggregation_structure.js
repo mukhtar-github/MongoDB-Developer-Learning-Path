@@ -1,3 +1,9 @@
+// Chapter 0: Introduction and Aggregation Concepts
+
+// Aggregation Structure and Syntax
+
+// **m121/aggregation_structure.js**
+
 // simple first example
 db.solarSystem.aggregate([{
     "$match": {
@@ -11,6 +17,14 @@ db.solarSystem.aggregate([{
       "hasMoons": { "$gt": ["$numberOfMoons", 0] }
     }
   }], { "allowDiskUse": true});
+
+
+
+  // Chapter 1: Basic Aggregation - $match and $project
+
+// $match: Filtering documents
+
+// **m121/match_stage.js**
 
   // $match all celestial bodies, not equal to Star
 db.solarSystem.aggregate([{
@@ -35,6 +49,9 @@ db.solarSystem.find({"name": "Earth"}, {"_id": 0});
 
 
 
+
+// Shaping documents with $project
+
 // **m121/project_stage.js**
 
 // project ``name`` and remove ``_id``
@@ -56,6 +73,10 @@ db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "surfaceGravity": 
 db.solarSystem.aggregate([{"$project": { "_id": 0, "name": 1, "myWeight": { "$multiply": [ { "$divide": [ "$gravity.value", 9.8 ] }, 86 ] } }}]);
 
 
+
+// Chapter 2: Basic Aggregation - Utility Stages
+
+// $addFields and how it is similar to $project
 
 // **m121/addFields_stage.js**
 
@@ -106,6 +127,8 @@ db.solarSystem.aggregate([
 
 
 
+// geoNear Stage
+
 // **m121/geoNear_stage.js**
 
 // using ``$geoNear`` stage
@@ -138,6 +161,8 @@ db.nycFacilities.aggregate([{
 ]).pretty();
 
 
+
+// Cursor-like stages: Part 1
 
 // **m121/cursorlike_stages.js**
 
@@ -176,6 +201,8 @@ db.solarSystem.aggregate([{
 }, {
   "$skip": 1
 }]).pretty();
+
+// Cursor-like stages: Part 2
 
 // ``$count`` stage
 db.solarSystem.aggregate([{
@@ -240,6 +267,8 @@ db.solarSystem.aggregate([{
 
 
 
+// $sample Stage
+
 // **m121/sample_stage.js**
 
 // sampling 200 documents of collection ``nycFacilities``
@@ -290,3 +319,75 @@ x = imdb.votes;
 // given we have the numbers, this is how to calculated normalized_rating
 // yes, you can use $avg in $project and $addFields!
 normalized_rating = average(scaled_votes, imdb.rating);
+
+
+
+// Chapter 3: Core Aggregation - Combining Information
+
+// The $group Stage
+
+// grouping by year and getting a count per year using the { $sum: 1 } pattern
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": "$year",
+      "numFilmsThisYear": { "$sum": 1 }
+    }
+  }
+]);
+
+// grouping as before, then sorting in descending order based on the count
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": "$year",
+      "count": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "count": -1 }
+  }
+]);
+
+// grouping on the number of directors a film has, demonstrating that we have to
+// validate types to protect some expressions
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": {
+        "numDirectors": {
+          "$cond": [{ "$isArray": "$directors" }, { "$size": "$directors" }, 0]
+        }
+      },
+      "numFilms": { "$sum": 1 },
+      "averageMetacritic": { "$avg": "$metacritic" }
+    }
+  },
+  {
+    "$sort": { "_id.numDirectors": -1 }
+  }
+]);
+
+// showing how to group all documents together. By convention, we use null or an
+// empty string, ""
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": null,
+      "count": { "$sum": 1 }
+    }
+  }
+]);
+
+// filtering results to only get documents with a numeric metacritic value
+db.movies.aggregate([
+  {
+    "$match": { "metacritic": { "$gte": 0 } }
+  },
+  {
+    "$group": {
+      "_id": null,
+      "averageMetacritic": { "$avg": "$metacritic" }
+    }
+  }
+]);
