@@ -1850,7 +1850,7 @@ WHEN:
     Source Collection has >= 100 documents AND $sample is the first stage
 ```
 
-If all other conditions, and let's recap them very quickly, if N is more than 5% or the source collection has less than 100 documents, or if sample is not the first stage, if any of these conditions does not apply, then what is done is a in-memory random sort and select the specific number of documents that we specify as the size. Now this sort will be subjected to the same memory restrictions as the sort stage of our aggregation pipeline.
+If all other conditions, and let's recap them very quickly, if *N* is more than *5%* or the *source collection* has less than *100 documents*, or if sample is not the *first stage*, if any of these conditions does not apply, then what is done is a *in-memory random sort* and select the specific number of documents that we specify as the *size*. Now this sort will be subjected to the same memory restrictions as the *sort stage* of our aggregation pipeline.
 
 ```javascript
     {$sample: {size: < N, how many documents> } }
