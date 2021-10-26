@@ -2019,42 +2019,40 @@ favorites = [
 
 For movies released in the **USA** with a *tomatoes.viewer.rating* greater than or equal to *3*, calculate a new field called *num_favs* that represets how many *favorites* appear in the *cast* field of the movie.
 
-Sort your results by *num_favs, tomatoes.viewer.rating, and title*, all in descending order.
-
-What is the *title* of the *25th* film in the aggregation result?
+Sort your results by *num_favs, tomatoes.viewer.rating, and title*, all in descending order. What is the *title* of the *25th* film in the aggregation result?
 
 #### Answer 5
 
 ```javascript
 
+// Favorite actors.
+var favorites = [
+    "Sandra Bullock",
+    "Tom Hanks",
+    "Julia Roberts",
+    "Kevin Spacey",
+    "George Clooney"
+];
+ 
 // Builds the pipeline.
 var pipeline = [
-        { $match : { 
-            "languages" : "English",
-            "imdb.rating" : { $gte : 1 }, 
-            "imdb.votes" : { $gte : 1 }, 
-            "year" : { $gte : 1990 }
+    { $match : { 
+            "tomatoes.viewer.rating": { $gte: 3 },
+            "countries": { $in: ["USA"] },
+            "cast" : { $exists : true }
             } 
         },
-        { $addFields : 
-            { "scaled_votes" : 
-                { $add: [
-                    1,
-                    { $multiply: [
-                        9,
-                        { $divide: [
-                            { $subtract: [ "$imdb.votes" , 5] },
-                            { $subtract: [1521105, 5] }
-                        ]}
-                    ]}
-                ]}
-            }
+        { $addFields : { "num_favs" : { $size : { $setIntersection : [ "$cast", favorites ] } } } },
+        { $sort : {
+            "num_favs" : -1,
+            "tomatoes.viewer.rating" : -1,
+            "title" : -1
+            },
         },
-        { $addFields : { "normalized_rating" : { $avg : [ "$scaled_votes", "$imdb.rating" ] } } },
-        { $sort : { "normalized_rating" : 1 } }
+        { $skip : 24 }
 ];
 
 // Prints the result.
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline, { allowDiskUse : true }).next().title;
-The Christmas Tree
+The Heat
 ```
