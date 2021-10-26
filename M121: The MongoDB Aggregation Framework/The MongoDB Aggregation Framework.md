@@ -1860,6 +1860,144 @@ WHEN:
 
 So let's see some of this in action. In my database, I will have a NYC facilities collection. This collection contains more than 100 documents. The sample size is greater than 5% of the total amount of documents. And the sample stage is the first of my pipeline. Therefore, the pseudo-random operation will apply. When I run this pipeline, we can see that we got randomly selected documents from our collection. Now $sample is very useful when working with large collections.
 
+```javascript
+// sampling 200 documents of collection ``nycFacilities``
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([{"$sample": { "size": 200 }}]).pretty();
+{
+        "_id" : ObjectId("59a57f72ea2da4c51ef3626a"),
+        "name" : "Jamaica Gateway Park",
+        "address" : {
+            "number" : "137-37",
+            "street" : "95 Avenue",
+            "city" : "Jamaica",
+            "zipcode" : "11435"
+        },
+        "borough" : "Queens",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.812177,
+                40.696834
+            ]
+        },
+        "domain" : "Administration of Government",
+        "group" : "Other Property",
+        "specialty" : "Miscellaneous Use",
+        "type" : "Undeveloped"
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3cf24"),
+        "name" : "USDA-CEO P371k At Sunset Park H.S",
+        "address" : {
+            "number" : "153",
+            "street" : "35 Street",
+            "city" : "Brooklyn",
+            "zipcode" : "11232"
+        },
+        "borough" : "Brooklyn",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -74.004282,
+                40.655552
+            ]
+        },
+        "domain" : "Education, Child Welfare, and Youth",
+        "group" : "Child Services and Welfare",
+        "specialty" : "Child Nutrition",
+        "type" : "USDA Community Eligibility Option"
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3c669"),
+        "name" : "Motor Parkway",
+        "address" : {
+            "number" : "",
+            "street" : "",
+            "city" : "Oakland Gardens",
+            "zipcode" : "11364"
+        },
+        "borough" : "Queens",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.753579,
+                40.737021
+            ]
+        },
+        "domain" : "Parks, Gardens, and Historical Sites",
+        "group" : "Parks and Plazas",
+        "specialty" : "Preserves and Conservation Areas",
+        "type" : "Nature Area"
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3c59b"),
+        "name" : "Louis Pl Friends",
+        "address" : {
+            "number" : "",
+            "street" : "",
+            "city" : "Brooklyn",
+            "zipcode" : "11233"
+        },
+        "borough" : "Brooklyn",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.917054,
+                40.677419
+            ]
+        },
+        "domain" : "Parks, Gardens, and Historical Sites",
+        "group" : "Parks and Plazas",
+        "specialty" : "Gardens",
+        "type" : "Garden"
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef37da6"),
+        "name" : "P.S. 229 Emanuel Kaplan",
+        "address" : {
+            "number" : "67-25",
+            "street" : "51 Road",
+            "city" : "Woodside",
+            "zipcode" : "11377"
+        },
+        "borough" : "Queens",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.897083,
+                40.734631
+            ]
+        },
+        "domain" : "Education, Child Welfare, and Youth",
+        "group" : "Child Care and Pre-Kindergarten",
+        "specialty" : "DOE Universal Pre-Kindergarten",
+        "type" : "DOE Universal Pre-K"
+    }
+    {
+        "_id" : ObjectId("59a57f72ea2da4c51ef3c4f3"),
+        "name" : "Ould Sod Construction Corp.",
+        "address" : {
+            "number" : "33-13",
+            "street" : "70 Street",
+            "city" : "Jackson Heights",
+            "zipcode" : "11372"
+        },
+        "borough" : "Queens",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [
+                -73.896175,
+                40.753902
+            ]
+        },
+        "domain" : "Core Infrastructure and Transportation",
+        "group" : "Solid Waste",
+        "specialty" : "Solid Waste Transfer and Carting",
+        "type" : "Trade Waste Carter Site"
+}
+Type "it" for more
+```
+
 And we only want a limited amount of documents to operate with.
 
 They can be useful to do an initial analysis or to do some sampling on the result set that we might be interested to work with.
