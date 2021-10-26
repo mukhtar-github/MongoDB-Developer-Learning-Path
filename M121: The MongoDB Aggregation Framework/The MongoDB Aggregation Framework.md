@@ -2056,3 +2056,11 @@ var pipeline = [
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline, { allowDiskUse : true }).next().title;
 The Heat
 ```
+
+### Lab - Bringing it all together
+
+#### Problem 6
+
+Calculate an average rating for each movie in our collection where English is an available language, the minimum *imdb.rating* is at least 1, the minimum *imdb.votes* is at least 1, and it was released in *1990* or after. You'll be required to *rescale (or normalize) imdb.votes*. The formula to rescale imdb.votes and calculate normalized_rating is included as a handout.
+
+What film has the lowest normalized_rating?
