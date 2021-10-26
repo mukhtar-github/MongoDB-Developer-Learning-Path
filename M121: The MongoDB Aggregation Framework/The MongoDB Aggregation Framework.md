@@ -2024,3 +2024,37 @@ Sort your results by *num_favs, tomatoes.viewer.rating, and title*, all in desce
 What is the *title* of the *25th* film in the aggregation result?
 
 #### Answer 5
+
+```javascript
+
+// Builds the pipeline.
+var pipeline = [
+        { $match : { 
+            "languages" : "English",
+            "imdb.rating" : { $gte : 1 }, 
+            "imdb.votes" : { $gte : 1 }, 
+            "year" : { $gte : 1990 }
+            } 
+        },
+        { $addFields : 
+            { "scaled_votes" : 
+                { $add: [
+                    1,
+                    { $multiply: [
+                        9,
+                        { $divide: [
+                            { $subtract: [ "$imdb.votes" , 5] },
+                            { $subtract: [1521105, 5] }
+                        ]}
+                    ]}
+                ]}
+            }
+        },
+        { $addFields : { "normalized_rating" : { $avg : [ "$scaled_votes", "$imdb.rating" ] } } },
+        { $sort : { "normalized_rating" : 1 } }
+];
+
+// Prints the result.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(pipeline, { allowDiskUse : true }).next().title;
+The Christmas Tree
+```
