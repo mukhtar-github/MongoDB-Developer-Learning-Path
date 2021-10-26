@@ -1844,6 +1844,7 @@ So in short, *$sort, $skip, $limits, and $count* are functionally equivalent to 
 Another very useful utility stage is *$sample*. *$sample* will select a set of random documents from a collection in one of two ways. The *first method* is, if the *size* that we are specifying, the *N number* of documents that we want our sample to be looking like. If it's less than *5%* of the number of documents in our *source collection*, and the *source collection* has more than *100 documents*, and *$sample* is the *first stage*, then a *pseudo-random cursor* will select the specific number of documents to be passed on.
 
 ```javascript
+// First Method
     {$sample: {size: < N, how many documents> } }
 WHEN:
     N <= 5% of number of documents in source collection AND
@@ -1853,12 +1854,13 @@ WHEN:
 If all other conditions, and let's recap them very quickly, if *N* is more than *5%* or the *source collection* has less than *100 documents*, or if sample is not the *first stage*, if any of these conditions does not apply, then what is done is a *in-memory random sort* and select the specific number of documents that we specify as the *size*. Now this sort will be subjected to the same memory restrictions as the *sort stage* of our aggregation pipeline.
 
 ```javascript
+// Second Method
     {$sample: {size: < N, how many documents> } }
 WHEN:
     All other conditions
 ```
 
-So let's see some of this in action. In my database, I will have a NYC facilities collection. This collection contains more than 100 documents. The sample size is greater than 5% of the total amount of documents. And the sample stage is the first of my pipeline. Therefore, the pseudo-random operation will apply. When I run this pipeline, we can see that we got randomly selected documents from our collection. Now $sample is very useful when working with large collections.
+So let's see some of this in action. In my database, I will have a *NYC facilities collection*. This collection contains more than *100 documents*. The *sample size* is greater than *5%* of the *total amount* of documents. And the *sample stage* is the *first* of my pipeline. Therefore, the *pseudo-random operation* will apply. When I run this pipeline, we can see that we got *randomly selected* documents from our collection.
 
 ```javascript
 // sampling 200 documents of collection ``nycFacilities``
@@ -1998,10 +2000,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.nycFacilities.aggregate([{"$samp
 Type "it" for more
 ```
 
-And we only want a limited amount of documents to operate with.
-
-They can be useful to do an initial analysis or to do some sampling on the result set that we might be interested to work with.
-
-It can be used to fetch documents in a random fashion for features such as random user search in a collection, or when we want to seed some random object for some computation, or when we want aleatory data for our data set.
-
-And this is all we have for you on $sample.
+Now *$sample* is very useful when working with *large* collections. And we only want a *limited amount* of documents to operate with. They can be useful to do an *initial analysis* or to do some *sampling on the result set* that we might be interested to work with. It can be used to fetch documents in a *random fashion* for features such as *random user search* in a collection, or when we want to *seed some random object* for some computation, or when we want aleatory data for our data set. And this is all we have for you on $sample.
