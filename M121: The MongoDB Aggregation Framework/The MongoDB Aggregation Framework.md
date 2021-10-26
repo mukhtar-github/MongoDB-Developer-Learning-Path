@@ -2001,3 +2001,26 @@ Type "it" for more
 ```
 
 Now *$sample* is very useful when working with *large* collections. And we only want a *limited amount* of documents to operate with. They can be useful to do an *initial analysis* or to do some *sampling on the result set* that we might be interested to work with. It can be used to fetch documents in a *random fashion* for features such as *random user search* in a collection, or when we want to *seed some random object* for some computation, or when we want *aleatory data* for our data set. And this is all we have for you on *$sample*.
+
+### Lab: Using Cursor-like Stages
+
+#### Problem 5
+
+*MongoDB* has another movie night scheduled. This time, we polled employees for their favorite actress or actor, and got these results.
+
+```javascript
+favorites = [
+  "Sandra Bullock",
+  "Tom Hanks",
+  "Julia Roberts",
+  "Kevin Spacey",
+  "George Clooney"]
+```
+
+For movies released in the **USA** with a *tomatoes.viewer.rating* greater than or equal to *3*, calculate a new field called *num_favs* that represets how many *favorites* appear in the *cast* field of the movie.
+
+Sort your results by *num_favs, tomatoes.viewer.rating, and title*, all in descending order.
+
+What is the *title* of the *25th* film in the aggregation result?
+
+#### Answer 5
