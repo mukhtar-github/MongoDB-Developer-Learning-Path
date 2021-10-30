@@ -2312,7 +2312,118 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 Type "it" for more
 ```
 
-Wow, a film with 44 directors, but the average metacritic is null. Let's explore this by looking at the document. All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
+Wow, a film with *44 directors*, but the *average metacritic is null*. Let's explore this by looking at the document.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.findOne( { directors: { $size: 44 } } );
+{
+        "_id" : ObjectId("573a13edf29313caabdd41f4"),
+        "title" : "Our RoboCop Remake",
+        "year" : 2014,
+        "runtime" : 108,
+        "released" : ISODate("2014-02-06T00:00:00Z"),
+        "cast" : [
+            "Chase Fein",
+            "Nichole Bagby",
+            "Willy Roberts",
+            "Hank Friedmann"
+        ],
+        "lastupdated" : "2015-09-11 00:13:14.227000000",
+        "type" : "movie",
+        "languages" : [
+            "English"
+        ],
+        "directors" : [
+            "Kelsy Abbott",
+            "Eric Appel",
+            "James Atkinson",
+            "Paul Bartunek",
+            "Todd Bishop",
+            "Stephen Cedars",
+            "David Codeglia",
+            "Casey Donahue",
+            "Fatal Farm",
+            "Kate Freund",
+            "Matthew Freund",
+            "Hank Friedmann",
+            "Clint Gage",
+            "Ariel Gardner",
+            "Paul Isakson",
+            "Tom Kauffman",
+            "Alex Kavutskiy",
+            "Benji Kleiman",
+            "Jim Klimek",
+            "Jason Makiaris",
+            "Timothy Marklevitz",
+            "Michael McCafferty",
+            "Wendy McColm",
+            "Aaron Moles",
+            "Nick Mundy",
+            "Dan Murrell",
+            "John Olsen",
+            "Ben Pluimer",
+            "Wade Randolph",
+            "Kyle Reiter",
+            "Ryan Ridley",
+            "Dan Riesser",
+            "J.D. Ryznar",
+            "Joshua Sasson",
+            "David Seger",
+            "Duncan Skiles",
+            "Tyler Spiers",
+            "Spencer Strauss",
+            "Erni Walker",
+            "Jon Watts",
+            "Brian Wysol",
+            "Scott Yacyshyn",
+            "Zach Zdziebko",
+            "Mike Manasewitsch"
+        ],
+        "writers" : [
+            "Eric Appel",
+            "James Atkinson (creator)",
+            "Todd Bishop (scene)",
+            "Stephen Cedars",
+            "David Codeglia",
+            "Paul Isakson",
+            "Tom Kauffman",
+            "Benji Kleiman",
+            "Michael McCafferty",
+            "John Olsen (creator)",
+            "Ryan Ridley",
+            "David Seger",
+            "Tyler Spiers",
+            "Spencer Strauss",
+            "Michael Ryan Truly",
+            "Scott Yacyshyn"
+        ],
+        "imdb" : {
+            "rating" : 6.5,
+            "votes" : 156,
+            "id" : 3528906
+        },
+        "countries" : [
+            "USA"
+        ],
+        "genres" : [
+            "Animation",
+            "Action",
+            "Comedy"
+        ],
+        "num_mflix_comments" : 1,
+        "comments" : [
+            {
+                "name" : "Mackenzie Bell",
+                "email" : "mackenzie_bell@fakegmail.com",
+                "movie_id" : ObjectId("573a13edf29313caabdd41f4"),
+                "text" : "Alias veritatis quasi a et magni. Tempore ullam omnis temporibus. Eaque officia assumenda quasi vero corrupti laborum recusandae. Blanditiis sequi iusto ducimus officia nam ad.",
+                "date" : ISODate("1975-04-10T19:33:13Z")
+            }
+        ]
+}
+```
+
+All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
 
 It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all.
 
