@@ -290,10 +290,10 @@ scaled_votes = 1 + 9 * ((x - x_min) / (x_max - x_min));
 // Order of operations is important!
 
 // use these values for scaling imdb.votes
-x_max = 1521105;
-x_min = 5;
-min = 1;
-max = 10;
+x_max = 1521105,
+x_min = 5,
+min = 1,
+max = 10,
 x = imdb.votes;
 
 // within a pipeline, it should look something like the following
@@ -325,6 +325,8 @@ normalized_rating = average(scaled_votes, imdb.rating);
 // Chapter 3: Core Aggregation - Combining Information
 
 // The $group Stage
+
+// **m121/group_stage.js**
 
 // grouping by year and getting a count per year using the { $sum: 1 } pattern
 db.movies.aggregate([
@@ -391,3 +393,11 @@ db.movies.aggregate([
     }
   }
 ]);
+
+
+
+
+// Accumulator Stages with $project
+
+// **m121/accumulator_project.js**
+
