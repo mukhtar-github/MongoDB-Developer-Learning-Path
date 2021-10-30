@@ -2245,13 +2245,74 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 Type "it" for more
 ```
 
-Great. We can start to get an indication that as a *year value* increases, we have more documents in our collection. This brings up an important point about the expression we specified *_id*. Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
+Great. We can start to get an indication that as a *year value* increases, we have more documents in our collection. This brings up an important point about the expression with specified *_id*. Document values used in the expression must resolve to the same value or combination of values in order for documents to match. Let's look at an example.
 
-Let's look at an example. Here we're using the size expression to get the value of the directors array. I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error. So if directors is an array, return the size of directors. Otherwise, 0. As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together.
+```javascript
+// grouping on the number of directors a film has, demonstrating that we have to
+// validate types to protect some expressions
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": {
+        "numDirectors": {
+          "$cond": [{ "$isArray": "$directors" }, { "$size": "$directors" }, 0]
+        }
+      },
+      "numFilms": { "$sum": 1 },
+      "averageMetacritic": { "$avg": "$metacritic" }
+    }
+  },
+  {
+    "$sort": { "_id.numDirectors": -1 }
+  }
+]);
+```
 
-All documents without director information or with an empty array for directors will be grouped as well. We call the field numDirectors, but could have given it any name we wanted. When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match. We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group.
+Here we're using the size expression to get the value of the directors array. I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error. So if directors is an array, return the size of directors. Otherwise, 0. As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together. All documents without director information or with an empty array for directors will be grouped as well.
 
-Again, we could have specified any name for numFilms or averageMetacritic. Lastly, we'll just sort the documents in descending order. Let's see it in action. Wow, a film with 44 directors, but the average metacritic is null. Let's explore this by looking at the document. All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
+We call the field numDirectors, but could have given it any name we wanted. When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match. We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group. Again, we could have specified any name for numFilms or averageMetacritic. Lastly, we'll just sort the documents in descending order. Let's see it in action.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": {
+...       "_id": {
+...         "numDirectors": {
+...           "$cond": [{ "$isArray": "$directors" }, { "$size": "$directors" }, 0]
+...         }
+...       },
+...       "numFilms": { "$sum": 1 },
+...       "averageMetacritic": { "$avg": "$metacritic" }
+...     }
+...   },
+...   {
+...     "$sort": { "_id.numDirectors": -1 }
+...   }
+... ]);
+{ "_id" : { "numDirectors" : 44 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 42 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 41 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 36 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 30 }, "numFilms" : 1, "averageMetacritic" : 53 }
+{ "_id" : { "numDirectors" : 29 }, "numFilms" : 1, "averageMetacritic" : 58 }
+{ "_id" : { "numDirectors" : 27 }, "numFilms" : 1, "averageMetacritic" : 43 }
+{ "_id" : { "numDirectors" : 26 }, "numFilms" : 2, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 22 }, "numFilms" : 1, "averageMetacritic" : 66 }
+{ "_id" : { "numDirectors" : 21 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 20 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 15 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 14 }, "numFilms" : 3, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 13 }, "numFilms" : 3, "averageMetacritic" : 18 }
+{ "_id" : { "numDirectors" : 12 }, "numFilms" : 1, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 11 }, "numFilms" : 9, "averageMetacritic" : 48 }
+{ "_id" : { "numDirectors" : 10 }, "numFilms" : 9, "averageMetacritic" : 58 }
+{ "_id" : { "numDirectors" : 9 }, "numFilms" : 5, "averageMetacritic" : null }
+{ "_id" : { "numDirectors" : 8 }, "numFilms" : 13, "averageMetacritic" : 51 }
+{ "_id" : { "numDirectors" : 7 }, "numFilms" : 26, "averageMetacritic" : 49 }
+Type "it" for more
+```
+
+Wow, a film with 44 directors, but the average metacritic is null. Let's explore this by looking at the document. All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
 
 It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all.
 
