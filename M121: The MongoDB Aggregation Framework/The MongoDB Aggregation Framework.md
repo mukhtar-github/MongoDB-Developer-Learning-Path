@@ -2495,31 +2495,13 @@ And we can see the *average metacritic rating* among all documents that had *met
 
 ### Accumulator Stages with $project
 
-Let's take a moment to learn about using accumulator expressions with the $project stage.
+> Note: At 04:38 in the highlights slide, under "Available Accumulator Expressions" instead of $stdDevSam it should be $stdDevSamp.
 
-Knowledge of how to use these expressions can greatly simplify our work.
+Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered.
 
-One important thing to keep in mind is that accumulator expressions within $project work over an array within the given document.
+Let's suppose we have a collection named example with this schema. If we perform this aggregation, this will be the result. An output document for every input document, with the average of that document's data field. For this lesson, we're going to explore this data set. It's the average monthly low and high temperature for the United States as well as monthly ice cream consumer price index and sales information.
 
-They do not carry values forward to each document encountered.
-
-Let's suppose we have a collection named example with this schema.
-
-If we perform this aggregation, this will be the result.
-
-An output document for every input document, with the average of that document's data field.
-
-For this lesson, we're going to explore this data set.
-
-It's the average monthly low and high temperature for the United States as well as monthly ice cream consumer price index and sales information.
-
-And here's what the data looks like in our collection.
-
-We can see we have a trends array with documents that contain all the information we'll need.
-
-Easy enough to work with.
-
-Let's go ahead and find the maximum and minimum values for the average high temperature.
+And here's what the data looks like in our collection. We can see we have a trends array with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the maximum and minimum values for the average high temperature.
 
 We'll explore two different methods to find the maximum.
 
