@@ -2105,11 +2105,11 @@ Result: The Christmas Tree
 
 ### The $group Stage
 
-The next stage we'll learn about is the $group stage.
+The next stage we'll learn about is the *$group stage*. Key to our comprehension of group is to understand the one required argument -- the *_id* field of this stage. The expression or expressions we specify to *_id* becomes the criteria the *group stage* uses to categorize and bundle documents together.
 
-Key to our comprehension of group is to understand the one required argument-- the _id field of this stage.
-
-The expression or expressions we specify to _id becomes the criteria the group stage uses to categorize and bundle documents together.
+```javascript
+{$group: { _id: <matching/grouping criteria> } }
+```
 
 In this picture, we're grouping coins based on their denomination, so the expression specified to _id would be the denomination field path.
 
