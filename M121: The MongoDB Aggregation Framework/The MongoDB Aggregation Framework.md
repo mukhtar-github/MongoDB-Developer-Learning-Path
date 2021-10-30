@@ -2111,7 +2111,7 @@ The next stage we'll learn about is the *$group stage*. Key to our comprehension
 {$group: { _id: <matching/grouping criteria> } }
 ```
 
-![Coins-Denomination](file:///home/mukhtar/Pictures/Coins-Denomination.png)
+![7599](https://images.kleen-ritecorp.com/images/product/large/7599.jpg)
 
 In this picture, we're grouping coins based on their denomination, so the expression specified to _id would be the denomination field path. Let's see this in action using real data. All right, let's group documents in our movies collection based on the value they have in their year field. By grouping, we can see we have fundamentally changed the structure of the resulting documents.
 
