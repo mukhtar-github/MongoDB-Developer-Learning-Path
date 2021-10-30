@@ -2423,37 +2423,56 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.findOne( { directors: { $
 }
 ```
 
-All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
+All right, scanning the document, we can see that the *metacritic field* is missing entirely. This illustrates an important concept. It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all. *Accumulator expressions* will ignore documents with a *value at the specified field* that isn't of the type the expression expects, or if the value is missing.
 
-It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all.
+If all documents encountered have an *incorrect data type or a missing value* for the desired field, the expression will result in null. OK, we're gaining a good understanding of how both the *expressions applied to the _id* groups documents, and how *expressions specified to our accumulators* work. But what if we wanted to group all documents, rather than just a *subset*?
 
-Accumulator expressions will ignore documents with a value at the specified field that isn't of the type the expression expects, or if the value is missing.
+```javascript
+// showing how to group all documents together. By convention, we use null or an
+// empty string, ""
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": null,
+      "count": { "$sum": 1 }
+    }
+  }
+]);
+```
 
-If all documents encountered have an incorrect data type or a missing value for the desired field, the expression will result in null.
+By convention, we specify *null* -- or an *empty string* -- as the argument to *_id*. Before we run this pipeline, let's set an expectation. I expect the value of *count* to be equal to the number of documents in the *movies collection*. Let's test.
 
-OK, we're gaining a good understanding of how both the expressions applied to the _id groups documents, and how expressions specified to our accumulators work.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": {
+...       "_id": null,
+...       "count": { "$sum": 1 }
+...     }
+...   }
+... ]);
+{ "_id" : null, "count" : 44488 }
 
-But what if we wanted to group all documents, rather than just a subset?
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.count();
+44488
+```
 
-By convention, we specify null-- or an empty string-- as the argument to _id.
+All right, *44,488*. And the total number of documents? Again 44,488. An exact match. Rather than duplicating functionality in a very unoptimized way, let's do something that is useful for all documents. Let's calculate the *average metacritic rating*.
 
-Before we run this pipeline, let's set an expectation.
-
-I expect the value of count to be equal to the number of documents in the movies collection.
-
-Let's test.
-
-All right, 44,497.
-
-And the total number of documents?
-
-Again 44,497.
-
-An exact match.
-
-Rather than duplicating functionality in a very unoptimized way, let's do something that is useful for all documents.
-
-Let's calculate the average metacritic rating.
+```javascript
+// filtering results to only get documents with a numeric metacritic value
+db.movies.aggregate([
+  {
+    "$match": { "metacritic": { "$gte": 0 } }
+  },
+  {
+    "$group": {
+      "_id": null,
+      "averageMetacritic": { "$avg": "$metacritic" }
+    }
+  }
+]);
+```
 
 Here, we use a match stage to filter documents out with a metacritic that isn't greater than or equal to 0.
 
