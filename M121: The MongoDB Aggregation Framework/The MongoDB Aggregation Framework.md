@@ -2474,18 +2474,6 @@ db.movies.aggregate([
 ]);
 ```
 
-Here, we use a match stage to filter documents out with a metacritic that isn't greater than or equal to 0.
+Here, we use a *match stage* to filter documents out with a *metacritic* that isn't *greater than or equal to 0*. Documents missing *metacritic* information, or with a *non-numeric value* at that field won't make it through. And we can assume the *average metacritic rating* among all documents that had *metacritic* information is around *56.93*. And that covers the *group stage*.
 
-Documents missing metacritic information, or with a non-numeric value at that field won't make it through.
-
-And we can assume the average metacritic rating among all documents that had metacritic information is around 56.93.
-
-And that covers the group stage.
-
-Let's summarize.
-
-_id is where we specify what incoming documents should be grouped on.
-
-We can use all accumulator expressions within group.
-
-Group can be used multiple times within a pipeline, and it may be necessary to sanitize incoming data.
+Let's summarize. *_id* is where we specify what *incoming* documents should be *grouped* on. We can use all *accumulator expressions* within *group*. *Group* can be used *multiple* times within a *pipeline*, and it may be necessary to *sanitize incoming data*.
