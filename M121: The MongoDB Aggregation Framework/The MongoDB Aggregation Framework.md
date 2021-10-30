@@ -2126,15 +2126,40 @@ coins: [
 {$group: { _id: "denomination" } }
 ```
 
-In this picture, we're grouping coins based on their denomination, so the expression specified to *_id* would be the denomination field path. Let's see this in action using real data. All right, let's group documents in our movies collection based on the value they have in their year field. By grouping, we can see we have fundamentally changed the structure of the resulting documents.
+In this picture, we're grouping *coins* based on their *denomination*, so the expression specified to *_id* would be the *denomination field path*. Let's see this in action using real data. All right, let's group documents in our *movies collection* based on the value they have in their *year field*.
 
-Group matched them based on the value of the year field.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": { "_id": "$year" }
+...   }
+... ]);
+{ "_id" : 1874 }
+{ "_id" : 1880 }
+{ "_id" : 1887 }
+{ "_id" : 1888 }
+{ "_id" : 1890 }
+{ "_id" : 1891 }
+{ "_id" : 1892 }
+{ "_id" : 1893 }
+{ "_id" : 1894 }
+{ "_id" : 1895 }
+{ "_id" : 1896 }
+{ "_id" : 1897 }
+{ "_id" : 1898 }
+{ "_id" : 1899 }
+{ "_id" : 1900 }
+{ "_id" : 1901 }
+{ "_id" : 1902 }
+{ "_id" : 1903 }
+{ "_id" : 1904 }
+{ "_id" : 1905 }
+Type "it" for more
+```
 
-Documents with identical values got bundled together, and each unique value produced an output document that shows us the values or value we grouped on.
+By grouping, we can see, we have fundamentally changed the structure of the resulting documents. *Group* matched them based on the value of the *year field*. Documents with *identical values* got bundled together, and each unique value produced an output document that shows us the values or value we grouped on. By itself, this may or may not be useful depending on the use case, and just grouping on one expression is functionally equivalent to using the distinct command.
 
-By itself, this may or may not be useful depending on the use case, and just grouping on one expression is functionally equivalent to using the distinct command.
-
-Let's explore the other powerful feature of the group stage-- the ability to use aggregation accumulator expressions.
+Let's explore the other powerful feature of the group stage -- the ability to use aggregation accumulator expressions.
 
 We can specify additional fields we want to calculate in the group stage, and as many as we're required to accomplish our goal.
 
