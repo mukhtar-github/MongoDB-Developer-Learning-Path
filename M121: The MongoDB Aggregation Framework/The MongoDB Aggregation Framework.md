@@ -2158,8 +2158,7 @@ Type "it" for more
 ```
 
 By grouping, we can see, we have fundamentally changed the structure of the resulting documents. *Group* matched them based on the value of the *year field*. Documents with *identical values* got bundled together, and each unique value produced an output document that shows us the values or value we grouped on. By itself, this may or may not be useful depending on the use case, and just grouping on one expression is functionally equivalent to using the distinct command.
-
-Let's explore the other powerful feature of the group stage -- *the ability to use aggregation accumulator expressions*.
+> Let's explore the other powerful feature of the group stage -- *the ability to use aggregation accumulator expressions*.
 
 We can specify additional fields we want to calculate in the *group stage*, and as many as we're required to accomplish our goal. Here we are going to group on the value of year, as before. We also calculate a new field called *num_films_in_year* using the *$sum* accumulator expression. Each time group categorizes a document for us, the *sum* expression gets called. Since we specified a value of 1, each matching document is going to *sum 1* to the value of *num_films_in_year*. Let's see it in action.
 
