@@ -2170,9 +2170,9 @@ By grouping, we can see, we have fundamentally changed the structure of the resu
 }
 ```
 
-We can specify additional fields we want to calculate in the *group stage*, and as many as we're required to accomplish our goal.
+We can specify additional fields we want to calculate in the *group stage*, and as many as were required to accomplish our goal.
 
-Here, we are going to group on the value of *year*, as before. We also calculate a new field called *num_films_in_year* using the *$sum* accumulator expression. Each time group categorizes a document for us, the *sum* expression gets called. Since we specified a value of 1, each matching document is going to *sum 1* to the value of *num_films_in_year*. Let's see it in action.
+Here, we are going to group on the value of *year*, as before. We also calculate a new field called *num_films_in_year* using the *$sum* accumulator expression. Each time *group* categorizes a document for us, the *sum* expression gets called. Since we specified a value of *1*, each matching document is going to *sum 1* to the value of *num_films_in_year*. Let's see it in action.
 
 ```javascript
 // grouping by year and getting a count per year using the { $sum: 1 } pattern
@@ -2207,53 +2207,30 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 Type "it" for more
 ```
 
-The same results as before, with the addition of the *num_films_in_year* field. We can see that there was only one document with a value *1874* in the year field, while there were 2,058 documents with the value 2014.
+The same results as before, with the addition of the *num_films_in_year* field. We can see that there was only *two* documents with a value *1888* in the year field, while there were *1606* documents with the value *2009*. Quite a busy year. Let's perform the same *aggregation* with the *sort stage* appended to the end to order our results.
 
-Quite a busy year.
+```javascript
+// grouping as before, then sorting in descending order based on the count
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": "$year",
+      "count": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "count": -1 }
+  }
+]);
+```
 
-Let's perform the same aggregation with the source stage appended to the end to order our results.
+Great. We can start to get an indication that as a year value increases, we have more documents in our collection. This brings up an important point about the expression we specified _id. Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
 
-Great.
+Let's look at an example. Here we're using the size expression to get the value of the directors array. I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error. So if directors is an array, return the size of directors. Otherwise, 0. As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together.
 
-We can start to get an indication that as a year value increases, we have more documents in our collection.
+All documents without director information or with an empty array for directors will be grouped as well. We call the field numDirectors, but could have given it any name we wanted. When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match. We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group.
 
-This brings up an important point about the expression we specified _id.
-
-Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
-
-Let's look at an example.
-
-Here we're using the size expression to get the value of the directors array.
-
-I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error.
-
-So if directors is an array, return the size of directors.
-
-Otherwise, 0.
-
-As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together.
-
-All documents without director information or with an empty array for directors will be grouped as well.
-
-We call the field numDirectors, but could have given it any name we wanted.
-
-When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match.
-
-We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group.
-
-Again, we could have specified any name for numFilms or averageMetacritic.
-
-Lastly, we'll just sort the documents in descending order.
-
-Let's see it in action.
-
-Wow, a film with 44 directors, but the average metacritic is null.
-
-Let's explore this by looking at the document.
-
-All right, scanning the document, we can see that the metacritic field is missing entirely.
-
-This illustrates an important concept.
+Again, we could have specified any name for numFilms or averageMetacritic. Lastly, we'll just sort the documents in descending order. Let's see it in action. Wow, a film with 44 directors, but the average metacritic is null. Let's explore this by looking at the document. All right, scanning the document, we can see that the metacritic field is missing entirely. This illustrates an important concept.
 
 It is crucial to understand the type of data coming in to properly interpret the results we calculate, and we may be required to sanitize our input in some way to calculate a result at all.
 
