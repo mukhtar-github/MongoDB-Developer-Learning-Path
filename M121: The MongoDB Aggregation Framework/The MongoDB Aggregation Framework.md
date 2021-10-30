@@ -2159,19 +2159,42 @@ Type "it" for more
 
 By grouping, we can see, we have fundamentally changed the structure of the resulting documents. *Group* matched them based on the value of the *year field*. Documents with *identical values* got bundled together, and each unique value produced an output document that shows us the values or value we grouped on. By itself, this may or may not be useful depending on the use case, and just grouping on one expression is functionally equivalent to using the distinct command.
 
-Let's explore the other powerful feature of the group stage -- the ability to use aggregation accumulator expressions.
+Let's explore the other powerful feature of the group stage -- *the ability to use aggregation accumulator expressions*.
 
-We can specify additional fields we want to calculate in the group stage, and as many as we're required to accomplish our goal.
+We can specify additional fields we want to calculate in the *group stage*, and as many as we're required to accomplish our goal. Here we are going to group on the value of year, as before. We also calculate a new field called *num_films_in_year* using the *$sum* accumulator expression. Each time group categorizes a document for us, the *sum* expression gets called. Since we specified a value of 1, each matching document is going to *sum 1* to the value of *num_films_in_year*. Let's see it in action.
 
-Here we are going to group on the value of year, as before.
-
-We also calculate a new field called num_films_in_year using the $sum accumulator expression.
-
-Each time group categorizes a document for us, the sum expression gets called.
-
-Since we specified a value of 1, each matching document is going to sum 1 to the value of num_films_in_year.
-
-Let's see it in action.
+```javascript
+// grouping by year and getting a count per year using the { $sum: 1 } pattern
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": {
+...       "_id": "$year",
+...       "numFilmsThisYear": { "$sum": 1 }
+...     }
+...   }
+... ]);
+{ "_id" : 1982, "numFilmsThisYear" : 361 }
+{ "_id" : 1904, "numFilmsThisYear" : 9 }
+{ "_id" : 1987, "numFilmsThisYear" : 460 }
+{ "_id" : 1897, "numFilmsThisYear" : 8 }
+{ "_id" : 1895, "numFilmsThisYear" : 7 }
+{ "_id" : 1900, "numFilmsThisYear" : 13 }
+{ "_id" : 1920, "numFilmsThisYear" : 30 }
+{ "_id" : 1888, "numFilmsThisYear" : 2 }
+{ "_id" : 1954, "numFilmsThisYear" : 189 }
+{ "_id" : 1976, "numFilmsThisYear" : 332 }
+{ "_id" : 1891, "numFilmsThisYear" : 5 }
+{ "_id" : 2009, "numFilmsThisYear" : 1606 }
+{ "_id" : 1964, "numFilmsThisYear" : 256 }
+{ "_id" : 1944, "numFilmsThisYear" : 141 }
+{ "_id" : "2008�", "numFilmsThisYear" : 3 }
+{ "_id" : "2011�", "numFilmsThisYear" : 7 }
+{ "_id" : 2001, "numFilmsThisYear" : 862 }
+{ "_id" : 1947, "numFilmsThisYear" : 155 }
+{ "_id" : 1932, "numFilmsThisYear" : 138 }
+{ "_id" : 1929, "numFilmsThisYear" : 77 }
+Type "it" for more
+```
 
 The same results as before, with the addition of the num_films_in_year field.
 
