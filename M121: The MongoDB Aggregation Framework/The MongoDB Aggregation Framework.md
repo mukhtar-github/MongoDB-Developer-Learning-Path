@@ -2207,24 +2207,45 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 Type "it" for more
 ```
 
-The same results as before, with the addition of the *num_films_in_year* field. We can see that there was only *two* documents with a value *1888* in the year field, while there were *1606* documents with the value *2009*. Quite a busy year. Let's perform the same *aggregation* with the *sort stage* appended to the end to order our results.
+The same results as before, with the addition of the *num_films_in_year* field. We can see that there were only *two* documents with a value *1888* in the *year field*, while there were *1606* documents with the value *2009*. Quite a busy year. Let's perform the same *aggregation* with the *sort stage* appended to the end, to order our results.
 
 ```javascript
 // grouping as before, then sorting in descending order based on the count
-db.movies.aggregate([
-  {
-    "$group": {
-      "_id": "$year",
-      "count": { "$sum": 1 }
-    }
-  },
-  {
-    "$sort": { "count": -1 }
-  }
-]);
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": {
+...       "_id": "$year",
+...       "count": { "$sum": 1 }
+...     }
+...   },
+...   {
+...     "$sort": { "count": -1 }
+...   }
+... ]);
+{ "_id" : 2015, "count" : 2079 }
+{ "_id" : 2014, "count" : 2058 }
+{ "_id" : 2013, "count" : 1897 }
+{ "_id" : 2012, "count" : 1769 }
+{ "_id" : 2011, "count" : 1665 }
+{ "_id" : 2009, "count" : 1606 }
+{ "_id" : 2010, "count" : 1538 }
+{ "_id" : 2008, "count" : 1493 }
+{ "_id" : 2007, "count" : 1327 }
+{ "_id" : 2006, "count" : 1292 }
+{ "_id" : 2005, "count" : 1135 }
+{ "_id" : 2004, "count" : 1007 }
+{ "_id" : 2002, "count" : 909 }
+{ "_id" : 2003, "count" : 897 }
+{ "_id" : 2001, "count" : 862 }
+{ "_id" : 2000, "count" : 806 }
+{ "_id" : 1999, "count" : 730 }
+{ "_id" : 1998, "count" : 722 }
+{ "_id" : 1997, "count" : 676 }
+{ "_id" : 1996, "count" : 644 }
+Type "it" for more
 ```
 
-Great. We can start to get an indication that as a year value increases, we have more documents in our collection. This brings up an important point about the expression we specified _id. Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
+Great. We can start to get an indication that as a *year value* increases, we have more documents in our collection. This brings up an important point about the expression we specified *_id*. Document values used in the expression must resolve to the same value or combination of values in order for documents to match.
 
 Let's look at an example. Here we're using the size expression to get the value of the directors array. I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error. So if directors is an array, return the size of directors. Otherwise, 0. As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together.
 
