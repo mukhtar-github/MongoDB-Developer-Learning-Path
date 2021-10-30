@@ -2113,7 +2113,20 @@ The next stage we'll learn about is the *$group stage*. Key to our comprehension
 
 ![klopp-se-electric-coin-sorter-moneymachines.com](https://i2.wp.com/www.moneymachines.com/wp-content/uploads/2018/08/klopp-se-electric-coin-sorter-moneymachines.com.jpg?fit=1024%2C837&ssl=1)
 
-In this picture, we're grouping coins based on their denomination, so the expression specified to _id would be the denomination field path. Let's see this in action using real data. All right, let's group documents in our movies collection based on the value they have in their year field. By grouping, we can see we have fundamentally changed the structure of the resulting documents.
+```javascript
+coins: [
+    { denomination: 0.01},
+    { denomination: 0.25},
+    { denomination: 0.10},
+    { denomination: 0.05},
+    { denomination: 0.25},
+    ...
+]
+
+{$group: { _id: "denomination" } }
+```
+
+In this picture, we're grouping coins based on their denomination, so the expression specified to *_id* would be the denomination field path. Let's see this in action using real data. All right, let's group documents in our movies collection based on the value they have in their year field. By grouping, we can see we have fundamentally changed the structure of the resulting documents.
 
 Group matched them based on the value of the year field.
 
