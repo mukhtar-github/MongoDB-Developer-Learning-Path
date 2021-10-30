@@ -2268,9 +2268,9 @@ db.movies.aggregate([
 ]);
 ```
 
-Here we're using the size expression to get the value of the directors array. I'm wrapping it in this $cond conditional expression because if the value we specified as size doesn't evaluate to an array or is missing, size will error. So if directors is an array, return the size of directors. Otherwise, 0. As documents flow in, this will be evaluated, and documents with the same number of directors will be grouped together. All documents without director information or with an empty array for directors will be grouped as well.
+Here we're using the *size expression* to get the value of the *directors array*. I'm wrapping it in this *$cond conditional expression* because if the value we specified as *size* doesn't evaluate to an *array* or is missing, *size* will error. So if *directors* is an array, return the *size of directors*. Otherwise, *0*. As documents flow in, this will be evaluated, and documents with the same number of *directors* will be grouped together. All documents without *director* information or with an empty array for *directors* will be grouped as well.
 
-We call the field numDirectors, but could have given it any name we wanted. When documents are grouped together, we'll calculate a field called numFilms and just count how many documents match. We'll also average the metacritic information, and assign that to a field called averageMetacritic for all the matching documents in a group. Again, we could have specified any name for numFilms or averageMetacritic. Lastly, we'll just sort the documents in descending order. Let's see it in action.
+We call the field *numDirectors*, but could have given it any *name* we wanted. When documents are grouped together, we'll calculate a field called *numFilms* and just *count* how many documents match. We'll also *average the metacritic* information, and assign that to a field called *averageMetacritic* for all the matching documents in a group. Again, we could have specified any name for *numFilms or averageMetacritic*. Lastly, we'll just *sort* the documents in descending order. Let's see it in action.
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
