@@ -2712,9 +2712,9 @@ db.icecream_data.aggregate([
 ]);
 ```
 
-Here, we're calculating both in one pass. For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
+Here, we're calculating both in one pass. For the *average_cpi* field, we specified the *$avg* average expression, telling it to average of the values in the *icecream_cpi* field in the *trends* array. And here, the *cpi_deviation* is calculated almost identically, except we're using the *population standard deviation*. We're using *standard deviation pop* because we're looking at the entire *set of data*.
 
-And here, the cpi_deviation is calculated almost identically, except we're using the population standard deviation. We're using standard deviation pop because we're looking at the entire set of data. However, if this was only a sample of our data, we'd use the sample standard deviation expression. Great. We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
+However, if this was only a sample of our data, we'd use the sample standard deviation expression. Great. We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
 
 We could use this information to find data that is outside norms to point to areas that might need special analysis. The last accumulator expression I'd like to show is $sum. As the name implies, $sum sums up the values of an array. We can see that the yearly sales were 1,601 million. And that covers accumulator expressions available within $project. Here are a few things to keep in mind.
 
