@@ -2519,12 +2519,12 @@ An *output* document for every *input* document, with the average of that docume
 
 | ave_high_temp | ave_low_temp | ice-cream_cpi | ice-cream_sales_in_millions | month    |
 |---------------|--------------|---------------|-----------------------------|----------|
-|       42      |      27      |     238.8     |            57.33            |  January |
-|       44      |      28      |     225.5     |            58.79            | February |
-|       53      |      35      |     221.9     |            59.98            |   March  |
-|       64      |      44      |     222.6     |            62.55            |   April  |
-|       75      |      54      |     216.7     |            69.38            |    May   |
-|       83      |      63      |     216.6     |            77.49            |   June   |
+|       42      |      27      |     238.8     |             115             |  January |
+|       44      |      28      |     225.5     |             118             | February |
+|       53      |      35      |     221.9     |             121             |   March  |
+|       64      |      44      |     222.6     |             125             |   April  |
+|       75      |      54      |     216.7     |             140             |    May   |
+|       83      |      63      |     216.6     |             155             |   June   |
 
 It's the *average monthly low and high temperature* for the United States as well as *monthly ice cream consumer price index and sales information*. And here's what the *data* looks like in our collection.
 
