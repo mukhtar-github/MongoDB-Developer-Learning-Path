@@ -2744,4 +2744,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
 { "yearly_sales (millions)" : 1601 }
 ```
 
-And that covers accumulator expressions available within $project. Here are a few things to keep in mind. The available accumulator expressions in $project are sum, average, max, min, standard deviation population, and standard deviation sample. Within $project, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the unwind stage and group accumulator expressions. For more complex calculations, it's handy to know how to use $reduce and $map.
+And that covers accumulator expressions available within *$project*. Here are a few things to keep in mind. The available accumulator expressions in *$project are sum, average, max, min, standard deviation population, and standard deviation sample*. Within *$project*, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the *unwind stage and group accumulator expressions*. For more complex calculations, it's handy to know how to use *$reduce and $map*.
