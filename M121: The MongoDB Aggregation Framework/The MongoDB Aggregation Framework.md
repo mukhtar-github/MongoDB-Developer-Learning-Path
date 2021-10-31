@@ -2786,3 +2786,111 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.movies.aggregate(pipel
     "deviation" : 0.5988145513344498
 }
 ```
+
+### The $unwind Stage
+
+Let's learn about another useful aggregation stage, the $unwind stage.
+
+$unwind lists unwind in an RA field, creating a new document for every entry where the field value is now each entry.
+
+Let's visualize this with an example.
+
+If I had the following schema on the left, title and genres, and $unwind on the genres field, I'll get back documents on the right.
+
+What?
+
+Am I saying that I'm generating a document for each array entry, when it was all tighten and well-embedded?
+
+Why might this be useful?
+
+One example is when we'd like to group on individual entries.
+
+In the group lesson, we grouped movies based on their year.
+
+And we tried to group on year and genres, we would have gotten back many distinct entries because, within group, arrays are mashed on pure equality, not equivalents.
+
+So this array of Adventure Action would not match this array of Action Adventure.
+
+Let's use $unwind for something real.
+
+Let's find the most popular genres by year from 2010 to 2015 within the movie's collection.
+
+I'm going to go ahead and limit this, and say that I'm only considering entries with a runtime of 90 minutes or greater.
+
+And for popularity, I'll use a value in the imdb.rating.
+
+Let's break this down.
+
+Here, we begin with the $match stage, ensuring we have an imdb.rating value by specifying that it must be greater than 0, and filtering documents based on year and runtime.
+
+Then we unwind the genres array, creating a new document for each entry in the original array.
+
+Then we'll group on the year, and the now single genre values field, and use the average expression to calculate the average_rating from imdb.rating.
+
+Finally, we sort, first on the year descending, and then the average_rating descending.
+
+Let's test it out.
+
+It's close, but not quite there yet.
+
+We can see we're getting the most popular genre by year, but we're getting all results back.
+
+We just want a single document per year, with the highest-rated genre.
+
+There are many ways to accomplish this.
+
+We'll just look at one of the most simple.
+
+Let's examine this new pipeline.
+
+It's identical to the previous one, with the addition of these two stages.
+
+The previous pipeline was returning in the format we wanted.
+
+There were just too many documents being returned.
+
+Here, in this additional group stage, we group documents together based on their year.
+
+And since they are already sorted in the order we need, we just take the first value we encounter for the genre and the average rating.
+
+Then we finish with a $sort to make sure that they're return and the order we want.
+
+Let's see if it works.
+
+Excellent.
+
+One document per year, with the highest-rated genre in that year.
+
+We've seen how $unwind works.
+
+Now there's a few less things to cover.
+
+We've been using the short form for $unwind.
+
+Here's the long form for contrast.
+
+In the long form, we specify the array we want to unwind by providing a field path expression to the path argument.
+
+We can provide a string to includeArrayIndex.
+
+This will create another field in the document with whatever name we specify, with the value to the index of the element in the original array.
+
+Lastly, we can provide a true or false value to preserveNullAndEmptyArrays.
+
+True will create an entry with an empty array, with the value specified in the path as either null, missing, or an empty array.
+
+One more thing of note.
+
+If the documents in our collection are very large, and we need to use $unwind, we may exceed the default memory limit of the aggregation framework.
+
+As always, match early, retain only the information needed with project, and remember that we can specify to allow disk use.
+
+And that covers $unwind We've learned a lot.
+
+Let's recap on a few things.
+
+$unwind only works on an array of values.
+
+There are two forms for unwind, the short form and long form.
+
+Using unwind on large collections with big documents may lead to performance issues.
