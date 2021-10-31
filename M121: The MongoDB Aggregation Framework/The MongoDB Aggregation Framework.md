@@ -2515,7 +2515,7 @@ db.example.aggregate([{
 { _id: 2, dataAverage: 6 }
 ```
 
-An *output* document for every *input* document, with the average of that document's *data* field. For this lesson, we're going to explore this *data set*.
+An *output* document for every *input* document, with the average of that document's *data* field. For this lesson, we're going to explore this below *data set*.
 
 | ave_high_temp | ave_low_temp | ice-cream_cpi | ice-cream_sales_in_millions | month    |
 |---------------|--------------|---------------|-----------------------------|----------|
