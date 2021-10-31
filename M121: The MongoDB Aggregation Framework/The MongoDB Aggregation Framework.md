@@ -2648,92 +2648,18 @@ db.icecream_data.aggregate([
 ]);
 ```
 
-Before I run this, let's break it down.
+Before I run this, let's break it down. Here, I'm specifying the $reduce expression. $reduce takes an array as its input argument here. For the argument to initial value, the value or accumulator we'll begin with, we're specifying negative infinity. I hope we'll never have a monthly average high temperature of negative infinity, but in all seriousness, we're using negative infinity because any reasonable value we encounter should be greater.
 
-Here, I'm specifying the $reduce expression.
+Lastly, we'll specify the logic to the end field here. This is using the $cond conditional operator and saying if $$this.avg_high_tmp is greater than the value which is held in our accumulator, then return this.avg_high_tmp. Otherwise, just return the value back. So compare the current value against the accumulator value, and if it's greater, we'll replace it with the value we just encountered.
 
-$reduce takes an array as its input argument here.
+Otherwise, we'll just keep using our current max value. Notice the double dollar signs. These are temporary variables defined for use only within the $reduce expression, as we mentioned in the aggregation structure and syntax lesson. $this refers to the current element in the array. $value refers to the accumulator value. It will do this for every element in the array. OK, let's run this.
 
-For the argument to initial value, the value or accumulator we'll begin with, we're specifying negative infinity.
+And we see the max high was 87. Wow, that was pretty complicated. Let's look at an easier way to accomplish this. I think we can all agree that this is much simpler. We use the $max group accumulator expression to get the information we want. And again, we get max high of 87. OK, let's get the minimum average temperature.
 
-I hope we'll never have a monthly average high temperature of negative infinity, but in all seriousness, we're using negative infinity because any reasonable value we encounter should be greater.
+Here, we use the $min accumulator expression and we can see our max low was 27. All right. We now know how to use max and min. We can also calculate averages and standard deviations. Let's calculate the average consumer price index for ice cream, as well as the standard deviation. Here, we're calculating both in one pass. For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
 
-Lastly, we'll specify the logic to the end field here.
+And here, the cpi_deviation is calculated almost identically, except we're using the population standard deviation. We're using standard deviation pop because we're looking at the entire set of data. However, if this was only a sample of our data, we'd use the sample standard deviation expression. Great. We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
 
-This is using the $cond conditional operator and saying if $$this.avg_high_tmp is greater than the value which is held in our accumulator, then return this.avg_high_tmp.
+We could use this information to find data that is outside norms to point to areas that might need special analysis. The last accumulator expression I'd like to show is $sum. As the name implies, $sum sums up the values of an array. We can see that the yearly sales were 1,601 million. And that covers accumulator expressions available within $project. Here are a few things to keep in mind.
 
-Otherwise, just return the value back.
-
-So compare the current value against the accumulator value, and if it's greater, we'll replace it with the value we just encountered.
-
-Otherwise, we'll just keep using our current max value.
-
-Notice the double dollar signs.
-
-These are temporary variables defined for use only within the $reduce expression, as we mentioned in the aggregation structure and syntax lesson.
-
-$this refers to the current element in the array.
-
-$value refers to the accumulator value.
-
-It will do this for every element in the array.
-
-OK, let's run this.
-
-And we see the max high was 87.
-
-Wow, that was pretty complicated.
-
-Let's look at an easier way to accomplish this.
-
-I think we can all agree that this is much simpler.
-
-We use the $max group accumulator expression to get the information we want.
-
-And again, we get max high of 87.
-
-OK, let's get the minimum average temperature.
-
-Here, we use the $min accumulator expression and we can see our max low was 27.
-
-All right.
-
-We now know how to use max and min.
-
-We can also calculate averages and standard deviations.
-
-Let's calculate the average consumer price index for ice cream, as well as the standard deviation.
-
-Here, we're calculating both in one pass.
-
-For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
-
-And here, the cpi_deviation is calculated almost identically, except we're using the population standard deviation.
-
-We're using standard deviation pop because we're looking at the entire set of data.
-
-However, if this was only a sample of our data, we'd use the sample standard deviation expression.
-
-Great.
-
-We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
-
-We could use this information to find data that is outside norms to point to areas that might need special analysis.
-
-The last accumulator expression I'd like to show is $sum.
-
-As the name implies, $sum sums up the values of an array.
-
-We can see that the yearly sales were 1,601 million.
-
-And that covers accumulator expressions available within $project.
-
-Here are a few things to keep in mind.
-
-The available accumulator expressions in $project are sum, average, max, min, standard deviation population, and standard deviation sample.
-
-Within $project, these expressions will not carry their value forward and operate across multiple documents.
-
-For this, we'd need to use the unwind stage and group accumulator expressions.
-
-For more complex calculations, it's handy to know how to use $reduce and $map.
+The available accumulator expressions in $project are sum, average, max, min, standard deviation population, and standard deviation sample. Within $project, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the unwind stage and group accumulator expressions. For more complex calculations, it's handy to know how to use $reduce and $map.
