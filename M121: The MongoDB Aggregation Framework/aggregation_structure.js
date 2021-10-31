@@ -448,7 +448,7 @@ db.icecream_data.aggregate([
   }
 ]);
 
-// note that these two operations can be done with the following operations can
+// note that these two operations can be done with the following operations, can
 // be done more simply. The following two expressions are functionally identical
 
 db.icecream_data.aggregate([

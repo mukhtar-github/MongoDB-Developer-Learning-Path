@@ -2652,9 +2652,67 @@ Before I run this, let's break it down. Here, I'm specifying the *$reduce* expre
 
 Lastly, we'll specify the logic to the *in* field here. This is using the *$cond* conditional operator and saying if *$$this.avg_high_tmp* is greater than the *$$value* which is held in our accumulator, then return *this.avg_high_tmp*. Otherwise, just return the *value* back. So compare the *current value* against the *accumulator value*, and if it's greater, we'll replace it with the *value* we just encountered.
 
-Otherwise, we'll just keep using our current max value. Notice the double dollar signs. These are temporary variables defined for use only within the $reduce expression, as we mentioned in the aggregation structure and syntax lesson. $this refers to the current element in the array. $value refers to the accumulator value. It will do this for every element in the array. OK, let's run this.
+Otherwise, we'll just keep using our *current max value*. Notice the *double dollar* signs. These are *temporary variables* defined for use only within the *$reduce* expression, as we mentioned in the aggregation structure and syntax lesson. *$this* refers to the *current element* in the array. *$value* refers to the *accumulator value*. It will do this for every element in the array. OK, let's run this.
 
-And we see the max high was 87. Wow, that was pretty complicated. Let's look at an easier way to accomplish this. I think we can all agree that this is much simpler. We use the $max group accumulator expression to get the information we want. And again, we get max high of 87. OK, let's get the minimum average temperature.
+```javascript
+// using $reduce to get the highest temperature
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
+...   {
+...     "$project": {
+...       "_id": 0,
+...       "max_high": {
+...         "$reduce": {
+...           "input": "$trends",
+...           "initialValue": -Infinity,
+...           "in": {
+...             "$cond": [
+...               { "$gt": ["$$this.avg_high_tmp", "$$value"] },
+...               "$$this.avg_high_tmp",
+...               "$$value"
+...             ]
+...           }
+...         }
+...       }
+...     }
+...   }
+... ]);
+{ "max_high" : 87 }
+```
+
+And we see the *max high was 87*. Wow, that was pretty complicated. Let's look at an easier way to accomplish this.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
+...   { "$project": { "_id": 0, "max_high": { "$max": "$trends.avg_high_tmp" } } }
+... ]);
+{ "max_high" : 87 }
+```
+
+I think we can all agree that this is much simpler. We use the *$max* group accumulator expression to get the information we want. And again, we get *max high of 87*. OK, let's get the *minimum average temperature*.
+
+```javascript
+// performing the inverse, grabbing the lowest temperature
+db.icecream_data.aggregate([
+  {
+    "$project": {
+      "_id": 0,
+      "min_low": {
+        "$reduce": {
+          "input": "$trends",
+          "initialValue": Infinity,
+          "in": {
+            "$cond": [
+              { "$lt": ["$$this.avg_low_tmp", "$$value"] },
+              "$$this.avg_low_tmp",
+              "$$value"
+            ]
+          }
+        }
+      }
+    }
+  }
+]);
+```
 
 Here, we use the $min accumulator expression and we can see our max low was 27. All right. We now know how to use max and min. We can also calculate averages and standard deviations. Let's calculate the average consumer price index for ice cream, as well as the standard deviation. Here, we're calculating both in one pass. For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
 
