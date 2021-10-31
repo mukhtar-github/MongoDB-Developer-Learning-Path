@@ -2497,9 +2497,25 @@ And we can see the *average metacritic rating* among all documents that had *met
 
 > Note: At 04:38 in the highlights slide, under "Available Accumulator Expressions" instead of $stdDevSam it should be $stdDevSamp.
 
-Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered.
+Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered. Let's suppose we have a collection named example with this schema.
 
-Let's suppose we have a collection named example with this schema. If we perform this aggregation, this will be the result. An output document for every input document, with the average of that document's data field. For this lesson, we're going to explore this data set. It's the average monthly low and high temperature for the United States as well as monthly ice cream consumer price index and sales information.
+```javascript
+db.example.find()
+
+{ _id: 0, data: [ 1, 2, 3, 4, 5  ] }
+{ _id: 1, data: [ 1, 3, 5, 7, 9  ] }
+{ _id: 2, data: [ 2, 4, 6, 8, 10 ] }
+
+db.example.aggregate([{
+    $project: { dataAverage: { $ave: "$data" } }
+}])
+
+{ _id: 0, dataAverage: 3 }
+{ _id: 1, dataAverage: 5 }
+{ _id: 2, dataAverage: 6 }
+```
+
+If we perform this aggregation, this will be the result. An output document for every input document, with the average of that document's data field. For this lesson, we're going to explore this data set. It's the average monthly low and high temperature for the United States as well as monthly ice cream consumer price index and sales information.
 
 And here's what the data looks like in our collection. We can see we have a trends array with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the maximum and minimum values for the average high temperature.
 
