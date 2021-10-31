@@ -2727,8 +2727,21 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
 { "average_cpi" : 221.275, "cpi_deviation" : 6.632511464998266 }
 ```
 
-Great. We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
+Great. We can see that the *average consumer price index was 221.275* and the *standard deviation was around 6.63*. We could use this information to find data that is outside norms to point to areas that might need special analysis.
 
-We could use this information to find data that is outside norms to point to areas that might need special analysis. The last accumulator expression I'd like to show is $sum. As the name implies, $sum sums up the values of an array. We can see that the yearly sales were 1,601 million. And that covers accumulator expressions available within $project. Here are a few things to keep in mind.
+The last accumulator expression I'd like to show is *$sum*. As the name implies, *$sum* sums up the values of an array. We can see that the yearly sales were *1,601 million*.
 
-The available accumulator expressions in $project are sum, average, max, min, standard deviation population, and standard deviation sample. Within $project, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the unwind stage and group accumulator expressions. For more complex calculations, it's handy to know how to use $reduce and $map.
+```javascript
+// using the $sum expression to get total yearly sales
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
+...   {
+...     "$project": {
+...       "_id": 0,
+...       "yearly_sales (millions)": { "$sum": "$trends.icecream_sales_in_millions" }
+...     }
+...   }
+... ]);
+{ "yearly_sales (millions)" : 1601 }
+```
+
+And that covers accumulator expressions available within $project. Here are a few things to keep in mind. The available accumulator expressions in $project are sum, average, max, min, standard deviation population, and standard deviation sample. Within $project, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the unwind stage and group accumulator expressions. For more complex calculations, it's handy to know how to use $reduce and $map.
