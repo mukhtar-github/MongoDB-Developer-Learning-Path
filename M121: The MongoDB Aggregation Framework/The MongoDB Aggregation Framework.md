@@ -2526,7 +2526,7 @@ An *output* document for every *input* document, with the average of that docume
 |       75      |      54      |     216.7     |             140             |    May   |
 |       83      |      63      |     216.6     |             155             |   June   |
 
-It's the *average monthly low and high temperature* for the United States as well as *monthly ice cream consumer price index and sales information*. And here's what the *data* looks like in our collection.
+It's the *average monthly low and high temperature* for the United States, as well as *monthly ice cream consumer price index and sales information*. And here's what the *data* looks like in our collection.
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.findOne();
@@ -2622,11 +2622,31 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.findOne();
 
 ```
 
-We can see we have a trends array with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the maximum and minimum values for the average high temperature.
+We can see, we have a *trends array* with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the *maximum and minimum* values for the *average high temperature*. We'll explore two different methods to find the *maximum*. First, we'll use the *$reduce* expression to manually find the *maximum*.
 
-We'll explore two different methods to find the maximum.
-
-First, we'll use the $reduce expression to manually find the maximum.
+```javascript
+// using $reduce to get the highest temperature
+db.icecream_data.aggregate([
+  {
+    "$project": {
+      "_id": 0,
+      "max_high": {
+        "$reduce": {
+          "input": "$trends",
+          "initialValue": -Infinity,
+          "in": {
+            "$cond": [
+              { "$gt": ["$$this.avg_high_tmp", "$$value"] },
+              "$$this.avg_high_tmp",
+              "$$value"
+            ]
+          }
+        }
+      }
+    }
+  }
+]);
+```
 
 Before I run this, let's break it down.
 
