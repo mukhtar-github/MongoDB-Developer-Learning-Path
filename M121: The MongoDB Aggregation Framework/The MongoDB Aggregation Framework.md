@@ -2691,30 +2691,28 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
 I think we can all agree that this is much simpler. We use the *$max* group accumulator expression to get the information we want. And again, we get *max high of 87*. OK, let's get the *minimum average temperature*.
 
 ```javascript
-// performing the inverse, grabbing the lowest temperature
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
+...   { "$project": { "_id": 0, "min_low": { "$min": "$trends.avg_low_tmp" } } }
+... ]);
+{ "min_low" : 27 }
+```
+
+Here, we use the *$min* accumulator expression and we can see our *max low was 27*. All right. We now know how to use *max and min*. We can also calculate *averages and standard deviations*. Let's calculate the *average consumer price index* for ice cream, as well as the *standard deviation*.
+
+```javascript
+// getting the average and standard deviations of the consumer price index
 db.icecream_data.aggregate([
   {
     "$project": {
       "_id": 0,
-      "min_low": {
-        "$reduce": {
-          "input": "$trends",
-          "initialValue": Infinity,
-          "in": {
-            "$cond": [
-              { "$lt": ["$$this.avg_low_tmp", "$$value"] },
-              "$$this.avg_low_tmp",
-              "$$value"
-            ]
-          }
-        }
-      }
+      "average_cpi": { "$avg": "$trends.icecream_cpi" },
+      "cpi_deviation": { "$stdDevPop": "$trends.icecream_cpi" }
     }
   }
 ]);
 ```
 
-Here, we use the $min accumulator expression and we can see our max low was 27. All right. We now know how to use max and min. We can also calculate averages and standard deviations. Let's calculate the average consumer price index for ice cream, as well as the standard deviation. Here, we're calculating both in one pass. For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
+Here, we're calculating both in one pass. For the average_cpi field, we specified the $avg average expression, telling it to average of the values in the icecream_cpi field in the trends array.
 
 And here, the cpi_deviation is calculated almost identically, except we're using the population standard deviation. We're using standard deviation pop because we're looking at the entire set of data. However, if this was only a sample of our data, we'd use the sample standard deviation expression. Great. We can see that the average consumer price index was 221.275 and the standard deviation was around 6.63.
 
