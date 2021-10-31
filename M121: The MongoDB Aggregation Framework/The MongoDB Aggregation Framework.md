@@ -2495,8 +2495,6 @@ And we can see the *average metacritic rating* among all documents that had *met
 
 ### Accumulator Stages with $project
 
-> Note: At 04:38 in the highlights slide, under "Available Accumulator Expressions" instead of $stdDevSam it should be $stdDevSamp.
-
 Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered. Let's suppose we have a collection named *example* with this below schema. If we perform the *aggregation*, this will be the result.
 
 ```javascript
@@ -2744,4 +2742,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
 { "yearly_sales (millions)" : 1601 }
 ```
 
-And that covers accumulator expressions available within *$project*. Here are a few things to keep in mind. The available accumulator expressions in *$project are sum, average, max, min, standard deviation population, and standard deviation sample*. Within *$project*, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the *unwind stage and group accumulator expressions*. For more complex calculations, it's handy to know how to use *$reduce and $map*.
+And that covers accumulator expressions available within *$project*. Here are a few things to keep in mind. The available accumulator expressions in *$project are $sum, $avg, $max, $min, $stdDevPop, and $stdDevSamp*. Within *$project*, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the *unwind stage and group accumulator expressions*. For more complex calculations, it's handy to know how to use *$reduce and $map*.
