@@ -2650,7 +2650,7 @@ db.icecream_data.aggregate([
 
 Before I run this, let's break it down. Here, I'm specifying the *$reduce* expression. *$reduce* takes an array as its *input argument* here. For the argument to *initialValue*, the *value or accumulator* we'll begin with, we're specifying *negative infinity*. I hope we'll never have a *monthly average high temperature of negative infinity*, but in all seriousness, we're using *negative infinity* because any *reasonable value* we encounter should be greater.
 
-Lastly, we'll specify the logic to the end field here. This is using the $cond conditional operator and saying if $$this.avg_high_tmp is greater than the value which is held in our accumulator, then return this.avg_high_tmp. Otherwise, just return the value back. So compare the current value against the accumulator value, and if it's greater, we'll replace it with the value we just encountered.
+Lastly, we'll specify the logic to the *in* field here. This is using the *$cond* conditional operator and saying if *$$this.avg_high_tmp* is greater than the *$$value* which is held in our accumulator, then return *this.avg_high_tmp*. Otherwise, just return the *value* back. So compare the *current value* against the *accumulator value*, and if it's greater, we'll replace it with the *value* we just encountered.
 
 Otherwise, we'll just keep using our current max value. Notice the double dollar signs. These are temporary variables defined for use only within the $reduce expression, as we mentioned in the aggregation structure and syntax lesson. $this refers to the current element in the array. $value refers to the accumulator value. It will do this for every element in the array. OK, let's run this.
 
