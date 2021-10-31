@@ -2743,3 +2743,46 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.aggregate([
 ```
 
 And that covers accumulator expressions available within *$project*. Here are a few things to keep in mind. The available accumulator expressions in *$project are $sum, $avg, $max, $min, $stdDevPop, and $stdDevSamp*. Within *$project*, these expressions will not carry their value forward and operate across multiple documents. For this, we'd need to use the *unwind stage and group accumulator expressions*. For more complex calculations, it's handy to know how to use *$reduce and $map*.
+
+### Lab - $group and Accumulators
+
+#### Problem 7
+
+In the last lab, we calculated a normalized rating that required us to know what the minimum and maximum values for *imdb.votes* were. These values were found using the *$group* stage!
+
+For all films that won at least 1 Oscar, calculate the standard deviation, highest, lowest, and average *imdb.rating*. Use the *sample* standard deviation expression.
+
+*HINT* - All movies in the collection that won an Oscar begin with a string resembling one of the following in their awards field
+
+```javascript
+Won 13 Oscars
+Won 1 Oscar
+```
+
+#### Answer 7
+
+```javascript
+// Builds the pipeline.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [
+...     { $match : { "awards" : { $regex : /Won \d+ Oscar/ } } },
+... { $group : { 
+...     "_id" : null,
+...     "highest_rating" : { $max : "$imdb.rating" },
+... "lowest_rating" : { $min : "$imdb.rating" },
+... "average_rating" : { $avg : "$imdb.rating" },
+... "deviation" : { $stdDevSamp : "$imdb.rating" }
+... }
+... }
+... ];
+
+
+// Prints the result.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.movies.aggregate(pipeline).next());
+{
+    "_id" : null,
+    "highest_rating" : 9.2,
+    "lowest_rating" : 4.5,
+    "average_rating" : 7.527024070021882,
+    "deviation" : 0.5988145513344498
+}
+```
