@@ -2497,7 +2497,7 @@ And we can see the *average metacritic rating* among all documents that had *met
 
 > Note: At 04:38 in the highlights slide, under "Available Accumulator Expressions" instead of $stdDevSam it should be $stdDevSamp.
 
-Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered. Let's suppose we have a collection named example with this schema.
+Let's take a moment to learn about using *accumulator expressions* with the *$project stage*. Knowledge of how to use these *expressions* can greatly simplify our work. One important thing to keep in mind is that *accumulator expressions* within *$project* work over an *array* within the given document. They do not carry values forward to each document encountered. Let's suppose we have a collection named *example* with this below schema. If we perform the *aggregation*, this will be the result.
 
 ```javascript
 db.example.find()
@@ -2515,9 +2515,114 @@ db.example.aggregate([{
 { _id: 2, dataAverage: 6 }
 ```
 
-If we perform this aggregation, this will be the result. An output document for every input document, with the average of that document's data field. For this lesson, we're going to explore this data set. It's the average monthly low and high temperature for the United States as well as monthly ice cream consumer price index and sales information.
+An *output* document for every *input* document, with the average of that document's *data* field. For this lesson, we're going to explore this *data set*.
 
-And here's what the data looks like in our collection. We can see we have a trends array with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the maximum and minimum values for the average high temperature.
+| ave_high_temp | ave_low_temp | ice-cream_cpi | ice-cream_sales_in_millions | month    |
+|---------------|--------------|---------------|-----------------------------|----------|
+|       42      |      27      |     238.8     |            57.33            |  January |
+|       44      |      28      |     225.5     |            58.79            | February |
+|       53      |      35      |     221.9     |            59.98            |   March  |
+|       64      |      44      |     222.6     |            62.55            |   April  |
+|       75      |      54      |     216.7     |            69.38            |    May   |
+|       83      |      63      |     216.6     |            77.49            |   June   |
+
+It's the *average monthly low and high temperature* for the United States as well as *monthly ice cream consumer price index and sales information*. And here's what the *data* looks like in our collection.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.icecream_data.findOne();
+{
+        "_id" : ObjectId("59bff494f70ff89cacc36f90"),
+        "trends" : [
+            {
+                "month" : "January",
+                "avg_high_tmp" : 42,
+                "avg_low_tmp" : 27,
+                "icecream_cpi" : 238.8,
+                "icecream_sales_in_millions" : 115
+            },
+            {
+                "month" : "February",
+                "avg_high_tmp" : 44,
+                "avg_low_tmp" : 28,
+                "icecream_cpi" : 225.5,
+                "icecream_sales_in_millions" : 118
+            },
+            {
+                "month" : "March",
+                "avg_high_tmp" : 53,
+                "avg_low_tmp" : 35,
+                "icecream_cpi" : 221.9,
+                "icecream_sales_in_millions" : 121
+            },
+            {
+                "month" : "April",
+                "avg_high_tmp" : 64,
+                "avg_low_tmp" : 44,
+                "icecream_cpi" : 222.6,
+                "icecream_sales_in_millions" : 125
+            },
+            {
+                "month" : "May",
+                "avg_high_tmp" : 75,
+                "avg_low_tmp" : 54,
+                "icecream_cpi" : 216.7,
+                "icecream_sales_in_millions" : 140
+            },
+            {
+                "month" : "June",
+                "avg_high_tmp" : 83,
+                "avg_low_tmp" : 63,
+                "icecream_cpi" : 216.6,
+                "icecream_sales_in_millions" : 155
+            },
+            {
+                "month" : "July",
+                "avg_high_tmp" : 87,
+                "avg_low_tmp" : 68,
+                "icecream_cpi" : 213.2,
+                "icecream_sales_in_millions" : 163
+            },
+            {
+                "month" : "August",
+                "avg_high_tmp" : 84,
+                "avg_low_tmp" : 66,
+                "icecream_cpi" : 215.9,
+                "icecream_sales_in_millions" : 157
+            },
+            {
+                "month" : "September",
+                "avg_high_tmp" : 78,
+                "avg_low_tmp" : 59,
+                "icecream_cpi" : 217.4,
+                "icecream_sales_in_millions" : 140
+            },
+            {
+                "month" : "October",
+                "avg_high_tmp" : 67,
+                "avg_low_tmp" : 48,
+                "icecream_cpi" : 218.7,
+                "icecream_sales_in_millions" : 128
+            },
+            {
+                "month" : "November",
+                "avg_high_tmp" : 55,
+                "avg_low_tmp" : 38,
+                "icecream_cpi" : 220.3,
+                "icecream_sales_in_millions" : 122
+            },
+            {
+                "month" : "December",
+                "avg_high_tmp" : 45,
+                "avg_low_tmp" : 29,
+                "icecream_cpi" : 227.7,
+                "icecream_sales_in_millions" : 117
+            }
+        ]
+}
+
+```
+
+We can see we have a trends array with documents that contain all the information we'll need. Easy enough to work with. Let's go ahead and find the maximum and minimum values for the average high temperature.
 
 We'll explore two different methods to find the maximum.
 
