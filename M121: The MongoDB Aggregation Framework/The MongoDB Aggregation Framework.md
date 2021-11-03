@@ -2789,11 +2789,45 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.movies.aggregate(pipel
 
 ### The $unwind Stage
 
-Let's learn about another useful aggregation stage, the $unwind stage.
+Let's learn about another useful aggregation stage, the *$unwind stage*. *$unwind lists unwind in an RA field*, creating a new document for every entry where the field value is now each entry. Let's visualize this with an example.
 
-$unwind lists unwind in an RA field, creating a new document for every entry where the field value is now each entry.
+```javascript
+$unwind: "$genres"
 
-Let's visualize this with an example.
+{
+    "title": "The Martian",
+    "genres": [ "Action", "Adventure", " Sci-Fi" ]
+}
+
+{
+    "title": "The Martian",
+    "genres": "Action"
+}
+{
+    "title": "The Martian",
+    "genres": "Adventure"
+}
+{
+    "title": "The Martian",
+    "genres": " Sci-Fi"
+}
+
+
+{
+    "title": "Batman Begins",
+    "likes": [ "Action", "Adventure" ]
+}
+
+{
+    "title": "Batman Begins",
+    "genres": "Action"
+}
+{
+    "title": "Batman Begins",
+    "genres": "Adventure"
+}
+
+```
 
 If I had the following schema on the left, title and genres, and $unwind on the genres field, I'll get back documents on the right.
 
