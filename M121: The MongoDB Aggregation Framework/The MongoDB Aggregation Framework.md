@@ -2829,21 +2829,39 @@ $unwind: "$genres"
 
 ```
 
-If I had the following schema at top, *title and genres*, and *$unwind* on the genres field, I'll get back documents at below. What? Am I saying that I'm generating a document for each array entry, when it was all tighten and well-embedded? Why might this be useful? One example is when we'd like to *group* on individual entries. In the *group* lesson, we *grouped movies* based on their *year*.
+If I had the following schema at the top, *title and genres*, and *$unwind* on the genres field, I'll get back documents at below. What? Am I saying that I'm generating a document for each array entry, when it was all tighten and well-embedded? Why might this be useful? One example is when we'd like to *group* on individual entries. In the *group* lesson, we *grouped movies* based on their *year*.
 
-And we tried to group on year and genres, we would have gotten back many distinct entries because, within group, arrays are mashed on pure equality, not equivalents.
+```javascript
+$group: {
+    _id: {
+        tittle: "$tittle"
+        genre: "$genres"
+    }
+}
 
-So this array of Adventure Action would not match this array of Action Adventure.
+// A
+{
+    "title": "Star Trek",
+    "genre": [
+    "Adventure",
+    "Action"
+    ]
+}
 
-Let's use $unwind for something real.
+// B
+{
+    "title": "Star Trek",
+    "genres": [
+    "Action",
+    "Adventure"
+    ]
+}
+A is not equal to B
+```
 
-Let's find the most popular genres by year from 2010 to 2015 within the movie's collection.
+And we tried to *group on year and genres*, we would have gotten back many distinct entries because, within *group*, arrays are mashed on pure equality, not equivalents. So this array of *Adventure & Action* would not match this array of *Action $ Adventure*.
 
-I'm going to go ahead and limit this, and say that I'm only considering entries with a runtime of 90 minutes or greater.
-
-And for popularity, I'll use a value in the imdb.rating.
-
-Let's break this down.
+Let's use *$unwind* for something real. Let's find the most popular genres by year from 2010 to 2015 within the movie's collection. I'm going to go ahead and limit this, and say that I'm only considering entries with a runtime of 90 minutes or greater. And for popularity, I'll use a value in the imdb.rating. Let's break this down.
 
 Here, we begin with the $match stage, ensuring we have an imdb.rating value by specifying that it must be greater than 0, and filtering documents based on year and runtime.
 
