@@ -2893,15 +2893,55 @@ db.movies.aggregate([
 
 Here, we begin with the *$match* stage, ensuring we have an *imdb.rating* value by specifying that it must be *greater than 0*, and filtering documents based on *year and runtime*. Then we *unwind the genres array*, creating a new document for each entry in the *original array*. Then we'll *group on the year*, and the now *single genre values field*, and use the *average expression* to calculate the *average_rating from imdb.rating*. Finally, we *sort*, first on the *year descending*, and then the *average_rating descending*. Let's test it out.
 
-It's close, but not quite there yet.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$match": {
+...       "imdb.rating": { "$gt": 0 },
+...       "year": { "$gte": 2010, "$lte": 2015 },
+...       "runtime": { "$gte": 90 }
+...     }
+...   },
+...   {
+...     "$unwind": "$genres"
+...   },
+...   {
+...     "$group": {
+...       "_id": {
+...         "year": "$year",
+...         "genre": "$genres"
+...       },
+...       "average_rating": { "$avg": "$imdb.rating" }
+...     }
+...   },
+...   {
+...     "$sort": { "_id.year": -1, "average_rating": -1 }
+...   }
+... ]);
+{ "_id" : { "year" : 2015, "genre" : "Biography" }, "average_rating" : 7.423404255319149 }
+{ "_id" : { "year" : 2015, "genre" : "News" }, "average_rating" : 7.4 }
+{ "_id" : { "year" : 2015, "genre" : "Documentary" }, "average_rating" : 7.387012987012986 }
+{ "_id" : { "year" : 2015, "genre" : "Animation" }, "average_rating" : 7.107692307692308 }
+{ "_id" : { "year" : 2015, "genre" : "Music" }, "average_rating" : 7.015000000000001 }
+{ "_id" : { "year" : 2015, "genre" : "Sport" }, "average_rating" : 6.94 }
+{ "_id" : { "year" : 2015, "genre" : "History" }, "average_rating" : 6.903571428571429 }
+{ "_id" : { "year" : 2015, "genre" : "Family" }, "average_rating" : 6.864285714285714 }
+{ "_id" : { "year" : 2015, "genre" : "Western" }, "average_rating" : 6.85 }
+{ "_id" : { "year" : 2015, "genre" : "Drama" }, "average_rating" : 6.747838616714698 }
+{ "_id" : { "year" : 2015, "genre" : "Adventure" }, "average_rating" : 6.718 }
+{ "_id" : { "year" : 2015, "genre" : "Crime" }, "average_rating" : 6.591803278688525 }
+{ "_id" : { "year" : 2015, "genre" : "Mystery" }, "average_rating" : 6.579411764705882 }
+{ "_id" : { "year" : 2015, "genre" : "Musical" }, "average_rating" : 6.566666666666666 }
+{ "_id" : { "year" : 2015, "genre" : "Comedy" }, "average_rating" : 6.508152173913044 }
+{ "_id" : { "year" : 2015, "genre" : "Romance" }, "average_rating" : 6.472463768115943 }
+{ "_id" : { "year" : 2015, "genre" : "War" }, "average_rating" : 6.45 }
+{ "_id" : { "year" : 2015, "genre" : "Sci-Fi" }, "average_rating" : 6.3175 }
+{ "_id" : { "year" : 2015, "genre" : "Thriller" }, "average_rating" : 6.279166666666667 }
+{ "_id" : { "year" : 2015, "genre" : "Action" }, "average_rating" : 6.253465346534654 }
+Type "it" for more
+```
 
-We can see we're getting the most popular genre by year, but we're getting all results back.
-
-We just want a single document per year, with the highest-rated genre.
-
-There are many ways to accomplish this.
-
-We'll just look at one of the most simple.
+It's close, but not quite there yet. We can see we're getting the most popular genre by year, but we're getting all results back. We just want a single document per year, with the highest-rated genre. There are many ways to accomplish this. We'll just look at one of the most simple.
 
 Let's examine this new pipeline.
 
