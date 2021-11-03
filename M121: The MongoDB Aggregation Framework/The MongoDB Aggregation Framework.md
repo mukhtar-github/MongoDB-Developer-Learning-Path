@@ -2829,17 +2829,7 @@ $unwind: "$genres"
 
 ```
 
-If I had the following schema on the left, title and genres, and $unwind on the genres field, I'll get back documents on the right.
-
-What?
-
-Am I saying that I'm generating a document for each array entry, when it was all tighten and well-embedded?
-
-Why might this be useful?
-
-One example is when we'd like to group on individual entries.
-
-In the group lesson, we grouped movies based on their year.
+If I had the following schema at top, *title and genres*, and *$unwind* on the genres field, I'll get back documents at below. What? Am I saying that I'm generating a document for each array entry, when it was all tighten and well-embedded? Why might this be useful? One example is when we'd like to *group* on individual entries. In the *group* lesson, we *grouped movies* based on their *year*.
 
 And we tried to group on year and genres, we would have gotten back many distinct entries because, within group, arrays are mashed on pure equality, not equivalents.
 
