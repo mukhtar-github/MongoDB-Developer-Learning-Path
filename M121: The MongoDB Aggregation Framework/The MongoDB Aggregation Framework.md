@@ -2983,35 +2983,9 @@ db.movies.aggregate([
 ]);
 ```
 
-It's identical to the previous one, with the addition of these two stages.
+It's identical to the previous one, with the addition of these *two stages*. The previous *pipeline* was returning in the format we wanted. There were just too many documents being returned. Here, in this additional *group stage*, we group documents together based on their year. And since they are already sorted in the order we need, we just take the first value we encounter for the genre and the average rating. Then we finish with a $sort to make sure that they're return and the order we want. Let's see if it works.
 
-The previous pipeline was returning in the format we wanted.
-
-There were just too many documents being returned.
-
-Here, in this additional group stage, we group documents together based on their year.
-
-And since they are already sorted in the order we need, we just take the first value we encounter for the genre and the average rating.
-
-Then we finish with a $sort to make sure that they're return and the order we want.
-
-Let's see if it works.
-
-Excellent.
-
-One document per year, with the highest-rated genre in that year.
-
-We've seen how $unwind works.
-
-Now there's a few less things to cover.
-
-We've been using the short form for $unwind.
-
-Here's the long form for contrast.
-
-In the long form, we specify the array we want to unwind by providing a field path expression to the path argument.
-
-We can provide a string to includeArrayIndex.
+Excellent. One document per year, with the highest-rated genre in that year. We've seen how $unwind works. Now there's a few less things to cover. We've been using the short form for $unwind. Here's the long form for contrast. In the long form, we specify the array we want to unwind by providing a field path expression to the path argument. We can provide a string to includeArrayIndex.
 
 This will create another field in the document with whatever name we specify, with the value to the index of the element in the original array.
 
