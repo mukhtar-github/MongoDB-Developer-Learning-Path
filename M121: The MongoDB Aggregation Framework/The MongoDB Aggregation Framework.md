@@ -2941,9 +2941,47 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 Type "it" for more
 ```
 
-It's close, but not quite there yet. We can see we're getting the most popular genre by year, but we're getting all results back. We just want a single document per year, with the highest-rated genre. There are many ways to accomplish this. We'll just look at one of the most simple.
+It's close, but not quite there yet. We can see we're getting the most popular *genre by year*, but we're getting all results back. We just want a *single document per year*, with the *highest-rated genre*. There are many ways to accomplish this. We'll just look at one of the most simple. Let's examine this new pipeline.
 
-Let's examine this new pipeline.
+```javascript
+// unfortunately we got too many results per year back. Rather than peform some
+// other complex grouping and matching, we just append a simple group and sort
+// stage, taking advantage of the fact the documents are in the order we want
+db.movies.aggregate([
+  {
+    "$match": {
+      "imdb.rating": { "$gt": 0 },
+      "year": { "$gte": 2010, "$lte": 2015 },
+      "runtime": { "$gte": 90 }
+    }
+  },
+  {
+    "$unwind": "$genres"
+  },
+  {
+    "$group": {
+      "_id": {
+        "year": "$year",
+        "genre": "$genres"
+      },
+      "average_rating": { "$avg": "$imdb.rating" }
+    }
+  },
+  {
+    "$sort": { "_id.year": -1, "average_rating": -1 }
+  },
+  {
+    "$group": {
+      "_id": "$_id.year",
+      "genre": { "$first": "$_id.genre" },
+      "average_rating": { "$first": "$average_rating" }
+    }
+  },
+  {
+    "$sort": { "_id": -1 }
+  }
+]);
+```
 
 It's identical to the previous one, with the addition of these two stages.
 
