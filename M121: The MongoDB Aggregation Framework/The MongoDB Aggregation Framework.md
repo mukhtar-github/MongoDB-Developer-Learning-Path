@@ -2983,7 +2983,50 @@ db.movies.aggregate([
 ]);
 ```
 
-It's identical to the previous one, with the addition of these *two stages*. The previous *pipeline* was returning in the format we wanted. There were just too many documents being returned. Here, in this additional *group stage*, we group documents together based on their year. And since they are already sorted in the order we need, we just take the first value we encounter for the genre and the average rating. Then we finish with a $sort to make sure that they're return and the order we want. Let's see if it works.
+It's identical to the previous one, with the addition of these *two stages*. The previous *pipeline* was returning in the format we wanted. There were just too many documents being returned. Here, in this additional *group stage*, we *group* documents together based on their *year*. And since they are already sorted in the order we need, we just take the first value we encounter for the *genre and the average rating*. Then we finish with a *$sort* to make sure that they're return and the order we want. Let's see if it works.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$match": {
+...       "imdb.rating": { "$gt": 0 },
+...       "year": { "$gte": 2010, "$lte": 2015 },
+...       "runtime": { "$gte": 90 }
+...     }
+...   },
+...   {
+...     "$unwind": "$genres"
+...   },
+...   {
+...     "$group": {
+...       "_id": {
+...         "year": "$year",
+...         "genre": "$genres"
+...       },
+...       "average_rating": { "$avg": "$imdb.rating" }
+...     }
+...   },
+...   {
+...     "$sort": { "_id.year": -1, "average_rating": -1 }
+...   },
+...   {
+...     "$group": {
+...       "_id": "$_id.year",
+...       "genre": { "$first": "$_id.genre" },
+...       "average_rating": { "$first": "$average_rating" }
+...     }
+...   },
+...   {
+...     "$sort": { "_id": -1 }
+...   }
+... ]);
+{ "_id" : 2015, "genre" : "Biography", "average_rating" : 7.423404255319149 }
+{ "_id" : 2014, "genre" : "Documentary", "average_rating" : 7.212587412587413 }
+{ "_id" : 2013, "genre" : "Documentary", "average_rating" : 7.158196721311475 }
+{ "_id" : 2012, "genre" : "Talk-Show", "average_rating" : 8.2 }
+{ "_id" : 2011, "genre" : "Documentary", "average_rating" : 7.262857142857143 }
+{ "_id" : 2010, "genre" : "News", "average_rating" : 7.65 }
+```
 
 Excellent. One document per year, with the highest-rated genre in that year. We've seen how $unwind works. Now there's a few less things to cover. We've been using the short form for $unwind. Here's the long form for contrast. In the long form, we specify the array we want to unwind by providing a field path expression to the path argument. We can provide a string to includeArrayIndex.
 
