@@ -2891,15 +2891,7 @@ db.movies.aggregate([
 ]);
 ```
 
-Here, we begin with the $match stage, ensuring we have an imdb.rating value by specifying that it must be greater than 0, and filtering documents based on year and runtime.
-
-Then we unwind the genres array, creating a new document for each entry in the original array.
-
-Then we'll group on the year, and the now single genre values field, and use the average expression to calculate the average_rating from imdb.rating.
-
-Finally, we sort, first on the year descending, and then the average_rating descending.
-
-Let's test it out.
+Here, we begin with the *$match* stage, ensuring we have an *imdb.rating* value by specifying that it must be *greater than 0*, and filtering documents based on *year and runtime*. Then we *unwind the genres array*, creating a new document for each entry in the *original array*. Then we'll *group on the year*, and the now *single genre values field*, and use the *average expression* to calculate the *average_rating from imdb.rating*. Finally, we *sort*, first on the *year descending*, and then the *average_rating descending*. Let's test it out.
 
 It's close, but not quite there yet.
 
