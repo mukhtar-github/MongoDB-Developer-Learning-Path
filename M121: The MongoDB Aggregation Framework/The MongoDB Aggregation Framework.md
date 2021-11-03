@@ -2859,9 +2859,37 @@ $group: {
 A is not equal to B
 ```
 
-And we tried to *group on year and genres*, we would have gotten back many distinct entries because, within *group*, arrays are mashed on pure equality, not equivalents. So this array of *Adventure & Action* would not match this array of *Action $ Adventure*.
+And we tried to *group on year and genres*, we would have gotten back many distinct entries because, within *group*, arrays are mashed on pure *equality*, not *equivalents*. So this array of *Adventure & Action* would not match this array of *Action $ Adventure*.
 
-Let's use *$unwind* for something real. Let's find the most popular genres by year from 2010 to 2015 within the movie's collection. I'm going to go ahead and limit this, and say that I'm only considering entries with a runtime of 90 minutes or greater. And for popularity, I'll use a value in the imdb.rating. Let's break this down.
+Let's use *$unwind* for something real. Let's find the most popular *genres by year from 2010 to 2015* within the *movie's* collection. I'm going to go ahead and limit this, and say that I'm only considering entries with a *runtime of 90 minutes or greater*. And for popularity, I'll use a value in the *imdb.rating*. Let's break this down.
+
+```javascript
+// finding the top rated genres per year from 2010 to 2015...
+db.movies.aggregate([
+  {
+    "$match": {
+      "imdb.rating": { "$gt": 0 },
+      "year": { "$gte": 2010, "$lte": 2015 },
+      "runtime": { "$gte": 90 }
+    }
+  },
+  {
+    "$unwind": "$genres"
+  },
+  {
+    "$group": {
+      "_id": {
+        "year": "$year",
+        "genre": "$genres"
+      },
+      "average_rating": { "$avg": "$imdb.rating" }
+    }
+  },
+  {
+    "$sort": { "_id.year": -1, "average_rating": -1 }
+  }
+]);
+```
 
 Here, we begin with the $match stage, ensuring we have an imdb.rating value by specifying that it must be greater than 0, and filtering documents based on year and runtime.
 
