@@ -3163,13 +3163,9 @@ db.movies.aggregate([
 
 ### The $lookup Stage
 
-Now it's time we learned about lookup, a powerful stage that lets you combine information from two collections.
+Now it's time we learned about *lookup*, a powerful stage that lets you combine information from two collections. For those with some knowledge of *SQL*, lookup is effectively a *left outer join*. If that didn't make any sense, don't worry. Let's break it down.
 
-For those with some knowledge of SQL, lookup is effectively a left outer join.
-
-If that didn't make any sense, don't worry.
-
-Let's break it down.
+![B00134_07_12](https://static.packt-cdn.com/products/9781782161080/graphics/B00134_07_12.jpg)
 
 In database terms, a left outer join combines all documents or entries on the left with matching documents or entries from the right.
 
