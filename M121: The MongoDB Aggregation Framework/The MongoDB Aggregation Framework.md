@@ -3047,3 +3047,38 @@ Here's the *long form* for contrast. In the *long form*, we specify the array we
 *True* will create an entry with an *empty array*, with the value specified in the *path* as either *null, missing, or an empty array*. One more thing of note. If the documents in our collection are *very large*, and we need to use *$unwind*, we may exceed the *default memory limit of the aggregation framework*. As always, *match* early, retain only the information needed with *project*, and remember that we can specify to *allow disk use*. And that covers *$unwind*. We've learned a lot.
 
 Let's recap on a few things. *$unwind* only works on an *array of values*. There are two forms for *unwind, the short form and long form*. Using *unwind* on large collections with big documents may lead to *performance issues*.
+
+### Lab - $unwind
+
+#### Problem 8
+
+Let's use our increasing knowledge of the Aggregation Framework to explore our movies collection in more detail. We'd like to calculate how many movies every *cast* member has been in and get an average *imdb.rating* for each *cast* member.
+
+What is the name, number of movies, and average rating (truncated to one decimal) for the cast member that has been in the most number of movies with *English* as an available language?
+
+Provide the input in the following order and format:
+
+```javascript
+{ "_id": "First Last", "numFilms": 1, "average": 1.1 }
+```
+
+#### Answer 8
+
+```javascript
+// Builds the pipeline.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var pipeline = [
+...     { $unwind : "$cast" },
+... { $group: { 
+...     "_id" : "$cast", 
+... "numFilms" : { $sum : 1 },
+... "average" : { $avg : "$imdb.rating" }
+... }
+... },
+... { $sort : { "numFilms" : -1 } },
+... { $limit : 1 }
+... ];
+
+// Prints the result.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.movies.aggregate(pipeline).next());
+{ "_id" : "John Wayne", "numFilms" : 107, "average" : 6.4 }
+```
