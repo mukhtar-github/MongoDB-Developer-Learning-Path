@@ -3160,3 +3160,115 @@ db.movies.aggregate([
 // Lastly, we $sort in descending order so the result with the greatest number of movies comes first, and then $limit our result to 1 document, giving the expected answer
 { "_id" : "John Wayne", "numFilms" : 107, "average" : 6.4 }
 ```
+
+### The $lookup Stage
+
+Now it's time we learned about lookup, a powerful stage that lets you combine information from two collections.
+
+For those with some knowledge of SQL, lookup is effectively a left outer join.
+
+If that didn't make any sense, don't worry.
+
+Let's break it down.
+
+In database terms, a left outer join combines all documents or entries on the left with matching documents or entries from the right.
+
+So A left outer joined with B would look like this.
+
+The lookup stage has this form.
+
+The from field here is the collection from which we want to look up documents.
+
+Keep in mind, the collection you specify in the from field cannot be sharded and must exist within the same database.
+
+LocalField here is a field in the working collection where we express the aggregation command that we want to compare to.
+
+ForeignField here, is the field we want to compare from in the collection we specified in from.
+
+Lookup will form a strict equality comparison.
+
+And the as field here, is the new field name we specify that will show up in our documents that contains any matches between localField and foreignField.
+
+All matches will be put in an array in this field.
+
+If there were no matches, the field will contain an empty array.
+
+Let's visualize this in an example.
+
+Suppose we're aggregating over an airline's collection and we want to fetch which alliance the airline belongs to.
+
+As the argument from would specify air alliances.
+
+Next, we would specify name as the argument to localField, the value we want to compare to.
+
+The argument to a localField can resolve to either an array or a single value.
+
+Then we specify airlines as the argument to a foreignField the value we want to compare from.
+
+The argument to foreignField can also resolve to either an array or a single value.
+
+We can see that based on the argument so far, Penguin Air won't match anything.
+
+Delta Airlines will match SkyTeam.
+
+And Lufthansa will match Star Alliance.
+
+Those matches were brought into the current document as alliance.
+
+We could have given any string value we wanted, but keep in mind, that if we specify a name that already exists in the working document, that field will be overwritten.
+
+Notice here that because the document was named Penguin Air and did not have any results, there is an empty array.
+
+Oftentimes after a lookup, we want to follow it with a match stage to filter documents out.
+
+Another thing to know, lookup retrieves the entire document that matched, not just the field we specified, the foreignField.
+
+All right, let's look at lookup in actual use.
+
+Let's combine information from the air airlines collection with the air alliances collection, putting all the airline information within the alliance document.
+
+First, let's look at the schema in our airlines alliances collection.
+
+OK, the data we need for localField is in the airline's field.
+
+Let's look at the airline's schema, so we know what value to use as the foreignField.
+
+All right, easy enough.
+
+It looks like the information we need for foreignField is in the name field.
+
+That should be all the information we need.
+
+Let's build the pipeline.
+
+All right, we specify air airlines to the from field, airlines as the localField name as the foreignField.
+
+And here we chose to overwrite the airlines field with the information we get back.
+
+It makes sense.
+
+We'll be replacing the names with entire documents.
+
+Let's see the output.
+
+Pretty cool.
+
+We can see that lookup did just what we expected it to do.
+
+We could follow this with some projections or even another lookup stage to perform some powerful reshaping and analysis.
+
+But for now, that's enough.
+
+We've covered a lot of information in this lesson.
+
+Lookup is a powerful stage that can help help reduce network requests and combine information from different collections together for powerful and deep analysis.
+
+Here are a few things to keep in mind.
+
+The from field cannot be sharded.
+
+The from collection must be in the same database.
+
+The values in localField and foreignField are matched on equality.
+
+And as can be any name, but if it exists in the working document, that field will be overwritten.
