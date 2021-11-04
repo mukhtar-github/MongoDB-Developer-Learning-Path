@@ -3178,23 +3178,9 @@ $lookup: {
 }
 ```
 
-The from field here is the collection from which we want to look up documents.
+The *from field* here is the collection from which we want to *look up* documents. Keep in mind, the collection you specify in the *from field* cannot be *sharded* and must exist within the same database. *LocalField* here is a field in the working collection where we express the aggregation command that we want to compare to. *ForeignField* here, is the field we want to compare from in the collection we specified in *from*.
 
-Keep in mind, the collection you specify in the from field cannot be sharded and must exist within the same database.
-
-LocalField here is a field in the working collection where we express the aggregation command that we want to compare to.
-
-ForeignField here, is the field we want to compare from in the collection we specified in from.
-
-Lookup will form a strict equality comparison.
-
-And the as field here, is the new field name we specify that will show up in our documents that contains any matches between localField and foreignField.
-
-All matches will be put in an array in this field.
-
-If there were no matches, the field will contain an empty array.
-
-Let's visualize this in an example.
+*Lookup* will form a strict equality comparison. And the as field here, is the new field name we specify that will show up in our documents that contains any matches between localField and foreignField. All matches will be put in an array in this field. If there were no matches, the field will contain an empty array. Let's visualize this in an example.
 
 Suppose we're aggregating over an airline's collection and we want to fetch which alliance the airline belongs to.
 
