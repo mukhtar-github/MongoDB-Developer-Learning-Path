@@ -3163,15 +3163,20 @@ db.movies.aggregate([
 
 ### The $lookup Stage
 
-Now it's time we learned about *lookup*, a powerful stage that lets you combine information from two collections. For those with some knowledge of *SQL*, lookup is effectively a *left outer join*. If that didn't make any sense, don't worry. Let's break it down.
+Now it's time we learned about *lookup*, a powerful stage that lets you combine information from two collections. For those with some knowledge of *SQL*, lookup is effectively a *left outer join*. If that didn't make any sense, don't worry. Let's break it down. In database terms, a *left outer join* combines all documents or entries on the *left* with matching documents or entries from the *right*. So *table 1 left outer joined with table 2* would look like this.
 
 ![B00134_07_12](https://static.packt-cdn.com/products/9781782161080/graphics/B00134_07_12.jpg)
 
-In database terms, a left outer join combines all documents or entries on the left with matching documents or entries from the right.
+The *lookup stage* has this form.
 
-So A left outer joined with B would look like this.
-
-The lookup stage has this form.
+```javascript
+$lookup: {
+    from: <location to join>,
+    localField: <field from the input documents>,
+    foreignField: <field from the documents of the "from" collection>,
+    as: <output array feild>
+}
+```
 
 The from field here is the collection from which we want to look up documents.
 
