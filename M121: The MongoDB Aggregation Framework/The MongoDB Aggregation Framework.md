@@ -3028,13 +3028,25 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 { "_id" : 2010, "genre" : "News", "average_rating" : 7.65 }
 ```
 
-Excellent. One document *per year*, with the *highest-rated genre in that year*. We've seen how *$unwind* works. Now there's a few less things to cover. We've been using the *short form* for *$unwind*. Here's the *long form* for contrast.
+Excellent. One document *per year*, with the *highest-rated genre in that year*. We've seen how *$unwind* works. Now there's a few less things to cover. We've been using the *short form* for *$unwind*.
 
-In the long form, we specify the array we want to unwind by providing a field path expression to the path argument. We can provide a string to includeArrayIndex.
+```javascript
+// Short Form
+$unwind: <field path>
+
+// Long Form
+$unwind: {
+    path: <field path>,
+    includeArrayIndex: <string>,
+    preserveNullAndEmptyArrays: <boolean>
+}
+```
+
+Here's the *long form* for contrast. In the *long form*, we specify the array we want to *unwind* by providing a *field path* expression to the path argument. We can provide a string to *includeArrayIndex*.
 
 This will create another field in the document with whatever name we specify, with the value to the index of the element in the original array.
 
-Lastly, we can provide a true or false value to preserveNullAndEmptyArrays.
+Lastly, we can provide a true or false value to *preserveNullAndEmptyArrays*.
 
 True will create an entry with an empty array, with the value specified in the path as either null, missing, or an empty array.
 
