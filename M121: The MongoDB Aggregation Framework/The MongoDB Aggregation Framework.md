@@ -3218,7 +3218,7 @@ We can see that based on the argument so far, *Penguin Air* won't *match* anythi
 }
 ```
 
-Notice here that because the document was named Penguin Air and did not have any results, there is an empty array. Oftentimes after a lookup, we want to follow it with a match stage to filter documents out. Another thing to know, lookup retrieves the entire document that matched, not just the field we specified, the foreignField. All right, let's look at lookup in actual use.
+Notice here that because the document was named *Penguin Air* did not have any results, there is an *empty array*. Oftentimes after a *lookup*, we want to follow it with a *match stage* to *filter documents* out. Another thing to know, *lookup* retrieves the entire document that *matched*, not just the *field* we specified, the *foreignField*. All right, let's look at *lookup* in actual use.
 
 Let's combine information from the air airlines collection with the air alliances collection, putting all the airline information within the alliance document.
 
