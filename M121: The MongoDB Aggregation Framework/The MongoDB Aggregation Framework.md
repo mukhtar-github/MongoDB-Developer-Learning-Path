@@ -3188,15 +3188,7 @@ And the *as field* here, is the new field name we specify, that will show up in 
 | {   name: "Delta Air Lines",   country: "United States",   ... }, | localFieild    foreignField | {   ...,  name: "Star Alliance",   airlines: [ "Lufthansa", ... ]   ... } |
 | {   name: "Lufthansa",   country: "Germany",   ... }              |               as            | {   ...,  name: "SkyTeam",  airlines: [ "Delta Air Lines", ... ]  ... }   |
 
-Suppose we're aggregating over an airline's collection and we want to fetch which alliance the airline belongs to.
-
-As the argument from would specify air alliances.
-
-Next, we would specify name as the argument to localField, the value we want to compare to.
-
-The argument to a localField can resolve to either an array or a single value.
-
-Then we specify airlines as the argument to a foreignField the value we want to compare from.
+Suppose we're aggregating over an *airline's* collection, and we want to fetch which *alliance* the airline belongs to. As the argument *from* would specify *air alliances -- (from: "air_alliances")*. Next, we would specify *name* as the argument to *localField*, the value we want to *compare to*. The argument to a *localField* can resolve to either an *array or a single value*. Then we specify *airlines* as the argument to a *foreignField*, the value we want to *compare from*.
 
 The argument to foreignField can also resolve to either an array or a single value.
 
