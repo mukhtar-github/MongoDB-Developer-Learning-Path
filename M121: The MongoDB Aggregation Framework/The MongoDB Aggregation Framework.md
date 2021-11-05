@@ -3190,15 +3190,9 @@ And the *as field* here, is the new field name we specify, that will show up in 
 
 Suppose we're aggregating over an *airline's* collection, and we want to *fetch* which *alliance* the *airline* belongs to. As the argument *from would specify air alliances -- (from: "air_alliances")*. Next, we would specify *name as the argument to localField -- (localField: "name")*, the value we want to *compare to*. The argument to a *localField* can resolve to either *an array or a single value*. Then we specify *airlines as the argument to a foreignField -- (foreignField: "airlines")*, the value we want to *compare from*. The argument to *foreignField* can also resolve to either *an array or a single value*.
 
-We can see that based on the argument so far, *Penguin Air* won't *match* anything. *Delta Airlines* will *match* *SkyTeam*. And *Lufthansa* will *match Star Alliance*. Those *matches* were brought into the *current document* as *alliance*. We could have given any *string value* we wanted, but keep in mind that if we specify a *name* that already exists in the *working document*, that *field will be overwritten*.
+We can see that based on the argument so far, *Penguin Air* won't *match* anything. *Delta Airlines* will *match* *SkyTeam*. And *Lufthansa* will *match Star Alliance*. Those *matches* were brought into the *current document as alliance -- (as: "alliance")*. We could have given any *string value* we wanted, but keep in mind that if we specify a *name* that already exists in the *working document*, that *field will be overwritten*.
 
-Notice here that because the document was named Penguin Air and did not have any results, there is an empty array.
-
-Oftentimes after a lookup, we want to follow it with a match stage to filter documents out.
-
-Another thing to know, lookup retrieves the entire document that matched, not just the field we specified, the foreignField.
-
-All right, let's look at lookup in actual use.
+Notice here that because the document was named Penguin Air and did not have any results, there is an empty array. Oftentimes after a lookup, we want to follow it with a match stage to filter documents out. Another thing to know, lookup retrieves the entire document that matched, not just the field we specified, the foreignField. All right, let's look at lookup in actual use.
 
 Let's combine information from the air airlines collection with the air alliances collection, putting all the airline information within the alliance document.
 
