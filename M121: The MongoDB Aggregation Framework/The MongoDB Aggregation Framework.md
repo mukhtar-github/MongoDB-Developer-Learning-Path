@@ -3247,9 +3247,23 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.findOne();
 }
 ```
 
-OK, the data we need for localField is in the airline's field.
+OK, the data we need for *localField* is in the *airline's field*. Let's look at the *airline's schema*, so we know what value to use as the *foreignField*.
 
-Let's look at the airline's schema, so we know what value to use as the foreignField.
+```javascript
+// familiarizing with the air_airlines schema
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.findOne();
+{
+    "_id" : ObjectId("56e9b497732b6122f8790287"),
+    "airline" : 8,
+    "name" : "247 Jet Ltd",
+    "alias" : "",
+    "iata" : "TWF",
+    "icao" : "CLOUD RUNNER",
+    "active" : "N",
+    "country" : "United Kingdom",
+    "base" : "FLS"
+}
+```
 
 All right, easy enough.
 
