@@ -3192,6 +3192,32 @@ Suppose we're aggregating over an *airline's* collection, and we want to *fetch*
 
 We can see that based on the argument so far, *Penguin Air* won't *match* anything. *Delta Airlines* will *match* *SkyTeam*. And *Lufthansa* will *match Star Alliance*. Those *matches* were brought into the *current document as alliance -- (as: "alliance")*. We could have given any *string value* we wanted, but keep in mind that if we specify a *name* that already exists in the *working document*, that *field will be overwritten*.
 
+```javascript
+// as: "alliance"
+{
+   name: "Penguin Air",
+   country: "Antarctica",
+   alliance: [],
+   ...
+}                         // from
+{
+    name: "Delta Air Lines",
+   country: "United States",   // localFieild
+   alliance: [
+       { name: "SkyTeam", ... }
+   ],                           // foreignField
+   ...
+},
+{                              // as
+    name: "Lufthansa",
+    country: "Germany",
+    alliance: [
+        { name: "Star Alliance", ... }
+   ],
+   ... 
+}
+```
+
 Notice here that because the document was named Penguin Air and did not have any results, there is an empty array. Oftentimes after a lookup, we want to follow it with a match stage to filter documents out. Another thing to know, lookup retrieves the entire document that matched, not just the field we specified, the foreignField. All right, let's look at lookup in actual use.
 
 Let's combine information from the air airlines collection with the air alliances collection, putting all the airline information within the alliance document.
