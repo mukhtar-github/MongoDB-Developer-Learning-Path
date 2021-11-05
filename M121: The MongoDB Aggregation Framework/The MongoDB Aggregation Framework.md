@@ -3218,11 +3218,34 @@ We can see that based on the argument so far, *Penguin Air* won't *match* anythi
 }
 ```
 
-Notice here that because the document was named *Penguin Air* did not have any results, there is an *empty array*. Oftentimes after a *lookup*, we want to follow it with a *match stage* to *filter documents* out. Another thing to know, *lookup* retrieves the entire document that *matched*, not just the *field* we specified, the *foreignField*. All right, let's look at *lookup* in actual use.
+Notice here that because the document was named *Penguin Air* did not have any results, there is an *empty array*. Oftentimes after a *lookup*, we want to follow it with a *match stage* to *filter documents* out. Another thing to know, *lookup retrieves the entire document that matched*, not just the *field* we specified, the *foreignField*. All right, let's look at *lookup* in actual use. Let's combine information from the *air airlines collection* with the *air alliances collection*, putting all the *airline information within the alliance document*. First, let's look at the *schema in our airlines alliances collection*.
 
-Let's combine information from the air airlines collection with the air alliances collection, putting all the airline information within the alliance document.
-
-First, let's look at the schema in our airlines alliances collection.
+```javascript
+// familiarizing with the air_alliances schema
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.findOne();
+{
+    "_id" : ObjectId("5980bef9a39d0ba3c650ae9d"),
+    "name" : "OneWorld",
+    "airlines" : [
+        "Air Berlin",
+        "American Airlines",
+        "British Airways",
+        "Cathay Pacific",
+        "Finnair",
+        "Iberia Airlines",
+        "Japan Airlines",
+        "LATAM Chile",
+        "LATAM Brasil",
+        "Malaysia Airlines",
+        "Canadian Airlines",
+        "Qantas",
+        "Qatar Airways",
+        "Royal Jordanian",
+        "SriLankan Airlines",
+        "S7 Airlines"
+    ]
+}
+```
 
 OK, the data we need for localField is in the airline's field.
 
