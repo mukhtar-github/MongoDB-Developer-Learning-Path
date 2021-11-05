@@ -3265,42 +3265,560 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.findOne();
 }
 ```
 
-All right, easy enough.
+All right, easy enough. It looks like the information we need for *foreignField* is in the *name field*. That should be all the information we need. Let's build the *pipeline*.
 
-It looks like the information we need for foreignField is in the name field.
+```javascript
+// performing a lookup, joining air_alliances with air_airlines and replacing
+// the current airlines information with the new values
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.aggregate([
+...     {
+...       "$lookup": {
+...         "from": "air_airlines",
+...         "localField": "airlines",
+...         "foreignField": "name",
+...         "as": "airlines"
+...       }
+...     }
+...   ]).pretty();
+{
+        "_id" : ObjectId("5980bef9a39d0ba3c650ae9d"),
+        "name" : "OneWorld",
+        "airlines" : [
+            {
+                "_id" : ObjectId("56e9b497732b6122f87908cd"),
+                "airline" : 1615,
+                "name" : "Canadian Airlines",
+                "alias" : "CP",
+                "iata" : "CDN",
+                "icao" : "CANADIAN",
+                "active" : "Y",
+                "country" : "Canada",
+                "base" : "LVI"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87907c8"),
+                "airline" : 1355,
+                "name" : "British Airways",
+                "alias" : "BA",
+                "iata" : "BAW",
+                "icao" : "SPEEDBIRD",
+                "active" : "Y",
+                "country" : "United Kingdom",
+                "base" : "VDA"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790297"),
+                "airline" : 24,
+                "name" : "American Airlines",
+                "alias" : "AA",
+                "iata" : "AAL",
+                "icao" : "AMERICAN",
+                "active" : "Y",
+                "country" : "United States",
+                "base" : "UEO"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87908a2"),
+                "airline" : 1572,
+                "name" : "British Airways",
+                "alias" : "",
+                "iata" : "XMS",
+                "icao" : "SANTA",
+                "active" : "N",
+                "country" : "United Kingdom",
+                "base" : "VQS"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790355"),
+                "airline" : 214,
+                "name" : "Air Berlin",
+                "alias" : "AB",
+                "iata" : "BER",
+                "icao" : "AIR BERLIN",
+                "active" : "Y",
+                "country" : "Germany",
+                "base" : "KTE"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879090e"),
+                "airline" : 1680,
+                "name" : "Cathay Pacific",
+                "alias" : "CX",
+                "iata" : "CPA",
+                "icao" : "CATHAY",
+                "active" : "Y",
+                "country" : "Hong Kong SAR of China",
+                "base" : "YQU"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790fac"),
+                "airline" : 3378,
+                "name" : "Malaysia Airlines",
+                "alias" : "MH",
+                "iata" : "MAS",
+                "icao" : "MALAYSIAN",
+                "active" : "Y",
+                "country" : "Malaysia",
+                "base" : "GPB"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790bac"),
+                "airline" : 2350,
+                "name" : "Finnair",
+                "alias" : "AY",
+                "iata" : "FIN",
+                "icao" : "FINNAIR",
+                "active" : "Y",
+                "country" : "Finland",
+                "base" : "JNZ"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790d83"),
+                "airline" : 2822,
+                "name" : "Iberia Airlines",
+                "alias" : "IB",
+                "iata" : "IBE",
+                "icao" : "IBERIA",
+                "active" : "Y",
+                "country" : "Spain",
+                "base" : "BRN"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790e28"),
+                "airline" : 2987,
+                "name" : "Japan Airlines",
+                "alias" : "JL",
+                "iata" : "JAL",
+                "icao" : "JAPANAIR",
+                "active" : "Y",
+                "country" : "Japan",
+                "base" : "TGR"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879131c"),
+                "airline" : 4259,
+                "name" : "Royal Jordanian",
+                "alias" : "RJ",
+                "iata" : "RJA",
+                "icao" : "JORDANIAN",
+                "active" : "Y",
+                "country" : "Jordan",
+                "base" : "MSJ"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791374"),
+                "airline" : 4349,
+                "name" : "SriLankan Airlines",
+                "alias" : "UL",
+                "iata" : "ALK",
+                "icao" : "SRILANKAN",
+                "active" : "Y",
+                "country" : "Sri Lanka",
+                "base" : "PYY"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791272"),
+                "airline" : 4089,
+                "name" : "Qantas",
+                "alias" : "QF",
+                "iata" : "QFA",
+                "icao" : "QANTAS",
+                "active" : "Y",
+                "country" : "Australia",
+                "base" : "YQX"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791360"),
+                "airline" : 4329,
+                "name" : "S7 Airlines",
+                "alias" : "S7",
+                "iata" : "SBI",
+                "icao" : "SIBERIAN AIRLINES",
+                "active" : "Y",
+                "country" : "Russia",
+                "base" : "CED"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791274"),
+                "airline" : 4091,
+                "name" : "Qatar Airways",
+                "alias" : "QR",
+                "iata" : "QTR",
+                "icao" : "QATARI",
+                "active" : "Y",
+                "country" : "Qatar",
+                "base" : "GCI"
+            }
+        ]
+    }
+    {
+        "_id" : ObjectId("5980bef9a39d0ba3c650ae9b"),
+        "name" : "Star Alliance",
+        "airlines" : [
+            {
+                "_id" : ObjectId("56e9b497732b6122f87903ca"),
+                "airline" : 330,
+                "name" : "Air Canada",
+                "alias" : "AC",
+                "iata" : "ACA",
+                "icao" : "AIR CANADA",
+                "active" : "Y",
+                "country" : "Canada",
+                "base" : "TAL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879056c"),
+                "airline" : 751,
+                "name" : "Air China",
+                "alias" : "CA",
+                "iata" : "CCA",
+                "icao" : "AIR CHINA",
+                "active" : "Y",
+                "country" : "China",
+                "base" : "PGV"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87909df"),
+                "airline" : 1889,
+                "name" : "Copa Airlines",
+                "alias" : "CM",
+                "iata" : "CMP",
+                "icao" : "COPA",
+                "active" : "Y",
+                "country" : "Panama",
+                "base" : "KGA"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87902d2"),
+                "airline" : 83,
+                "name" : "Adria Airways",
+                "alias" : "JP",
+                "iata" : "ADR",
+                "icao" : "ADRIA",
+                "active" : "Y",
+                "country" : "Slovenia",
+                "base" : "DHM"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879029b"),
+                "airline" : 28,
+                "name" : "Asiana Airlines",
+                "alias" : "OZ",
+                "iata" : "AAR",
+                "icao" : "ASIANA",
+                "active" : "Y",
+                "country" : "Republic of Korea",
+                "base" : "MZW"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87903c3"),
+                "airline" : 324,
+                "name" : "All Nippon Airways",
+                "alias" : "NH",
+                "iata" : "ANA",
+                "icao" : "ALL NIPPON",
+                "active" : "Y",
+                "country" : "Japan",
+                "base" : "CAL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790a03"),
+                "airline" : 1925,
+                "name" : "Croatia Airlines",
+                "alias" : "OU",
+                "iata" : "CTN",
+                "icao" : "CROATIA",
+                "active" : "Y",
+                "country" : "Croatia",
+                "base" : "NAP"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87903d8"),
+                "airline" : 345,
+                "name" : "Air New Zealand",
+                "alias" : "NZ",
+                "iata" : "ANZ",
+                "icao" : "NEW ZEALAND",
+                "active" : "Y",
+                "country" : "New Zealand",
+                "base" : "KUL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790879"),
+                "airline" : 1531,
+                "name" : "Brussels Airlines",
+                "alias" : "SN",
+                "iata" : "DAT",
+                "icao" : "BEE-LINE",
+                "active" : "Y",
+                "country" : "Belgium",
+                "base" : "XMS"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790f73"),
+                "airline" : 3320,
+                "name" : "Lufthansa",
+                "alias" : "LH",
+                "iata" : "DLH",
+                "icao" : "LUFTHANSA",
+                "active" : "Y",
+                "country" : "Germany",
+                "base" : "CYS"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790aa9"),
+                "airline" : 2091,
+                "name" : "EVA Air",
+                "alias" : "BR",
+                "iata" : "EVA",
+                "icao" : "EVA",
+                "active" : "Y",
+                "country" : "Taiwan",
+                "base" : "PHO"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879157b"),
+                "airline" : 4869,
+                "name" : "TAP Portugal",
+                "alias" : "TP",
+                "iata" : "TAP",
+                "icao" : "AIR PORTUGAL",
+                "active" : "Y",
+                "country" : "Portugal",
+                "base" : "OPO"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791348"),
+                "airline" : 4305,
+                "name" : "South African Airways",
+                "alias" : "SA",
+                "iata" : "SAA",
+                "icao" : "SPRINGBOK",
+                "active" : "Y",
+                "country" : "South Africa",
+                "base" : "BDJ"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87913ca"),
+                "airline" : 4435,
+                "name" : "Singapore Airlines",
+                "alias" : "SQ",
+                "iata" : "SIA",
+                "icao" : "SINGAPORE",
+                "active" : "Y",
+                "country" : "Singapore",
+                "base" : "DGT"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791479"),
+                "airline" : 4611,
+                "name" : "Shenzhen Airlines",
+                "alias" : "ZH",
+                "iata" : "CSZ",
+                "icao" : "SHENZHEN AIR",
+                "active" : "Y",
+                "country" : "China",
+                "base" : "AOQ"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8791446"),
+                "airline" : 4559,
+                "name" : "Swiss International Air Lines",
+                "alias" : "LX",
+                "iata" : "SWR",
+                "icao" : "SWISS",
+                "active" : "Y",
+                "country" : "Switzerland",
+                "base" : "YTS"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87915cc"),
+                "airline" : 4951,
+                "name" : "Turkish Airlines",
+                "alias" : "TK",
+                "iata" : "THY",
+                "icao" : "TURKAIR",
+                "active" : "Y",
+                "country" : "Turkey",
+                "base" : "MHG"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87916ca"),
+                "airline" : 5209,
+                "name" : "United Airlines",
+                "alias" : "UA",
+                "iata" : "UAL",
+                "icao" : "UNITED",
+                "active" : "Y",
+                "country" : "United States",
+                "base" : "ORD"
+            }
+        ]
+    }
+    {
+        "_id" : ObjectId("5980bef9a39d0ba3c650ae9c"),
+        "name" : "SkyTeam",
+        "airlines" : [
+            {
+                "_id" : ObjectId("56e9b497732b6122f87902d9"),
+                "airline" : 90,
+                "name" : "Air Europa",
+                "alias" : "UX",
+                "iata" : "AEA",
+                "icao" : "EUROPA",
+                "active" : "Y",
+                "country" : "Spain",
+                "base" : "RPR"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879095a"),
+                "airline" : 1756,
+                "name" : "China Airlines",
+                "alias" : "CI",
+                "iata" : "CAL",
+                "icao" : "DYNASTY",
+                "active" : "Y",
+                "country" : "Taiwan",
+                "base" : "AGN"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879095c"),
+                "airline" : 1758,
+                "name" : "China Eastern Airlines",
+                "alias" : "MU",
+                "iata" : "CES",
+                "icao" : "CHINA EASTERN",
+                "active" : "Y",
+                "country" : "China",
+                "base" : "LUW"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87904d3"),
+                "airline" : 596,
+                "name" : "Alitalia",
+                "alias" : "AZ",
+                "iata" : "AZA",
+                "icao" : "ALITALIA",
+                "active" : "Y",
+                "country" : "Italy",
+                "base" : "TTA"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790308"),
+                "airline" : 137,
+                "name" : "Air France",
+                "alias" : "AF",
+                "iata" : "AFR",
+                "icao" : "AIRFRANS",
+                "active" : "Y",
+                "country" : "France",
+                "base" : "HDM"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790965"),
+                "airline" : 1767,
+                "name" : "China Southern Airlines",
+                "alias" : "CZ",
+                "iata" : "CSN",
+                "icao" : "CHINA SOUTHERN",
+                "active" : "Y",
+                "country" : "China",
+                "base" : "LKL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790a18"),
+                "airline" : 1946,
+                "name" : "Czech Airlines",
+                "alias" : "OK",
+                "iata" : "CSA",
+                "icao" : "CSA-LINES",
+                "active" : "Y",
+                "country" : "Czech Republic",
+                "base" : "MXZ"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790a57"),
+                "airline" : 2009,
+                "name" : "Delta Air Lines",
+                "alias" : "DL",
+                "iata" : "DAL",
+                "icao" : "DELTA",
+                "active" : "Y",
+                "country" : "United States",
+                "base" : "RVK"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879101c"),
+                "airline" : 3490,
+                "name" : "Middle East Airlines",
+                "alias" : "ME",
+                "iata" : "MEA",
+                "icao" : "CEDAR JET",
+                "active" : "Y",
+                "country" : "Lebanon",
+                "base" : "CGK"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790eb3"),
+                "airline" : 3126,
+                "name" : "Kenya Airways",
+                "alias" : "KQ",
+                "iata" : "KQA",
+                "icao" : "KENYA",
+                "active" : "Y",
+                "country" : "Kenya",
+                "base" : "JOL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790ed7"),
+                "airline" : 3163,
+                "name" : "Korean Air",
+                "alias" : "KE",
+                "iata" : "KAL",
+                "icao" : "KOREANAIR",
+                "active" : "Y",
+                "country" : "Republic of Korea",
+                "base" : "MEH"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f8790c56"),
+                "airline" : 2520,
+                "name" : "Garuda Indonesia",
+                "alias" : "GA",
+                "iata" : "GIA",
+                "icao" : "INDONESIA",
+                "active" : "Y",
+                "country" : "Indonesia",
+                "base" : "OGX"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f879172c"),
+                "airline" : 5309,
+                "name" : "Vietnam Airlines",
+                "alias" : "VN",
+                "iata" : "HVN",
+                "icao" : "VIET NAM AIRLINES",
+                "active" : "Y",
+                "country" : "Vietnam",
+                "base" : "JKL"
+            },
+            {
+                "_id" : ObjectId("56e9b497732b6122f87917d8"),
+                "airline" : 5484,
+                "name" : "Xiamen Airlines",
+                "alias" : "MF",
+                "iata" : "CXA",
+                "icao" : "XIAMEN AIR",
+                "active" : "Y",
+                "country" : "China",
+                "base" : "PPQ"
+            }
+        ]
+}
+```
 
-That should be all the information we need.
+All right, we specify *air_airlines* to the *from field*, *airlines* as the *localField*, *name* as the *foreignField*. And here we chose to *overwrite* the *airlines* field with the information we get back. It makes sense. We'll be replacing the *names* with entire documents. Let's see the output.
 
-Let's build the pipeline.
+Pretty cool. We can see that lookup did just what we expected it to do. We could follow this with some projections or even another lookup stage to perform some powerful reshaping and analysis. But for now, that's enough. We've covered a lot of information in this lesson. Lookup is a powerful stage that can help help reduce network requests and combine information from different collections together for powerful and deep analysis.
 
-All right, we specify air airlines to the from field, airlines as the localField name as the foreignField.
-
-And here we chose to overwrite the airlines field with the information we get back.
-
-It makes sense.
-
-We'll be replacing the names with entire documents.
-
-Let's see the output.
-
-Pretty cool.
-
-We can see that lookup did just what we expected it to do.
-
-We could follow this with some projections or even another lookup stage to perform some powerful reshaping and analysis.
-
-But for now, that's enough.
-
-We've covered a lot of information in this lesson.
-
-Lookup is a powerful stage that can help help reduce network requests and combine information from different collections together for powerful and deep analysis.
-
-Here are a few things to keep in mind.
-
-The from field cannot be sharded.
-
-The from collection must be in the same database.
-
-The values in localField and foreignField are matched on equality.
-
-And as can be any name, but if it exists in the working document, that field will be overwritten.
+Here are a few things to keep in mind. The from field cannot be sharded. The from collection must be in the same database. The values in localField and foreignField are matched on equality. And as can be any name, but if it exists in the working document, that field will be overwritten.
