@@ -4019,13 +4019,11 @@ While modeling *tree structures*, there are different patterns that we can follo
 
 We're going to have the different individuals in the company, like for example, we're going to have our *CEO*. And to our *CEO*, he's going to have a bunch of different reports, like the *CMO, CRO, CTO, SVP services, and CFO*. All of them reporting, obviously, to this particular individual. Then we're going to have a sublayer between this where we going to have the different individuals that report directly to the *CTO*.
 
-In this case, we're going to be having the *SVP of Engineering* reporting directly to that *CTO* and also the *VP of Product* also to the *CTO*. And further down the line, we're going to have the different reports of the different core areas, like for example, *VP Education*, *VP Cloud*, or even *VP of Core*. So modeling such a tree in a document or a structure of documents we might have a couple of different alternatives.
+In this case, we're going to be having the *SVP of Engineering* reporting directly to that *CTO* and also the *VP of Product* also to the *CTO*. And further down the line, we're going to have the different reports of the different core areas, like for example, *VP Education*, *VP Cloud*, or even *VP of Core*. So modeling such a tree in a document or a structure of documents, we might have a couple of different alternatives.
 
-So for example, in this particular structure, we're going to have a parent reference.
+![unnamed](https://lh3.googleusercontent.com/E1TwtjXbvQVAT1JwelM-_Kui0eTVWyWD8QUOd03t4lFixMw3a5qXe43y8274a8khMPG8pt8=s151)
 
-Now a parent reference means that for each single document we're going to have a particular attribute of field that will indicate us who do we report to, who is our parent in the tree structure, or in this case, the org chart that we are defining.
-
-So for example, here we can see that Carlos, our CRO, reports to 1.
+So for example, in this particular structure, we're going to have a *parent reference*. Now a *parent reference* means that for each single document we're going to have a particular attribute of field that will indicate us who do we report to, who is our parent in the tree structure, or in this case, the *org chart* that we are defining. So for example, here we can see that Carlos, our CRO, reports to 1.
 
 And 1 referring to the *_id*, the primary key, of Dave, which is our CEO.
 
