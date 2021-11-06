@@ -3974,7 +3974,15 @@ Or *quite complex and deeply nested schemas* that reflect application needs for 
 }
 ```
 
-A common set of *data structures* that require both complex nesting levels and flexible storage layer tends to be graph or tree hierarchy use cases. Data sets can be as simple as a reporting chain HR data store or complex data structures that map airport traveling routes or even social networks. Telcos switch, disease taxonomy, and fraud detection are amongst several different use cases where graph queryability and flexible data representation go hand in hand.
+A common set of *data structures* that require both *complex nesting levels and flexible storage layer* tends to be *graph or tree hierarchy* use cases.
+
+![330px-Parse-tree.svg](https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Parse-tree.svg/330px-Parse-tree.svg.png)
+
+Data sets can be as simple as a reporting chain HR data store or complex data structures that map airport traveling routes or even social networks.
+
+![unnamed](https://lh3.googleusercontent.com/HMRwzx_J-d_0w8-v4E78bQk8yKNpwdrY1-1BXKS817iWR0gvHMJkdBk4-0MKOTi2nLCDew=s120)
+
+Telcos switch, disease taxonomy, and fraud detection are amongst several different use cases where graph queryability and flexible data representation go hand in hand.
 
 Unlike graph specific databases, *MongoDB* is designed to be a general purpose database, meaning that we want to provide a very good infrastructure to support operational and analytical use cases. We are extending furthermore the query capabilities of MongoDB by offering dollar graph lookup. *Graph lookup* allows developers to combine their flexible data sets with graph or graph-like operations.
 
