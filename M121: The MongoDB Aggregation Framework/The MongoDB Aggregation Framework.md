@@ -4059,19 +4059,16 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.find({ "reports
 
 If we want to know the full structure of reporting, well, we would just need to go back and forth to do the database to understand exactly, for each element or for each document that we find, check who *reports-to* and do the query again, based on his *_id*.
 
-Now this continuous pinging of the database is quite inefficient.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.find({ "reports_to" : 2 });
+{ "_id" : 5, "name" : "Andrew", "title" : "VP Eng", "reports_to" : 2 }
+{ "_id" : 6, "name" : "Ron", "title" : "VP PM", "reports_to" : 2 }
+{ "_id" : 7, "name" : "Elyse", "title" : "COO", "reports_to" : 2 }
+```
 
-For each request that we get, we need to ping the database again.
+Now this continuous *pinging* of the database is quite inefficient. For each request that we get, we need to *ping* the database again.
 
-The alternative to this operation will be to use our new operator graphLookup.
-
-So in this particular example here, I want to know the full reporting structure that reports to our CTO, Eliot.
-
-So to do this with graphLookup we need to run a query similar to this.
-
-We start by matching the document that we want to start to analyze from with the match operator.
-
-So in this case, I want to find the reporting structure to Eliot, therefore, I'm going to match for all documents that contain this particular name.
+The alternative to this operation will be to use our new operator *$graphLookup*. So in this particular example here, I want to know the full reporting structure that reports to our CTO, Eliot. So to do this with graphLookup we need to run a query similar to this. We start by matching the document that we want to start to analyze from with the match operator. So in this case, I want to find the reporting structure to Eliot, therefore, I'm going to match for all documents that contain this particular name.
 
 And then we have the graphLookup operator that will retrieve all subsequent descendant documents from the parent reference.
 
