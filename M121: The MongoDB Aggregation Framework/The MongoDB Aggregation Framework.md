@@ -3820,3 +3820,72 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.aggregate([
 Pretty cool. We can see that *lookup* did just what we expected it to do. We could follow this with some projections or even another *lookup stage* to perform some powerful reshaping and analysis. But for now, that's enough. We've covered a lot of information in this lesson. *Lookup* is a powerful stage that can help help *reduce network requests* and combine information from different collections together for powerful and deep analysis.
 
 Here are a few things to keep in mind. The *from field* cannot be sharded. The *from collection* must be in the same database. The values in *localField and foreignField* are matched on equality. And *as* can be any name, but if it exists in the working document, that *field will be overwritten*.
+
+### Lab - Using $lookup
+
+#### Problem 9
+
+Which alliance from *air_alliances* flies the most *routes* with either a Boeing 747 or an Airbus A380 (abbreviated 747 and 380 in *air_routes*)?
+
+#### Answer 9
+
+```javascript
+//University's Solution
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.aggregate([
+...   {
+...     $match: {
+...       airplane: /747|380/
+...     }
+...   },
+...   {
+...     $lookup: {
+...       from: "air_alliances",
+...       foreignField: "airlines",
+...       localField: "airline.name",
+...       as: "alliance"
+...     }
+...   },
+...   {
+...     $unwind: "$alliance"
+...   },
+...   {
+...     $group: {
+...       _id: "$alliance.name",
+...       count: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $sort: { count: -1 }
+...   }
+... ]);
+{ "_id" : "SkyTeam", "count" : 16 }
+{ "_id" : "OneWorld", "count" : 15 }
+{ "_id" : "Star Alliance", "count" : 11 }
+
+
+
+
+// Builds the pipeline.
+var pipeline = [
+    { $unwind : "$airlines" },
+    { $lookup: {
+            from: "air_routes",
+            localField: "airlines",
+            foreignField: "airline.name",
+            as: "routes"
+        }
+    },
+    { $unwind : "$routes" },
+    { $match : { "routes.airplane" : { $in : [ "747", "380" ] } } },
+    { $group : {
+        "_id" : "$name",
+        "routes_count" : { $sum : 1 } 
+    }
+    },
+    { $sort : {"routes_count" : -1 } }
+];
+
+// Prints the result.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.air_alliances.aggregate(pipeline).next());
+{ "_id" : "OneWorld", "routes_count" : 10 }
+```
