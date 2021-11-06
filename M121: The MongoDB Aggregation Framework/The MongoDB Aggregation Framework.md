@@ -4150,15 +4150,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 }
 ```
 
-After I run this query, I'll find the document that I wanted, the one that matches name equals Eliot. I can see his title.
-
-And then I can find, thanks to the graphLookup, all his descendant reports.
-
-In this case, it's going to be Cailin, then Andrew, Ron, Shannon, and Elyse.
-
-Now this just tells me all of the descendants beneath Eliot.
-
-So in this case, graphLookup will allow me to find all different nodes that are beneath a particular node that I'm finding.
+After I run this query, I'll find the document that I wanted, the one that *matches name equals Eliot*. I can see his *title*. And then I can find, thanks to the *graphLookup*, all his descendant *reports*. In this case, it's going to be *Cailin, Dan, Andrew, Ron, Shannon*, and *Elyse*. Now this just tells me all of the descendants beneath *Eliot*. So in this case, *graphLookup* will allow me to find all different *nodes* that are beneath a particular node that I'm finding.
 
 We can also ask the reverse question, which is, given an element on the org chart, what is the hierarchy to upper levels of reporting?
 
