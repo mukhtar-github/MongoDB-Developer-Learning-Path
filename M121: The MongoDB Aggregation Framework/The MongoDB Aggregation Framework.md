@@ -3265,7 +3265,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.findOne();
 }
 ```
 
-All right, easy enough. It looks like the information we need for *foreignField* is in the *name field*. That should be all the information we need. Let's build the *pipeline*.
+All right, easy enough. It looks like the information we need for *foreignField* is in the *name field*. That should be all the information we need. Let's build the *pipeline*. All right, we specify *air_airlines* to the *from field*, *airlines* as the *localField*, *name* as the *foreignField*. And here we chose to *overwrite* the *airlines field* with the information we get back. It makes sense. We'll be replacing the *names* with entire documents. Let's see the output.
 
 ```javascript
 // performing a lookup, joining air_alliances with air_airlines and replacing
@@ -3817,8 +3817,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.aggregate([
 }
 ```
 
-All right, we specify *air_airlines* to the *from field*, *airlines* as the *localField*, *name* as the *foreignField*. And here we chose to *overwrite* the *airlines* field with the information we get back. It makes sense. We'll be replacing the *names* with entire documents. Let's see the output.
+Pretty cool. We can see that *lookup* did just what we expected it to do. We could follow this with some projections or even another *lookup stage* to perform some powerful reshaping and analysis. But for now, that's enough. We've covered a lot of information in this lesson. *Lookup* is a powerful stage that can help help *reduce network requests* and combine information from different collections together for powerful and deep analysis.
 
-Pretty cool. We can see that lookup did just what we expected it to do. We could follow this with some projections or even another lookup stage to perform some powerful reshaping and analysis. But for now, that's enough. We've covered a lot of information in this lesson. Lookup is a powerful stage that can help help reduce network requests and combine information from different collections together for powerful and deep analysis.
-
-Here are a few things to keep in mind. The from field cannot be sharded. The from collection must be in the same database. The values in localField and foreignField are matched on equality. And as can be any name, but if it exists in the working document, that field will be overwritten.
+Here are a few things to keep in mind. The *from field* cannot be sharded. The *from collection* must be in the same database. The values in *localField and foreignField* are matched on equality. And *as* can be any name, but if it exists in the working document, that *field will be overwritten*.
