@@ -3990,9 +3990,9 @@ In *standard SQL*, such hierarchical queries are implemented by way of *recursiv
 
 ```javascript
 $graphLookup: {
-    from:
-    startWith:
-    connectFromField:
+    from: <lookup table>,
+    startWith: <expression for value to start from>
+    connectFromField: <feild name to connect from>
     connectToField:
     as:
     maxDepth:
@@ -4001,9 +4001,7 @@ $graphLookup: {
 }
 ```
 
-We'll have a *from field* that specifies a collection at this stage retrieves results from.
-
-A startwith field that specifies the connect to field value or values that we should start our recursive search with. We have a connectFromField that determines a field in each document in the from collection that is used to perform the next recursive query. And we have the connectToField that sets the field in each document in the from collection that is queried against each recursive query.
+We'll have a *from field* that specifies a collection, that this stage retrieves results from. A *startwith* field that specifies the *connect to field value or values* that we should start our recursive search with. We have a *connectFromField* that determines a field in each document in the *from collection* that is used to perform the next recursive query. And we have the *connectToField* that sets the field in each document in the *from collection* that is queried against each recursive query.
 
 As specifies a field in the output document that will be assigned an array of results of the *graph lookup*. *MaxDepth*. This is an optional field that specifies the maximum number of recursive def for the graph lookup. *Depth field*, also optional, specifies in field name in which the result document will be set to the recursive depth at which the document was retrieved. This will be zero for the first *lookup*.
 
