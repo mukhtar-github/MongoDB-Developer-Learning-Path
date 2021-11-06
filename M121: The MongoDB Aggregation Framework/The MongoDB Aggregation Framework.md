@@ -4087,15 +4087,53 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 
 So in this particular example here, I want to know the full reporting structure that reports to our *CTO, Eliot*. So to do this with *graphLookup*, we need to run a query similar to this. We start by matching the document that we want to start to analyze from with the *match* operator. So in this case, I want to find the reporting structure to *Eliot*, therefore, I'm going to *match* for all documents that contain this particular *name*.
 
-And then we have the graphLookup operator that will retrieve all subsequent descendant documents from the parent reference. So this will be a self lookup.
+And then we have the *graphLookup* operator that will retrieve all subsequent descendant documents from the *perent_reference*. So this will be a *self lookup*. Starting with the *id* value of the previous first encountered document, connecting from the field *_id*, this is the field I'm going to search on for the subsequent *graphLookups*, but we are going to be using the *reports_to* value to *match*, and use that to use for the subsequent queries. And then I'll be storing all documents that I encounter from the lockup up *as all_reports*.
 
-Starting with the id value of the previous first encountered document, connecting from the field _id, this is the field I'm going to search on for the subsequent graphLookups, but we are going to be using the reports_to value to match, and use that to use for the subsequent queries.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
+    {
+        $match: { name: "Eliot" }
+    },
+    {
+        $graphLookup: {
+            from: "perent_reference",
+            startWith: "_id",
+            connectFromField: "_id",
+            connectToField: "reports_to",
+            as: "all_reports"
+        } 
+    }
+]);
+{
+    "_id" : 2,
+    "name" : "Eliot",
+    "title" : "CTO",
+    "reports_to" : 1,
+    "all_reports" : [
+        {
+            "_id" : 11,
+            "name" : "Cailin",
+            "title" : "VP Cloud Engineering",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 10,
+            "name" : "Dan",
+            "title" : "VP Core Engineering",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 5,
+            "name" : "Andrew",
+            "title" : "VP Eng",
+            "reports_to" : 2
+        },
+    ]
+         
+}
+```
 
-And then I'll be storing all documents that I encounter from the lockup up as all_reports.
-
-After I run this query, I'll find the document that I wanted, the one that matches name equals Eliot.
-
-I can see his title.
+After I run this query, I'll find the document that I wanted, the one that matches name equals Eliot. I can see his title.
 
 And then I can find, thanks to the graphLookup, all his descendant reports.
 
