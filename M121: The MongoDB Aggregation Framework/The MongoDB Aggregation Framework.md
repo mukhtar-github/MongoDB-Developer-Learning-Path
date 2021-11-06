@@ -3984,7 +3984,7 @@ Data sets can be as simple as a *reporting chain HR data store* or complex data 
 
 *Telcos switch, disease taxonomy, and fraud detection* are amongst several different use cases where *graph* queryability and flexible data representation go hand in hand.
 
-Unlike graph specific databases, *MongoDB* is designed to be a general purpose database, meaning that we want to provide a very good infrastructure to support operational and analytical use cases. We are extending furthermore the query capabilities of MongoDB by offering dollar graph lookup. *Graph lookup* allows developers to combine their flexible data sets with graph or graph-like operations.
+Unlike *graph* specific databases, *MongoDB* is designed to be a *general purpose database*, meaning that we want to provide a very good infrastructure to support *operational and analytical* use cases. We are extending furthermore the query capabilities of *MongoDB* by offering *dollar graph lookup*. *Graph lookup* allows developers to combine their flexible data sets with *graph or graph-like operations*.
 
 This enables all of those complex data sets to be processed, analyzed, and transformed using a single data source. When designing and implementing graph relationships and designing its queries, we generally need to think about transitive relationships. If A reports to B, and B reports to C, then A indirectly it reports to C. In standard SQL, such hierarchical queries are implemented by way of recursive common table expressions.
 
