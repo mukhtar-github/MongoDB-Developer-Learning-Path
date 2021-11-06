@@ -4085,9 +4085,9 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 ]);
 ```
 
-So in this particular example here, I want to know the full reporting structure that reports to our CTO, Eliot. So to do this with graphLookup we need to run a query similar to this. We start by matching the document that we want to start to analyze from with the match operator.
+So in this particular example here, I want to know the full reporting structure that reports to our *CTO, Eliot*. So to do this with *graphLookup*, we need to run a query similar to this. We start by matching the document that we want to start to analyze from with the *match* operator. So in this case, I want to find the reporting structure to *Eliot*, therefore, I'm going to *match* for all documents that contain this particular *name*.
 
-So in this case, I want to find the reporting structure to Eliot, therefore, I'm going to match for all documents that contain this particular name. And then we have the graphLookup operator that will retrieve all subsequent descendant documents from the parent reference. So this will be a self lookup.
+And then we have the graphLookup operator that will retrieve all subsequent descendant documents from the parent reference. So this will be a self lookup.
 
 Starting with the id value of the previous first encountered document, connecting from the field _id, this is the field I'm going to search on for the subsequent graphLookups, but we are going to be using the reports_to value to match, and use that to use for the subsequent queries.
 
