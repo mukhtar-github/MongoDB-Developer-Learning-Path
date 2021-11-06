@@ -4128,8 +4128,25 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
             "title" : "VP Eng",
             "reports_to" : 2
         },
-    ]
-         
+        {
+            "_id" : 6,
+            "name" : "Ron",
+            "title" : "VP PM",
+            "reports_to" : 2
+        },
+        {
+            "_id" : 9,
+            "name" : "Shannon",
+            "title" : "VP Education",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 7,
+            "name" : "Elyse",
+            "title" : "COO",
+            "reports_to" : 2
+        },
+    ]               
 }
 ```
 
