@@ -3976,11 +3976,11 @@ Or *quite complex and deeply nested schemas* that reflect application needs for 
 
 A common set of *data structures* that require both *complex nesting levels and flexible storage layer* tends to be *graph or tree hierarchy* use cases. Data sets can be as simple as a *reporting chain HR data store*.
 
-![330px-Parse-tree.svg](https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Parse-tree.svg/330px-Parse-tree.svg.png)
+![tree-vs-graph-data-structure](https://static.javatpoint.com/ds/images/tree-vs-graph-data-structure.png)
 
 Or complex data structures that map *airport traveling routes or even social networks*.
 
-![wWT63](https://i.stack.imgur.com/wWT63.png)
+![binary-search-tree-example](https://www.sqlshack.com/wp-content/uploads/2020/07/binary-search-tree-example.png)
 
 Telcos switch, disease taxonomy, and fraud detection are amongst several different use cases where graph queryability and flexible data representation go hand in hand.
 
