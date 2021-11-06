@@ -4047,11 +4047,17 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.find({ "name" :
 { "_id" : 1, "name" : "Dev", "title" : "CEO" }
 ```
 
-And we know that he doesn't report to anyone but we have his *_id*.
+And we know that he doesn't report to anyone but we have his *_id*. So if we want to know exactly who reports directly to *Dev*, we can use the reference and the value of his *_id* and find all of his direct reports.
 
-So if we want to know exactly who reports directly to Dave, we can use the reference and the value of his _id and find all of his direct reports.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.find({ "reports_to" : 1 });
+{ "_id" : 4, "name" : "Carlos", "title" : "CRO", "reports_to" : 1 }
+{ "_id" : 8, "name" : "Richard", "title" : "VP PS", "reports_to" : 1 }
+{ "_id" : 2, "name" : "Eliot", "title" : "CTO", "reports_to" : 1 }
+{ "_id" : 3, "name" : "Meagen", "title" : "CMO", "reports_to" : 1 }
+```
 
-If we want to know the full structure of reporting, well, we would just need to go back and forth to do the database to understand exactly, for each element or for each document that we find, check who reports-to and do the query again, based on his _id.
+If we want to know the full structure of reporting, well, we would just need to go back and forth to do the database to understand exactly, for each element or for each document that we find, check who *reports-to* and do the query again, based on his *_id*.
 
 Now this continuous pinging of the database is quite inefficient.
 
