@@ -3944,7 +3944,17 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.air_alliances.aggregat
 
 ### $graphLookup Introduction
 
-By now, you've probably already realized that *MongoDB* offers a flexible data model. Documents can be of different shapes and forms and organized in such a way that it reflects both application dynamic data structures and scalability requirements. We can have very flat root level only fields on our documents or quite complex and deeply nested schemas that reflect application needs for fast operations and business logic.
+By now, you've probably already realized that *MongoDB* offers a *flexible data model*. Documents can be of different *shapes and forms* and organized in such a way that it reflects both application *dynamic data structures and scalability requirements*.
+
+```javascript
+{
+    name: 'Jose Morinho',
+    employer: 'Manchester United',
+    nickname: 'Special One'
+}
+```
+
+We can have very flat root level only fields on our documents or quite complex and deeply nested schemas that reflect application needs for fast operations and business logic.
 
 A common set of *data structures* that require both complex nesting levels and flexible storage layer tends to be graph or tree hierarchy use cases. Data sets can be as simple as a reporting chain HR data store or complex data structures that map airport traveling routes or even social networks. Telcos switch, disease taxonomy, and fraud detection are amongst several different use cases where graph queryability and flexible data representation go hand in hand.
 
