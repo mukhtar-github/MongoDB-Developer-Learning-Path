@@ -4006,3 +4006,105 @@ We'll have a *from field* that specifies a collection, that this stage retrieves
 *As* specifies a field in the output document that will be assigned an *array of results* of the *graph lookup*. *MaxDepth*, this is an *optional* field that specifies the *maximum number of recursive depth* for the *graph lookup*. *DepthField*, also *optional*, specifies in field name in which the result document will be set to the recursive depth at which the document was retrieved. This will be *zero* for the first *lookup*.
 
 And we also have *restrictSearchWithMatch*, another optional field that *specifies a filter to apply* when doing to *lookup* in the *from collection*. Looks great, doesn't it? In the following lesson, we are going to get ourselves busy and start experimenting with this new feature, looking to new set of different examples.
+
+### $graphLookup: Simple Lookup
+
+While modeling *tree structures*, there are different patterns that we can follow depending on how we want to juggle with our data. So let's have a look, for example, to an *org chart*.
+
+|              |                 | CEO |              |     |
+|--------------|-----------------|-----|--------------|-----|
+|      CMO     |       CRO       | CTO | SVP Services | CFO |
+|              | SVP Engineering |     |  VP Product  |     |
+| VP Education |     VP Cloud    |     |    VP Core   |     |
+
+We're going to have the different individuals in the company, like for example, we're going to have our *CEO*. And to our *CEO*, he's going to have a bunch of different reports, like the CMO, CRO, CTO, services, and CFO.
+
+All of them reporting, obviously, to this particular individual.
+
+Then we're going to have a sublayer between this where are we going to have the different individuals that report directly to the CTO.
+
+In this case, we're going to be having the SVP of Engineering reporting directly to that CTO and also the VP of Product also to the CTO.
+
+And further down the line, we're going to have the different reports of the different core areas, like for example, in education, cloud, or even VP of Core.
+
+So modeling such a tree in a document or a structure of documents we might have a couple of different alternatives.
+
+So for example, in this particular structure, we're going to have a parent reference.
+
+Now a parent reference means that for each single document we're going to have a particular attribute of field that will indicate us who do we report to, who is our parent in the tree structure, or in this case, the org chart that we are defining.
+
+So for example, here we can see that Carlos, our CRO, reports to 1.
+
+And 1 referring to the *_id*, the primary key, of Dave, which is our CEO.
+
+So we're going to have a 1 to n relationship, where each document will point to its reports_to, which in turn will be then the *_id* field value of the designated parent.
+
+With this schema it's quite easy to navigate between different documents.
+
+So if I want to go from Carlos to his reports_to, or to whom he reports to, I just follow this and go directly to Dave, which is value *_id* equals 1.
+
+So there's always a link between reports_to and *_id*.
+
+Now what happens if we want to know the full reporting structure of, for example, Dave.
+
+I want to know all of his direct reports but also his direct reports' reports.
+
+We can go and fetch, for example, Dave's.
+
+And we know that he doesn't report to anyone but we have his *_id*.
+
+So if we want to know exactly who reports directly to Dave, we can use the reference and the value of his _id and find all of his direct reports.
+
+If we want to know the full structure of reporting, well, we would just need to go back and forth to do the database to understand exactly, for each element or for each document that we find, check who reports-to and do the query again, based on his _id.
+
+Now this continuous pinging of the database is quite inefficient.
+
+For each request that we get, we need to ping the database again.
+
+The alternative to this operation will be to use our new operator graphLookup.
+
+So in this particular example here, I want to know the full reporting structure that reports to our CTO, Eliot.
+
+So to do this with graphLookup we need to run a query similar to this.
+
+We start by matching the document that we want to start to analyze from with the match operator.
+
+So in this case, I want to find the reporting structure to Eliot, therefore, I'm going to match for all documents that contain this particular name.
+
+And then we have the graphLookup operator that will retrieve all subsequent descendant documents from the parent reference.
+
+So this will be a self lookup.
+
+Starting with the id value of the previous first encountered document, connecting from the field _id, this is the field I'm going to search on for the subsequent graphLookups, but we are going to be using the reports_to value to match, and use that to use for the subsequent queries.
+
+And then I'll be storing all documents that I encounter from the lockup up as all_reports.
+
+After I run this query, I'll find the document that I wanted, the one that matches name equals Eliot.
+
+I can see his title.
+
+And then I can find, thanks to the graphLookup, all his descendant reports.
+
+In this case, it's going to be Cailin, then Andrew, Ron, Shannon, and Elyse.
+
+Now this just tells me all of the descendants beneath Eliot.
+
+So in this case, graphLookup will allow me to find all different nodes that are beneath a particular node that I'm finding.
+
+We can also ask the reverse question, which is, given an element on the org chart, what is the hierarchy to upper levels of reporting?
+
+So for example, if I give the VP of Education I want to know the full structure till I get to the top parent of our tree, root level.
+
+To do that, what we need to do is, again, match on the element that we are interested on, in this case Shannon, and then invert the connectFrom and connectTo fields, but also starting with the different startWith value.
+
+In this case, we're going to be starting with reports_to.
+
+connectFrom will be also reports_to but the connect field, the value that we're going to pick up to match against reports_to will be _id.
+
+And we're going to be storing that information, that chain, into a field called bosses.
+
+Once I run this, I can see that Shannon has the set of bosses.
+
+He has Dave.
+
+Eliot, and, obviously, his direct boss, Andrew.
