@@ -4038,7 +4038,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.find();
 { "_id" : 1, "name" : "Dev", "title" : "CEO" }
 ```
 
-So for example, here we can see that *Carlos, our CRO, reports to 1*. And *1* referring to the *_id*, the primary key, of Dave, which is our CEO. So we're going to have a 1 to n relationship, where each document will point to its reports_to, which in turn will be then the *_id* field value of the designated parent. With this schema it's quite easy to navigate between different documents.
+So for example, here we can see that *Carlos, our CRO, reports to 1*. And *1* referring to the *_id*, the primary key, of *Dev*, which is our *CEO*. So we're going to have a *1* to *end* relationship, where each document will point to its *reports_to*, which in turn will be then the *_id* field value of the *designated parent*. With this schema, it's quite easy to navigate between different documents.
 
 So if I want to go from Carlos to his reports_to, or to whom he reports to, I just follow this and go directly to Dave, which is value *_id* equals 1.
 
