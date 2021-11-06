@@ -4017,11 +4017,7 @@ While modeling *tree structures*, there are different patterns that we can follo
 |              | SVP Engineering |     |  VP Product  |     |
 | VP Education |     VP Cloud    |     |    VP Core   |     |
 
-We're going to have the different individuals in the company, like for example, we're going to have our *CEO*. And to our *CEO*, he's going to have a bunch of different reports, like the CMO, CRO, CTO, services, and CFO.
-
-All of them reporting, obviously, to this particular individual.
-
-Then we're going to have a sublayer between this where are we going to have the different individuals that report directly to the CTO.
+We're going to have the different individuals in the company, like for example, we're going to have our *CEO*. And to our *CEO*, he's going to have a bunch of different reports, like the *CMO, CRO, CTO, SVP services, and CFO*. All of them reporting, obviously, to this particular individual. Then we're going to have a sublayer between this where are we going to have the different individuals that report directly to the *CTO*.
 
 In this case, we're going to be having the SVP of Engineering reporting directly to that CTO and also the VP of Product also to the CTO.
 
