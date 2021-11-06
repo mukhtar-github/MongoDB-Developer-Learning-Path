@@ -3862,6 +3862,53 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.aggregate([
 { "_id" : "OneWorld", "count" : 15 }
 { "_id" : "Star Alliance", "count" : 11 }
 
+/*
+We begin by aggregating over our air_routes collection to allow for filtering of documents containing the string "747" or "380". If we started from air_alliances we would have to do this after the lookup!
+*/
+{
+  $match: {
+    airplane: /747|380/
+  }
+},
+
+/*
+Next, we use the $lookup stage to match documents from air_alliances on the value of their airlines field against the current document's airline.name field
+*/
+{
+  $lookup: {
+    from: "air_alliances",
+    foreignField: "airlines",
+    localField: "airline.name",
+    as: "alliance"
+  }
+},
+
+/*
+We then use $unwind on the alliance field we created in $lookup, creating a document with each entry in alliance
+*/
+{
+  $unwind: "$alliance"
+},
+
+/*
+We end with a $group and $sort stage, grouping on the name of the alliance and counting how many times it appeared
+*/
+{
+  $group: {
+    _id: "$alliance.name",
+    count: { $sum: 1 }
+  }
+},
+{
+  $sort: { count: -1 }
+}
+
+/*
+This produces the following output
+*/
+{ "_id" : "SkyTeam", "count" : 16 }
+{ "_id" : "OneWorld", "count" : 15 }
+{ "_id" : "Star Alliance", "count" : 11 }
 
 
 
@@ -3886,6 +3933,11 @@ var pipeline = [
 ];
 
 // Prints the result.
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_alliances.aggregate(pipeline);
+{ "_id" : "OneWorld", "routes_count" : 10 }
+{ "_id" : "SkyTeam", "routes_count" : 8 }
+{ "_id" : "Star Alliance", "routes_count" : 5 }
+
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> printjson(db.air_alliances.aggregate(pipeline).next());
 { "_id" : "OneWorld", "routes_count" : 10 }
 ```
