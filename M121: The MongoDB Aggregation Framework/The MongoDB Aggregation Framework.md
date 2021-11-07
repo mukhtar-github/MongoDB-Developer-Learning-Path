@@ -4217,13 +4217,13 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 
 ### $graphLookup: Simple Lookup Reverse Schema
 
-Another pattern that we can apply will be to have the reverse referencing.
+Another pattern that we can apply will be to have the reverse referencing. Let's say that in this case, we're going to have the definition of our CEO, but inside of that document we're going to have the reference to all his direct reports, its children nodes. Same thing for CTO, we can be referencing all of its immediate reports, and the same thing down the line. To do this, we just need to transform our documents.
 
-Let's say that in this case, we're going to have the definition of our CEO, but inside of that document we're going to have the reference to all his direct reports, its children nodes.
-
-Same thing for CTO, we can be referencing all of its immediate reports, and the same thing down the line.
-
-To do this, we just need to transform our documents.
+|              |                 | CEO |              |     |
+|--------------|-----------------|-----|--------------|-----|
+|      CMO     |       CRO       | CTO | SVP Services | CFO |
+|              | SVP Engineering |     |  VP Product  |     |
+| VP Education |     VP Cloud    |     |    VP Core   |     |
 
 Instead of having a reference back to its parents, what we're going to have is each single document referencing is direct reports.
 
