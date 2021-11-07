@@ -4157,35 +4157,53 @@ We can also ask the reverse question, which is, given an element on the *org cha
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
     {
-        $match: { name: "Eliot" }
+        $match: { name: "Shannon" }
     },
     {
         $graphLookup: {
             from: "perent_reference",
-            startWith: "_id",
-            connectFromField: "_id",
-            connectToField: "reports_to",
-            as: "all_reports"
+            startWith: "$reports_to",
+            connectFromField: "reports_to",
+            connectToField: "_id",
+            as: "bosses"
         } 
     }
-]);
+]).pretty();
+```
+
+To do that, what we need to do is, again, *match* on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value. In this case, we're going to be starting with *reports_to*. *connectFrom* will be also *reports_to* but the connect field, the value that we're going to pick up to match against *reports_to* will be *_id*. And we're going to be storing that information, that chain, into a field called *bosses*.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
+    {
+        $match: { name: "Shannon" }
+    },
+    {
+        $graphLookup: {
+            from: "perent_reference",
+            startWith: "$reports_to",
+            connectFromField: "reports_to",
+            connectToField: "_id",
+            as: "bosses"
+        } 
+    }
+]).pretty();
 {
-    "_id" : 2,
-    "name" : "Eliot",
-    "title" : "CTO",
-    "reports_to" : 1,
-    "all_reports" : [
+    "_id" : 9,
+    "name" : "Shannon",
+    "title" : "VP Education",
+    "reports_to" : 5
+    "bosses" : [
         {
-            "_id" : 11,
-            "name" : "Cailin",
-            "title" : "VP Cloud Engineering",
-            "reports_to" : 5
-        },
+            "_id" : 1,
+           "name" : "Dev",
+            "title" : "CEO"
+        },  
         {
-            "_id" : 10,
-            "name" : "Dan",
-            "title" : "VP Core Engineering",
-            "reports_to" : 5
+            "_id" : 2,
+            "name" : "Eliot",
+            "title" : "CTO",
+            "reports_to" : 1
         },
         {
             "_id" : 5,
@@ -4215,16 +4233,4 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 }
 ```
 
-To do that, what we need to do is, again, *match* on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value.
-
-In this case, we're going to be starting with reports_to.
-
-connectFrom will be also reports_to but the connect field, the value that we're going to pick up to match against reports_to will be _id.
-
-And we're going to be storing that information, that chain, into a field called bosses.
-
-Once I run this, I can see that Shannon has the set of bosses.
-
-He has Dave.
-
-Eliot, and, obviously, his direct boss, Andrew.
+Once I run this, I can see that *Shannon* has the set of *bosses*. He has *Dev, Eliot, and, obviously, his direct boss, Andrew*.
