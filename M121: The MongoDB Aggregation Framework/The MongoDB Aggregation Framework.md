@@ -4152,11 +4152,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 
 After I run this query, I'll find the document that I wanted, the one that *matches name equals Eliot*. I can see his *title*. And then I can find, thanks to the *graphLookup*, all his descendant *reports*. In this case, it's going to be *Cailin, Dan, Andrew, Ron, Shannon*, and *Elyse*. Now this just tells me all of the descendants beneath *Eliot*. So in this case, *graphLookup* will allow me to find all different *nodes* that are beneath a particular node that I'm finding.
 
-We can also ask the reverse question, which is, given an element on the org chart, what is the hierarchy to upper levels of reporting?
-
-So for example, if I give the VP of Education I want to know the full structure till I get to the top parent of our tree, root level.
-
-To do that, what we need to do is, again, match on the element that we are interested on, in this case Shannon, and then invert the connectFrom and connectTo fields, but also starting with the different startWith value.
+We can also ask the reverse question, which is, given an element on the *org chart*, what is the hierarchy to upper levels of reporting? So for example, if I give the *VP of Education* I want to know the full structure till I get to the top parent of our tree, root level. To do that, what we need to do is, again, match on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value.
 
 In this case, we're going to be starting with reports_to.
 
