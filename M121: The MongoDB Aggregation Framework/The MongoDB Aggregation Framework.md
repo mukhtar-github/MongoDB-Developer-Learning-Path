@@ -4214,3 +4214,53 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
     ]               
 }
 ```
+
+### $graphLookup: Simple Lookup Reverse Schema
+
+Another pattern that we can apply will be to have the reverse referencing.
+
+Let's say that in this case, we're going to have the definition of our CEO, but inside of that document we're going to have the reference to all his direct reports, its children nodes.
+
+Same thing for CTO, we can be referencing all of its immediate reports, and the same thing down the line.
+
+To do this, we just need to transform our documents.
+
+Instead of having a reference back to its parents, what we're going to have is each single document referencing is direct reports.
+
+In this example here, we can see that Dave, with his title of CEO, has this list of direct reports, Eliot, Meagan, Carlos, Richard, and Kristen.
+
+With this structure, getting immediate children can be achieved by a single operation.
+
+If I find documents where name equals Dave I immediately get its full list of direct reports.
+
+So a level down from Dave.
+
+But getting the full tree to its last element requires something more elaborate.
+
+And again, $graphLookup is here for the rescue with one single operation.
+
+In this scenario, we changed the document schema starring the immediate child references, again, on direct_reports.
+
+And therefore, if we want to get the full list of descendants we will need to do the following.
+
+We will go through again the same matching, finding the node where we want to begin with, expressing where are we going to fetch the information from.
+
+In this case, again, a self graphLookup, self lookup.
+
+We're going to start with the direct reports, so this is the first set of values that we're going to be using to iterate from.
+
+We're going to connectFromField direct_reports, going to be using that for the subsequent graph queries but we are going to connectToField name.
+
+So every time we match a element of direct reports with a name we'll do this recursively.
+
+And we'll start this in all_reports.
+
+Once we run this, we'll have the following structure.
+
+We'll find that Dave has a set of direct_reports but all_reports are going to be matched and found on this field.
+
+We're going to have Dan, Shannon, Elyse, Ron, Andrew, and so on.
+
+So at the very end, what we have is basically, for all different direct reports, we match, or are trying to find, a document in the name field.
+
+And for his direct reports, we do this recursively,
