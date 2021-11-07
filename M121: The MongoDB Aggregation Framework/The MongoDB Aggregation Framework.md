@@ -4196,7 +4196,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
     "bosses" : [
         {
             "_id" : 1,
-           "name" : "Dev",
+            "name" : "Dev",
             "title" : "CEO"
         },  
         {
@@ -4217,7 +4217,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 
 ### $graphLookup: Simple Lookup Reverse Schema
 
-Another pattern that we can apply will be to have the reverse referencing. Let's say that in this case, we're going to have the definition of our CEO, but inside of that document we're going to have the reference to all his direct reports, its children nodes. Same thing for CTO, we can be referencing all of its immediate reports, and the same thing down the line. To do this, we just need to transform our documents.
+Another pattern that we can apply will be to have the reverse referencing. Let's say that in this case, we're going to have the definition of our *CEO*, but inside of that document we're going to have the reference to all his direct reports, its *children nodes*. Same thing for *CTO*, we can be referencing all of its *immediate reports*, and the same thing down the line. To do this, we just need to transform our documents. Instead of having a *reference back to its parents*, what we're going to have is each single document *referencing is direct reports*.
 
 |              |                 | CEO |              |     |
 |--------------|-----------------|-----|--------------|-----|
@@ -4225,7 +4225,20 @@ Another pattern that we can apply will be to have the reverse referencing. Let's
 |              | SVP Engineering |     |  VP Product  |     |
 | VP Education |     VP Cloud    |     |    VP Core   |     |
 
-Instead of having a reference back to its parents, what we're going to have is each single document referencing is direct reports.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.findOne({ "name" : "Dev" });
+{
+    "_id" : 1,
+    "name" : "Dev",
+    "title" : "CEO"
+    "direct_reports" : [
+            "Eliot",
+            "Meagen",
+            "Carlos",
+            "Richard",
+    ]       "Kristen"       
+}
+```
 
 In this example here, we can see that Dave, with his title of CEO, has this list of direct reports, Eliot, Meagan, Carlos, Richard, and Kristen.
 
