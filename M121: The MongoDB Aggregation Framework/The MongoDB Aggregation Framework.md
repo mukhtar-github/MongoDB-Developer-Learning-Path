@@ -4171,7 +4171,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 ]).pretty();
 ```
 
-To do that, what we need to do is, again, *match* on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value. In this case, we're going to be starting with *reports_to*. *connectFrom* will be also *reports_to* but the connect field, the value that we're going to pick up to match against *reports_to* will be *_id*. And we're going to be storing that information, that chain, into a field called *bosses*.
+To do that, what we need to do is, again, *match* on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value. In this case, we're going to be starting with *reports_to*. *connectFrom* will be also *reports_to* but the connect field, the value that we're going to pick up to match against *reports_to* will be *_id*. And we're going to be storing that information, that chain, into a field called *bosses*. Once I run this, I can see that *Shannon* has the set of *bosses*. He has *Dev, Eliot, and, obviously, his direct boss, Andrew*.
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
@@ -4211,26 +4211,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
             "title" : "VP Eng",
             "reports_to" : 2
         },
-        {
-            "_id" : 6,
-            "name" : "Ron",
-            "title" : "VP PM",
-            "reports_to" : 2
-        },
-        {
-            "_id" : 9,
-            "name" : "Shannon",
-            "title" : "VP Education",
-            "reports_to" : 5
-        },
-        {
-            "_id" : 7,
-            "name" : "Elyse",
-            "title" : "COO",
-            "reports_to" : 2
-        },
     ]               
 }
 ```
-
-Once I run this, I can see that *Shannon* has the set of *bosses*. He has *Dev, Eliot, and, obviously, his direct boss, Andrew*.
