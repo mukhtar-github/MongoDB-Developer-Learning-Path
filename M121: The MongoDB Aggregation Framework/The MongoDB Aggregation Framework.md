@@ -4152,7 +4152,70 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
 
 After I run this query, I'll find the document that I wanted, the one that *matches name equals Eliot*. I can see his *title*. And then I can find, thanks to the *graphLookup*, all his descendant *reports*. In this case, it's going to be *Cailin, Dan, Andrew, Ron, Shannon*, and *Elyse*. Now this just tells me all of the descendants beneath *Eliot*. So in this case, *graphLookup* will allow me to find all different *nodes* that are beneath a particular node that I'm finding.
 
-We can also ask the reverse question, which is, given an element on the *org chart*, what is the hierarchy to upper levels of reporting? So for example, if I give the *VP of Education* I want to know the full structure till I get to the top parent of our tree, root level. To do that, what we need to do is, again, match on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value.
+We can also ask the reverse question, which is, given an element on the *org chart*, what is the hierarchy to upper levels of reporting? So for example, if I give the *VP of Education*, I want to know the full structure till I get to the top parent of our tree, root level.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.perent_reference.aggregate([
+    {
+        $match: { name: "Eliot" }
+    },
+    {
+        $graphLookup: {
+            from: "perent_reference",
+            startWith: "_id",
+            connectFromField: "_id",
+            connectToField: "reports_to",
+            as: "all_reports"
+        } 
+    }
+]);
+{
+    "_id" : 2,
+    "name" : "Eliot",
+    "title" : "CTO",
+    "reports_to" : 1,
+    "all_reports" : [
+        {
+            "_id" : 11,
+            "name" : "Cailin",
+            "title" : "VP Cloud Engineering",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 10,
+            "name" : "Dan",
+            "title" : "VP Core Engineering",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 5,
+            "name" : "Andrew",
+            "title" : "VP Eng",
+            "reports_to" : 2
+        },
+        {
+            "_id" : 6,
+            "name" : "Ron",
+            "title" : "VP PM",
+            "reports_to" : 2
+        },
+        {
+            "_id" : 9,
+            "name" : "Shannon",
+            "title" : "VP Education",
+            "reports_to" : 5
+        },
+        {
+            "_id" : 7,
+            "name" : "Elyse",
+            "title" : "COO",
+            "reports_to" : 2
+        },
+    ]               
+}
+```
+
+To do that, what we need to do is, again, *match* on the element that we are interested on, in this case *Shannon*, and then invert the *connectFrom* and *connectTo* fields, but also starting with the different *startWith* value.
 
 In this case, we're going to be starting with reports_to.
 
