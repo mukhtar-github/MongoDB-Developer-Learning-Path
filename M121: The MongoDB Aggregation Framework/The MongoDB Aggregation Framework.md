@@ -4595,6 +4595,24 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.findOne();
 
 For this particular demonstration, I'm going to use this *air_airlines database* that I have here. So in this *air_airlines database*, what I have is *two collections*, one of them is *air_airlines* and another one is *air_routes*. In a particular *air_airlines document*, it's a pretty flat document, where I have all the information I need for a *particular airline*. Its *alias*, its *iata* code, the *country*, and where the *airline itself is based*, basically saying which airport is *base* to this home airline.
 
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.findOne();
+{
+    "_id" : ObjectId("56e9b39b732b6122f877fa31"),
+    "airline" : {
+        "id" : 410,
+        "name" : "Aerocondor",
+        "alias" : "2B",
+        "iata" : "ARD"
+    },
+    "src_airport" : "CEK",
+    "dst_airport" : "KZN",
+    "codeshare" : "",
+    "stops" : 0,
+    "airplane" : "CR2"
+}
+```
+
 On collection routes, what I can find is information on the airline, where does the flight depart from, the source airport, where does it reach, the destination airport, and some other information, like if it's codeshare, its stops, and the type of airplane or the airplane that actually is operating this particular route.
 
 So in this scenario, I'm going to have information on airlines and information on routes. So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
