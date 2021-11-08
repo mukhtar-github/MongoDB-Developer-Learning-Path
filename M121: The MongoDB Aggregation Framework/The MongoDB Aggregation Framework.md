@@ -4316,6 +4316,22 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
             "name" : "Andrew",
             "title" : "VP Eng"
         },
+        {
+            "_id" : 11,
+            "name" : "Cailin",
+            "title" : "VP Cloud Engineering"
+        },
+        {
+            "_id" : 4,
+            "name" : "Carlos",
+            "title" : "CRO"
+        },
+          
+        {
+            "_id" : 5,
+            "name" : "Andrew",
+            "title" : "VP Eng"
+        },
     ]      
 }    
 ```
