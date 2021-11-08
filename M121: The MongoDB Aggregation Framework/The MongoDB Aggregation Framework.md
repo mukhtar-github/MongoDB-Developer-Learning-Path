@@ -4368,15 +4368,116 @@ So at the very end, what we have is basically, for all different *direct reports
 |      |  Meagen |      |  Elyse  |
 |      | Richard |      |   Ron   |
 
-In some situations, we might not be interested on the full list. Let's say, for example, that we only want *Dev's direct reports and their direct reports*. So let's say two levels down. Now a *single lookup* is depth zero, meaning that if we match for *Dev* and we are only interested on knowing the documents of its direct reports, we just need to set the depth of our *lookup to zero*. But if we want to do two levels down, we would need to have a *depth of one*. And therefore, we'll find a full *data structures of Andrew, Elyse, and Ron*.
+In some situations, we might not be interested on the full list. Let's say, for example, that we only want *Dev's direct reports and their direct reports*. So let's say two levels down. Now a *single lookup* is depth zero, meaning that if we match for *Dev* and we are only interested on knowing the documents of its *direct reports*, we just need to set the *depth* of our *lookup to zero*. But if we want to do two levels down, we would need to have a *depth of one*. And therefore, we'll find a full *data structures of Andrew, Elyse, and Ron*.
 
-Graph lookup allows us to do that.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
+    {
+        $match: { name: "Dev" }
+    },
+    {
+        $graphLookup: {
+            from: "child_reference",
+            startWith: "$direct_reports",
+            connectFromField: "direct_reports",
+            connectToField: "name",
+            as: "till_2_level_reports",
+            maxDepth: 1
+        } 
+    }
+]).pretty();
+```
 
-Using the previous dataset, child reference, where we have a direct reports reference inside of each document.
+*Graph lookup* allows us to do that. Using the previous dataset, *child reference*, where we have a *direct reports* reference inside of each document. If you want to go two levels down, *till_2_level down reports*, you just specify a *maxDepth field, value equals 1*, on our *graphLookup*. After we run this, we have our matching documents.
 
-If you want to go two levels down, till_2_level down reports, you just specify a maxDepth field, value equals 1, on our graphLookup.
-
-After we run this, we have our matching documents.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
+    {
+        $match: { name: "Dev" }
+    },
+    {
+        $graphLookup: {
+            from: "child_reference",
+            startWith: "$direct_reports",
+            connectFromField: "direct_reports",
+            connectToField: "name",
+            as: "till_2_level_reports",
+            maxDepth: 1
+        } 
+    }
+]).pretty();
+{
+    "_id" : 1,
+    "name" : "Dev",
+    "title" : "CEO"
+    "direct_reports" : [
+        "Eliot",
+        "Meagen",
+        "Carlos",
+        "Richard",
+        "Kristen"
+    ],
+    "all_reports" : [
+        {
+            "_id" : 10,
+            "name" : "Dan",
+            "title" : "VP Core Engineering"
+        },  
+        {
+            "_id" : 9,
+            "name" : "Shannon",
+            "title" : "VP Education"
+        },
+        {
+            "_id" : 7,
+            "name" : "Elyse",
+            "title" : "COO"
+        },
+        {
+            "_id" : 6,
+            "name" : "Ron",
+            "title" : "VP PM"
+        },
+        {
+            "_id" : 5,
+            "name" : "Andrew",
+            "title" : "VP Eng"
+        },
+        {
+            "_id" : 11,
+            "name" : "Cailin",
+            "title" : "VP Cloud Engineering"
+        },
+        {
+            "_id" : 4,
+            "name" : "Carlos",
+            "title" : "CRO"
+        },
+          
+        {
+            "_id" : 8,
+            "name" : "Richard",
+            "title" : "VP PS"
+        },
+        {
+            "_id" : 3,
+            "name" : "Meagen",
+            "title" : "CMO"
+        },
+              
+        {
+            "_id" : 2,
+            "name" : "Eliot",
+            "title" : "CTO",
+            "direct_reports" : [
+                "Andrew",
+                "Elyse",
+                "Ron",
+            ]       
+        }
+    ]      
+}
+```
 
 And then the list of results of direct reports to Dave up to two levels down.
 
