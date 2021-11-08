@@ -4326,7 +4326,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
             "name" : "Carlos",
             "title" : "CRO"
         },
-          
         {
             "_id" : 8,
             "name" : "Richard",
@@ -4336,8 +4335,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
             "_id" : 3,
             "name" : "Meagen",
             "title" : "CMO"
-        },
-              
+        },  
         {
             "_id" : 2,
             "name" : "Eliot",
@@ -4437,16 +4435,32 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
                 "Dan",
                 "Shannon"
             ]       
+        },
+        {
+            "_id" : 4,
+            "name" : "Carlos",
+            "title" : "CRO"
+        },
+        {
+            "_id" : 8,
+            "name" : "Richard",
+            "title" : "VP PS"
+        },
+        {
+            "_id" : 2,
+            "name" : "Eliot",
+            "title" : "CTO",
+            "direct_reports" : [
+                "Andrew",
+                "Elyse",
+                "Ron",
+            ]       
         }
     ]      
 }
 ```
 
-And then the list of results of direct reports to Dave up to two levels down.
-
-So we can see here that, for example, Andrew will be listed, as well as Ron and Elyse, and obviously, all of Dave's direct reports.
-
-So basically, maxDepth will restrict how many times we want to recursively find documents that match or they are connected using the FromField and the connecToField.
+And then the list of results of *direct reports to Dev up to two levels down*. So we can see here that, for example, Andrew will be listed, as well as Ron and Elyse, and obviously, all of Dave's direct reports. So basically, maxDepth will restrict how many times we want to recursively find documents that match or they are connected using the FromField and the connecToField.
 
 But let's say that, apart from defining a maxDepth field of I only want to go two levels down, I also want to know how far away are those elements to the first element that I find in my lookup.
 
