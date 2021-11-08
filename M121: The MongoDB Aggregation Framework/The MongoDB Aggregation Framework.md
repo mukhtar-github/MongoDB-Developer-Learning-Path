@@ -4417,17 +4417,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
         "Richard",
         "Kristen"
     ],
-    "all_reports" : [
-        {
-            "_id" : 10,
-            "name" : "Dan",
-            "title" : "VP Core Engineering"
-        },  
-        {
-            "_id" : 9,
-            "name" : "Shannon",
-            "title" : "VP Education"
-        },
+    "till_2_level_reports" : [
         {
             "_id" : 7,
             "name" : "Elyse",
@@ -4442,37 +4432,10 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
             "_id" : 5,
             "name" : "Andrew",
             "title" : "VP Eng"
-        },
-        {
-            "_id" : 11,
-            "name" : "Cailin",
-            "title" : "VP Cloud Engineering"
-        },
-        {
-            "_id" : 4,
-            "name" : "Carlos",
-            "title" : "CRO"
-        },
-          
-        {
-            "_id" : 8,
-            "name" : "Richard",
-            "title" : "VP PS"
-        },
-        {
-            "_id" : 3,
-            "name" : "Meagen",
-            "title" : "CMO"
-        },
-              
-        {
-            "_id" : 2,
-            "name" : "Eliot",
-            "title" : "CTO",
             "direct_reports" : [
-                "Andrew",
-                "Elyse",
-                "Ron",
+                "Cailin",
+                "Dan",
+                "Shannon"
             ]       
         }
     ]      
