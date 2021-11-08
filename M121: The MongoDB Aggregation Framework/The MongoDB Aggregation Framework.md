@@ -4460,13 +4460,28 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
 }
 ```
 
-And then the list of results of *direct reports to Dev up to two levels down*. So we can see here that, for example, Andrew will be listed, as well as Ron and Elyse, and obviously, all of Dave's direct reports. So basically, maxDepth will restrict how many times we want to recursively find documents that match or they are connected using the FromField and the connecToField.
+And then the list of results of *direct reports to Dev up to two levels down*. So we can see here that, for example, *Andrew* will be listed, as well as *Ron* and *Elyse*, and obviously, all of *Dev's direct reports*. So basically, *maxDepth* will restrict how many times we want to recursively find documents that match, or they are connected using the *FromField and the connecToField*.
 
-But let's say that, apart from defining a maxDepth field of I only want to go two levels down, I also want to know how far away are those elements to the first element that I find in my lookup.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
+    {
+        $match: { name: "Dev" }
+    },
+    {
+        $graphLookup: {
+            from: "child_reference",
+            startWith: "$direct_reports",
+            connectFromField: "direct_reports",
+            connectToField: "name",
+            as: "descendants",
+            maxDepth: 1,
+            depthField: "level"
+        } 
+    }
+]).pretty();
+```
 
-Basically, I want to know how many recursive lookups did I need to do to find the particular documents.
-
-For that, I have depthField, which I can specify a field name which will tell me exactly that, how many recursive lookups were needed to get this particular point.
+But let's say that, apart from defining a *maxDepth* field of, I only want to go two levels down, I also want to know how far away are those elements to the first element that I find in my *lookup*. Basically, I want to know how many *recursive lookups* did I need to do to find the particular documents. For that, I have *depthField*, which I can specify a *field name* which will tell me exactly that, how many *recursive lookups* were needed to get this particular point.
 
 When I run this I can see that Eliot is on number zero, meaning that I only needed one single lookup to find it.
 
