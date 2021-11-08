@@ -4569,3 +4569,77 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
 ```
 
 When I run this I can see that *Eliot is on number zero*, meaning that I only needed *one single lookup* to find it. Then again, it's the *first base lookup*. Same thing for *Meagan*, same thing for *Richard*, same thing for *Carlos*. But for *Andrew*, I need to go *two recursive lookups down*. Same thing for *Ron* and same thing for *Elyse*. By specifying *depth field level*, I can get the information of how many *recursive lookups* were needed to find that particular element on the *descendants field* here.
+
+### $graphLookup: Cross Collection Lookup
+
+So far we've been analyzing graph lookup on self lookups, meaning that we find a document then we implement the graph lookup and then we find also subsequent documents that match what I intended.
+
+And then I do another one on the self-join, and so forth, which is nice and fun but we can do a lot more than that.
+
+As in any other ordinary lookup, we can start from one initial collection and lookup another collections, and doing the recursive lookups as we see fit.
+
+Obviously, we don't need to restrict to just one original document.
+
+We have multiple that will follow always the same behavior.
+
+For this particular demonstration, I'm going to use this air database that I have here.
+
+So in this air database, what I have is two collections, one of them is airlines and another one is routes.
+
+In a particular airline document, it's a pretty flat document, where I have all the information I need for a particular airline.
+
+Its alias, its iata code, the country, and where the airline itself is based, basically saying which airport is base to this home airline.
+
+On collection routes, what I can find is information on the airline, where does the flight depart from, the source airport, where does it reach, the destination airport, and some other information, like if it's codeshare, its stops, and the type of airplane or the airplane that actually is operating this particular route.
+
+So in this scenario, I'm going to have information on airlines and information on routes.
+
+So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
+
+Say that I want to go from this particular place here, where can I go through?
+
+I have at least three different routes departing here.
+
+But from those routes I can go multiple other ways, depending on the number of layovers that I want to do.
+
+If I want a list of all connections, and by restricting, for example, the number layovers, or something like that, we can do that using graph lookup.
+
+So again, if I want to start with TAP Portugal, finding its own base airport and knowing every single destination, regardless of the airline, that I can go from its base airport, in this case, Portugal-- my home town, very lovely city-- where can I go with a maximum of one connection?
+
+The full list of connected the airports will be given by this query.
+
+I can see here that I am going all the way to Athens passing through Gatwick Airport in London.
+
+Now comparing maxDepth here, we're using one instead of zero, is because we are starting from airlines and searching on routes.
+
+And maxDepth only will restrict the number of recursive lookups on the front collection.
+
+So I started my collecting the matching document that I want and then I'm going to only lookup, or in this case, graph lookup twice, the first one and another one, on the route's collection.
+
+Previously, we used the same value for the two levels down since we were doing a self-recursive lookup.
+
+But let's say that, starting from a particular airport and connecting to all other airport, regardless of the airlines, is not really what I was intending.
+
+Not only I want to start from the base airport of a given airline, I also want to make sure that all flights that I'm connecting with are using the exactly same airline.
+
+So I don't want to connect from, for example, Porto to New York and then the next hop to be on a different airline.
+
+No, not at all.
+
+I want to make sure I'm always using the same carrier all the way through its network.
+
+To do that we can also restrict the search with a match.
+
+And in this case, I want to make sure that the only lookups that I'd retrieve match the airline name with the same one that I'm originally intending, in this case, TAP Portugal.
+
+So what are we doing?
+
+Are matching on airlines, finding the airline document that matches name equals TAP Portugal, We're going to graphLookup from routes, setting up the values in chain, using as initial value of the base airport of this original documents.
+
+Connecting the destination airport with the source airport, So the value of destination airport will be using this recursive query over the field source airport with a maximum of one hop.
+
+So I only want one layover.
+
+But always using the same airline.
+
+Once I do this, I can have the full list of all connections that I intended, always traveling within the same airline.
