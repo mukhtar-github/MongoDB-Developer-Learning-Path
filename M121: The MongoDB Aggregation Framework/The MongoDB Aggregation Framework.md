@@ -4572,7 +4572,7 @@ When I run this I can see that *Eliot is on number zero*, meaning that I only ne
 
 ### $graphLookup: Cross Collection Lookup
 
-So far we've been analyzing *graph lookup* on self lookups, meaning that we find a document then we implement the *graph lookup* and then we find also subsequent documents that match what I intended. And then I do another one on the self-join, and so forth, which is nice and fun but we can do a lot more than that. As in any other ordinary lookup, we can start from one initial collection and lookup another collections, and doing the recursive lookups as we see fit.
+So far we've been analyzing *graph lookup* on *self lookups*, meaning that we find a document then we implement the *graph lookup* and then we find also subsequent documents that match what I intended. And then I do another one on the self-join, and so forth, which is nice and fun but we can do a lot more than that. As in any other ordinary *lookup*, we can start from *one initial collection* and lookup *another collections*, and doing the *recursive lookups* as we see fit.
 
 Obviously, we don't need to restrict to just one original document. We have multiple that will follow always the same behavior. For this particular demonstration, I'm going to use this air database that I have here. So in this air database, what I have is two collections, one of them is airlines and another one is routes. In a particular airline document, it's a pretty flat document, where I have all the information I need for a particular airline.
 
