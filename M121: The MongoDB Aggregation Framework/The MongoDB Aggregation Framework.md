@@ -4485,98 +4485,117 @@ But let's say that, apart from defining a *maxDepth* field of *1*, I only want t
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
-    {
-        $match: { name: "Dev" }
-    },
-    {
-        $graphLookup: {
-            from: "child_reference",
-            startWith: "$direct_reports",
-            connectFromField: "direct_reports",
-            connectToField: "name",
-            as: "descendants",
-            maxDepth: 1,
-            depthField: "level"
-        } 
-    }
-]).pretty();
+...     {
+...         $match: { name: "Dev" }
+...     },
+...     {
+...         $graphLookup: {
+...             from: "child_reference",
+...             startWith: "$direct_reports",
+...             connectFromField: "direct_reports",
+...             connectToField: "name",
+...             as: "descendants",
+...             maxDepth: 1,
+...             depthField: "level"
+...         } 
+...     }
+... ]).pretty();
 {
-    "_id" : 1,
-    "name" : "Dev",
-    "title" : "CEO"
-    "direct_reports" : [
-        "Eliot",
-        "Meagen",
-        "Carlos",
-        "Richard",
-        "Kristen"
-    ],
-    "descendants" : [
-        {
-            "_id" : 7,
-            "name" : "Elyse",
-            "title" : "COO",
-            "level" : NumberLong(1)
-        },
-        {
-            "_id" : 6,
-            "name" : "Ron",
-            "title" : "VP PM",
-            "level" : NumberLong(1)
-        },
-        {
-            "_id" : 5,
-            "name" : "Andrew",
-            "title" : "VP Eng"
-            "direct_reports" : [
-                "Cailin",
-                "Dan",
-                "Shannon"
-            ],
-            "level" : NumberLong(1)
-        },
-        {
-            "_id" : 4,
-            "name" : "Carlos",
-            "title" : "CRO",
-            "level" : NumberLong(0)
-        },
-        {
-            "_id" : 8,
-            "name" : "Richard",
-            "title" : "VP PS",
-            "level" : NumberLong(0)
-        },
-        {
-            "_id" : 3,
-            "name" : "Meagen",
-            "title" : "CMO",
-            "level" : NumberLong(0)
-        },
-        {
-            "_id" : 2,
-            "name" : "Eliot",
-            "title" : "CTO",
-            "direct_reports" : [
-                "Andrew",
-                "Elyse",
-                "Ron",
-            ],
-            "level" : NumberLong(0)     
-        }
-    ]      
+        "_id" : 1,
+        "name" : "Dev",
+        "title" : "CEO",
+        "direct_reports" : [
+            "Eliot",
+            "Meagen",
+            "Carlos",
+            "Richard",
+            "Kristen"
+        ],
+        "descendants" : [
+            {
+                "_id" : 7,
+                "name" : "Elyse",
+                "title" : "COO",
+                "level" : NumberLong(1)
+            },
+            {
+                "_id" : 5,
+                "name" : "Andrew",
+                "title" : "VP Eng",
+                "direct_reports" : [
+                    "Cailin",
+                    "Dan",
+                    "Shannon"
+                ],
+                "level" : NumberLong(1)
+            },
+            {
+                "_id" : 8,
+                "name" : "Richard",
+                "title" : "VP PS",
+                "level" : NumberLong(0)
+            },
+            {
+                "_id" : 4,
+                "name" : "Carlos",
+                "title" : "CRO",
+                "level" : NumberLong(0)
+            },
+            {
+                "_id" : 2,
+                "name" : "Eliot",
+                "title" : "CTO",
+                "direct_reports" : [
+                    "Andrew",
+                    "Elyse",
+                    "Ron"
+                ],
+                "level" : NumberLong(0)
+            },
+            {
+                "_id" : 3,
+                "name" : "Meagen",
+                "title" : "CMO",
+                "level" : NumberLong(0)
+            },
+            {
+                "_id" : 6,
+                "name" : "Ron",
+                "title" : "VP PM",
+                "level" : NumberLong(1)
+            }
+        ]
 }
+
 ```
 
 When I run this I can see that *Eliot is on number zero*, meaning that I only needed *one single lookup* to find it. Then again, it's the *first base lookup*. Same thing for *Meagan*, same thing for *Richard*, same thing for *Carlos*. But for *Andrew*, I need to go *two recursive lookups down*. Same thing for *Ron* and same thing for *Elyse*. By specifying *depth field level*, I can get the information of how many *recursive lookups* were needed to find that particular element on the *descendants field* here.
 
 ### $graphLookup: Cross Collection Lookup
 
-So far we've been analyzing *graph lookup* on *self lookups*, meaning that we find a document then we implement the *graph lookup* and then we find also subsequent documents that match what I intended. And then I do another one on the self-join, and so forth, which is nice and fun but we can do a lot more than that. As in any other ordinary *lookup*, we can start from *one initial collection* and lookup *another collections*, and doing the *recursive lookups* as we see fit.
+So far we've been analyzing *graph lookup* on *self lookups*, meaning that we find a document then we implement the *graph lookup* and then we find also subsequent documents that match what I intended. And then I do another one on the self-join, and so forth, which is nice and fun but we can do a lot more than that. As in any other ordinary *lookup*, we can start from *one initial collection* and lookup *another collections*, and doing the *recursive lookups* as we see fit. Obviously, we don't need to restrict to just *one original document*. We have multiple, that will follow always the same behavior.
 
-Obviously, we don't need to restrict to just one original document. We have multiple that will follow always the same behavior. For this particular demonstration, I'm going to use this air database that I have here. So in this air database, what I have is two collections, one of them is airlines and another one is routes. In a particular airline document, it's a pretty flat document, where I have all the information I need for a particular airline.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> show collections
+air_airlines
+air_routes
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.findOne();
+{
+    "_id" : ObjectId("56e9b497732b6122f8790287"),
+    "airline" : 8,
+    "name" : "247 Jet Ltd",
+    "alias" : "",
+    "iata" : "TWF",
+    "icao" : "CLOUD RUNNER",
+    "active" : "N",
+    "country" : "United Kingdom",
+    "base" : "FLS"
+}
+```
 
-Its alias, its iata code, the country, and where the airline itself is based, basically saying which airport is base to this home airline. On collection routes, what I can find is information on the airline, where does the flight depart from, the source airport, where does it reach, the destination airport, and some other information, like if it's codeshare, its stops, and the type of airplane or the airplane that actually is operating this particular route.
+For this particular demonstration, I'm going to use this *air_airlines database* that I have here. So in this *air_airlines database*, what I have is *two collections*, one of them is *air_airlines* and another one is *air_routes*. In a particular *air_airlines document*, it's a pretty flat document, where I have all the information I need for a *particular airline*. Its *alias*, its *iata* code, the *country*, and where the *airline itself is based*, basically saying which airport is *base* to this home airline.
+
+On collection routes, what I can find is information on the airline, where does the flight depart from, the source airport, where does it reach, the destination airport, and some other information, like if it's codeshare, its stops, and the type of airplane or the airplane that actually is operating this particular route.
 
 So in this scenario, I'm going to have information on airlines and information on routes. So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
 
