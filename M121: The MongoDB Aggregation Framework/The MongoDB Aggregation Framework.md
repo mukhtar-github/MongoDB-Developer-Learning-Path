@@ -4306,8 +4306,18 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
             "name" : "Elyse",
             "title" : "COO"
         },
+        {
+            "_id" : 6,
+            "name" : "Ron",
+            "title" : "VP PM"
+        },
+        {
+            "_id" : 5,
+            "name" : "Andrew",
+            "title" : "VP Eng"
+        },
     ]      
-}
+}    
 ```
 
 Once we run this, we'll have the following structure.
