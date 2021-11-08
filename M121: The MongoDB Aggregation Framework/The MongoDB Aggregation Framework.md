@@ -4261,9 +4261,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
 
 In this scenario, we changed the document schema, starting with the immediate *child_reference*, again, on *direct_reports*. And therefore, if we want to get the full list of descendants we will need to do the following. We will go through again the same *matching*, finding the *node - (name: "Dev")* where we want to begin with, expressing where are we going to fetch the information *from - (child_reference)*.
 
-In this case, again, a self *graphLookup*, self lookup. We're going to *startWith: "$direct_reports"*, so this is the first set of values that we're going to be using to iterate from. We're going to connectFromField direct_reports, going to be using that for the subsequent graph queries but we are going to connectToField name.
-
-So every time we match a element of direct reports with a name we'll do this recursively.
+In this case, again, a self *graphLookup*, self lookup. We're going to *startWith: "$direct_reports"*, so this is the first set of values that we're going to be using to iterate from. We're going to *connectFromField: "direct_reports"*, going to be using that for the *subsequent graph queries*, but we are going to *connectToField: "name"*. So every time we *match an element of direct reports with a name*, we'll do this recursively.
 
 And we'll start this in all_reports.
 
