@@ -4359,3 +4359,41 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> direct_reports -> name, -> direct_r
 ```
 
 So at the very end, what we have is basically, for all different *direct reports*, we match, or are trying to find, a document in the *name field*. And for his *direct reports*, we do this recursively.
+
+### $graphLookup: maxDepth and depthField
+
+In some situations, we might not be interested on the full list. Let's say, for example, that we only want *Dev's direct reports and their direct reports*. So let's say two levels down. Now a *single lookup* is depth zero, meaning that if we match for *Dev* and we are only interested on knowing the documents of its direct reports, we just need to set the depth of our *lookup to zero*. But if we want to do two levels down, we would need to have a *depth of one*.
+
+And therefore, we'll find a full data structures of Andrew, Elyse, and Ron.
+
+Graph lookup allows us to do that.
+
+Using the previous dataset, child reference, where we have a direct reports reference inside of each document.
+
+If you want to go two levels down, till_2_level down reports, you just specify a maxDepth field, value equals 1, on our graphLookup.
+
+After we run this, we have our matching documents.
+
+And then the list of results of direct reports to Dave up to two levels down.
+
+So we can see here that, for example, Andrew will be listed, as well as Ron and Elyse, and obviously, all of Dave's direct reports.
+
+So basically, maxDepth will restrict how many times we want to recursively find documents that match or they are connected using the FromField and the connecToField.
+
+But let's say that, apart from defining a maxDepth field of I only want to go two levels down, I also want to know how far away are those elements to the first element that I find in my lookup.
+
+Basically, I want to know how many recursive lookups did I need to do to find the particular documents.
+
+For that, I have depthField, which I can specify a field name which will tell me exactly that, how many recursive lookups were needed to get this particular point.
+
+When I run this I can see that Eliot is on number zero, meaning that I only needed one single lookup to find it.
+
+Then again, it's the first base lookup.
+
+Same thing for Meagan, same thing for Richard, same thing for Carlos.
+
+But for Andrew, I need to go one recursive or, in this case, two recursive lookups down.
+
+Same thing for Ron and same thing for Elyse.
+
+By specifying depth field level I can get the information of how many recursive lookups were needed to find that particular element on the descendants field here.
