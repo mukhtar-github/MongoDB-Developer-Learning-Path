@@ -4240,17 +4240,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.findOne({ "name"
 }
 ```
 
-In this example here, we can see that Dave, with his title of CEO, has this list of direct reports, Eliot, Meagan, Carlos, Richard, and Kristen.
-
-With this structure, getting immediate children can be achieved by a single operation.
-
-If I find documents where name equals Dave I immediately get its full list of direct reports.
-
-So a level down from Dave.
-
-But getting the full tree to its last element requires something more elaborate.
-
-And again, $graphLookup is here for the rescue with one single operation.
+In this example here, we can see that *Dev*, with his title of *CEO*, has this list of *direct reports, Eliot, Meagan, Carlos, Richard, and Kristen*. With this structure, getting immediate children can be achieved by a single operation. If I find documents where *name equals Dev*, I immediately get its full list of direct reports. So a level down from *Dev*. But getting the full tree to its last element requires something more elaborate. And again, *$graphLookup* is here for the rescue with one single operation.
 
 In this scenario, we changed the document schema starring the immediate child references, again, on direct_reports.
 
