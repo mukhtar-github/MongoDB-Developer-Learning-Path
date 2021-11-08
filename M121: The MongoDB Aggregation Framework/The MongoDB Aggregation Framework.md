@@ -4352,12 +4352,10 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.child_reference.aggregate([
 }    
 ```
 
-Once we run this, we'll have the following structure.
+Once we run this, we'll have the following structure. We'll find that *Dev* has a set of *direct_reports*, but *all_reports* are going to be *matched* and found on this field. We're going to have *Dan, Shannon, Elyse, Ron, Andrew*, and so on.
 
-We'll find that Dave has a set of direct_reports but all_reports are going to be matched and found on this field.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> direct_reports -> name, -> direct_reports -> name ...
+```
 
-We're going to have Dan, Shannon, Elyse, Ron, Andrew, and so on.
-
-So at the very end, what we have is basically, for all different direct reports, we match, or are trying to find, a document in the name field.
-
-And for his direct reports, we do this recursively,
+So at the very end, what we have is basically, for all different *direct reports*, we match, or are trying to find, a document in the *name field*. And for his *direct reports*, we do this recursively.
