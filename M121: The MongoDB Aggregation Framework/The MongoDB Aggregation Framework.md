@@ -4362,9 +4362,13 @@ So at the very end, what we have is basically, for all different *direct reports
 
 ### $graphLookup: maxDepth and depthField
 
-In some situations, we might not be interested on the full list. Let's say, for example, that we only want *Dev's direct reports and their direct reports*. So let's say two levels down. Now a *single lookup* is depth zero, meaning that if we match for *Dev* and we are only interested on knowing the documents of its direct reports, we just need to set the depth of our *lookup to zero*. But if we want to do two levels down, we would need to have a *depth of one*.
+|  Dev |         |      |         |
+|:----:|---------|------|---------|
+| \|-> |  Eliot  | \|-> | Andrew  |
+|      |  Meagen |      |  Elyse  |
+|      | Richard |      |   Ron   |
 
-And therefore, we'll find a full data structures of Andrew, Elyse, and Ron.
+In some situations, we might not be interested on the full list. Let's say, for example, that we only want *Dev's direct reports and their direct reports*. So let's say two levels down. Now a *single lookup* is depth zero, meaning that if we match for *Dev* and we are only interested on knowing the documents of its direct reports, we just need to set the depth of our *lookup to zero*. But if we want to do two levels down, we would need to have a *depth of one*. And therefore, we'll find a full *data structures of Andrew, Elyse, and Ron*.
 
 Graph lookup allows us to do that.
 
