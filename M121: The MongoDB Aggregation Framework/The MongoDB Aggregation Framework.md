@@ -4613,7 +4613,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.findOne();
 }
 ```
 
-On collection routes, what I can find is information on the airline, where does the flight depart from, the source airport, where does it reach, the destination airport, and some other information, like if it's codeshare, its stops, and the type of airplane or the airplane that actually is operating this particular route.
+On collection *air_routes*, what I can find is information on the *airline*, where does the flight depart from, the *src_airport*, where does it reach, the *dst_airport*, and some other information, like if it's *codeshare*, its *stops*, and the *type of airplane* or the *airplane* that actually is operating this particular route.
 
 So in this scenario, I'm going to have information on airlines and information on routes. So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
 
