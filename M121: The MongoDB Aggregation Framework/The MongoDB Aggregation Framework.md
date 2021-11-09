@@ -4617,9 +4617,11 @@ On collection *air_routes*, what I can find is information on the *airline*, whe
 
 ![airport-airplane-routes-white-world-map-vector-illustration-eps-file-airport-airplane-routes-white-world-map-vector-141200753](https://thumbs.dreamstime.com/z/airport-airplane-routes-white-world-map-vector-illustration-eps-file-airport-airplane-routes-white-world-map-vector-141200753.jpg)
 
-So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
+So if you imagine this very image of map of the world, where we have the points identifying the *airports*, and the *routes* connecting these dots, giving an *airline* that operates certain *routes*. We can try to identify that from a given *airport*, where the *airline is based out*. Where can I go with a maximum, for example, of one layover?
 
-Say that I want to go from this particular place here, where can I go through? I have at least three different routes departing here. But from those routes I can go multiple other ways, depending on the number of layovers that I want to do. If I want a list of all connections, and by restricting, for example, the number layovers, or something like that, we can do that using graph lookup.
+Say that I want to go from this particular place here, where can I go through? I have at least three different *routes* departing here. But from those *routes* I can go multiple other ways, depending on the number of layovers that I want to do. If I want a list of all connections, and by restricting, for example, the number layovers, or something like that, we can do that using *graph lookup*.
+
+
 
 So again, if I want to start with TAP Portugal, finding its own base airport and knowing every single destination, regardless of the airline, that I can go from its base airport, in this case, Portugal-- my home town, very lovely city-- where can I go with a maximum of one connection?
 
