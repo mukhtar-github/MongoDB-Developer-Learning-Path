@@ -4621,7 +4621,23 @@ So if you imagine this very image of map of the world, where we have the points 
 
 Say that I want to go from this particular place here, where can I go through? I have at least three different *routes* departing here. But from those *routes* I can go multiple other ways, depending on the number of layovers that I want to do. If I want a list of all connections, and by restricting, for example, the number layovers, or something like that, we can do that using *graph lookup*.
 
-
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
+    {
+        $match: { name: "TAP Portugal" }
+    },
+    {
+        $graphLookup: {
+            from: "air_routes",
+            as: "chain",
+            startWith: "$base",
+            connectFromField: "dst_airport",
+            connectToField: "src_airport",
+            maxDepth: 1
+        } 
+    }
+]).pretty();
+```
 
 So again, if I want to start with TAP Portugal, finding its own base airport and knowing every single destination, regardless of the airline, that I can go from its base airport, in this case, Portugal-- my home town, very lovely city-- where can I go with a maximum of one connection?
 
