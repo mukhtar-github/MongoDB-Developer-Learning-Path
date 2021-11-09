@@ -4793,9 +4793,9 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
 ]).pretty();
 ```
 
-To do that we can also restrict the search with a match. And in this case, I want to make sure that the only lookups that I'd retrieve match the airline name with the same one that I'm originally intending, in this case, TAP Portugal. So what are we doing? Are matching on airlines, finding the airline document that matches name equals TAP Portugal, We're going to graphLookup from routes, setting up the values in chain, using as initial value of the base airport of this original documents.
+To do that we can also restrict the search with a *match*. And in this case, I want to make sure that the only *lookups* that I'd retrieve match the *airline name* with the same one that I'm originally intending, in this case, *TAP Portugal*. So what are we doing? We're matching on *airlines*, finding the *airline document* that matches name equals *TAP Portugal*, We're going to *graphLookup* from *routes*, setting up the values in *chain*, using as initial value of the *base airport* of this original documents.
 
-Connecting the destination airport with the source airport, So the value of destination airport will be using this recursive query over the field source airport with a maximum of one hop. So I only want one layover. But always using the same airline. Once I do this, I can have the full list of all connections that I intended, always traveling within the same airline.
+Connecting the *destination airport* with the *source airport*, So the value of *destination airport* will be using this *recursive query over the field source airport with a maximum of one hop*. So I only want one layover. But always using the same *airline*. Once I do this, I can have the full list of all connections that I intended, always traveling within the same *airline*.
 
 ```javascript
 MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
