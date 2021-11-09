@@ -4951,3 +4951,80 @@ Another important thing to keep in mind is the use of *indexes*. Now in *MongoDB
 Another important aspect to take into consideration is the fact that they our *from collection cannot be sharded*. So if you are using *graph lookup stage*, we cannot use a *shard collection in our from collection*. Also, *unrelated match stages* do not get pushed before *graph lookup in the pipeline*. Therefore, they will not be optimized if they are not related with the *dollar graph lookup operator*. So keep that in mind when building your pipeline.
 
 Now, and last important thing is, giving its *recursive lookup* nature, *dollar graph lookup makes it allow memory usage* without *spilling to disk*. Take that into consideration. Even though that you are using *allow disk use*, this may still exceed the *100 megabytes of maximum memory allowed per aggregation pipeline*.
+
+### Lab: $graphLookup
+
+#### Problem
+
+Now that you have been introduced to *$graphLookup*, let's use it to solve an interesting need. You are working for a travel agency and would like to find routes for a client! For this exercise, we'll be using the *air_airlines, air_alliances, and air_routes* collections in the *aggregations database*.
+
+* The *air_airlines* collection will use the following schema:
+
+```javascript
+{
+    "_id" : ObjectId("56e9b497732b6122f8790280"),
+    "airline" : 4,
+    "name" : "2 Sqn No 1 Elementary Flying Training School",
+    "alias" : "",
+    "iata" : "WYT",
+    "icao" : "",
+    "active" : "N",
+    "country" : "United Kingdom",
+    "base" : "HGH"
+}
+```
+
+* The air_routes collection will use this schema:
+
+```javascript
+{
+    "_id" : ObjectId("56e9b39b732b6122f877fa31"),
+    "airline" : {
+            "id" : 410,
+            "name" : "Aerocondor",
+            "alias" : "2B",
+            "iata" : "ARD"
+    },
+    "src_airport" : "CEK",
+    "dst_airport" : "KZN",
+    "codeshare" : "",
+    "stops" : 0,
+    "airplane" : "CR2"
+}
+```
+
+* Finally, the air_alliances collection will show the airlines that are in each alliance, with this schema:
+
+```javascript
+{
+    "_id" : ObjectId("581288b9f374076da2e36fe5"),
+    "name" : "Star Alliance",
+    "airlines" : [
+            "Air Canada",
+            "Adria Airways",
+            "Avianca",
+            "Scandinavian Airlines",
+            "All Nippon Airways",
+            "Brussels Airlines",
+            "Shenzhen Airlines",
+            "Air China",
+            "Air New Zealand",
+            "Asiana Airlines",
+            "Copa Airlines",
+            "Croatia Airlines",
+            "EgyptAir",
+            "TAP Portugal",
+            "United Airlines",
+            "Turkish Airlines",
+            "Swiss International Air Lines",
+            "Lufthansa",
+            "EVA Air",
+            "South African Airways",
+            "Singapore Airlines"
+    ]
+}
+```
+
+Determine the approach that satisfies the following question in the most efficient manner:
+
+* Find the list of all possible distinct destinations, with at most one layover, departing from the base airports of airlines from Germany, Spain or Canada that are part of the "OneWorld" alliance. Include both the destination and which airline services that location. As a small hint, you should find 158 destinations.
