@@ -4793,7 +4793,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
 ]).pretty();
 ```
 
-To do that we can also restrict the search with a *match*. And in this case, I want to make sure that the only *lookups* that I'd retrieve match the *airline name* with the same one that I'm originally intending, in this case, *TAP Portugal*. So what are we doing? We're matching on *airlines*, finding the *airline document* that matches name equals *TAP Portugal*, We're going to *graphLookup* from *routes*, setting up the values in *chain*, using as initial value of the *base airport* of this original documents.
+To do that we can also restrict the search with a *match*. And in this case, I want to make sure that the only *lookups* that I'd retrieve match the *airline name* with the same one that I'm originally intending, in this case, *TAP Portugal*. So what are we doing? We're matching on *airlines*, finding the *airline document* that matches name equals *TAP Portugal*, We're going to *graphLookup* from *air_routes*, setting up the values in *chain*, using as initial value of the *base airport* of this original documents.
 
 Connecting the *destination airport* with the *source airport*, So the value of *destination airport* will be using this *recursive query over the field source airport with a maximum of one hop*. So I only want one layover. But always using the same *airline*. Once I do this, I can have the full list of all connections that I intended, always traveling within the same *airline*.
 
@@ -4941,3 +4941,13 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
 }
 MongoDB Enterprise Cluster0-shard-0:PRIMARY>
 ```
+
+### $graphLookup: General Considerations
+
+So now don't forget about the underlying restrictions of running *aggregation pipelines*. The first thing I want to raise your attention to is the *memory allocation*. The *dollar graph lookup*, due to its *recursive nature*, and the fact that it might bring back *several thousand megabytes of memory*, just on a single query may require significant amount of memory to operate properly, not only due to the *recursiveness*, but also given the complexity of the documents and how broad your queries might be. So *allowDiskUse* will be your friend.
+
+Another important thing to keep in mind is the use of *indexes*. Now in *MongoDB*, as in any other *database, indexes* will accelerate or might accelerate our queries. In the case of *graph lookup*, having our *connectToField*, which is the field in the front collection that we're going to be using on the recursive query. Having this particular field indexed will be a good, good thing.
+
+Another important aspect to take into consideration is the fact that they our from collection cannot be sharded. So if you are using graph lookup stage, we cannot use a shard collection in our from collection. Also, unrelated match stages do not get pushed before graph lookup in the pipeline. Therefore, they will not be optimized if they are not related with the dollar graph lookup operator. So keep that in mind when building your pipeline.
+
+Now, and last important thing, is giving its recursive lookup nature, dollar graph lookup makes it allow memory usage without spilling to disk. Take that into consideration. Even though that you are using allow disk use, this may still exceed the 100 megabytes of maximum memory allowed per aggregation pipeline
