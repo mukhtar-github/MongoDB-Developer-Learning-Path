@@ -5208,3 +5208,39 @@ while (result.hasNext()) {
     printjson(result.next());
 }
 ```
+
+## Chapter 4: Core Aggregation - Multidimensional Grouping
+
+### Facets: Introduction
+
+Many of these cases require the ability to *manipulate, inspect, and analyze, data* across multiple dimensions. Apart from this, these use cases often required that this data categorization meets strict application as well *SLAs, service level agreements*, to enable *responsive Interfaces*. In *MongoDB 3.4*, we are introducing support for *facet navigation* enabling developers to quickly create an *interface that characterizes query results across multiple dimensions or facets*.
+
+Application users can then narrow their query results by selecting a facet value as a subsequent filter providing an intuitive interface to exploring a data set.
+
+Facetf navigation is heavily used for browsing data catalogs and grouping the data in analytics use cases.
+
+Combining facet navigation with the functionality of the MongoDB aggregation framework provides a powerful way to manipulate data and analyze it.
+
+Extending MongoDB usage to a wider range of applications with minimum overhead.
+
+What is faceting?
+
+Faceting is a popular analytics capability that allows users to explore data by applying multiple filters and characterizations.
+
+Using this approach an application classifies each information element along multiple explicit dimensions, called facets, enabling the classifications to be accessed in order in multiple ways.
+
+For example, let's consider a user catalog for a popular social media-- sites like LinkedIn in this example let's do a search on the catalog.
+
+This search is looking for users with the term MongoDB somewhere in their profile.
+
+Initial results set return is roughly 200k users.
+
+The location and current company facets can be used to further narrow down the results set according to certain criteria.
+
+For example, if a user chooses to limit the result's sets to only users in the United States, then the result set will narrow down to near 62k users.
+
+Facets in MongoDB are implemented using the aggregation framework and comprehend a few different stages.
+
+We will be covering single facet queries, manual, automatic bucketing, and rendering multiple facets.
+
+Well let's get ourselves busy working with facets.
