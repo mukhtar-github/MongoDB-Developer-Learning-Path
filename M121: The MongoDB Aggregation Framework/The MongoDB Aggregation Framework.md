@@ -4613,9 +4613,11 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.findOne();
 }
 ```
 
-On collection *air_routes*, what I can find is information on the *airline*, where does the flight depart from, the *src_airport*, where does it reach, the *dst_airport*, and some other information, like if it's *codeshare*, its *stops*, and the *type of airplane* or the *airplane* that actually is operating this particular route.
+On collection *air_routes*, what I can find is information on the *airline*, where does the flight depart from, the *src_airport*, where does it reach, the *dst_airport*, and some other information, like if it's *codeshare*, its *stops*, and the *type of airplane* or the *airplane* that actually is operating this particular route. So in this scenario, I'm going to have information on *airlines* and information on *routes*.
 
-So in this scenario, I'm going to have information on airlines and information on routes. So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
+![airport-airplane-routes-white-world-map-vector-illustration-eps-file-airport-airplane-routes-white-world-map-vector-141200753](https://thumbs.dreamstime.com/z/airport-airplane-routes-white-world-map-vector-illustration-eps-file-airport-airplane-routes-white-world-map-vector-141200753.jpg)
+
+So if you imagine this very sketchy map of the world, where we have the blue points and identifying the airports, and the routes connecting these dots, giving an airline that operates certain routes, we can try to identify that from a given airport, where the airline is based out, where can I go with a maximum, for example, of one layover?
 
 Say that I want to go from this particular place here, where can I go through? I have at least three different routes departing here. But from those routes I can go multiple other ways, depending on the number of layovers that I want to do. If I want a list of all connections, and by restricting, for example, the number layovers, or something like that, we can do that using graph lookup.
 
