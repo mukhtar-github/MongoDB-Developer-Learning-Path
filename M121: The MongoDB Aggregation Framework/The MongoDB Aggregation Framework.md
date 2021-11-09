@@ -5222,3 +5222,73 @@ What is *faceting*? *Faceting* is a popular *analytics capability* that allows u
 In this example let's do a search on the *catalog*. This search is looking for users with the term *MongoDB* somewhere in their profile. Initial results set return is roughly *200k users*. The location and current company *facets* can be used to further narrow down the results set according to certain criteria. For example, if a user chooses to limit the result's sets to only users in the *United States*, then the result set will narrow down to near *62k users*.
 
 *Facets in MongoDB* are implemented using the *aggregation framework* and comprehend a few different stages. We will be covering *single facet queries, manual, automatic bucketing, and rendering multiple facets*. Well let's get ourselves busy working with *facets*.
+
+### Facets: Single Facet Query
+
+So let's get started working with facets and explore this new functionality that [INAUDIBLE] brings.
+
+Now, to get a better picture of what we are going to do, let's imagine the following scenario.
+
+Let's imagine that we have an application that has some sort of search bar where we can look for things like MongoDB, for example.
+
+Once we press the Enter button looking for this particular keyword or term, we are generally prompt with some list of results.
+
+We might have some attributes, some indication of things related with this term given the catalog that we are searching on.
+
+But we also might have some sort of filters or characterization for this search term in combination with several different dimensions that this information that we are storing in the catalog of this application might have.
+
+So to explain this very well, we're going to be using a very dear data set to you guys that we've been exploring throughout the course.
+
+The data set that we're going to be looking into is the Companies data set that you can find on our startups database.
+
+With this, we're going to be exploring this data set as a catalog of companies, and how we can organize, search, and find information and get facets out of the data stored in that particular collection.
+
+So let's get started by looking through one single document inside this Companies data set.
+
+As usual, you can find a bunch of information from external links to awards and milestones and acquisitions and a bunch of other information related to one single company listed on this data set.
+
+Now, what we might have is the need for us to search on a bunch of different dimensions.
+
+And for that-- going to be using a very straightforward search terms, like for example on description and overview for companies which are in some way related with networking.
+
+To express such a query, we're going to be creating a text index on description and overview.
+
+And if you want to find the companies that have the keyword "networking" in their field-- either in description or overview-- we can use it by simply issuing the query where Companies can aggregate and match on tags searching for term "network." Once we do this, we get a list of results.
+
+Now, let's assume that the application of our building-- our corporate catalog-- not only wants to give the end user the result set, but also to render a facet describing the category code.
+
+Now, this is a field that will tell us the type of company or sector on which this particular company is operating.
+
+So basically, for that particular functionality, we now can use SortByCounts.
+
+SortByCount will allow us to create the facet by category on the list of results that the previous stage, match, will provide.
+
+So for all the companies that will include "network" keyword on their description or overview, those will be piped into a SortByCount where we're going to be grouping the category code.
+
+Once we run this, we have a full list with their count and sorted of the sectors of activity where we can find companies.
+
+In this case, we're going to have web with 788 companies listed, software with 463, and so forth.
+
+So SortByCount groups incoming documents coming from our match query based on their specified expression, "search for network," and then computes the count of the documents in which distinct group.
+
+And sort by its count.
+
+Each group is a document with two fields-- an _id specifying the value by which we are grouping, and accounts-- determining the number of documents that match that group.
+
+If we want the same result, but let's say with instead of having the breakdown per category, we want it for office location, city-- something like that-- we could run the-- an aggregation pipeline that's a little more elaborate than this simple one.
+
+Let's say, for example, what we want is still search for all companies that have "network" keyword on their description or overview, but then given that offices is an array of different locations that we might have, we want to unwind that particular array and then match the offices which do have a city.
+
+So they have this city value different than empty.
+
+For all that, let's SortByCount on the different offices.city values that we find.
+
+So there we go.
+
+We now have a list of documents specifying the value of the office city-- in this case, for example, San Francisco with a count of 245.
+
+New York will have 218-- London, Los Angeles, Palo Alto, and so on.
+
+So this is also to demonstrate that we can have elaborate pipelines that would filter project, match, group, determine the list of documents that then can use to sort by and count given one of the attributes that is coming with the result set to this last stage of the pipeline.
+
+In essence, with this aggregation inquiry, we can have the breakdown of companies per city that match networking, or in this case, "network," in their description overview.
