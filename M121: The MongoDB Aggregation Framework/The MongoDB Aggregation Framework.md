@@ -4658,6 +4658,17 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
     }
 ]).pretty();
 {
+        "_id" : ObjectId("56e9b497732b6122f879157b"),
+        "airline" : 4869,
+        "name" : "TAP Portugal",
+        "alias" : "TP",
+        "iata" : "TAP",
+        "icao" : "AIR PORTUGAL",
+        "active" : "Y",
+        "country" : "Portugal",
+        "base" : "OPO",
+        "chain" : [
+            {
                 "_id" : ObjectId("56e9b39c732b6122f878737c"),
                 "airline" : {
                     "id" : 2684,
@@ -4728,76 +4739,6 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
                 "airplane" : "320"
             },
             {
-                "_id" : ObjectId("56e9b39c732b6122f87867af"),
-                "airline" : {
-                    "id" : 4296,
-                    "name" : "Ryanair",
-                    "alias" : "FR",
-                    "iata" : "RYR"
-                },
-                "src_airport" : "TFS",
-                "dst_airport" : "BGY",
-                "codeshare" : "",
-                "stops" : 0,
-                "airplane" : "738"
-            },
-            {
-                "_id" : ObjectId("56e9b39b732b6122f8780bef"),
-                "airline" : {
-                    "id" : 1203,
-                    "name" : "Airlinair",
-                    "alias" : "A5",
-                    "iata" : "RLA"
-                },
-                "src_airport" : "LRH",
-                "dst_airport" : "PIS",
-                "codeshare" : "",
-                "stops" : 0,
-                "airplane" : "AT5"
-            },
-            {
-                "_id" : ObjectId("56e9b39b732b6122f878504e"),
-                "airline" : {
-                    "id" : 5133,
-                    "name" : "TAAG Angola Airlines",
-                    "alias" : "DT",
-                    "iata" : "DTA"
-                },
-                "src_airport" : "LAD",
-                "dst_airport" : "LUO",
-                "codeshare" : "",
-                "stops" : 0,
-                "airplane" : "73G"
-            },
-            {
-                "_id" : ObjectId("56e9b39c732b6122f8789026"),
-                "airline" : {
-                    "id" : 3320,
-                    "name" : "Lufthansa",
-                    "alias" : "LH",
-                    "iata" : "DLH"
-                },
-                "src_airport" : "GRU",
-                "dst_airport" : "CWB",
-                "codeshare" : "Y",
-                "stops" : 0,
-                "airplane" : "320"
-            },
-            {
-                "_id" : ObjectId("56e9b39c732b6122f878642e"),
-                "airline" : {
-                    "id" : 4296,
-                    "name" : "Ryanair",
-                    "alias" : "FR",
-                    "iata" : "RYR"
-                },
-                "src_airport" : "LIS",
-                "dst_airport" : "STN",
-                "codeshare" : "",
-                "stops" : 0,
-                "airplane" : "738"
-            },
-            {
                 "_id" : ObjectId("56e9b39b732b6122f877fc30"),
                 "airline" : {
                     "id" : 9818,
@@ -4833,6 +4774,170 @@ I can see from one of the results, that I am going all the way to *Athens* passi
 
 But let's say that, starting from a particular *airport* and connecting to all other *airport*, regardless of the *airlines*, is not really what I was intending. Not only I want to start from the *base airport* of a given *airline*, I also want to make sure that all flights that I'm connecting with are using the exactly same *airline*. So I don't want to connect from, for example, *Porto to New York* and then the next hop to be on a different *airline*. No, not at all. I want to make sure I'm always using the same carrier all the way through its network.
 
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
+    {
+        $match: { name: "TAP Portugal" }
+    },
+    {
+        $graphLookup: {
+            from: "air_routes",
+            as: "chain",
+            startWith: "$base",
+            connectFromField: "dst_airport",
+            connectToField: "src_airport",
+            maxDepth: 1,
+            restrictSearchWithMatch: { "airline.name": "TAP Portugal" }
+        } 
+    }
+]).pretty();
+```
+
 To do that we can also restrict the search with a match. And in this case, I want to make sure that the only lookups that I'd retrieve match the airline name with the same one that I'm originally intending, in this case, TAP Portugal. So what are we doing? Are matching on airlines, finding the airline document that matches name equals TAP Portugal, We're going to graphLookup from routes, setting up the values in chain, using as initial value of the base airport of this original documents.
 
 Connecting the destination airport with the source airport, So the value of destination airport will be using this recursive query over the field source airport with a maximum of one hop. So I only want one layover. But always using the same airline. Once I do this, I can have the full list of all connections that I intended, always traveling within the same airline.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
+...     {
+...         $match: { name: "TAP Portugal" }
+...     },
+...     {
+...         $graphLookup: {
+...             from: "air_routes",
+...             as: "chain",
+...             startWith: "$base",
+...             connectFromField: "dst_airport",
+...             connectToField: "src_airport",
+...             maxDepth: 1,
+...             restrictSearchWithMatch: { "airline.name": "TAP Portugal" }
+...         } 
+...     }
+... ]).pretty();
+{
+        "_id" : ObjectId("56e9b497732b6122f879157b"),
+        "airline" : 4869,
+        "name" : "TAP Portugal",
+        "alias" : "TP",
+        "iata" : "TAP",
+        "icao" : "AIR PORTUGAL",
+        "active" : "Y",
+        "country" : "Portugal",
+        "base" : "OPO",
+        "chain" : [
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbae"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "BRU",
+                "dst_airport" : "LIS",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "319 321 320 100"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbc5"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "FCO",
+                "dst_airport" : "LIS",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320 321 319"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbd4"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "GVA",
+                "dst_airport" : "OPO",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320 319"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbb3"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "CCS",
+                "dst_airport" : "FNC",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "332"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cc1d"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "LIS",
+                "dst_airport" : "POA",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "332"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbe2"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "LIS",
+                "dst_airport" : "ACC",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbe5"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "LIS",
+                "dst_airport" : "BIO",
+                "codeshare" : "Y",
+                "stops" : 0,
+                "airplane" : "ER4 100"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878cbf4"),
+                "airline" : {
+                    "id" : 4869,
+                    "name" : "TAP Portugal",
+                    "alias" : "TP",
+                    "iata" : "TAP"
+                },
+                "src_airport" : "LIS",
+                "dst_airport" : "CPH",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "321 320"
+            }
+        ]
+}
+MongoDB Enterprise Cluster0-shard-0:PRIMARY>
+```
