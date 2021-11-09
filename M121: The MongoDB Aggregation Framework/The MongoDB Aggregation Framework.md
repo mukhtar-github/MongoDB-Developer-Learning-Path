@@ -4639,9 +4639,197 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
 ]).pretty();
 ```
 
-So again, if I want to start with TAP Portugal, finding its own base airport and knowing every single destination, regardless of the airline, that I can go from its base airport, in this case, Portugal-- my home town, very lovely city-- where can I go with a maximum of one connection?
+So again, if I want to start with *TAP Portugal*, finding its own *base airport* and knowing every single *destination*, regardless of the *airline*, that I can go from its *base airport*, in this case, *Portugal* -- my home town, very lovely city -- where can I go with a maximum of one connection? The full list of connected the airports will be given by this query.
 
-The full list of connected the airports will be given by this query. I can see here that I am going all the way to Athens passing through Gatwick Airport in London. Now comparing maxDepth here, we're using one instead of zero, is because we are starting from airlines and searching on routes. And maxDepth only will restrict the number of recursive lookups on the front collection. So I started my collecting the matching document that I want and then I'm going to only lookup, or in this case, graph lookup twice, the first one and another one, on the route's collection.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_airlines.aggregate([
+    {
+        $match: { name: "TAP Portugal" }
+    },
+    {
+        $graphLookup: {
+            from: "air_routes",
+            as: "chain",
+            startWith: "$base",
+            connectFromField: "dst_airport",
+            connectToField: "src_airport",
+            maxDepth: 1
+        } 
+    }
+]).pretty();
+{
+                "_id" : ObjectId("56e9b39c732b6122f878737c"),
+                "airline" : {
+                    "id" : 2684,
+                    "name" : "Harmony Airways",
+                    "alias" : "HQ",
+                    "iata" : "HMY"
+                },
+                "src_airport" : "BRU",
+                "dst_airport" : "PMI",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320 319"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878c9ac"),
+                "airline" : {
+                    "id" : 8745,
+                    "name" : "Transavia France",
+                    "alias" : "TO",
+                    "iata" : "TVF"
+                },
+                "src_airport" : "FAO",
+                "dst_airport" : "EMA",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "73H"
+            },
+            {
+                "_id" : ObjectId("56e9b39b732b6122f87833a9"),
+                "airline" : {
+                    "id" : 1355,
+                    "name" : "British Airways",
+                    "alias" : "BA",
+                    "iata" : "BAW"
+                },
+                "src_airport" : "LHR",
+                "dst_airport" : "HAJ",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "319"
+            },
+            {
+                "_id" : ObjectId("56e9b39b732b6122f878514f"),
+                "airline" : {
+                    "id" : 3737,
+                    "name" : "Norwegian Air Shuttle",
+                    "alias" : "DY",
+                    "iata" : "NAX"
+                },
+                "src_airport" : "BCN",
+                "dst_airport" : "ARN",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "73H"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f8787885"),
+                "airline" : {
+                    "id" : 2822,
+                    "name" : "Iberia Airlines",
+                    "alias" : "IB",
+                    "iata" : "IBE"
+                },
+                "src_airport" : "BCN",
+                "dst_airport" : "SCQ",
+                "codeshare" : "Y",
+                "stops" : 0,
+                "airplane" : "320"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f87867af"),
+                "airline" : {
+                    "id" : 4296,
+                    "name" : "Ryanair",
+                    "alias" : "FR",
+                    "iata" : "RYR"
+                },
+                "src_airport" : "TFS",
+                "dst_airport" : "BGY",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "738"
+            },
+            {
+                "_id" : ObjectId("56e9b39b732b6122f8780bef"),
+                "airline" : {
+                    "id" : 1203,
+                    "name" : "Airlinair",
+                    "alias" : "A5",
+                    "iata" : "RLA"
+                },
+                "src_airport" : "LRH",
+                "dst_airport" : "PIS",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "AT5"
+            },
+            {
+                "_id" : ObjectId("56e9b39b732b6122f878504e"),
+                "airline" : {
+                    "id" : 5133,
+                    "name" : "TAAG Angola Airlines",
+                    "alias" : "DT",
+                    "iata" : "DTA"
+                },
+                "src_airport" : "LAD",
+                "dst_airport" : "LUO",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "73G"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f8789026"),
+                "airline" : {
+                    "id" : 3320,
+                    "name" : "Lufthansa",
+                    "alias" : "LH",
+                    "iata" : "DLH"
+                },
+                "src_airport" : "GRU",
+                "dst_airport" : "CWB",
+                "codeshare" : "Y",
+                "stops" : 0,
+                "airplane" : "320"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878642e"),
+                "airline" : {
+                    "id" : 4296,
+                    "name" : "Ryanair",
+                    "alias" : "FR",
+                    "iata" : "RYR"
+                },
+                "src_airport" : "LIS",
+                "dst_airport" : "STN",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "738"
+            },
+            {
+                "_id" : ObjectId("56e9b39b732b6122f877fc30"),
+                "airline" : {
+                    "id" : 9818,
+                    "name" : "Air Arabia Maroc",
+                    "alias" : "3O",
+                    "iata" : "\\N"
+                },
+                "src_airport" : "AMS",
+                "dst_airport" : "NDR",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320"
+            },
+            {
+                "_id" : ObjectId("56e9b39c732b6122f878b730"),
+                "airline" : {
+                    "id" : 4304,
+                    "name" : "SATA International",
+                    "alias" : "S4",
+                    "iata" : "RZO"
+                },
+                "src_airport" : "LGW",
+                "dst_airport" : "PDL",
+                "codeshare" : "",
+                "stops" : 0,
+                "airplane" : "320"
+            }
+        ]
+}
+```
+
+I can see from one of the results, that I am going all the way to *Athens* passing through *Gatwick Airport in London*. Now comparing *maxDepth* here, we're using *one instead of zero*, is because we are starting from *airlines* and searching on *routes*. And *maxDepth* only will restrict the number of *recursive lookups* on the *from collection*. So I started collecting the matching document that I want and then I'm going to only *graph lookup* twice, the first one and another one, on the *route's collection*.
 
 Previously, we used the same value for the two levels down since we were doing a self-recursive lookup. But let's say that, starting from a particular airport and connecting to all other airport, regardless of the airlines, is not really what I was intending. Not only I want to start from the base airport of a given airline, I also want to make sure that all flights that I'm connecting with are using the exactly same airline. So I don't want to connect from, for example, Porto to New York and then the next hop to be on a different airline.
 
