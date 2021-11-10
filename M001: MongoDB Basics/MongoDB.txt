@@ -70,6 +70,8 @@ processManagement:
 replication:
   replSetName: m103-example
 
+*** Checking which mongo processes are running and on which port: ps -ef | grep "[m]ongo"
+
 sudo mongod -f node1.conf
 sudo mongod -f node2.conf
 sudo mongod -f node3.conf

@@ -5227,9 +5227,34 @@ In this example let's do a search on the *catalog*. This search is looking for u
 
 So let's get started working with *facets* and explore this new functionality to see what it brings. Now, to get a better picture of what we are going to do, let's imagine the following scenario. Let's imagine that we have an application that has some sort of search bar where we can look for things like *MongoDB*, for example. Once we press the Enter button looking for this particular keyword or term, we are generally prompt with some list of results. We might have some attributes, some indication of things related with this term given the catalog that we are searching on.
 
-But we also might have some sort of filters or characterization for this search term in combination with several different dimensions that this information that we are storing in the catalog of this application might have. So to explain this very well, we're going to be using a very dear data set to you guys that we've been exploring throughout the course.
+```javascript
+vagrant@vagrant:~$ mongoimport companies_1.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection companies
+2021-11-10T15:12:07.513+0000    connected to: localhost:26000
+2021-11-10T15:12:09.101+0000    imported 100 documents
+vagrant@vagrant:~$ mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+MongoDB shell version v3.6.23
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("c3252ef7-0c1d-471a-8ee8-900d8f75a12f") }
+MongoDB server version: 3.6.23
+Server has startup warnings: 
+2021-11-10T13:43:37.841+0000 I CONTROL  [main] ** WARNING: You are running this process as the root user, which is not recommended.
+2021-11-10T13:43:37.841+0000 I CONTROL  [main] 
+```
 
-The data set that we're going to be looking into is the Companies data set that you can find on our startups database. With this, we're going to be exploring this data set as a catalog of companies, and how we can organize, search, and find information and get facets out of the data stored in that particular collection. So let's get started by looking through one single document inside this Companies data set. As usual, you can find a bunch of information from external links to awards and milestones and acquisitions and a bunch of other information related to one single company listed on this data set.
+But we also might have some sort of filters or characterization for this search term in combination with several different dimensions that this information that we are storing in the catalog of this application might have. So to explain this very well, we're going to be using a very dear data set to you guys that we'll be exploring throughout the course.
+
+```javascript
+mongos> use m103
+switched to db m103
+mongos> show collections
+companies
+messages
+products 
+```
+
+The data set that we're going to be looking into is the *Companies data set* that you can find on our *startups (m103)database*. With this, we're going to be exploring this data set as a catalog of *companies*, and how we can *organize, search, and find information and get facets* out of the data stored in that particular collection.
+
+So let's get started by looking through one single document inside this Companies data set. As usual, you can find a bunch of information from external links to awards and milestones and acquisitions and a bunch of other information related to one single company listed on this data set.
 
 Now, what we might have is the need for us to search on a bunch of different dimensions. And for that-- going to be using a very straightforward search terms, like for example on description and overview for companies which are in some way related with networking. To express such a query, we're going to be creating a text index on description and overview. And if you want to find the companies that have the keyword "networking" in their field-- either in description or overview-- we can use it by simply issuing the query where Companies can aggregate and match on tags searching for term "network." Once we do this, we get a list of results.
 
