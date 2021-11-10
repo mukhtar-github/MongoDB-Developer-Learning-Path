@@ -202,6 +202,7 @@ db.solarSystem.aggregate([{
   "$skip": 1
 }]).pretty();
 
+
 // Cursor-like stages: Part 2
 
 // ``$count`` stage
@@ -576,3 +577,16 @@ db.air_alliances
     }
   ])
   .pretty();
+
+
+
+
+  // Chapter 4: Core Aggregation - Multidimensional Grouping
+
+// Facets: Single Facet Query
+
+// **facets/singleQueryFacets.sh**
+
+// find one company document
+// mongo startups
+db.companies.findOne();

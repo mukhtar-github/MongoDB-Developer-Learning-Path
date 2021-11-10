@@ -1,7 +1,5 @@
 sudo systemctl start mongod
-
 sudo systemctl status mongod
-
 sudo systemctl stop mongod
 
 
@@ -9,21 +7,15 @@ mongo --port 27000.
 mongoimport --db mongo-exercises --collection courses --drop --file exercise-data.json --jsonArray
 
 ** dkemg
-
 mongo "mongodb+srv://cluster0.dkemg.mongodb.net/admin" --username m001-student
-
 ** m001-mongodb-basics
-
 mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test
 
 
 
 # Just do those two commands for temporary solution:
-
 $ sudo rm -rf /tmp/mongodb-27017.sock
-
 $ sudo service mongod start
-
 # That shall be fault due to user permissions in .sock file, You may have to change the owner to monogdb user.
 
 chown -R mongodb:mongodb /var/lib/mongodb
@@ -39,15 +31,20 @@ ls -l /var/mongodb/pki
 ls -l /var/mongodb
 
 cat /var/mongodb/pki/m103-keyfile
-
 sudo mkdir -p /var/mongodb/db/node1
-
 chown -R mongodb.mongodb ~/var/mongodb/db/node1
-
 mongod -f /shared/node1.conf
 
 ~~~
 vagrant --global-status --prune
+*** Bring up a virtual machine
+cd vagrant@m103
+vagrant up
+*** SSH into the machine
+vagrant ssh
+vagrant@vagrant:~$ logout
+Connection to 127.0.0.1 closed.
+
 
 sudo systemctl stop mongod.service
 sudo systemctl start mongod.service
@@ -84,10 +81,6 @@ sudo mongod -f csrs_3.conf
 sudo mongos -f mongos.conf
 mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
 
-To paste in the Vim Editor, use "+p then paste.
-To create a new file vim (filename)
-:wq or :x or ZZ - write (save) and quit
-
 * Adding new nodes to  my repSet
 cp node3.conf node4.conf
 sudo mkdir -p /var/mongodb/db/node4
@@ -123,6 +116,10 @@ mongoimport --db applicationData --collection products --port 27000 -u m103-appl
 mongo --port 27000 -u m103-admin -p m103-pass --authenticationDatabase admin
 
 
+sudo mkdir -p /var/mongodb/db/companies_1.json
+vim companies_1.json
+mongoimport companies_1.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection companies
+
 db.products.insert(
   {
     "sku" : 1000000749,
@@ -135,12 +132,11 @@ db.products.insert(
 )
 
 db.products.remove()
-
 sudo mkdir -p /var/mongodb/db/products_2.json
-
 mongoimport products_2.json --drop --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db m103 --collection products
-
 vim -r products_2.json
+ls
+
 
 ***
 mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
@@ -167,3 +163,26 @@ Ctrl-W N
 :set makeprg=javac\ -g\ /etc/environment
 :copen
 =expand('%:r') => brings out current file name
+
+
+To paste in the Vim Editor, use "+p then paste.
+To create a new file vim (filename)
+:wq or :x or ZZ - write (save) and quit
+
+Long story short: If at all possible, use "*P or "+P to paste 
+(which even works in some terminal emulators if I recall correctly).
+This is the "correct" way to paste; everything else is basically a workaround gives you those kinds of headaches.
+
+You can explore your current directory by hitting :Ex.
+This will show a list view of your files and you can navigate up (j) or down (k) with the usual methods.
+You can also delete a file by hitting: SHIFT + D and confirming with y.
+To go back to editing, select the file and hit ENTER.
+
+How do I delete a vim file in Terminal?
+You can do it with two steps:
+save as a new file. :w newfilename.
+delete the old file. ! rm oldfilename.
+
+! rm companies_dataset/companies.json
+cat /var/m121/validateLab1.js
+/var/mongodb/db/companies.json
