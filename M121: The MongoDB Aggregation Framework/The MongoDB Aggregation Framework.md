@@ -5976,10 +5976,19 @@ db.companies.aggregate([ {"$match": { "$text": {"$search": "network"}  }  }] );
 Type "it" for more
 ```
 
-Now, let's assume that the application we're building, -- *our corporate catalog* -- not only wants to give the end user the result set, but also to render a *facet* describing the *category code*. Now, this is a field that will tell us the type of *company or sector* on which this particular company is operating. So basically, for that particular functionality, we now can use *SortByCounts*. *SortByCount* will allow us to create the *facet* by category on the list of results that the previous stage, *match*, will provide.
+Now, let's assume that the application we're building, -- *our corporate catalog* -- not only wants to give the *end user* the result set, but also to render a *facet* describing the *category code*. Now, this is a field that will tell us the type of *company or sector* on which this particular company is operating. So basically, for that particular functionality, we now can use *SortByCounts*. *SortByCount* will allow us to create the *facet by category* on the list of results that the previous stage, *match*, will provide.
 
 ```javascript
 // $sortByCount single query facet for the previous search
+db.companies.aggregate([
+    {"$match": { "$text": {"$search": "network"}  }  },
+    {"$sortByCount": "$category_code"} 
+]);
+```
+
+So for all the companies that will include *"network"* keyword on their *description or overview*, those will be *piped* into a *SortByCount* where we're going to be grouping the *category code*. Once we run this, we have a full list with their *count and sorted* of the sectors of activity where we can *find companies*. In this case, we're going to have *web with 9 companies* listed, *software with 1*, and so forth.
+
+```javascript
 mongos> db.companies.aggregate([
 ...     {"$match": { "$text": {"$search": "network"}  }  },
 ...     {"$sortByCount": "$category_code"} 
@@ -5998,9 +6007,9 @@ mongos> db.companies.aggregate([
 { "_id" : "hardware", "count" : 1 }
 ```
 
-So for all the companies that will include "network" keyword on their description or overview, those will be piped into a SortByCount where we're going to be grouping the category code. Once we run this, we have a full list with their count and sorted of the sectors of activity where we can find companies. In this case, we're going to have web with 788 companies listed, software with 463, and so forth. So SortByCount groups incoming documents coming from our match query based on their specified expression, "search for network," and then computes the count of the documents in which distinct group.
+So *SortByCount*, groups incoming documents coming from our *match query* based on their specified expression, *"search for network"*, and then *computes the count* of the documents in each distinct group, and *sort by its count*. Each group is a document with two fields -- an *_id* specifying the value by which we are grouping, and accounts -- determining the *number of documents that match* that group.
 
-And sort by its count. Each group is a document with two fields-- an _id specifying the value by which we are grouping, and accounts-- determining the number of documents that match that group. If we want the same result, but let's say with instead of having the breakdown per category, we want it for office location, city-- something like that-- we could run the-- an aggregation pipeline that's a little more elaborate than this simple one.
+If we want the same result, but let's say with instead of having the breakdown per category, we want it for office location, city-- something like that-- we could run the-- an aggregation pipeline that's a little more elaborate than this simple one.
 
 Let's say, for example, what we want is still search for all companies that have "network" keyword on their description or overview, but then given that offices is an array of different locations that we might have, we want to unwind that particular array and then match the offices which do have a city. So they have this city value different than empty. For all that, let's SortByCount on the different offices.city values that we find. So there we go. We now have a list of documents specifying the value of the office city-- in this case, for example, San Francisco with a count of 245.
 
