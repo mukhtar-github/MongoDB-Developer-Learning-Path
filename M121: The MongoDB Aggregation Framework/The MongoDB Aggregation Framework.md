@@ -5783,9 +5783,34 @@ mongos> db.companies.findOne();
 }
 ```
 
-So let's get started by looking through *one single document inside this Companies data set*. As usual, you can find a bunch of information from *external links* to *awards and milestones and acquisitions and a bunch of other information* related to *one single company* listed on this data set.
+So let's get started by looking through *one single document inside this Companies data set*. As usual, you can find a bunch of information from *external links* to *awards and milestones and acquisitions and a bunch of other information* related to *one single company* listed on this data set. Now, what we might have is the need for us to search on a bunch of different dimensions. And for that we're going to be using a very straightforward search terms, like for example on *description and overview for companies* which are in some way related with networking.
 
-Now, what we might have is the need for us to search on a bunch of different dimensions. And for that-- going to be using a very straightforward search terms, like for example on description and overview for companies which are in some way related with networking. To express such a query, we're going to be creating a text index on description and overview. And if you want to find the companies that have the keyword "networking" in their field-- either in description or overview-- we can use it by simply issuing the query where Companies can aggregate and match on tags searching for term "network." Once we do this, we get a list of results.
+```javascript
+mongos> db.companies.createIndex({"description": "text", "overview": "text"});
+{
+    "raw" : {
+        "m103-example/localhost:27011,localhost:27012,localhost:27013" : {
+            "createdCollectionAutomatically" : false,
+            "numIndexesBefore" : 1,
+            "numIndexesAfter" : 2,
+            "ok" : 1
+        }
+    },
+    "ok" : 1,
+    "operationTime" : Timestamp(1636563918, 1),
+    "$clusterTime" : {
+        "clusterTime" : Timestamp(1636563918, 1),
+        "signature" : {
+            "hash" : BinData(0,"/fZkH+hOnUM6EH2WENAgHWcM5WM="),
+            "keyId" : NumberLong("7006634394848854025")
+        }
+    }
+}
+```
+
+To express such a query, we're going to be creating a *text index on description and overview*.
+
+And if you want to find the companies that have the keyword *"networking"* in their field -- either in *description or overview* -- we can use it by simply issuing the query where Companies can *aggregate and match* on tags searching for term *"network"*. Once we do this, we get a list of results.
 
 Now, let's assume that the application of our building-- our corporate catalog-- not only wants to give the end user the result set, but also to render a facet describing the category code. Now, this is a field that will tell us the type of company or sector on which this particular company is operating. So basically, for that particular functionality, we now can use SortByCounts. SortByCount will allow us to create the facet by category on the list of results that the previous stage, match, will provide.
 

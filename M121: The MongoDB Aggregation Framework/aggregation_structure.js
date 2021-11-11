@@ -588,5 +588,9 @@ db.air_alliances
 // **facets/singleQueryFacets.sh**
 
 // find one company document
-// mongo startups
+// mongo startups(m103)
 db.companies.findOne();
+
+// create text index
+// mongo startups(m103)
+db.companies.createIndex({"description": "text", "overview": "text"});
