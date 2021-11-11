@@ -5810,7 +5810,7 @@ mongos> db.companies.createIndex({"description": "text", "overview": "text"});
 }
 ```
 
-And if you want to find the companies that have the keyword *"networking"* in their field -- either in *description or overview* -- we can use it by simply issuing the query where Companies can *aggregate and match* on tags searching for term *"network"*. Once we do this, we get a list of results.
+And if you want to find the companies that have the keyword *"networking"* in their field -- either in *description or overview* -- we can use it by simply issuing the query where *Companies* can *aggregate and match* on tags searching for term *"network"*. Once we do this, we get a list of results.
 
 ```javascript
 // find companies matching term `networking` using text search
@@ -5976,7 +5976,27 @@ db.companies.aggregate([ {"$match": { "$text": {"$search": "network"}  }  }] );
 Type "it" for more
 ```
 
-Now, let's assume that the application of our building -- our corporate catalog -- not only wants to give the end user the result set, but also to render a *facet* describing the *category code*. Now, this is a field that will tell us the type of company or sector on which this particular company is operating. So basically, for that particular functionality, we now can use SortByCounts. SortByCount will allow us to create the facet by category on the list of results that the previous stage, match, will provide.
+Now, let's assume that the application we're building, -- *our corporate catalog* -- not only wants to give the end user the result set, but also to render a *facet* describing the *category code*. Now, this is a field that will tell us the type of *company or sector* on which this particular company is operating. So basically, for that particular functionality, we now can use *SortByCounts*. *SortByCount* will allow us to create the *facet* by category on the list of results that the previous stage, *match*, will provide.
+
+```javascript
+// $sortByCount single query facet for the previous search
+mongos> db.companies.aggregate([
+...     {"$match": { "$text": {"$search": "network"}  }  },
+...     {"$sortByCount": "$category_code"} 
+... ]);
+{ "_id" : "web", "count" : 9 }
+{ "_id" : "games_video", "count" : 8 }
+{ "_id" : "mobile", "count" : 5 }
+{ "_id" : "enterprise", "count" : 2 }
+{ "_id" : "search", "count" : 2 }
+{ "_id" : "messaging", "count" : 1 }
+{ "_id" : "advertising", "count" : 1 }
+{ "_id" : "news", "count" : 1 }
+{ "_id" : "social", "count" : 1 }
+{ "_id" : "software", "count" : 1 }
+{ "_id" : "network_hosting", "count" : 1 }
+{ "_id" : "hardware", "count" : 1 }
+```
 
 So for all the companies that will include "network" keyword on their description or overview, those will be piped into a SortByCount where we're going to be grouping the category code. Once we run this, we have a full list with their count and sorted of the sectors of activity where we can find companies. In this case, we're going to have web with 788 companies listed, software with 463, and so forth. So SortByCount groups incoming documents coming from our match query based on their specified expression, "search for network," and then computes the count of the documents in which distinct group.
 
