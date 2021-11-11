@@ -606,7 +606,7 @@ db.companies.aggregate([
 
 // extend the pipeline for a more elaborate facet
 db.companies.aggregate([
-  {"$match": { "$text": {"$search": "network"}  }  } ,
+  {"$match": { "$text": {"$search": "network"}  }  },
   {"$unwind": "$offices"},
-  {"$match": { "offices.city": {"$ne": ""}  }}   ,
+  {"$match": { "offices.city": {"$ne": ""}  }},
   {"$sortByCount": "$offices.city"}] );

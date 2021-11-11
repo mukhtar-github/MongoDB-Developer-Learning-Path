@@ -6007,10 +6007,22 @@ mongos> db.companies.aggregate([
 { "_id" : "hardware", "count" : 1 }
 ```
 
-So *SortByCount*, groups incoming documents coming from our *match query* based on their specified expression, *"search for network"*, and then *computes the count* of the documents in each distinct group, and *sort by its count*. Each group is a document with two fields -- an *_id* specifying the value by which we are grouping, and accounts -- determining the *number of documents that match* that group.
+So *SortByCount*, groups incoming documents coming from our *match query* based on their specified expression, *"search for network"*, and then *computes the count* of the documents in each distinct group, and *sort by its count*. Each group is a document with two fields -- an *_id* specifying the value by which we are grouping, and the *counts* -- determining the *number of documents that match that group*.
 
-If we want the same result, but let's say with instead of having the breakdown per category, we want it for office location, city-- something like that-- we could run the-- an aggregation pipeline that's a little more elaborate than this simple one.
+If we want the same result, but let's say with instead of having the breakdown per *category*, we want it for *office location, city* -- something like that -- we could run an *aggregation pipeline* that's a little more elaborate than this simple one.
 
-Let's say, for example, what we want is still search for all companies that have "network" keyword on their description or overview, but then given that offices is an array of different locations that we might have, we want to unwind that particular array and then match the offices which do have a city. So they have this city value different than empty. For all that, let's SortByCount on the different offices.city values that we find. So there we go. We now have a list of documents specifying the value of the office city-- in this case, for example, San Francisco with a count of 245.
+```javascript
+// extend the pipeline for a more elaborate facet
+db.companies.aggregate([
+  {"$match": { "$text": {"$search": "network"}  }  },
+  {"$unwind": "$offices"},
+  {"$match": { "offices.city": {"$ne": ""}  }},
+  {"$sortByCount": "$offices.city"}
+]);
+```
+
+Let's say, for example, what we want is still *search* for *all companies* that have *"network"* keyword on their *description or overview*, but then given that offices is an array of different locations that we might have, we want to unwind that particular array and then match the offices which do have a city.
+
+So they have this city value different than empty. For all that, let's SortByCount on the different offices.city values that we find. So there we go. We now have a list of documents specifying the value of the office city-- in this case, for example, San Francisco with a count of 245.
 
 New York will have 218-- London, Los Angeles, Palo Alto, and so on. So this is also to demonstrate that we can have elaborate pipelines that would filter project, match, group, determine the list of documents that then can use to sort by and count given one of the attributes that is coming with the result set to this last stage of the pipeline. In essence, with this aggregation inquiry, we can have the breakdown of companies per city that match networking, or in this case, "network," in their description overview.
