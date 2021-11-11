@@ -600,8 +600,9 @@ db.companies.aggregate([ {"$match": { "$text": {"$search": "network"}  }  }] );
 // $sortByCount single query facet for the previous search
 // mongo startups
 db.companies.aggregate([
-{"$match": { "$text": {"$search": "network"}  }  },
-  {"$sortByCount": "$category_code"}] );
+  {"$match": { "$text": {"$search": "network"}  }  },
+ {"$sortByCount": "$category_code"} 
+]);
 
 
 // extend the pipeline for a more elaborate facet
