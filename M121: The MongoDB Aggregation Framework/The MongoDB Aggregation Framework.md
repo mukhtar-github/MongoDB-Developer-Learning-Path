@@ -5255,6 +5255,7 @@ products
 The data set that we're going to be looking into is the *Companies data set* that you can find on our *startups (m103)database*. With this, we're going to be exploring this data set as a catalog of *companies*, and how we can *organize, search, and find information and get facets* out of the data stored in that particular collection.
 
 ```javascript
+// find one company document
 mongos> db.companies.findOne();
 {
         "_id" : ObjectId("52cdef7c4bab8bd675297d8a"),
@@ -5786,6 +5787,7 @@ mongos> db.companies.findOne();
 So let's get started by looking through *one single document inside this Companies data set*. As usual, you can find a bunch of information from *external links* to *awards and milestones and acquisitions and a bunch of other information* related to *one single company* listed on this data set. Now, what we might have is the need for us to search on a bunch of different dimensions. And for that we're going to be using a very straightforward search terms, like for example on *description and overview for companies* which are in some way related with networking.
 
 ```javascript
+// create text index
 mongos> db.companies.createIndex({"description": "text", "overview": "text"});
 {
     "raw" : {
@@ -5808,9 +5810,12 @@ mongos> db.companies.createIndex({"description": "text", "overview": "text"});
 }
 ```
 
-To express such a query, we're going to be creating a *text index on description and overview*.
+To express such a query, we're going to be creating a *text index on description and overview*. And if you want to find the companies that have the keyword *"networking"* in their field -- either in *description or overview* -- we can use it by simply issuing the query where Companies can *aggregate and match* on tags searching for term *"network"*. Once we do this, we get a list of results.
 
-And if you want to find the companies that have the keyword *"networking"* in their field -- either in *description or overview* -- we can use it by simply issuing the query where Companies can *aggregate and match* on tags searching for term *"network"*. Once we do this, we get a list of results.
+```javascript
+// find companies matching term `networking` using text search
+db.companies.aggregate([ {"$match": { "$text": {"$search": "network"}  }  }] );
+```
 
 Now, let's assume that the application of our building-- our corporate catalog-- not only wants to give the end user the result set, but also to render a facet describing the category code. Now, this is a field that will tell us the type of company or sector on which this particular company is operating. So basically, for that particular functionality, we now can use SortByCounts. SortByCount will allow us to create the facet by category on the list of results that the previous stage, match, will provide.
 
