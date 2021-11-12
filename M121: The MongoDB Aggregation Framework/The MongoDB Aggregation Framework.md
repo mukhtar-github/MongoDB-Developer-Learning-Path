@@ -6021,7 +6021,7 @@ db.companies.aggregate([
 ]);
 ```
 
-Let's say, for example, what we want is still *search* for *all companies* that have *"network"* keyword on their *description or overview*, but then given that offices is an array of different locations that we might have, we want to unwind that particular array and then match the offices which do have a city.
+Let's say, for example, what we want is still *search* for *all companies* that have *"network"* keyword on their *description or overview*, but then, given that offices is an array of different locations that we might have, we want to *unwind* that particular array and then *match the offices which do have a city*.
 
 So they have this city value different than empty. For all that, let's SortByCount on the different offices.city values that we find. So there we go. We now have a list of documents specifying the value of the office city-- in this case, for example, San Francisco with a count of 245.
 
