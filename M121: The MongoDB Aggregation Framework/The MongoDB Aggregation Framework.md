@@ -6205,11 +6205,14 @@ DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1224:12
 @(shell):1:1
 ```
 
-So let's say that we have this particular document on this *coll* collection where *x* equals a string of *a*.
+So let's say that we have this particular document on this *coll* collection where *x* equals a string of *a*. If we run this *aggregation pipeline* on this particular collection where we *bucket grouping by x*, and with the *boundaries of 0, 50, and 100*, we will get back an *error* saying that the *"errmsg" : "$switch could not find a matching branch for an input, and no default was specified"*. Basically what it's trying to say here is that our *boundaries do not have a place for our documents*.
 
-If we run this aggregation pipeline on this particular collection where we bucket grouping by x, and with the boundaries of 0, 50, and 100, we will get back an error saying that the switch will not find a matching branch for an input, and no default was specified. Basically what it's trying to say here is that our boundaries do not have a place for our documents.
+```javascript
+mongos> db.coll.find();
+{ "_id" : ObjectId("618fb2a6bf46fd2106bd1c8c"), "x" : "a" }
+```
 
-Since our document is defined with a value x equals a, and our boundaries are from 0 to 50, 50 to 100, we do not have a place to put this particular document. Therefore, we error out saying that we cannot find a place to put it inside the buckets that we are asking for. To avoid these scenarios, bucket stage contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
+Since our document is defined with a *value x equals a*, and our *boundaries are from 0 to 50, 50 to 100*, we do not have a place to put this particular document. Therefore, we *error* out saying that we cannot find a place to put it inside the buckets that we are asking for. To avoid these scenarios, bucket stage contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
 
 So in our match query, you are going to change it slightly to include again, all founded companies after 1980. But now let's remove the restriction on having our nots the no values for the number of employees. So basically what it is saying is if a company does not that field particular set, and since we wouldn't find a bucket, a manual bucket to place that particular field, we will be placing it in other.
 
