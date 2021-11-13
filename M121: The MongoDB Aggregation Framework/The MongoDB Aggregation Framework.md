@@ -6212,7 +6212,135 @@ mongos> db.coll.find();
 { "_id" : ObjectId("618fb2a6bf46fd2106bd1c8c"), "x" : "a" }
 ```
 
-Since our document is defined with a *value x equals a*, and our *boundaries are from 0 to 50, 50 to 100*, we do not have a place to put this particular document. Therefore, we *error* out saying that we cannot find a place to put it inside the buckets that we are asking for. To avoid these scenarios, bucket stage contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
+Since our document is defined with a *value x equals a*, and our *boundaries are from 0 to 50, 50 to 100*, we do not have a place to put this particular document. Therefore, we *error* out saying that *we cannot find a place to put it inside the buckets that we are asking for*.
+> At minute 4:45 we show the error message for trying to group a value that falls outside the boundaries.
+
+```javascript
+$switch could not find matching branch for an input, and no default was specified
+```
+
+> This message might be a bit confusing since we mention *switch* and *branches*. This is related with the internal *$bucket* stage implementation that uses a *$group* and *$switch* stages. We can see that in detail when running the *explain()* command.
+
+```javascript
+mongos> db.coll.explain().aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}])
+{
+        "serverInfo" : {
+            "host" : "vagrant",
+            "port" : 26000,
+            "version" : "3.6.23",
+            "gitVersion" : "d352e6a4764659e0d0350ce77279de3c1f243e5c"
+        },
+        "stages" : [
+            {
+                "$cursor" : {
+                    "query" : {
+                        
+                    },
+                    "fields" : {
+                        "x" : 1,
+                        "_id" : 0
+                    },
+                    "queryPlanner" : {
+                        "plannerVersion" : 1,
+                        "namespace" : "m103.coll",
+                        "indexFilterSet" : false,
+                        "parsedQuery" : {
+                            
+                        },
+                        "winningPlan" : {
+                            "stage" : "COLLSCAN",
+                            "direction" : "forward"
+                        },
+                        "rejectedPlans" : [ ]
+                    }
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : {
+                        "$switch" : {
+                            "branches" : [
+                                {
+                                    "case" : {
+                                        "$and" : [
+                                            {
+                                                "$gte" : [
+                                                    "$x",
+                                                    {
+                                                        "$const" : 0
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "$lt" : [
+                                                    "$x",
+                                                    {
+                                                        "$const" : 50
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "then" : {
+                                        "$const" : 0
+                                    }
+                                },
+                                {
+                                    "case" : {
+                                        "$and" : [
+                                            {
+                                                "$gte" : [
+                                                    "$x",
+                                                    {
+                                                        "$const" : 50
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "$lt" : [
+                                                    "$x",
+                                                    {
+                                                        "$const" : 100
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "then" : {
+                                        "$const" : 50
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "count" : {
+                        "$sum" : {
+                            "$const" : 1
+                        }
+                    }
+                }
+            },
+            {
+                "$sort" : {
+                    "sortKey" : {
+                        "_id" : 1
+                    }
+                }
+            }
+        ],
+        "ok" : 1,
+        "operationTime" : Timestamp(1636808737, 1),
+        "$clusterTime" : {
+            "clusterTime" : Timestamp(1636808737, 1),
+            "signature" : {
+                "hash" : BinData(0,"h5z32/t4TPydGl/H2h+FAoWqYzA="),
+                "keyId" : NumberLong("7006634394848854025")
+            }
+        }
+}
+```
+
+To avoid these scenarios, *bucket stage* contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
 
 So in our match query, you are going to change it slightly to include again, all founded companies after 1980. But now let's remove the restriction on having our nots the no values for the number of employees. So basically what it is saying is if a company does not that field particular set, and since we wouldn't find a bucket, a manual bucket to place that particular field, we will be placing it in other.
 
