@@ -6370,9 +6370,36 @@ mongos> db.companies.aggregate( [
 { "_id" : "Other", "count" : 32 }
 ```
 
-Once we run this, we can see that the *normal buckets*, with it's *previously provided number of documents that fit those buckets*, are correctly placed. And for *all other field values* that are not contained within this *range or have a different data type*, we will place it on *other* and with its *count*. Another important aspect of *bucket stage* and in regard to *boundaries* defined manually, is that all values inside *the array that defines our boundaries* need to have the same data type.
+Once we run this, we can see that the *normal buckets*, with it's *previously provided number of documents that fit those buckets*, are correctly placed. And for *all other field values* that are not contained within this *range or have a different data type*, we will place it on *other* and with its *count*.
 
-In case that we do not do so, we'll get an error back saying that all values in the boundaries option to bucket must have the same type. And in our case, it found conflicting types between string and double. So young padawans, be careful about that. Once defining our manual boundaries for our buckets, make sure that our boundary's array only contains values of the same data type.
+```javascript
+// reproduce error message for inconsitent boundaries datatype
+mongos> db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: ["a", "b", 100]}}]);
+assert: command failed: {
+    "ok" : 0,
+    "errmsg" : "All values in the the 'boundaries' option to $bucket must have the same type. Found conflicting types string and double.",
+    "code" : 40193,
+    "codeName" : "Location40193",
+    "operationTime" : Timestamp(1636810777, 1),
+    "$clusterTime" : {
+        "clusterTime" : Timestamp(1636810777, 1),
+        "signature" : {
+            "hash" : BinData(0,"BpVXUYkuqoN2zKUNX2rz/r+jOAQ="),
+            "keyId" : NumberLong("7006634394848854025")
+        }
+    }
+} : aggregate failed
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:16:14
+assert.commandWorked@src/mongo/shell/assert.js:403:5
+DB.prototype._runAggregate@src/mongo/shell/db.js:260:9
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1224:12
+@(shell):1:1
+```
+
+Another important aspect of *bucket stage* and in regard to *boundaries* defined manually, is that all values inside *the array that defines our boundaries* need to have *the same data type*. In case that we do not do so, we'll get an *error* back saying that *"errmsg" : "All values in the the 'boundaries' option to $bucket must have the same type. Found conflicting types string and double"*.
+
+So young padawans, be careful about that. Once defining our manual boundaries for our buckets, make sure that our boundary's array only contains values of the same data type.
 
 The output result of the bucket stage will be this plain simple document, where we're going to have the underscore ID and accounts. That's pretty much straightforward. But let's say that we would like to have something a little bit more elaborate. Now the other option that bucket stage allows us to set is our output field, or how the output would be looking like.
 
