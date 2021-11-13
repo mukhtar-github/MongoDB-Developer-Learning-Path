@@ -6435,12 +6435,117 @@ db.companies.aggregate([
       }
     }
   }
-]);
+]).pretty();
 ```
 
-In our case, let's assume that we don't want just the *total*. That's fine. And with *"$sum":1*, that's OK. But we also want to get back the *average value of the number of employees*, or even a set of *all categories that match that particular bucket*. That can be set through this optional field *output*, where we define exactly that. In this case, the aggregate operators that will give me that particular grouping.
+In our case, let's assume that we don't want just the *total*. That's fine. And with *"$sum":1*, that's OK. But we also want to get back the *average value of the number of employees*, or even a set of *all categories that match that particular bucket*. That can be set through this optional field *output*, where we define exactly that. In this case, the *aggregate operators* that will give me that *particular grouping*.
 
-Once we run this particular aggregation pipeline, in a pretty fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522. An average of no, because averaging no by no gives me no. That's pretty OK. But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
+```javascript
+mongos> db.companies.aggregate([
+...   { "$match":
+...     {"founded_year": {"$gt": 1980}}
+...   },
+...   { "$bucket": {
+...       "groupBy": "$number_of_employees",
+...       "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+...       "default": "Other",
+...       "output": {
+...         "total": {"$sum":1},
+...         "average": {"$avg": "$number_of_employees" },
+...         "categories": {"$addToSet": "$category_code"}
+...       }
+...     }
+...   }
+... ]).pretty();
+{
+        "_id" : 0,
+        "total" : 20,
+        "average" : 5.25,
+        "categories" : [
+            "enterprise",
+            "web",
+            "mobile",
+            "software",
+            "social",
+            "games_video"
+        ]
+}
+{
+        "_id" : 20,
+        "total" : 12,
+        "average" : 31.583333333333332,
+        "categories" : [
+            "search",
+            "web",
+            "mobile",
+            "advertising",
+            "games_video"
+        ]
+}
+{
+        "_id" : 50,
+        "total" : 7,
+        "average" : 61.714285714285715,
+        "categories" : [
+            "web",
+            "search",
+            "photo_video",
+            "news"
+        ]
+}
+{
+        "_id" : 100,
+        "total" : 6,
+        "average" : 200.83333333333334,
+        "categories" : [
+            "mobile",
+            "messaging",
+            "games_video",
+            "advertising"
+        ]
+}
+{
+        "_id" : 500,
+        "total" : 3,
+        "average" : 681.3333333333334,
+        "categories" : [
+            "search",
+            "security",
+            "enterprise"
+        ]
+}
+{
+        "_id" : 1000,
+        "total" : 7,
+        "average" : 18257,
+        "categories" : [
+            "search",
+            "social",
+            "software",
+            "web",
+            "network_hosting"
+        ]
+}
+{
+        "_id" : "Other",
+        "total" : 32,
+        "average" : null,
+        "categories" : [
+            "search",
+            "finance",
+            "news",
+            "mobile",
+            "web",
+            "games_video",
+            "travel",
+            "ecommerce",
+            "network_hosting",
+            "music"
+        ]
+}
+```
+
+Once we run this particular *aggregation pipeline*, in a *pretty* fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522. An average of no, because averaging no by no gives me no. That's pretty OK. But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
 
 The average being a little bit above 13,000 in all sorts of different categories for those companies. Same thing for the 500 buckets and so on. So to recap, we have a new operator stage or new mongodb aggregation stage called dollar bucket that we need to set the group by elements specifying the field that we want to group by. We need to specify the boundaries, which tells us the brackets in which our documents will be grouping by.
 
