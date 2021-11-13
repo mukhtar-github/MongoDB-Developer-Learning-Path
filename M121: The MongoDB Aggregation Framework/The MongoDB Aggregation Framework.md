@@ -6397,15 +6397,50 @@ DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1224:12
 @(shell):1:1
 ```
 
-Another important aspect of *bucket stage* and in regard to *boundaries* defined manually, is that all values inside *the array that defines our boundaries* need to have *the same data type*. In case that we do not do so, we'll get an *error* back saying that *"errmsg" : "All values in the the 'boundaries' option to $bucket must have the same type. Found conflicting types string and double"*.
+Another important aspect of *bucket stage* and in regard to *boundaries* defined manually, is that all values inside *the array that defines our boundaries* need to have *the same data type*. In case that we do not do so, we'll get an *error* back saying that *"errmsg" : "All values in the the 'boundaries' option to $bucket must have the same type. Found conflicting types string and double"*. So young padawans, be careful about that. Once defining our *manual boundaries for our buckets*, make sure that our *boundary's array* only contains values of *the same data type*.
 
-So young padawans, be careful about that. Once defining our manual boundaries for our buckets, make sure that our boundary's array only contains values of the same data type.
+```javascript
+mongos> db.companies.aggregate( [
+...   { "$match": {"founded_year": {"$gt": 1980}}},
+...   { "$bucket": {
+...     "groupBy": "$number_of_employees",
+...     "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+...     "default": "Other" }
+... }]);
+{ "_id" : 0, "count" : 20 }
+{ "_id" : 20, "count" : 12 }
+{ "_id" : 50, "count" : 7 }
+{ "_id" : 100, "count" : 6 }
+{ "_id" : 500, "count" : 3 }
+{ "_id" : 1000, "count" : 7 }
+{ "_id" : "Other", "count" : 32 }
+```
 
-The output result of the bucket stage will be this plain simple document, where we're going to have the underscore ID and accounts. That's pretty much straightforward. But let's say that we would like to have something a little bit more elaborate. Now the other option that bucket stage allows us to set is our output field, or how the output would be looking like.
+The output result of the *bucket* stage will be this plain simple document, where we're going to have the *underscore ID and the counts*. That's pretty much straightforward. But let's say that we would like to have something a little bit more elaborate. Now the other option that *bucket* stage allows us to set is our *output field*, or how the *output* would be looking like. The *shape of our output result for this facet*.
 
-The shape of our output result for this facet. In our case, let's assume that we don't want just a total. That's fine. And with sum 1, that's OK. But we also want to get back the average value of the number of employees, or even a set of all categories that match that particular bucket. That can be set through this optional field output, where we define exactly that.
+```javascript
+// set `output` option for $bucket stage
+db.companies.aggregate([
+  { "$match":
+    {"founded_year": {"$gt": 1980}}
+  },
+  { "$bucket": {
+      "groupBy": "$number_of_employees",
+      "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+      "default": "Other",
+      "output": {
+        "total": {"$sum":1},
+        "average": {"$avg": "$number_of_employees" },
+        "categories": {"$addToSet": "$category_code"}
+      }
+    }
+  }
+]);
+```
 
-In this case, the aggregate operators that will give me that particular grouping. Once we run this particular aggregation pipeline, in a pretty fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522. An average of no, because averaging no by no gives me no. That's pretty OK. But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
+In our case, let's assume that we don't want just the *total*. That's fine. And with *"$sum":1*, that's OK. But we also want to get back the *average value of the number of employees*, or even a set of *all categories that match that particular bucket*. That can be set through this optional field *output*, where we define exactly that. In this case, the aggregate operators that will give me that particular grouping.
+
+Once we run this particular aggregation pipeline, in a pretty fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522. An average of no, because averaging no by no gives me no. That's pretty OK. But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
 
 The average being a little bit above 13,000 in all sorts of different categories for those companies. Same thing for the 500 buckets and so on. So to recap, we have a new operator stage or new mongodb aggregation stage called dollar bucket that we need to set the group by elements specifying the field that we want to group by. We need to specify the boundaries, which tells us the brackets in which our documents will be grouping by.
 
