@@ -6370,7 +6370,7 @@ mongos> db.companies.aggregate( [
 { "_id" : "Other", "count" : 32 }
 ```
 
-Once we run this, we can see that the normal buckets, with it's previously provided number of documents that fit those buckets, are correctly placed. And for all other field values that are not contained within this range or have a different data type, we will place it on other and with its [INAUDIBLE] count. Another important aspect of bucket stage and in regard to boundaries defined manually, is that all values inside the array that defines our boundaries need to have the same data type.
+Once we run this, we can see that the *normal buckets*, with it's *previously provided number of documents that fit those buckets*, are correctly placed. And for *all other field values* that are not contained within this *range or have a different data type*, we will place it on *other* and with its *count*. Another important aspect of *bucket stage* and in regard to *boundaries* defined manually, is that all values inside *the array that defines our boundaries* need to have the same data type.
 
 In case that we do not do so, we'll get an error back saying that all values in the boundaries option to bucket must have the same type. And in our case, it found conflicting types between string and double. So young padawans, be careful about that. Once defining our manual boundaries for our buckets, make sure that our boundary's array only contains values of the same data type.
 
