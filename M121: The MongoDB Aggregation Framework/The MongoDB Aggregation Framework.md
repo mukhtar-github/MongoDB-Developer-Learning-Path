@@ -6174,9 +6174,9 @@ mongos> db.companies.aggregate( [
 { "_id" : 1000, "count" : 7 }
 ```
 
-Once we run this, we can see that we are going to have a result which contains an *_id* field pointing to the *bucket name or bucket value* in this case, where we can see a *count of the number of companies that fall into that bucket*. For the following *bucket, which is 20*, we see a different *count, 12*. Now the *boundaries define the brackets where the lower bound in this case, here 0, is inclusive, and upper bound, 20, will be exclusive*.
+Once we run this, we can see that we are going to have a result which contains an *_id* field pointing to the *bucket name or bucket value* in this case, where we can see a *count of the number of companies that fall into that bucket*. For the following *bucket, which is 20*, we see a different *count, 12*. Now the *boundaries define the brackets, where the lower bound in this case, here 0, is inclusive, and upper bound, 20, will be exclusive*. So meaning that there are *20 companies that have been founded after 1980, which have either 0 up to 19 employees*. In the case of from *20 to 50*, we have *12, 50 to 100, we have 7*, and so forth.
 
-So meaning that there are 5,447 companies that have been founded after 1980, which have either 0 up to 19 employees. In the case of from 20 to 50, we have 1,172, 50 to 100, we have 652, and so forth. Now an important aspect to keep in mind is that if we have documents with the field number of employees in this case, which we are grouping by our boundaries array here, these field types need to be the same.
+Now an important aspect to keep in mind is that if we have documents with the field number of employees in this case, which we are grouping by our boundaries array here, these field types need to be the same.
 
 Meaning that if we have a number of employees that doesn't have in this case, a numerical value, here infinity is a double value that we are using to define, or even if they fall outside the buckets, we will have an error generated. Let's see an example of that. So let's say that we have this particular document on this call collection where x equals a string of a.
 
