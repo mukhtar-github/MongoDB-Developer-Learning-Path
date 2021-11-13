@@ -6159,6 +6159,21 @@ db.companies.aggregate( [
 
 So to put this in place, let's use a simple *aggregation* example. So in my particular case, for this example, we're going to have the *companies founded after 1980*. And we are going to have on the same *data set only companies that have a number of employees value sets*. Basically, not null -- *"$ne": null*. And then we are going to *bucket* those results using a *new stage of the aggregation pipeline called "$bucket"*, where are we going to be using a *"groupBy"* in *"boundaries"* fields to define exactly how our *buckets* are going to be looking like, and which field we are going to be using for our *grouping*, which in this case, is *"$number_of_employees"*.
 
+```javascript
+mongos> db.companies.aggregate( [
+...   { "$match": {"founded_year": {"$gt": 1980}, "number_of_employees": {"$ne": null}}},
+...   {"$bucket": {
+...      "groupBy": "$number_of_employees",
+...      "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ]}
+... }]);
+{ "_id" : 0, "count" : 20 }
+{ "_id" : 20, "count" : 12 }
+{ "_id" : 50, "count" : 7 }
+{ "_id" : 100, "count" : 6 }
+{ "_id" : 500, "count" : 3 }
+{ "_id" : 1000, "count" : 7 }
+```
+
 Once we run this, we can see that we are going to have a result which contains an _id field pointing to the bucket name or bucket value in this case, where we can see a count of the number of companies that fall into that bucket. For the following bucket, which is 20, we see a different count, 1,172. Now the boundaries define the brackets where the lower bound in this case, here 0, is inclusive, and upper bound, 20, will be exclusive.
 
 So meaning that there are 5,447 companies that have been founded after 1980, which have either 0 up to 19 employees. In the case of from 20 to 50, we have 1,172, 50 to 100, we have 652, and so forth. Now an important aspect to keep in mind is that if we have documents with the field number of employees in this case, which we are grouping by our boundaries array here, these field types need to be the same.

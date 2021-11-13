@@ -72,16 +72,18 @@ replication:
 
 *** Checking which mongo processes are running and on which port: ps -ef | grep "[m]ongo"
 
-sudo mongod -f node1.conf
-sudo mongod -f node2.conf
-sudo mongod -f node3.conf
-mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
-
+// start with
 sudo mongod -f csrs_1.conf
 sudo mongod -f csrs_2.conf
 sudo mongod -f csrs_3.conf
 sudo mongos -f mongos.conf
 mongo --port 26000 --username m103-admin --password m103-pass --authenticationDatabase admin
+
+// followed by
+sudo mongod -f node1.conf
+sudo mongod -f node2.conf
+sudo mongod -f node3.conf
+mongo --host "m103-example/localhost:27011" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
 
 * Adding new nodes to  my repSet
 cp node3.conf node4.conf
