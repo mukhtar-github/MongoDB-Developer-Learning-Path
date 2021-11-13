@@ -6096,7 +6096,7 @@ is not a single query facet since it does not group any particular data dimensio
 
 ### Facets: Manual Buckets
 
-So now let's have a look into buckets, or better saying, looking to bucketing strategies. Now bucketing is a very common operation associated facets, where we group data by a range of values, as opposed for individual values. So basically, we group sorts of documents based on some specific brackets or boundaries where our documents will fit in based on a particular value comprehended on those ranges.
+So now let's have a look into *buckets*, or better saying, looking to *bucketing strategies*. Now *bucketing* is a very common operation associated *facets*, where we group data by a *range of values*, as opposed for *individual values*. So basically, we group *sorts of documents* based on some specific *brackets or boundaries* where our *documents will fit in* based on a *particular value comprehended on those ranges*.
 
 In our example, we might want to bucket companies based on the size of their workforce, the number of employees. Now to do that, if we look into for example, the range of values that we have in our data sets, we can see that we go from the very large workforce for companies to companies that don't even have number of employees set or are set to 0.
 
