@@ -6180,11 +6180,32 @@ Now an important aspect to keep in mind is that, if we have documents with the f
 
 ```javascript
 // reproduce error message for non matching documents
-db.coll.insert({ x: "a" });
-db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}]);
+mongos> db.coll.insert({ x: "a" });
+WriteResult({ "nInserted" : 1 })
+mongos> db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}]);
+assert: command failed: {
+    "ok" : 0,
+    "errmsg" : "$switch could not find a matching branch for an input, and no default was specified.",
+    "code" : 40066,
+    "codeName" : "Location40066",
+    "operationTime" : Timestamp(1636807357, 1),
+    "$clusterTime" : {
+    "clusterTime" : Timestamp(1636807357, 1),
+        "signature" : {
+            "hash" : BinData(0,"6Zd6mvIIdaZylTw6Z1ZjvHYTMLk="),
+            "keyId" : NumberLong("7006634394848854025")
+        }
+    }
+} : aggregate failed
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:16:14
+assert.commandWorked@src/mongo/shell/assert.js:403:5
+DB.prototype._runAggregate@src/mongo/shell/db.js:260:9
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1224:12
+@(shell):1:1
 ```
 
-So let's say that we have this particular document on this call collection where x equals a string of a.
+So let's say that we have this particular document on this *coll* collection where *x* equals a string of *a*.
 
 If we run this aggregation pipeline on this particular collection where we bucket grouping by x, and with the boundaries of 0, 50, and 100, we will get back an error saying that the switch will not find a matching branch for an input, and no default was specified. Basically what it's trying to say here is that our boundaries do not have a place for our documents.
 
