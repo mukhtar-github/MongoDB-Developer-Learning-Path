@@ -6340,9 +6340,35 @@ mongos> db.coll.explain().aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 
 }
 ```
 
-To avoid these scenarios, *bucket stage* contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
+```javascript
+// set `default` option to collect documents that do not match boundaries
+db.companies.aggregate( [
+  { "$match": {"founded_year": {"$gt": 1980}}},
+  { "$bucket": {
+    "groupBy": "$number_of_employees",
+    "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+    "default": "Other" }
+}]);
+```
 
-So in our match query, you are going to change it slightly to include again, all founded companies after 1980. But now let's remove the restriction on having our nots the no values for the number of employees. So basically what it is saying is if a company does not that field particular set, and since we wouldn't find a bucket, a manual bucket to place that particular field, we will be placing it in other.
+To avoid these scenarios, *bucket stage* contains a *default* option where we can define a field, or in this case, the *name of a bucket*, which doesn't *fit the described boundaries*. So in our *match query*, we are going to change it slightly to include again, *all founded companies after 1980*. But now let's remove the restriction on *having or not the null values* for the *number of employees*. So basically what we're saying is, if a company does not have that field particular set, and since we wouldn't find a *bucket*, a manual *bucket* to place that particular field, we will be placing it in *other*.
+
+```javascript
+mongos> db.companies.aggregate( [
+...   { "$match": {"founded_year": {"$gt": 1980}}},
+...   { "$bucket": {
+...     "groupBy": "$number_of_employees",
+...     "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+...     "default": "Other" }
+... }]);
+{ "_id" : 0, "count" : 20 }
+{ "_id" : 20, "count" : 12 }
+{ "_id" : 50, "count" : 7 }
+{ "_id" : 100, "count" : 6 }
+{ "_id" : 500, "count" : 3 }
+{ "_id" : 1000, "count" : 7 }
+{ "_id" : "Other", "count" : 32 }
+```
 
 Once we run this, we can see that the normal buckets, with it's previously provided number of documents that fit those buckets, are correctly placed. And for all other field values that are not contained within this range or have a different data type, we will place it on other and with its [INAUDIBLE] count. Another important aspect of bucket stage and in regard to boundaries defined manually, is that all values inside the array that defines our boundaries need to have the same data type.
 

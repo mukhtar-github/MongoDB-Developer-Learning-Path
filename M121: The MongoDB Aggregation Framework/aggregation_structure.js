@@ -634,7 +634,6 @@ db.coll.insert({ x: "a" });
 db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}]);
 
 // set `default` option to collect documents that do not match boundaries
-
 db.companies.aggregate( [
   { "$match": {"founded_year": {"$gt": 1980}}},
   { "$bucket": {
