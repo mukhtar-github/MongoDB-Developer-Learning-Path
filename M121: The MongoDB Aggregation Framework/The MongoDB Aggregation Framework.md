@@ -6098,11 +6098,66 @@ is not a single query facet since it does not group any particular data dimensio
 
 So now let's have a look into *buckets*, or better saying, looking to *bucketing strategies*. Now *bucketing* is a very common operation associated *facets*, where we group data by a *range of values*, as opposed for *individual values*. So basically, we group *sorts of documents* based on some specific *brackets or boundaries* where our *documents will fit in* based on a *particular value comprehended on those ranges*.
 
-In our example, we might want to bucket companies based on the size of their workforce, the number of employees. Now to do that, if we look into for example, the range of values that we have in our data sets, we can see that we go from the very large workforce for companies to companies that don't even have number of employees set or are set to 0.
+```javascript
+mongos> db.companies.find({}, {number_of_employees: 1}).sort({number_of_employees: -1});
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc4"), "number_of_employees" : 86300 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da2"), "number_of_employees" : 63000 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dba"), "number_of_employees" : 28000 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d9b"), "number_of_employees" : 15000 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da3"), "number_of_employees" : 13600 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8e"), "number_of_employees" : 5299 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8c"), "number_of_employees" : 1600 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d94"), "number_of_employees" : 1300 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de0"), "number_of_employees" : 800 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297db5"), "number_of_employees" : 644 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8b"), "number_of_employees" : 600 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da8"), "number_of_employees" : 305 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dda"), "number_of_employees" : 300 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc1"), "number_of_employees" : 250 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297da7"), "number_of_employees" : 120 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc0"), "number_of_employees" : 120 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dbb"), "number_of_employees" : 110 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297db2"), "number_of_employees" : 75 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297deb"), "number_of_employees" : 75 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297db8"), "number_of_employees" : 62 }
+Type "it" for more
+mongos> it
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de1"), "number_of_employees" : 8 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de6"), "number_of_employees" : 8 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dca"), "number_of_employees" : 6 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc6"), "number_of_employees" : 5 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dcd"), "number_of_employees" : 4 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dc5"), "number_of_employees" : 3 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de3"), "number_of_employees" : 3 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de7"), "number_of_employees" : 3 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297de9"), "number_of_employees" : 2 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d93"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d9d"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dbc"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dbd"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dd2"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dd4"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297ddd"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297dec"), "number_of_employees" : 0 }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d8f"), "number_of_employees" : null }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d90"), "number_of_employees" : null }
+{ "_id" : ObjectId("52cdef7c4bab8bd675297d92"), "number_of_employees" : null }
+Type "it" for more
+```
 
-And this will give us the ranges and an opportunity to establish boundaries for those buckets, if we want to group the different companies based on the number of employees that they have. But then again, not individual values, but ranges of values. So to put this in place, let's use a simple aggregation example. So in my particular case, for this example, we're going to have the companies founded after 1980.
+In our example, we might want to *bucket companies* based on the size of their workforce, the *number of employees*. Now to do that, if we look into for example, the *range of values* that we have in our *data sets*, we can see that we go from the *very large workforce for companies to companies that don't even have number of employees set or are set to 0*. And this will give us the *ranges and an opportunity to establish boundaries for those buckets*, if we want to group the *different companies based on the number of employees that they have*. But then again, *not individual values, but ranges of values*.
 
-And we are going to have on the same data set only companies that have a number of employees value sets. Basically, not no. And then we are going to bucket those results using a new stage of the aggregation pipeline called buckets, where are we going to be using a group by in boundary fields to define exactly how our buckets are going to be looking like, and which field we are going to be using for our grouping, which in this case, is number of employees.
+```javascript
+// create manual buckets using $ bucket
+db.companies.aggregate( [
+  { "$match": {"founded_year": {"$gt": 1980}, "number_of_employees": {"$ne": null}}},
+  {"$bucket": {
+     "groupBy": "$number_of_employees",
+     "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ]}
+}]);
+```
+
+So to put this in place, let's use a simple *aggregation* example. So in my particular case, for this example, we're going to have the *companies founded after 1980*. And we are going to have on the same *data set only companies that have a number of employees value sets*. Basically, not no. And then we are going to bucket those results using a new stage of the aggregation pipeline called buckets, where are we going to be using a group by in boundary fields to define exactly how our buckets are going to be looking like, and which field we are going to be using for our grouping, which in this case, is number of employees.
 
 Once we run this, we can see that we are going to have a result which contains an _id field pointing to the bucket name or bucket value in this case, where we can see a count of the number of companies that fall into that bucket. For the following bucket, which is 20, we see a different count, 1,172. Now the boundaries define the brackets where the lower bound in this case, here 0, is inclusive, and upper bound, 20, will be exclusive.
 
