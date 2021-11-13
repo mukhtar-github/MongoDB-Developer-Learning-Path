@@ -585,7 +585,7 @@ db.air_alliances
 
 // Facets: Single Facet Query
 
-// **facets/singleQueryFacets.sh**
+// **facets/singleQueryFacets.js**
 
 // find one company document
 db.companies.findOne();
@@ -609,4 +609,57 @@ db.companies.aggregate([
   {"$match": { "$text": {"$search": "network"}  }  },
   {"$unwind": "$offices"},
   {"$match": { "offices.city": {"$ne": ""}  }},
-  {"$sortByCount": "$offices.city"}] );
+  {"$sortByCount": "$offices.city"}
+]);
+
+
+
+
+// Chapter 4: Core Aggregation - Multidimensional Grouping
+
+// Facets: Single Facet Query
+
+// **facets/manualBuckets.js**
+
+// create manual buckets using $ bucket
+db.companies.aggregate( [
+  { "$match": {"founded_year": {"$gt": 1980}, "number_of_employees": {"$ne": null}}  },
+  {"$bucket": {
+     "groupBy": "$number_of_employees",
+     "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ]}
+}]);
+
+// reproduce error message for non matching documents
+db.coll.insert({ x: "a" });
+db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: [0, 50, 100]}}]);
+
+// set `default` option to collect documents that do not match boundaries
+
+db.companies.aggregate( [
+  { "$match": {"founded_year": {"$gt": 1980}}},
+  { "$bucket": {
+    "groupBy": "$number_of_employees",
+    "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+    "default": "Other" }
+}]);
+
+// reproduce error message for inconsitent boundaries datatype
+db.coll.aggregate([{ $bucket: {groupBy: "$x", boundaries: ["a", "b", 100]}}]);
+
+// set `output` option for $bucket stage
+db.companies.aggregate([
+  { "$match":
+    {"founded_year": {"$gt": 1980}}
+  },
+  { "$bucket": {
+      "groupBy": "$number_of_employees",
+      "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+      "default": "Other",
+      "output": {
+        "total": {"$sum":1},
+        "average": {"$avg": "$number_of_employees" },
+        "categories": {"$addToSet": "$category_code"}
+      }
+    }
+  }
+]);

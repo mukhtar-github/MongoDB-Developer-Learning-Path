@@ -6054,3 +6054,162 @@ Type "it" for more
 ```
 
 So there we go. We now have a list of documents specifying the value of the *office city* -- in this case, for example, *San Francisco* with a count of *6*. *New York* also have *6* -- *London, Los Angeles, Palo Alto*, and so on. So this is also to demonstrate that we can have *elaborate pipelines* that would filter *project, match, group*, determine the list of documents that then can use to *sort by and count* given one of the attributes that is coming with the result set to this last stage of the pipeline. In essence, with this *aggregation inquiry*, we can have the breakdown of *companies per city* that *match networking*, or in this case, *"network"*, in their *description & overview*.
+
+#### Problem 11
+
+Which of the following aggregation pipelines are single facet queries?
+
+Single query facets are supported by the new aggregation pipeline stage *$sortByCount*.
+
+As like any other aggregation pipelines, except for *$out*, we can use the output of this stage, as input for downstream stages and operators, manipulating the dataset accordingly.
+
+The *correct* answers are:
+
+```javascript
+[
+  {"$match": { "$text": {"$search": "network"}}},
+  {"$sortByCount": "$offices.city"}
+]
+
+// and
+
+[
+  {"$unwind": "$offices"},
+  {"$project": { "_id": "$name", "hq": "$offices.city"}},
+  {"$sortByCount": "$hq"},
+  {"$sort": {"_id":-1}},
+  {"$limit": 100}
+]
+
+// The pipeline
+
+[
+  {"$match": { "$text": {"$search": "network"}}},
+  {"$unwind": "$offices"},
+  {"$sort": {"_id":-1}}
+]
+
+/*
+is not a single query facet since it does not group any particular data dimension. It simply unwinds an array field and sorts that result set.
+*/
+```
+
+### Facets: Manual Buckets
+
+So now let's have a look into buckets, or better saying, looking to bucketing strategies.
+
+Now bucketing is a very common operation associated facets, where we group data by a range of values, as opposed for individual values.
+
+So basically, we group sorts of documents based on some specific brackets or boundaries where our documents will fit in based on a particular value comprehended on those ranges.
+
+In our example, we might want to bucket companies based on the size of their workforce, the number of employees.
+
+Now to do that, if we look into for example, the range of values that we have in our data sets, we can see that we go from the very large workforce for companies to companies that don't even have number of employees set or are set to 0.
+
+And this will give us the ranges and an opportunity to establish boundaries for those buckets, if we want to group the different companies based on the number of employees that they have.
+
+But then again, not individual values, but ranges of values.
+
+So to put this in place, let's use a simple aggregation example.
+
+So in my particular case, for this example, we're going to have the companies founded after 1980.
+
+And we are going to have on the same data set only companies that have a number of employees value sets.
+
+Basically, not no.
+
+And then we are going to bucket those results using a new stage of the aggregation pipeline called buckets, where are we going to be using a group by in boundary fields to define exactly how our buckets are going to be looking like, and which field we are going to be using for our grouping, which in this case, is number of employees.
+
+Once we run this, we can see that we are going to have a result which contains an _id field pointing to the bucket name or bucket value in this case, where we can see a count of the number of companies that fall into that bucket.
+
+For the following bucket, which is 20, we see a different count, 1,172.
+
+Now the boundaries define the brackets where the lower bound in this case, here 0, is inclusive, and upper bound, 20, will be exclusive.
+
+So meaning that there are 5,447 companies that have been founded after 1980, which have either 0 up to 19 employees.
+
+In the case of from 20 to 50, we have 1,172, 50 to 100, we have 652, and so forth.
+
+Now an important aspect to keep in mind is that if we have documents with the field number of employees in this case, which we are grouping by our boundaries array here, these field types need to be the same.
+
+Meaning that if we have a number of employees that doesn't have in this case, a numerical value, here infinity is a double value that we are using to define, or even if they fall outside the buckets, we will have an error generated.
+
+Let's see an example of that.
+
+So let's say that we have this particular document on this call collection where x equals a string of a.
+
+If we run this aggregation pipeline on this particular collection where we bucket grouping by x, and with the boundaries of 0, 50, and 100, we will get back an error saying that the switch will not find a matching branch for an input, and no default was specified.
+
+Basically what it's trying to say here is that our boundaries do not have a place for our documents.
+
+Since our document is defined with a value x equals a, and our boundaries are from 0 to 50, 50 to 100, we do not have a place to put this particular document.
+
+Therefore, we error out saying that we cannot find a place to put it inside the buckets that we are asking for.
+
+To avoid these scenarios, bucket stage contains a default option where we can define field, or in this case, the name of a bucket, which doesn't fit the described boundaries.
+
+So in our match query, you are going to change it slightly to include again, all founded companies after 1980.
+
+But now let's remove the restriction on having our nots the no values for the number of employees.
+
+So basically what it is saying is if a company does not that field particular set, and since we wouldn't find a bucket, a manual bucket to place that particular field, we will be placing it in other.
+
+Once we run this, we can see that the normal buckets, with it's previously provided number of documents that fit those buckets, are correctly placed.
+
+And for all other field values that are not contained within this range or have a different data type, we will place it on other and with its [INAUDIBLE] count.
+
+Another important aspect of bucket stage and in regard to boundaries defined manually, is that all values inside the array that defines our boundaries need to have the same data type.
+
+In case that we do not do so, we'll get an error back saying that all values in the boundaries option to bucket must have the same type.
+
+And in our case, it found conflicting types between string and double.
+
+So young padawans, be careful about that.
+
+Once defining our manual boundaries for our buckets, make sure that our boundary's array only contains values of the same data type.
+
+The output result of the bucket stage will be this plain simple document, where we're going to have the underscore ID and accounts.
+
+That's pretty much straightforward.
+
+But let's say that we would like to have something a little bit more elaborate.
+
+Now the other option that bucket stage allows us to set is our output field, or how the output would be looking like.
+
+The shape of our output result for this facet.
+
+In our case, let's assume that we don't want just a total.
+
+That's fine.
+
+And with sum 1, that's OK.
+
+But we also want to get back the average value of the number of employees, or even a set of all categories that match that particular bucket.
+
+That can be set through this optional field output, where we define exactly that.
+
+In this case, the aggregate operators that will give me that particular grouping.
+
+Once we run this particular aggregation pipeline, in a pretty fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522.
+
+An average of no, because averaging no by no gives me no.
+
+That's pretty OK.
+
+But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
+
+The average being a little bit above 13,000 in all sorts of different categories for those companies.
+
+Same thing for the 500 buckets and so on.
+
+So to recap, we have a new operator stage or new mongodb aggregation stage called dollar bucket that we need to set the group by elements specifying the field that we want to group by.
+
+We need to specify the boundaries, which tells us the brackets in which our documents will be grouping by.
+
+Don't forget they need to be the same data type.
+
+We can specify a default bucket for all documents that do not fit the boundaries or the buckets defined by the boundaries that we are specifying.
+
+They are all going to be placed under the default with the appropriate value associated to it.
+
+And also we can define a different document shape for our output by specifying different operators that we might find useful, given the bucketing that we are doing.
