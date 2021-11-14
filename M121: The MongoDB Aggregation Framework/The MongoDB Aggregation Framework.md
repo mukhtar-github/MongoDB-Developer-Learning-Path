@@ -6551,11 +6551,19 @@ So to recap, we have a *new operator stage or new mongodb aggregation stage call
 
 ### Facets: Auto Buckets
 
-So far in facets, what we've been seeing in terms of buckets is the manual creation of these buckets. We have a bucket we group by a field, and then we specify the boundaries for those fields, and respectively to those buckets. Now, with MongoDB, we can also generate automatically those buckets.
+So far in *facets*, what we've been seeing in terms of *buckets* is the manual creation of these *buckets*. We have a *bucket we group by a field*, and then we specify the *boundaries* for those fields, and respectively to those *buckets*. Now, with *MongoDB*, we can also *generate automatically those buckets*. So let's have a look how to set that up.
 
-So let's have a look how to set that up. So with MongoDB 3.4, we also have $bucketAuto. $bucketAuto is another aggregation pipeline stage which is very similar to the previous $bucket operator. We also have here the groupBy specifying the field on this data set that we want to group on. But instead of defining the boundaries, what we are expected to set is the number of buckets-- in this case, five.
+```javascript
+// generate buckets automatically with $bucktAuto stage
+db.companies.aggregate([
+  { "$match": {"offices.city": "New York" }},
+  {"$bucketAuto": {
+    "groupBy": "$founded_year",
+    "buckets": 5
+}}]);
+```
 
-It is very similar to the previous $bucket, but we reversed the order by which we specify our options. Instead of defining boundaries, we define the number of buckets. So we run this.
+So with *MongoDB 3.4*, we also have *$bucketAuto. $bucketAuto* is another *aggregation pipeline stage* which is very similar to the previous *$bucket* operator. We also have here the *groupBy* specifying the field on this *data set* that we want to group on. But instead of defining the *boundaries*, what we are expected to set is the *number of buckets* -- in this case, *five*. It is very similar to the previous *$bucket*, but we reversed the order by which we specify our options. Instead of defining *boundaries*, we define the *number of buckets*. So we run this.
 
 You can see that the output is very similar to the previous $bucket one where we, again, have an ID. Instead of having now _id pointing to a value of one of the boundaries-- the inclusive one-- what we're going to have is basically a subdocument defining at the min and max value of our bucket, and obviously, the count-- the number of documents that match or fall into this bucket.
 
