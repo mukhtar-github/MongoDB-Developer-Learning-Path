@@ -6545,8 +6545,8 @@ mongos> db.companies.aggregate([
 }
 ```
 
-Once we run this particular *aggregation pipeline*, in a *pretty* fashion we will see that we will get the list, or in this case, a set of all categories that match the other bucket with a total of 4,522. An average of no, because averaging no by no gives me no. That's pretty OK. But in the case of the bucket for companies above 1,000 employees, we have the total of 137.
+Once we run this particular *aggregation pipeline*, in a *pretty* fashion we will see that we will get the list, or in this case, a set of *all categories that match the other bucket with a total of 32*. *An average of null*, because *averaging null by null gives me null*. That's pretty OK. But in the case of the *bucket for companies above 1,000 employees*, we have the *total of 7*. The *average* being *18257* in all sorts of different *categories* for those companies. Same thing for the *500 buckets* and so on.
 
-The average being a little bit above 13,000 in all sorts of different categories for those companies. Same thing for the 500 buckets and so on. So to recap, we have a new operator stage or new mongodb aggregation stage called dollar bucket that we need to set the group by elements specifying the field that we want to group by. We need to specify the boundaries, which tells us the brackets in which our documents will be grouping by.
+So to recap, we have a new operator stage or new mongodb aggregation stage called dollar bucket that we need to set the group by elements specifying the field that we want to group by. We need to specify the boundaries, which tells us the brackets in which our documents will be grouping by.
 
 Don't forget they need to be the same data type. We can specify a default bucket for all documents that do not fit the boundaries or the buckets defined by the boundaries that we are specifying. They are all going to be placed under the default with the appropriate value associated to it. And also we can define a different document shape for our output by specifying different operators that we might find useful, given the bucketing that we are doing.
