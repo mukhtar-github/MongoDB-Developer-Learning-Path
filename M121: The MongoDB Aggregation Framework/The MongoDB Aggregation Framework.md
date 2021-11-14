@@ -6601,8 +6601,23 @@ mongos> db.companies.aggregate([
 { "_id" : { "min" : 2007, "max" : 2008 }, "total" : 2, "average" : 212.5 }
 ```
 
-Now, we have several different ones. We have the Renard series. We have the E series, the 1-2-5 series, and powers of two series, all of them well-specified on this particular page with all the supported values for the granularity-- R5 to R20, 1-2-5, E6 to E192, and powers of two. To better see this in action, what we can do is generate a series collection where we're going to have _id values from 1 to 1,000.
+Now, we have several different ones. We have the *Renard series*. We have the *E series*, the *1-2-5 series*, and *powers of two series*, all of them well-specified on this particular page with all the supported values for the *granularity -- R5 to R20, 1-2-5, E6 to E192, and powers of two*.
 
-Once we generate that collection, I can just generate my auto buckets-- so calling my stage for auto bucketing-- grouping by _id, and generating five buckets. This is the default behavior of our bucketAuto stage. And with this, we again see that I evenly get buckets from 1 to 201 divided, and having around 200, or 200 in this case because it's an easy match, of 200 documents per bucket.
+```javascript
+// default $buckeAuto behaviour
+mongos> for(i=1; i <= 1000; i++) { db.series.insert( {_id: i} ) };
+WriteResult({ "nInserted" : 1 })
+mongos> db.series.aggregate(
+...   {$bucketAuto:
+...     {groupBy: "$_id", buckets: 5 }
+... });
+{ "_id" : { "min" : 1, "max" : 201 }, "count" : 200 }
+{ "_id" : { "min" : 201, "max" : 401 }, "count" : 200 }
+{ "_id" : { "min" : 401, "max" : 601 }, "count" : 200 }
+{ "_id" : { "min" : 601, "max" : 801 }, "count" : 200 }
+{ "_id" : { "min" : 801, "max" : 1000 }, "count" : 200 }
+```
+
+To better see this in action, what we can do is generate a *series collection*, where we're going to have *_id values from 1 to 1,000*. Once we generate that collection, I can just *generate my auto buckets* -- so calling my stage for *auto bucketing -- grouping by _id, and generating five buckets*. This is the *default behavior of our bucketAuto stage*. And with this, we again see that I evenly get *buckets from 1 to 201 divided*, and having around *200, or 200 in this case because it's an easy match, of 200 documents per bucket*.
 
 And defining the option granularity here to using the Renard series R20, which basically takes the 20th root of 10. We will have a slightly different set of boundaries where the boundaries' values will adhere to that particular series, but it still tried to distribute accordingly with the number of buckets that we requested the number of documents across those different buckets. And this is how $bucketAuto works.

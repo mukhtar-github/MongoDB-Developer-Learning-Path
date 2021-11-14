@@ -695,7 +695,7 @@ db.companies.aggregate([
 
 
 // default $buckeAuto behaviour
-for(i=1; i <= 1000; i++) {  db.series.insert( {_id: i}  ) };
+for(i=1; i <= 1000; i++) {  db.series.insert( {_id: i}  ) }
 db.series.aggregate(
   {$bucketAuto:
     {groupBy: "$_id", buckets: 5 }
