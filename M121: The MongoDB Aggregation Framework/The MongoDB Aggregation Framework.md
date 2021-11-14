@@ -6620,4 +6620,53 @@ mongos> db.series.aggregate(
 
 To better see this in action, what we can do is generate a *series collection*, where we're going to have *_id values from 1 to 1,000*. Once we generate that collection, I can just *generate my auto buckets* -- so calling my stage for *auto bucketing -- grouping by _id, and generating five buckets*. This is the *default behavior of our bucketAuto stage*. And with this, we again see that I evenly get *buckets from 1 to 201 divided*, and having around *200, or 200 in this case because it's an easy match, of 200 documents per bucket*.
 
-And defining the option granularity here to using the Renard series R20, which basically takes the 20th root of 10. We will have a slightly different set of boundaries where the boundaries' values will adhere to that particular series, but it still tried to distribute accordingly with the number of buckets that we requested the number of documents across those different buckets. And this is how $bucketAuto works.
+```javascript
+// generate automatic buckets using granularity numerical series R20
+mongos> db.series.aggregate(
+...   {$bucketAuto:
+...     {groupBy: "$_id", buckets: 5 , granularity: "R20"}
+...   });
+{ "_id" : { "min" : 0.9, "max" : 224 }, "count" : 223 }
+{ "_id" : { "min" : 224, "max" : 450 }, "count" : 226 }
+{ "_id" : { "min" : 450, "max" : 710 }, "count" : 260 }
+{ "_id" : { "min" : 710, "max" : 1000 }, "count" : 290 }
+{ "_id" : { "min" : 1000, "max" : 1120 }, "count" : 1 }
+```
+
+And defining the option *granularity* here to using the *Renard series R20*, which basically takes the *20th root of 10*. We will have a slightly different *set of boundaries* where the *boundaries'* values will adhere to that particular series, but it still tried to distribute accordingly with the *number of buckets* that we requested the number of documents across those different *buckets*. And this is how *$bucketAuto* works.
+
+### Facets: Multiple Facets
+
+Until this point, we've been looking to how to determine individual facets.
+
+But as you probably already realized, when building applications, we might need multiple different facets to achieve the kind of filters that we want to provide to our end users.
+
+In the initial example, I've shown you that, apart from the list of results that's given from a particular search term or query that we might do against a catalog, we might have different filters to help us trim down, narrow down the search results that we might be more interested on, depending on the dimensions that are suited for why we want to do.
+
+And we've been exploring some of those throughout the previous lessons.
+
+When building applications, we might want to group our data and their orthogonal properties.
+
+And running all this individually might take too many round trips to the database.
+
+Faceting support can compute several different facets in one single command.
+
+To do this, we have a new operator called facet that allows us to do exactly that.
+
+So let's, basically, take all the different facets that we've been building throughout the course individually, let's say the categories, the employees, the work force facet, and the founded year that companies have been created, and let's start grouping all this into one single command in our aggregation pipeline.
+
+So let's start by matching all documents that have databases on their description or overview by specifying a text search query, pass along that list of results to our facet stage, and then generating the different facets that we've been looking to before, either categories, employees, or founded dates, to provide that set of different facets that we've been exploring so far.
+
+So in essence, with this command, we are collecting back all different facets with their matching conditions and output variations, bringing in documents from the database all at once.
+
+Once I run it, I'll get all sorts of different facets, facet for founded, the facets for employees, and the facet for categories that my initial match search provided.
+
+Each sub-pipeline within facet is past the exact same set of input documents that this match stage here generates, and they are completely independent from one another.
+
+The output of one sub-pipeline cannot be used by the following ones within the same facet command.
+
+This means that you can interpret this as sub-pipelining inside of our aggregation framework pipeline.
+
+Provided via the dollar facet stage.
+
+And this is how we can generate facets navigation using Mongo DB 3.4.
