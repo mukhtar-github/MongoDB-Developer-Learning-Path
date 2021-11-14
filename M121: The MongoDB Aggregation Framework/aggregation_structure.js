@@ -662,3 +662,48 @@ db.companies.aggregate([
     }
   }
 ]);
+
+
+
+
+
+// Chapter 4: Core Aggregation - Multidimensional Grouping
+
+// Facets: Auto Buckets
+
+// **facets/autoBuckets.js**
+
+// generate buckets automatically with $bucktAuto stage
+db.companies.aggregate([
+  { "$match": {"offices.city": "New York" }},
+  {"$bucketAuto": {
+    "groupBy": "$founded_year",
+    "buckets": 5
+}}]);
+
+
+// set `output` option for $bucketAuto
+db.companies.aggregate([
+  { "$match": {"offices.city": "New York" }},
+  {"$bucketAuto": {
+    "groupBy": "$founded_year",
+    "buckets": 5,
+    "output": {
+        "total": {"$sum":1},
+        "average": {"$avg": "$number_of_employees" }  }}}
+]);
+
+
+// default $buckeAuto behaviour
+for(i=1; i <= 1000; i++) {  db.series.insert( {_id: i}  ) };
+db.series.aggregate(
+  {$bucketAuto:
+    {groupBy: "$_id", buckets: 5 }
+});
+
+
+// generate automatic buckets using granularity numerical series R20
+db.series.aggregate(
+  {$bucketAuto:
+    {groupBy: "$_id", buckets: 5 , granularity: "R20"}
+  });
