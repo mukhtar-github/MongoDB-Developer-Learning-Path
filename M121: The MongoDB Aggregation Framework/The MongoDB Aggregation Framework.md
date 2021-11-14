@@ -6548,3 +6548,65 @@ mongos> db.companies.aggregate([
 Once we run this particular *aggregation pipeline*, in a *pretty* fashion we will see that we will get the list, or in this case, a set of *all categories that match the other bucket with a total of 32*. *An average of null*, because *averaging null by null gives me null*. That's pretty OK. But in the case of the *bucket for companies above 1,000 employees*, we have the *total of 7*. The *average* being *18257* in all sorts of different *categories* for those companies. Same thing for the *500 buckets* and so on.
 
 So to recap, we have a *new operator stage or new mongodb aggregation stage called dollar bucket* that we need to set the *group by elements specifying the field that we want to group by*. We need to specify the *boundaries*, which tells us the brackets in which our documents will be *grouping by*. Don't forget they need to be *the same data type*. We can specify a *default bucket* for all documents that do not *fit the boundaries* or the *buckets defined by the boundaries that we are specifying*. They are all going to be placed under the *default* with the appropriate value associated to it. And also we can define a different document shape for our *output* by specifying different operators that we might find useful, given the *bucketing* that we are doing.
+
+### Facets: Auto Buckets
+
+So far in facets, what we've been seeing in terms of buckets is the manual creation of these buckets.
+
+We have a bucket we group by a field, and then we specify the boundaries for those fields, and respectively to those buckets.
+
+Now, with MongoDB, we can also generate automatically those buckets.
+
+So let's have a look how to set that up.
+
+So with MongoDB 3.4, we also have $bucketAuto.
+
+$bucketAuto is another aggregation pipeline stage which is very similar to the previous $bucket operator.
+
+We also have here the groupBy specifying the field on this data set that we want to group on.
+
+But instead of defining the boundaries, what we are expected to set is the number of buckets-- in this case, five.
+
+It is very similar to the previous $bucket, but we reversed the order by which we specify our options.
+
+Instead of defining boundaries, we define the number of buckets.
+
+So we run this.
+
+You can see that the output is very similar to the previous $bucket one where we, again, have an ID.
+
+Instead of having now _id pointing to a value of one of the boundaries-- the inclusive one-- what we're going to have is basically a subdocument defining at the min and max value of our bucket, and obviously, the count-- the number of documents that match or fall into this bucket.
+
+Same thing for all different-- five different buckets.
+
+The way that the auto bucket generates our buckets is to try to evenly balance the number of documents that will be distributed across those different five buckets.
+
+Similar to $bucket, we can also define a different output by defining our fields and the accumulators that will calculate those particular fields on our output documents.
+
+Once we run it, you can see that we still have the same exact boundaries.
+
+But instead of having only one field, we're going to have the fields that we defined in our output option-- total and average, in this case.
+
+Apart from those particular options, $bucketAuto also has the option of defining granularity.
+
+And granularity is basically a numerical series-- one that we might prefer from these different options that we have supported in 3.4 where the boundaries of our buckets will adhere to that specific numerical series.
+
+Now, we have several different ones.
+
+We have the Renard series.
+
+We have the E series, the 1-2-5 series, and powers of two series, all of them well-specified on this particular page with all the supported values for the granularity-- R5 to R20, 1-2-5, E6 to E192, and powers of two.
+
+To better see this in action, what we can do is generate a series collection where we're going to have _id values from 1 to 1,000.
+
+Once we generate that collection, I can just generate my auto buckets-- so calling my stage for auto bucketing-- grouping by _id, and generating five buckets.
+
+This is the default behavior of our bucketAuto stage.
+
+And with this, we again see that I evenly get buckets from 1 to 201 divided, and having around 200, or 200 in this case because it's an easy match, of 200 documents per bucket.
+
+And defining the option granularity here to using the Renard series R20, which basically takes the 20th root of 10.
+
+We will have a slightly different set of boundaries where the boundaries' values will adhere to that particular series, but it still tried to distribute accordingly with the number of buckets that we requested the number of documents across those different buckets.
+
+And this is how $bucketAuto works.
