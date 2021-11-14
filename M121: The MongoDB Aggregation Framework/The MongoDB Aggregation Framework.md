@@ -6565,7 +6565,21 @@ db.companies.aggregate([
 
 So with *MongoDB 3.4*, we also have *$bucketAuto. $bucketAuto* is another *aggregation pipeline stage* which is very similar to the previous *$bucket* operator. We also have here the *groupBy* specifying the field on this *data set* that we want to group on. But instead of defining the *boundaries*, what we are expected to set is the *number of buckets* -- in this case, *five*. It is very similar to the previous *$bucket*, but we reversed the order by which we specify our options. Instead of defining *boundaries*, we define the *number of buckets*. So we run this.
 
-You can see that the output is very similar to the previous $bucket one where we, again, have an ID. Instead of having now _id pointing to a value of one of the boundaries-- the inclusive one-- what we're going to have is basically a subdocument defining at the min and max value of our bucket, and obviously, the count-- the number of documents that match or fall into this bucket.
+```javascript
+mongos> db.companies.aggregate([
+...   { "$match": {"offices.city": "New York" }},
+...   {"$bucketAuto": {
+...     "groupBy": "$founded_year",
+...     "buckets": 5
+... }}]);
+{ "_id" : { "min" : 1971, "max" : 2002 }, "count" : 2 }
+{ "_id" : { "min" : 2002, "max" : 2005 }, "count" : 4 }
+{ "_id" : { "min" : 2005, "max" : 2006 }, "count" : 2 }
+{ "_id" : { "min" : 2006, "max" : 2007 }, "count" : 2 }
+{ "_id" : { "min" : 2007, "max" : 2008 }, "count" : 2 }
+```
+
+You can see that the *output* is very similar to the *previous $bucket* one where we, again, have an ID. Instead of having now _id pointing to a value of one of the boundaries-- the inclusive one-- what we're going to have is basically a subdocument defining at the min and max value of our bucket, and obviously, the count-- the number of documents that match or fall into this bucket.
 
 Same thing for all different-- five different buckets. The way that the auto bucket generates our buckets is to try to evenly balance the number of documents that will be distributed across those different five buckets. Similar to $bucket, we can also define a different output by defining our fields and the accumulators that will calculate those particular fields on our output documents.
 
