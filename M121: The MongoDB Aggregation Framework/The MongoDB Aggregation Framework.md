@@ -6579,11 +6579,29 @@ mongos> db.companies.aggregate([
 { "_id" : { "min" : 2007, "max" : 2008 }, "count" : 2 }
 ```
 
-You can see that the *output* is very similar to the *previous $bucket one* where we, again, have an ID. Instead of having now *_id* pointing to a value of one of the *boundaries* -- the inclusive one -- what we're going to have is basically a subdocument defining at the *min and max value of our bucket*, and obviously, the *count* -- the number of documents that match or fall into this *bucket*.
+You can see that the *output* is very similar to the *previous $bucket one* where we, again, have an ID. Instead of having now *_id* pointing to a value of one of the *boundaries* -- the inclusive one -- what we're going to have is basically a subdocument defining at the *min and max value of our bucket*, and obviously, the *count* -- the number of documents that match or fall into this *bucket*. Same thing for all different -- five different buckets. The way that the *auto bucket* generates our *buckets*, is to try to evenly balance the number of documents that will be distributed across those different *five buckets*.
 
-Same thing for all different-- five different buckets. The way that the auto bucket generates our buckets is to try to evenly balance the number of documents that will be distributed across those different five buckets. Similar to $bucket, we can also define a different output by defining our fields and the accumulators that will calculate those particular fields on our output documents.
+Similar to *$bucket*, we can also define a different *output* by defining our fields and the accumulators that will calculate those particular fields on our *output* documents. Once we run it, you can see that we still have the same exact boundaries. But instead of having only one field, we're going to have the fields that we defined in our output option -- total and average, in this case. Apart from those particular options, $bucketAuto also has the option of defining granularity.
 
-Once we run it, you can see that we still have the same exact boundaries. But instead of having only one field, we're going to have the fields that we defined in our output option-- total and average, in this case. Apart from those particular options, $bucketAuto also has the option of defining granularity. And granularity is basically a numerical series-- one that we might prefer from these different options that we have supported in 3.4 where the boundaries of our buckets will adhere to that specific numerical series.
+```javascript
+// set `output` option for $bucketAuto
+mongos> db.companies.aggregate([
+...   { "$match": {"offices.city": "New York" }},
+...   {"$bucketAuto": {
+...     "groupBy": "$founded_year",
+...     "buckets": 5,
+...     "output": {
+...         "total": {"$sum":1},
+...         "average": {"$avg": "$number_of_employees" }  }}}
+... ]);
+{ "_id" : { "min" : 1971, "max" : 2002 }, "total" : 2, "average" : 28000 }
+{ "_id" : { "min" : 2002, "max" : 2005 }, "total" : 4, "average" : 1379.25 }
+{ "_id" : { "min" : 2005, "max" : 2006 }, "total" : 2, "average" : 41 }
+{ "_id" : { "min" : 2006, "max" : 2007 }, "total" : 2, "average" : 0 }
+{ "_id" : { "min" : 2007, "max" : 2008 }, "total" : 2, "average" : 212.5 }
+```
+
+And granularity is basically a numerical series -- one that we might prefer from these different options that we have supported in 3.4 where the boundaries of our buckets will adhere to that specific numerical series.
 
 Now, we have several different ones. We have the Renard series. We have the E series, the 1-2-5 series, and powers of two series, all of them well-specified on this particular page with all the supported values for the granularity-- R5 to R20, 1-2-5, E6 to E192, and powers of two. To better see this in action, what we can do is generate a series collection where we're going to have _id values from 1 to 1,000.
 
