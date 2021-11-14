@@ -6579,7 +6579,7 @@ mongos> db.companies.aggregate([
 { "_id" : { "min" : 2007, "max" : 2008 }, "count" : 2 }
 ```
 
-You can see that the *output* is very similar to the *previous $bucket* one where we, again, have an ID. Instead of having now _id pointing to a value of one of the boundaries-- the inclusive one-- what we're going to have is basically a subdocument defining at the min and max value of our bucket, and obviously, the count-- the number of documents that match or fall into this bucket.
+You can see that the *output* is very similar to the *previous $bucket one* where we, again, have an ID. Instead of having now *_id* pointing to a value of one of the *boundaries* -- the inclusive one -- what we're going to have is basically a subdocument defining at the *min and max value of our bucket*, and obviously, the *count* -- the number of documents that match or fall into this *bucket*.
 
 Same thing for all different-- five different buckets. The way that the auto bucket generates our buckets is to try to evenly balance the number of documents that will be distributed across those different five buckets. Similar to $bucket, we can also define a different output by defining our fields and the accumulators that will calculate those particular fields on our output documents.
 
