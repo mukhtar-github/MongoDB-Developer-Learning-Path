@@ -6664,9 +6664,7 @@ db.companies.aggregate( [
   }}]).pretty();
 ```
 
-So let's, basically, take all the different facets that we've been building throughout the course individually, let's say the categories, the employees, the work force facet, and the founded year that companies have been created, and let's start grouping all this into one single command in our aggregation pipeline.
-
-So let's start by matching all documents that have databases on their description or overview by specifying a text search query, pass along that list of results to our facet stage, and then generating the different facets that we've been looking to before, either categories, employees, or founded dates, to provide that set of different facets that we've been exploring so far.
+So let's, basically, take all the different *facets* that we've been building throughout the course individually, let's say the *categories, the employees, the work force facet, and the founded year that companies have been created*, and let's start grouping all this into *one single command in our aggregation pipeline*. So let's start by matching all documents that have *databases on their description or overview* by specifying a *text search query*, pass along that list of results to our *facet stage*, and then generating the different *facets* that we've been looking to before, either *categories, employees, or founded dates*, to provide that *set of different facets* that we've been exploring so far.
 
 So in essence, with this command, we are collecting back all different facets with their matching conditions and output variations, bringing in documents from the database all at once. Once I run it, I'll get all sorts of different facets, facet for founded, the facets for employees, and the facet for categories that my initial match search provided. Each sub-pipeline within facet is past the exact same set of input documents that this match stage here generates, and they are completely independent from one another.
 
