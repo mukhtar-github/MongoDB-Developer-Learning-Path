@@ -6637,9 +6637,32 @@ And defining the option *granularity* here to using the *Renard series R20*, whi
 
 ### Facets: Multiple Facets
 
-Until this point, we've been looking to how to determine individual *facets*. But as you probably already realized, when building applications, we might need *multiple different facets* to achieve the kind of filters that we want to provide to our end users. In the initial example, I've shown you that, apart from the *list of results* that's given from a particular search term or query that we might do against a *catalog*, we might have different filters to help us *trim down, narrow down the search results* that we might be more interested on, depending on the dimensions that are suited for why we want to do. And we've been exploring some of those throughout the previous lessons.
+Until this point, we've been looking to how to determine individual *facets*. But as you probably already realized, when building applications, we might need *multiple different facets* to achieve the kind of filters that we want to provide to our end users. In the initial example, I've shown you that, apart from the *list of results* that's given from a particular search term or query that we might do against a *catalog*, we might have different filters to help us *trim down, narrow down the search results* that we might be more interested on, depending on the dimensions that are suited for why we want to do
 
-When building applications, we might want to group our data and their orthogonal properties. And running all this individually might take too many round trips to the database. Faceting support can compute several different facets in one single command. To do this, we have a new operator called facet that allows us to do exactly that.
+And we've been exploring some of those throughout the previous lessons. When building applications, we might want to *group our data and their orthogonal properties*. And running all this individually might take *too many round trips to the database*. *Faceting support* can compute several different *facets in one single command*. To do this, we have a new operator called *facet* that allows us to do exactly that.
+
+```javascript
+// render several different facets using $facet stage
+db.companies.aggregate( [
+    {"$match": { "$text": {"$search": "Databases"} } },
+    { "$facet": {
+      "Categories": [{"$sortByCount": "$category_code"}],
+      "Employees": [
+        { "$match": {"founded_year": {"$gt": 1980}}},
+        {"$bucket": {
+          "groupBy": "$number_of_employees",
+          "boundaries": [ 0, 20, 50, 100, 500, 1000, Infinity  ],
+          "default": "Other"
+        }}],
+      "Founded": [
+        { "$match": {"offices.city": "New York" }},
+        {"$bucketAuto": {
+          "groupBy": "$founded_year",
+          "buckets": 5   }
+        }
+      ]
+  }}]).pretty();
+```
 
 So let's, basically, take all the different facets that we've been building throughout the course individually, let's say the categories, the employees, the work force facet, and the founded year that companies have been created, and let's start grouping all this into one single command in our aggregation pipeline.
 
