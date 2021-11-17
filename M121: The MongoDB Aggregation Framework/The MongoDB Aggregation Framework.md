@@ -6943,22 +6943,40 @@ Type "it" for more
 MongoDB Enterprise Cluster0-shard-0:PRIMARY>
 ```
 
-Here we're using the $sortByCount stage, simply specifying what value we would like to sort by count on.
+Here we're using the *$sortByCount stage*, simply specifying what value we would like to *sort by count* on.
 
-The exact same results.
+```javascript
+// sortByCount is equivalent to the above. In fact, if you execute this pipeline
+// with { explain: true } you will see that it is transformed to the above!
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$sortByCount": "$imdb.rating"
+...   }
+... ]);
+{ "_id" : 7.2, "count" : 1810 }
+{ "_id" : 7.1, "count" : 1758 }
+{ "_id" : 7, "count" : 1721 }
+{ "_id" : "", "count" : 1705 }
+{ "_id" : 6.7, "count" : 1684 }
+{ "_id" : 6.8, "count" : 1636 }
+{ "_id" : 7.3, "count" : 1610 }
+{ "_id" : 6.9, "count" : 1605 }
+{ "_id" : 6.5, "count" : 1583 }
+{ "_id" : 6.4, "count" : 1554 }
+{ "_id" : 6.6, "count" : 1508 }
+{ "_id" : 6.3, "count" : 1438 }
+{ "_id" : 6.2, "count" : 1399 }
+{ "_id" : 7.4, "count" : 1281 }
+{ "_id" : 6.1, "count" : 1275 }
+{ "_id" : 7.5, "count" : 1172 }
+{ "_id" : 6, "count" : 1124 }
+{ "_id" : 5.8, "count" : 1108 }
+{ "_id" : 5.9, "count" : 1071 }
+{ "_id" : 7.6, "count" : 1061 }
+Type "it" for more
+MongoDB Enterprise Cluster0-shard-0:PRIMARY>
+```
 
-We've covered a lot of information.
+The exact same results. We've covered a lot of information. But let's recap a few important things. In *$bucket*, we must always specify at least *two values to boundaries*. *Boundaries must be all of the same general type, either numeric, or string, or Boolean*. And *count* is inserted by default with *no output*, but removed when *output* is specified.
 
-But let's recap a few important things.
-
-In $bucket, we must always specify at least two values to boundaries.
-
-Boundaries must be all of the same general type, either numeric, or string, or Boolean, you get the idea.
-
-And count is inserted by default with no output, but removed when output is specified.
-
-In $bucketAuto, cardinality of the group by expression may impact even distribution and number of buckets.
-
-Specifying a granularity requires the expression to groupBy to resolve to a numeric value.
-
-And lastly, $sortByCount is equivalent to a group stage to count occurrence, and then sorting in descending order.
+In *$bucketAuto*, cardinality of the *groupBy* expression may impact even distribution and *number of buckets*. Specifying a *granularity* requires the expression to *groupBy* to resolve to a numeric value. And lastly, *$sortByCount* is equivalent to a *group stage to count occurrence, and then sorting in descending order*.
