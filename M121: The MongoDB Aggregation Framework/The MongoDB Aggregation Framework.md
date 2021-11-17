@@ -6884,3 +6884,31 @@ while (result.hasNext()) {
 }
 { "commonTopFilms" : 0 }
 ```
+
+### The $sortByCount Stage
+
+$sortByCount takes one argument, an expression to group documents on.
+
+It works just like a group stage, followed immediately by a sort and descending direction.
+
+Here, we're using a group stage, grouping on the $imdb.rating, getting a count, and then sorting on that count in descending direction.
+
+Here we're using the $sortByCount stage, simply specifying what value we would like to sort by count on.
+
+The exact same results.
+
+We've covered a lot of information.
+
+But let's recap a few important things.
+
+In $bucket, we must always specify at least two values to boundaries.
+
+Boundaries must be all of the same general type, either numeric, or string, or Boolean, you get the idea.
+
+And count is inserted by default with no output, but removed when output is specified.
+
+In $bucketAuto, cardinality of the group by expression may impact even distribution and number of buckets.
+
+Specifying a granularity requires the expression to groupBy to resolve to a numeric value.
+
+And lastly, $sortByCount is equivalent to a group stage to count occurrence, and then sorting in descending order.
