@@ -6887,11 +6887,38 @@ while (result.hasNext()) {
 
 ### The $sortByCount Stage
 
-$sortByCount takes one argument, an expression to group documents on.
+```javascript
+{ $sortByCount: <expression> }
+```
 
-It works just like a group stage, followed immediately by a sort and descending direction.
+*$sortByCount* takes *one argument*, an *expression* to group documents on. It works just like a *group stage*, followed immediately by a *sort and descending direction*.
 
-Here, we're using a group stage, grouping on the $imdb.rating, getting a count, and then sorting on that count in descending direction.
+```javascript
+{
+    "$group": { "_id": "$imdb.rating", "count": { "$sum": 1 } }
+},
+{
+    "$sort": { "count": -1 }
+}
+```
+
+Here, we're using a *group stage*, grouping on the *$imdb.rating*, getting a count, and then sorting on that count in descending direction.
+
+```javascript
+// performing a group followed by a sort to rank occurence
+db.movies.aggregate([
+  {
+    "$group": {
+      "_id": "$imdb.rating",
+      "count": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "count": -1 }
+  }
+]);
+
+```
 
 Here we're using the $sortByCount stage, simply specifying what value we would like to sort by count on.
 
