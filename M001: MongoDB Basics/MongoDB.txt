@@ -123,6 +123,8 @@ mongo --port 27000 -u m103-admin -p m103-pass --authenticationDatabase admin
 sudo mkdir -p /var/mongodb/db/companies_1.json
 vim companies_1.json
 mongoimport companies_1.json --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection companies
+mongoimport companies_1.json --drop --port 26000 -u m103-admin -p m103-pass --authenticationDatabase admin -d m103 --collection companies --jsonArray
+
 
 db.products.insert(
   {
@@ -190,3 +192,17 @@ delete the old file. ! rm oldfilename.
 ! rm companies_dataset/companies.json
 cat /var/m121/validateLab1.js
 /var/mongodb/db/companies.json
+
+
+If you want to select all of the text using Vim then use ggVGy (note the uppercase VG in the middle). This command moves
+the cursor to the top of the file, enters visual mode, moves to the bottom of the file (thus, selecting all of the text)
+and then yanks (copies) it. You can then use p to put (paste) this code but only inside of Vim.
+
+If you want to copy to the clipboard to use somewhere outside of Vim then try this:
+First, select everything using the commands outlined above but without the final y: (ggVG). Then press "*y or "+y. This should
+now copy it to your operating system's clipboard and you can just paste (Ctrl/Cmd+v) anywhere you want outside of Vim.
+This can vary depending on what settings you have for Vim but it should work.
+:%y +
+
+Or you can install jq which is faster (written in C) from your package manager
+(e.g. sudo apt install jq in Ubuntu/Debian, and then in vim, type: (:%!jq .)
