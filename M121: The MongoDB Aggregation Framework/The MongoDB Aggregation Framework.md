@@ -6780,6 +6780,8 @@ db.movies.aggregate([
   }
 ])
 
+{ "movies_in_both" : [ { "title" : "The Godfather" } ] }
+
 // We begin with a $match and $project stage to only look at documents with the relevant fields, and project away needless information
 
 {
@@ -6882,7 +6884,7 @@ print("Result: ");
 while (result.hasNext()) {
     printjson(result.next());
 }
-{ "commonTopFilms" : 0 }
+{ "commonTopFilms" : 1 }
 ```
 
 ### The $sortByCount Stage
@@ -6902,22 +6904,43 @@ while (result.hasNext()) {
 }
 ```
 
-Here, we're using a *group stage*, grouping on the *$imdb.rating*, getting a count, and then sorting on that count in descending direction.
+Here, we're using a *group stage*, grouping on the *$imdb.rating*, getting a *count*, and then *sorting* on that *count* in descending direction.
 
 ```javascript
 // performing a group followed by a sort to rank occurence
-db.movies.aggregate([
-  {
-    "$group": {
-      "_id": "$imdb.rating",
-      "count": { "$sum": 1 }
-    }
-  },
-  {
-    "$sort": { "count": -1 }
-  }
-]);
-
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     "$group": {
+...       "_id": "$imdb.rating",
+...       "count": { "$sum": 1 }
+...     }
+...   },
+...   {
+...     "$sort": { "count": -1 }
+...   }
+... ]);
+{ "_id" : 7.2, "count" : 1810 }
+{ "_id" : 7.1, "count" : 1758 }
+{ "_id" : 7, "count" : 1721 }
+{ "_id" : "", "count" : 1705 }
+{ "_id" : 6.7, "count" : 1684 }
+{ "_id" : 6.8, "count" : 1636 }
+{ "_id" : 7.3, "count" : 1610 }
+{ "_id" : 6.9, "count" : 1605 }
+{ "_id" : 6.5, "count" : 1583 }
+{ "_id" : 6.4, "count" : 1554 }
+{ "_id" : 6.6, "count" : 1508 }
+{ "_id" : 6.3, "count" : 1438 }
+{ "_id" : 6.2, "count" : 1399 }
+{ "_id" : 7.4, "count" : 1281 }
+{ "_id" : 6.1, "count" : 1275 }
+{ "_id" : 7.5, "count" : 1172 }
+{ "_id" : 6, "count" : 1124 }
+{ "_id" : 5.8, "count" : 1108 }
+{ "_id" : 5.9, "count" : 1071 }
+{ "_id" : 7.6, "count" : 1061 }
+Type "it" for more
+MongoDB Enterprise Cluster0-shard-0:PRIMARY>
 ```
 
 Here we're using the $sortByCount stage, simply specifying what value we would like to sort by count on.
