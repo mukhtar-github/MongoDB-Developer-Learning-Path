@@ -7361,13 +7361,13 @@ Now that we know how new incoming documents will be matched to existing document
 #### Action
 
 * nothing matched: usually insert
-* source ----> target
+* document matched: overwrite? update?? ???
 
-When documents coming from the *source* to the *target*, either each incoming document doesn't *merge* anything in the *target*, or it *merges*. If nothing is *merged*, usually, you will want to *insert the new document*. If something is *merged*, you will probably want to somehow overwrite this document.
+##### source ----> target
 
-Right?
+When documents coming from the *source* to the *target*, either each incoming document doesn't *match* anything in the *target*, or it *matches*. If nothing is *matched*, usually, you will want to *insert the new document*. If something is *matched*, you will probably want to somehow *overwrite this document*.
 
-Maybe update it with new information, or completely replace it.
+Right? Maybe update it with new information, or completely replace it.
 
 We give you two fields in $merge to specify what action should be taken when there isn't a match or when there is a match.
 
