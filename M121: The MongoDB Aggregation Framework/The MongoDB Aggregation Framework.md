@@ -7226,3 +7226,17 @@ The *$redact* stage can be useful for implementing *access control lists*, thoug
 Lastly, if comparing to a field in the document, the field must be present at every level of using $$DESCEND, or the expression must account for and decide what to do if the field is missing. If we don't take any of these precautions, $redact is likely to error.
 
 Let's summarize some key points. $$PRUNE and $$KEEP automatically apply to all levels below the evaluated level. $$DESCEND retains the current level and evaluates the next level down. And $redact is not for restricting access to a collection. Remember, if a user has access to perform an aggregation on a collection, they have access to read that collection.
+
+### The $out Stage
+
+Let's learn about a useful stage for persisting the results of an aggregation, the *$out stage*. The *$out stage* has the following form. We specify the name of the output collection that we want. The out stage must be the last stage in the pipeline. As such, it can't be used within a facet.
+
+MongoDB will create the collection with the name specified if none exists. Otherwise it will overwrite an existing collection if an existing collection name is specified. Now there's a few things to know. It will only create the new collection within the same database.
+
+If an existing collection is replaced, any indexes that existed on the original collection will still be in place. If the pipeline errors, it will not create or overwrite a collection. This also means that the output from out must honor index restrictions, such as unique indexes, can include the _id field.
+
+So this aggregation here where we match every document, perform some grouping operation, unwind to create many documents, and then try an output to a new collection would fail because it would result in many documents with the same _id value. And that covers the $out stage.
+
+This stage is very useful for performing an aggregation against existing data to do a migration, seed a collection with useful data, or distribute snapshots of data for analysis. Here are a few things to remember about the $out stage. It will create a new collection or overwrite an existing collection if specified.
+
+It honors indexes on existing collections. It will not create or overwrite data if pipeline errors. And it creates collections in the same database as the source collection.
