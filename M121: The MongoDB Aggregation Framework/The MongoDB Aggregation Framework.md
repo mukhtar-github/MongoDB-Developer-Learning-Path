@@ -7357,9 +7357,11 @@ So to recap, *$merge* allows you to output results of an *aggregation pipeline* 
 ```
 
 Now that we know how new incoming documents will be matched to existing documents, it's good to understand what happens in each case by default, and what other options are available to you.
-**Action**
-> nothing matched: usually insert
-> source ----> target
+
+#### Action
+
+* nothing matched: usually insert
+* source ----> target
 
 When documents coming from the *source* to the *target*, either each incoming document doesn't *merge* anything in the *target*, or it *merges*. If nothing is *merged*, usually, you will want to *insert the new document*. If something is *merged*, you will probably want to somehow overwrite this document.
 
