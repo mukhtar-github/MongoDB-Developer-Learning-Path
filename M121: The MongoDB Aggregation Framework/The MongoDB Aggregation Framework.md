@@ -7219,8 +7219,10 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.employees.aggregate([   {     "$
 Type "it" for more
 ```
 
-Excellent. We can see that we are indeed only getting back document levels where "management" was in the "acl" array -- (block 1 & block 2). The *$redact* stage can be useful for implementing *access control lists*, though it is not the only way to *limit access to information*, as we'll learn later in the course. Any user who has access to a collection to perform this type of *aggregation* can also perform other *read operations*.
+Excellent. We can see that we are indeed only getting back document levels where "management" was in the "acl" array -- (block 1 & block 2).
 
-So the redact stage is not sufficient for collection and field level restrictions. Lastly, if comparing to a field in the document, the field must be present at every level of using descend, or the expression must account for and decide what to do if the field is missing. If we don't take any of these precautions, redact is likely to error.
+The *$redact* stage can be useful for implementing *access control lists*, though it is not the only way to *limit access to information*, as we'll learn later in the course. Any user who has access to a *collection* to perform this type of *aggregation* can also perform other *read operations*. So the *$redact* stage is not sufficient for *collection and field-level restrictions*.
 
-Let's summarize some key points. Keep and prune automatically apply to all levels below the evaluated level. Descend retains the current level and evaluates the next level down. And redact is not for restricting access to a collection. Remember, if a user has access to perform an aggregation on a collection, they have access to read that collection.
+Lastly, if comparing to a field in the document, the field must be present at every level of using $$DESCEND, or the expression must account for and decide what to do if the field is missing. If we don't take any of these precautions, $redact is likely to error.
+
+Let's summarize some key points. $$PRUNE and $$KEEP automatically apply to all levels below the evaluated level. $$DESCEND retains the current level and evaluates the next level down. And $redact is not for restricting access to a collection. Remember, if a user has access to perform an aggregation on a collection, they have access to read that collection.
