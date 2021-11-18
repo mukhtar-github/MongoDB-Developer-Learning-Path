@@ -7282,9 +7282,18 @@ db.coll.aggregate([{ pipeline }, ...
 ]);
 
 // coll --> $out --> new_coll
+
+// new_coll -- must be unsharded, -- overwrite existing.
 ```
 
-This only supported a subset of what people want to do with the *output from an aggregation*, and so MongoDB 4.2 introduces a new stage, which allows flexible ways of saving results of the aggregation into an already existing collection, whether or not it's *sharded or unsharded*. We called it *$merge*. Now, you'll have a pipeline like you normally do, and then as the last stage, you would specify *$merge* with some options, which we will review.
+This only supported a subset of what people want to do with the *output from an aggregation*, and so *MongoDB 4.2* introduces a new stage, which allows flexible ways of saving results of the aggregation into an already existing collection, whether or not it's *sharded or unsharded*. We called it *$merge*. Now, you'll have a *pipeline* like you normally do, and then as the last stage, you would specify *$merge* with some options, which we will review.
+
+```javascript
+// $merge
+db.coll.aggregate([{ pipeline }, ... 
+    { $merge: { ... } }
+]);
+```
 
 Now unlike $out stage, this new stage can output to any existing collection, whether it's sharded or unsharded You're allowed to output to a collection in a different database, and you can specify exactly how you want the new documents from this aggregation to be merged into the existing collection.
 
