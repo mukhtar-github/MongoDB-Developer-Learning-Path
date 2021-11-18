@@ -7332,9 +7332,12 @@ But you can also specify *a full object with the name of the database and the na
         on: <fields>
     } 
 }
+
+on: "_id"
+on: [ "_id",  "shardkey(s)"]
 ```
 
-You can specify the *fields on* which to *$merge* the documents. When deciding how to *merge* them, the documents that are incoming to the *target collection*, if the user doesn't specify the optional *on* argument, the *server* will use the field as the merging field for all unsharded *target collections*. And the combination of _id and your shard key if the collection is sharded. If that's how you want to *merge* documents, then you don't have to specify the field at all.
+You can specify the *fields on* which to *$merge* the documents. When deciding how to *merge* them, the documents that are incoming to the *target collection*, if the user doesn't specify the optional *on* argument, the *server* will use the *_id* field as the *merging* field for all unsharded *target collections*. And the combination of *_id and your shard key if the collection is sharded*. If that's how you want to *merge* documents, then you don't have to specify the field at all.
 
 But if you want to specify a different unique key to *merge* documents on then you would specify either a single field name or if there's multiple fields, an array of them in the on argument. We do require that if you specify your own merging key, there must be a unique index present on it. This is of course so we can uniquely identify the document in the *target collection* to *merge* with an incoming document from the aggregation.
 
