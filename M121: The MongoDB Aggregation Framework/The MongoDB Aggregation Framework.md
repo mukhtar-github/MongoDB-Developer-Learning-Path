@@ -6991,9 +6991,49 @@ Let's learn about one of the stages in the aggregation framework that can help u
 { $redact: <expression> }
 ```
 
-The *expression* can be any expression or combination of expressions, but must ultimately resolve to one of three values, $$DESCEND, $$PRUNE, and $$KEEP. OK, at first these seem pretty cryptic. So let's examine what each of them does. First, let's look at $$PRUNE, and $$KEEP. $$PRUNE, and $$KEEP are inverse of each other. $$PRUNE -- (Remove), will exclude all fields at the current document level without further inspection, while $$KEEP -- (Retain), will retain all fields at the current document level without further inspection.
+The *expression* can be any expression or combination of expressions, but must ultimately resolve to one of three values, $$DESCEND, $$PRUNE, and $$KEEP. OK, at first these seem pretty cryptic. So let's examine what each of them does. First, let's look at $$PRUNE, and $$KEEP. $$PRUNE, and $$KEEP are inverse of each other. $$PRUNE -- (Remove), will exclude all fields at the current document level without further inspection, while $$KEEP -- (Retain), will retain all fields at the current document level without further inspection. So what do we mean by *further inspection*?
 
-So what do we mean by further inspection? Let's look at this example document from the employees collection. Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all levels of the document. Let's look at this example document from the employees collection.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.employees.findOne()
+{
+    "_id" : ObjectId("59d288690e3733b153a9397f"),
+    "employee_ID" : "7d735016-4f9e-4322-87cf-54a313038caf",
+    "acl" : [
+        "HR",
+        "Management",
+        "Finance",
+        "Executive"
+    ],
+    "employee_compensation" : {
+        "acl" : [
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "salary" : 122519,
+        "stock_award" : 4880,
+        "programs" : {
+            "acl" : [
+                "Finance",
+                "Executive"
+            ],
+            "401K_contrib" : 0,
+            "health_plan" : true,
+            "spp" : 0.05
+        }
+    },
+    "employee_grade" : 3,
+    "team" : "Blue",
+    "age" : 50,
+    "first_name" : "Brown",
+    "last_name" : "Christian",
+    "gender" : "male",
+    "phone" : "+1 (927) 508-3083",
+    "address" : "564 Powers Street, Waumandee, Virgin Islands, 58090"
+}
+```
+
+Let's look at this example document from the employees collection. Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all levels of the document. Let's look at this example document from the employees collection.
 
 Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all document levels below the level we specified. OK, so let's look at descend.
 
