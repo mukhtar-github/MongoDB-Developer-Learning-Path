@@ -7040,27 +7040,27 @@ Let's look at this example document from the *employee's collection*. Each *bloc
     "$cond": [{ "$in": [userAccess, "$acl"] }, "$$DESCEND", "$$PRUNE"]
 }
 
-{
+{ // block 1
     ...
     "acl" : [ "HR", "Management", "Finance", "Executive" ],
-    "employee_compensation" : {
+    "employee_compensation" : { // block 2
         "acl" : [ "Management", "Finance", "Executive" ],
         "salary" : 122519,
         "stock_award" : 4880,
-        "programs" : {
+        "programs" : { // block 3
             "acl" : [ "Finance", "Executive" ],
             "401K_contrib" : 0,
             "health_plan" : true,
             "spp" : 0.05
-        }
-    },
+        } // block 3
+    }, // block 2
     ...
-}
+} // block 1
 ```
 
-Let's visualize how $$DESCEND would operate over this document, given this conditional expression, determining whether the value of userAccess is in the "$acl" array. We start with the entire document and compare whether "management" is in "$acl". Since it is, it descends into the sub document at "employee compensation", here. We now evaluate whether "management" is in "$acl", which it is. So we descend further. At this level, upon evaluation $$PRUNE is returned, because the "$acl" at this level does not include "management".
+Let's visualize how $$DESCEND would operate over this document, given this conditional expression, determining whether the value of userAccess is in the "$acl" array. We start with the entire document -- (block 1), and compare whether "management" is in "$acl". Since it is, it descends into the sub document at "employee compensation" -- (block 2). We now evaluate whether "management" is in "$acl", which it is. So we descend further -- (block 3). At this level, upon evaluation $$PRUNE is returned, because the "$acl" at this level does not include "management". This level -- (block 3), and any subsequent levels, if there were any, would not be returned.
 
-This level and any subsequent levels, if there were any, would not be returned. To the user, it's as if this field doesn't exist at all. Let's look at this in action. We set up our user access variable and then the pipeline, ensuring we only have access document levels we should.
+To the user, it's as if this field -- (block 3), doesn't exist at all. Let's look at this in action. We set up our user access variable and then the pipeline, ensuring we only have access document levels we should.
 
 Excellent. We can see that we are indeed only getting back document levels where management was in the ACL array. The redact stage can be useful for implementing access control lists, though it is not the only way to limit access to information, as we'll learn later in the course. Any user who has access to a collection to perform this type of aggregation can also perform other read operations.
 
