@@ -6980,3 +6980,27 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY>
 The exact same results. We've covered a lot of information. But let's recap a few important things. In *$bucket*, we must always specify at least *two values to boundaries*. *Boundaries must be all of the same general type, either numeric, or string, or Boolean*. And *count* is inserted by default with *no output*, but removed when *output* is specified.
 
 In *$bucketAuto*, cardinality of the *groupBy* expression may impact even distribution and *number of buckets*. Specifying a *granularity* requires the expression to *groupBy* to resolve to a numeric value. And lastly, *$sortByCount* is equivalent to a *group stage to count occurrence, and then sorting in descending order*.
+
+## Chapter 5: Miscellaneous Aggregation
+
+### The $redact Stage
+
+Let's learn about one of the stages in the aggregation framework that can help us protect information from unauthorized access, the redact stage. The redact stage has the following form. The expression can be any expression or combination of expressions, but must ultimately resolve to one of three values, descend, prune, and keep.
+
+OK, at first these seem pretty cryptic. So let's examine what each of them does. First, let's look at prune and keep. Prune and keep are inverse of each other. Prune will exclude all fields at the current document level without further inspection, while keep will retain all fields at the current document level without further inspection.
+
+So what do we mean by further inspection? Let's look at this example document from the employees collection. Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all levels of the document. Let's look at this example document from the employees collection.
+
+Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all document levels below the level we specified. OK, so let's look at descend.
+
+Descend retains the field at the current document level being evaluated except for subdocuments and arrays of documents. It will instead traverse down, evaluating each level. Let's visualize how descend would operate over this document, given this conditional expression, determining whether the value of user access is in the ACL array.
+
+We start with the entire document and compare whether management is in ACL. Since it is, it descends into the sub document at employee compensation, here. We now evaluate whether management is in ACL, which it is. So we descend further. At this level, upon evaluation prune is returned, because the ACL at this level does not include management.
+
+This level and any subsequent levels, if there were any, would not be returned. To the user, it's as if this field doesn't exist at all. Let's look at this in action. We set up our user access variable and then the pipeline, ensuring we only have access document levels we should.
+
+Excellent. We can see that we are indeed only getting back document levels where management was in the ACL array. The redact stage can be useful for implementing access control lists, though it is not the only way to limit access to information, as we'll learn later in the course. Any user who has access to a collection to perform this type of aggregation can also perform other read operations.
+
+So the redact stage is not sufficient for collection and field level restrictions. Lastly, if comparing to a field in the document, the field must be present at every level of using descend, or the expression must account for and decide what to do if the field is missing. If we don't take any of these precautions, redact is likely to error.
+
+Let's summarize some key points. Keep and prune automatically apply to all levels below the evaluated level. Descend retains the current level and evaluates the next level down. And redact is not for restricting access to a collection. Remember, if a user has access to perform an aggregation on a collection, they have access to read that collection.
