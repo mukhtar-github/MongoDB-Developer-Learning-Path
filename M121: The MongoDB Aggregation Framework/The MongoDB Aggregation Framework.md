@@ -7344,3 +7344,137 @@ You can specify the *fields on* which to *$merge* the documents. When deciding h
 But if you want to specify a different *unique key to merge* documents on, then you would specify either *a single field name or if there's multiple fields, an array of them in the on argument*. We do require that if you specify your own *merging key*, there must be a *unique index* present on it. This is of course so we can uniquely identify the document in the *target collection* to *merge* with an incoming document from the *aggregation*.
 
 So to recap, *$merge* allows you to output results of an *aggregation pipeline* right into another *collection*, giving you options to specify whether you want to *merge or insert or how you want to merge* the results with the existing documents, allowing you to output to an existing *sharded or unsharded collection*, as well as to a *collection in a different database* than the one that you're running the *aggregation*.
+
+### $merge Syntax
+
+```javascript
+{ 
+    $merge: { 
+        into: <target>
+        on: <fields>
+    } 
+}
+```
+
+Now that we know how new incoming documents will be matched to existing documents, it's good to understand what happens in each case by default, and what other options are available to you.
+**Action**
+> nothing matched: usually insert
+> source ----> target
+
+When documents coming from the *source* to the *target*, either each incoming document doesn't *merge* anything in the *target*, or it *merges*. If nothing is *merged*, usually, you will want to *insert the new document*. If something is *merged*, you will probably want to somehow overwrite this document.
+
+Right?
+
+Maybe update it with new information, or completely replace it.
+
+We give you two fields in $merge to specify what action should be taken when there isn't a match or when there is a match.
+
+Both of them are optional.
+
+By default, when there is no match, we will do an insert.
+
+When there is a match, we will merge the new incoming document with the existing document.
+
+Now, a merge here means we will add all the top level fields of the new document to existing document, but that will preserve all the fields in the existing document that don't exist in the new incoming document.
+
+I'll show you an example of this later.
+
+But you can think of this as sort of an update with an upsert option set to true.
+
+Right?
+
+It says that update set these new fields into an existing document.
+
+If there isn't an existing document, then insert it.
+
+So the default action is like an upsert into the target collection.
+
+That's the easiest way to remember it.
+
+Now, the other options when there isn't a match are discard and fail.
+
+Both of these would probably be useful in a scenario where you always expect to find a matching document.
+
+And if a match is not found, then something is wrong.
+
+Imagine doing some kind of partial processing where you're calculating some additional information to be merged with an existing record, and if the existing record isn't found, that's an error.
+
+In that case, you would want to raise an exception.
+
+That would be fail.
+
+In other cases, it's OK if you don't find a record to update with the new information, but you also don't want to create that record, in which case that option would be discard.
+
+Now, when there is a matching document found, you can specify four options to whenMatched, in addition to the default merge action.
+
+They are replace, keep existing, fail, and then one more special option here.
+
+Replace and keep existing is straightforward.
+
+Replace means the incoming document will completely overwrite or replace the matching document in the target collection.
+
+Keep existing will discard the incoming document and leave the existing document in the target collection as it is.
+
+And fail would be useful when you absolutely do not expect to find a match.
+
+I'll show you an example of that later.
+
+The last option you have when a document that's incoming matches an existing document is useful when you want to merge their values of fields somehow, but a simple merge option is not sufficient.
+
+The.
+
+Brackets here represent that you can specify your own custom pipeline that will be used to compute a new document to be written to the target collection.
+
+You can compute it from fields of, both, the incoming and existing versions of the document.
+
+Now, the pipeline is limited to stages that do single document transformations, like project or $addFields, and it will be applied to existing matched document in the target collection.
+
+Any field names, like $a or $total, are referring to fields in the existing document.
+
+But you can refer to fields in the incoming document with a special variable, $$new.
+
+Now, this may look to you, very much, like the new aggregation pipeline in update, which is new in 4.2.
+
+And it is.
+
+It's the exact same implementation, and we even give you the same alias for ad fields, known as $set.
+
+And what this pipeline is doing is, for matched document, it's going to set a field total to a sum of already existing dollar total, right here.
+
+And $$newtotal, that's the total from the document that's flowing through the pipeline.
+
+Here's an example.
+
+If you're incoming document has underscore ID 37 total 64, and then there's some other field F1.
+
+And our target has the same idea, obviously.
+
+That's how they merge.
+
+And it has an already existing total in some other F1.
+
+This pipeline will only modify the total field.
+
+It will set total to be the sum of the two.
+
+The other two fields will be left alone.
+
+Compare this with example two where, on match, we're going to use replace with, which creates a new object.
+
+And that new object is merging the entire new incoming document-- that would be the one on the left here-- just with a single field object where total is computed as a sum of new total and existing total.
+
+And here, you can see that the F1 field is actually inherited from incoming because it's in $$new.
+
+And the only field from $$new that's being changed is the total.
+
+Now, there's one other option that merge syntax allows.
+
+And that option is only allowed and only makes sense when you're using a custom pipeline for the whenMatched field, and that's let.
+
+Let allows you to define variables from your incoming or $$new document.
+
+And if you don't specify left, it's exactly as if you did specify left, but defining variable new to be $$ dollar route, which is the entire incoming document.
+
+So a different way to rewrite this particular pipeline might be to add a let, which preserves just the total from the new incoming document.
+
+And on a match, it sets total in the existing document to a sum of $total and $$itotal, which is this variable over here.
