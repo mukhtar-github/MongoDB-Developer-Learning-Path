@@ -7269,3 +7269,35 @@ db.movies.aggregate([
 So this *aggregation* here, where we match every document, perform some *grouping operation, unwind to create many documents*, and then try an *output to a new collection* would fail because it would result in *many documents with the same _id value*. And that covers the *$out* stage.
 
 The *$out* stage is very useful for performing an *aggregation against existing data to do a migration, seed a collection with useful data, or distribute snapshots of data for analysis*. Here are a few things to remember about the *$out* stage. It will *create a new collection or overwrite an existing collection if specified*. It *honors indexes on existing collections*. It *will not create or overwrite data if pipeline errors*. And it *creates collections in the same database as the source collection*.
+
+### $merge Overview
+
+Hi. This is Asiya, and I'm going to talk about the new *$merge* stage in the *aggregation pipeline*. The only way of saving the *aggregation pipeline* prior to *MongoDB 4.2*, was by writing it to a new, unsharded collection, via the *$out* stage. If the collection you wanted to write already existed, *$out* would replace it with the new version, and it couldn't be sharded.
+
+This only supported a subset of what people want to do with the *output from an aggregation*, and so MongoDB 4.2 introduces a new stage, which allows flexible ways of saving results of the aggregation into an already existing collection, whether or not it's *sharded or unsharded*. We called it *$merge*. Now, you'll have a pipeline like you normally do, and then as the last stage, you would specify *$merge* with some options, which we will review.
+
+Now unlike $out stage, this new stage can output to any existing collection, whether it's sharded or unsharded You're allowed to output to a collection in a different database, and you can specify exactly how you want the new documents from this aggregation to be merged into the existing collection.
+
+That's why we call it *$merge*. Now, when documents from an aggregation are to be added to an existing collection, the question is, how should we merge them with the documents that already exist in this output collection? Since there are multiple ways you might want to handle this, merge provides you with options to describe exactly what you want. Let's look at *$merge* syntax now. The only required argument to *$merge* is target. You specify into and then the name of the collection that you want to *$merge* your output with.
+
+The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*.
+
+Now, I said you might want to specify how to handle matching documents.
+
+But before we decide what to do on match, we have to understand how documents are matched.
+
+You can specify the fields on which to match the documents.
+
+When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections.
+
+And the combination of _id and your shard key if the collection is sharded.
+
+If that's how you want to merge documents, then you don't have to specify the field at all.
+
+But if you want to specify a different unique key to match documents on then you would specify either a single field name or if there's multiple fields, an array of them in the on argument.
+
+We do require that if you specify your own merging key, there must be a unique index present on it.
+
+This is of course so we can uniquely identify the document in the target collection to match with an incoming document from the aggregation.
+
+So to recap, $merge allows you to output results of an aggregation pipeline right into another collection, giving you options to specify whether you want to merge or insert or how you want to merge the results with the existing documents, allowing you to output to an existing sharded or unsharded collection, as well as to a collection in a different database than the one that you're running the aggregation.
