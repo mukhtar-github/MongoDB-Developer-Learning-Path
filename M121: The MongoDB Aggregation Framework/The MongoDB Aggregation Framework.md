@@ -7058,7 +7058,7 @@ Let's look at this example document from the *employee's collection*. Each *bloc
 }
 ```
 
-Let's visualize how descend would operate over this document, given this conditional expression, determining whether the value of user access is in the ACL array. We start with the entire document and compare whether management is in ACL. Since it is, it descends into the sub document at employee compensation, here. We now evaluate whether management is in ACL, which it is. So we descend further. At this level, upon evaluation prune is returned, because the ACL at this level does not include management.
+Let's visualize how $$DESCEND would operate over this document, given this conditional expression, determining whether the value of userAccess is in the "$acl" array. We start with the entire document and compare whether "management" is in "$acl". Since it is, it descends into the sub document at "employee compensation", here. We now evaluate whether "management" is in "$acl", which it is. So we descend further. At this level, upon evaluation $$PRUNE is returned, because the "$acl" at this level does not include "management".
 
 This level and any subsequent levels, if there were any, would not be returned. To the user, it's as if this field doesn't exist at all. Let's look at this in action. We set up our user access variable and then the pipeline, ensuring we only have access document levels we should.
 
