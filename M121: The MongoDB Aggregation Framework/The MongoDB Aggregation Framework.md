@@ -7058,9 +7058,166 @@ Let's look at this example document from the *employee's collection*. Each *bloc
 } // block 1
 ```
 
-Let's visualize how $$DESCEND would operate over this document, given this conditional expression, determining whether the value of userAccess is in the "$acl" array. We start with the entire document -- (block 1), and compare whether "management" is in "$acl". Since it is, it descends into the sub document at "employee compensation" -- (block 2). We now evaluate whether "management" is in "$acl", which it is. So we descend further -- (block 3). At this level, upon evaluation $$PRUNE is returned, because the "$acl" at this level does not include "management". This level -- (block 3), and any subsequent levels, if there were any, would not be returned.
+Let's visualize how $$DESCEND would operate over this document, given this conditional expression, determining whether the value of userAccess is in the "$acl" array. We start with the entire document -- (block 1), and compare whether "management" is in "$acl". Since it is, it descends into the sub document at "employee compensation" -- (block 2). We now evaluate whether "management" is in "$acl", which it is. So we descend further -- (block 3). At this level, upon evaluation $$PRUNE is returned, because the "$acl" at this level does not include "management". This level -- (block 3), and any subsequent levels, if there were any, would not be returned. To the user, it's as if this field -- (block 3), doesn't exist at all.
 
-To the user, it's as if this field -- (block 3), doesn't exist at all. Let's look at this in action. We set up our user access variable and then the pipeline, ensuring we only have access document levels we should.
+```javascript
+// creating a variable to refer against
+var userAccess = "Management";
+
+// comparing whether the value/s in the userAccess variable are in the array
+// referenced by the $acl field path
+db.employees.aggregate([
+  {
+    "$redact": {
+        "$cond": [{ "$in": [userAccess, "$acl"] }, "$$DESCEND", "$$PRUNE"]
+      }
+    }
+  ]).pretty();
+```
+
+Let's look at this in action. We set up our *userAccess* variable and then the *pipeline*, ensuring we only have access document levels we should.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> var userAccess = "Management";
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.employees.aggregate([   {     "$redact": {         "$cond": [{ "$in": [userAccess, "$acl"] }, "$$DESCEND", "$$PRUNE"]       }     }   ]).pretty();
+{
+        "_id" : ObjectId("59d288690e3733b153a9397f"),
+        "employee_ID" : "7d735016-4f9e-4322-87cf-54a313038caf",
+        "acl" : [
+            "HR",
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "employee_compensation" : {
+            "acl" : [
+                "Management",
+                "Finance",
+                "Executive"
+            ],
+            "salary" : 122519,
+            "stock_award" : 4880
+        },
+        "employee_grade" : 3,
+        "team" : "Blue",
+        "age" : 50,
+        "first_name" : "Brown",
+        "last_name" : "Christian",
+        "gender" : "male",
+        "phone" : "+1 (927) 508-3083",
+        "address" : "564 Powers Street, Waumandee, Virgin Islands, 58090"
+}
+{
+        "_id" : ObjectId("59d288690e3733b153a93970"),
+        "employee_ID" : "22d4d4a4-2003-4978-bed4-0e6e5ae4a575",
+        "acl" : [
+            "HR",
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "employee_compensation" : {
+            "acl" : [
+                "Management",
+                "Finance",
+                "Executive"
+            ],
+            "salary" : 101450,
+            "stock_award" : 3835
+        },
+        "employee_grade" : 1,
+        "team" : "Violet",
+        "age" : 42,
+        "first_name" : "Sonya",
+        "last_name" : "Buchanan",
+        "gender" : "female",
+        "phone" : "+1 (822) 566-3511",
+        "address" : "320 Boerum Street, Vincent, Connecticut, 10860"
+}
+
+{
+        "_id" : ObjectId("59d288690e3733b153a9397c"),
+        "employee_ID" : "a1bd75c5-18b3-4284-bb8e-831b5c5f5c55",
+        "acl" : [
+            "HR",
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "employee_compensation" : {
+            "acl" : [
+                "Management",
+                "Finance",
+                "Executive"
+            ],
+            "salary" : 137635,
+            "stock_award" : 2052
+        },
+        "employee_grade" : 1,
+        "team" : "Green",
+        "age" : 42,
+        "first_name" : "Ford",
+        "last_name" : "Head",
+        "gender" : "male",
+        "phone" : "+1 (980) 434-3557",
+        "address" : "785 Ingraham Street, Shasta, Louisiana, 97136"
+}
+{
+        "_id" : ObjectId("59d288690e3733b153a9398b"),
+        "employee_ID" : "def72b1f-0c6e-45be-87be-c8802cfd7a6c",
+        "acl" : [
+            "HR",
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "employee_compensation" : {
+            "acl" : [
+                "Management",
+                "Finance",
+                "Executive"
+            ],
+            "salary" : 118015,
+            "stock_award" : 1182
+        },
+        "employee_grade" : 3,
+        "team" : "Violet",
+        "age" : 34,
+        "first_name" : "Mai",
+        "last_name" : "Russell",
+        "gender" : "female",
+        "phone" : "+1 (830) 491-2750",
+        "address" : "712 Regent Place, Leyner, Wisconsin, 25356"
+}
+{
+        "_id" : ObjectId("59d288690e3733b153a9398c"),
+        "employee_ID" : "b627efe5-473d-4579-b36d-55f6dd52bf64",
+        "acl" : [
+            "HR",
+            "Management",
+            "Finance",
+            "Executive"
+        ],
+        "employee_compensation" : {
+            "acl" : [
+                "Management",
+                "Finance",
+                "Executive"
+            ],
+            "salary" : 117370,
+            "stock_award" : 3142
+        },
+        "employee_grade" : 2,
+        "team" : "Green",
+        "age" : 63,
+        "first_name" : "Dickerson",
+        "last_name" : "Buck",
+        "gender" : "male",
+        "phone" : "+1 (801) 469-3716",
+        "address" : "623 Albemarle Road, Fresno, New Hampshire, 04729"
+}
+Type "it" for more
+```
 
 Excellent. We can see that we are indeed only getting back document levels where management was in the ACL array. The redact stage can be useful for implementing access control lists, though it is not the only way to limit access to information, as we'll learn later in the course. Any user who has access to a collection to perform this type of aggregation can also perform other read operations.
 
