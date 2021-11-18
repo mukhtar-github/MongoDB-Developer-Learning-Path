@@ -7036,7 +7036,26 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.employees.findOne()
 Let's look at this example document from the *employee's collection*. Each *block* represents a document level. Specifying $$PRUNE or $$KEEP at any given document level will perform the associated action and automatically apply this action to *all document levels below the level we specified*. OK, so let's look at $$DESCEND. $$DESCEND retains the field at the current document level being evaluated except for subdocuments and arrays of documents. It will instead traverse down, evaluating each level.
 
 ```javascript
-{ $redact: <expression> }
+{
+    "$cond": [{ "$in": [userAccess, "$acl"] }, "$$DESCEND", "$$PRUNE"]
+}
+
+{
+    ...
+    "acl" : [ "HR", "Management", "Finance", "Executive" ],
+    "employee_compensation" : {
+        "acl" : [ "Management", "Finance", "Executive" ],
+        "salary" : 122519,
+        "stock_award" : 4880,
+        "programs" : {
+            "acl" : [ "Finance", "Executive" ],
+            "401K_contrib" : 0,
+            "health_plan" : true,
+            "spp" : 0.05
+        }
+    },
+    ...
+}
 ```
 
 Let's visualize how descend would operate over this document, given this conditional expression, determining whether the value of user access is in the ACL array. We start with the entire document and compare whether management is in ACL. Since it is, it descends into the sub document at employee compensation, here. We now evaluate whether management is in ACL, which it is. So we descend further. At this level, upon evaluation prune is returned, because the ACL at this level does not include management.
