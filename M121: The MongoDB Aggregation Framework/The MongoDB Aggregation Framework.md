@@ -7280,24 +7280,10 @@ Now unlike $out stage, this new stage can output to any existing collection, whe
 
 That's why we call it *$merge*. Now, when documents from an aggregation are to be added to an existing collection, the question is, how should we merge them with the documents that already exist in this output collection? Since there are multiple ways you might want to handle this, merge provides you with options to describe exactly what you want. Let's look at *$merge* syntax now. The only required argument to *$merge* is target. You specify into and then the name of the collection that you want to *$merge* your output with.
 
-The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*.
+The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*. Now, I said you might want to specify how to handle matching documents. But before we decide what to do on match, we have to understand how documents are matched. You can specify the fields on which to match the documents.
 
-Now, I said you might want to specify how to handle matching documents.
+When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections. And the combination of _id and your shard key if the collection is sharded. If that's how you want to merge documents, then you don't have to specify the field at all.
 
-But before we decide what to do on match, we have to understand how documents are matched.
-
-You can specify the fields on which to match the documents.
-
-When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections.
-
-And the combination of _id and your shard key if the collection is sharded.
-
-If that's how you want to merge documents, then you don't have to specify the field at all.
-
-But if you want to specify a different unique key to match documents on then you would specify either a single field name or if there's multiple fields, an array of them in the on argument.
-
-We do require that if you specify your own merging key, there must be a unique index present on it.
-
-This is of course so we can uniquely identify the document in the target collection to match with an incoming document from the aggregation.
+But if you want to specify a different unique key to match documents on then you would specify either a single field name or if there's multiple fields, an array of them in the on argument. We do require that if you specify your own merging key, there must be a unique index present on it. This is of course so we can uniquely identify the document in the target collection to match with an incoming document from the aggregation.
 
 So to recap, $merge allows you to output results of an aggregation pipeline right into another collection, giving you options to specify whether you want to merge or insert or how you want to merge the results with the existing documents, allowing you to output to an existing sharded or unsharded collection, as well as to a collection in a different database than the one that you're running the aggregation.
