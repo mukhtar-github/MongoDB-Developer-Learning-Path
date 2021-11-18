@@ -7272,7 +7272,17 @@ The *$out* stage is very useful for performing an *aggregation against existing 
 
 ### $merge Overview
 
-Hi. This is Asiya, and I'm going to talk about the new *$merge* stage in the *aggregation pipeline*. The only way of saving the *aggregation pipeline* prior to *MongoDB 4.2*, was by writing it to a new, unsharded collection, via the *$out* stage. If the collection you wanted to write already existed, *$out* would replace it with the new version, and it couldn't be sharded.
+Hi. This is Asiya, and I'm going to talk about the new *$merge* stage in the *aggregation pipeline*. The only way of saving the *aggregation pipeline* prior to *MongoDB 4.2*, was by writing it to a *new, unsharded collection*, via the *$out* stage. If the collection you wanted to write already existed, *$out* would replace it with the *new version*, and it couldn't be *sharded*.
+
+```javascript
+// $out
+
+db.coll.aggregate([{ pipeline }, ... 
+    { $out: "new_coll" }
+]);
+
+// coll --> $out --> new_coll
+```
 
 This only supported a subset of what people want to do with the *output from an aggregation*, and so MongoDB 4.2 introduces a new stage, which allows flexible ways of saving results of the aggregation into an already existing collection, whether or not it's *sharded or unsharded*. We called it *$merge*. Now, you'll have a pipeline like you normally do, and then as the last stage, you would specify *$merge* with some options, which we will review.
 
