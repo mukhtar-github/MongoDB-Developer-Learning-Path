@@ -7311,11 +7311,30 @@ Now, when documents from an *aggregation* are to be added to an existing collect
 }
 ```
 
-The only required argument to *$merge* is *target*. You specify *into* and then the *name of the collection* that you want to *$merge* your output with. The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*.
+The only required argument to *$merge* is *target*. You specify *into* and then the *name of the collection* that you want to *$merge* your output with.
 
-Now, I said you might want to specify how to handle matching documents. But before we decide what to do on match, we have to understand how documents are matched. You can specify the fields on which to match the documents.
+```javascript
+{ $merge: "collection2" }
+```
 
-When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections. And the combination of _id and your shard key if the collection is sharded. If that's how you want to merge documents, then you don't have to specify the field at all.
+The simplest syntax of that is just to give it a *string*, which represents a *collection name in the same database* that you're running the *aggregation in*.
+
+```javascript
+{ $merge: { db: "db2", coll: "collection2" } }
+```
+
+But you can also specify *a full object with the name of the database and the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*. Now, I said you might want to specify how to handle *matching documents*. But before we decide what to do on *$merge*, we have to understand how documents are *$merged*.
+
+```javascript
+{ 
+    $merge: { 
+        into: <target>
+        on: <fields>
+    } 
+}
+```
+
+You can specify the *fields on* which to *$merge* the documents. When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections. And the combination of _id and your shard key if the collection is sharded. If that's how you want to merge documents, then you don't have to specify the field at all.
 
 But if you want to specify a different unique key to match documents on then you would specify either a single field name or if there's multiple fields, an array of them in the on argument. We do require that if you specify your own merging key, there must be a unique index present on it. This is of course so we can uniquely identify the document in the target collection to match with an incoming document from the aggregation.
 
