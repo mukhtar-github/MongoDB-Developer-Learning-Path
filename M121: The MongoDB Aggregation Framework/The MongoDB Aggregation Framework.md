@@ -6985,9 +6985,13 @@ In *$bucketAuto*, cardinality of the *groupBy* expression may impact even distri
 
 ### The $redact Stage
 
-Let's learn about one of the stages in the aggregation framework that can help us protect information from unauthorized access, the redact stage. The redact stage has the following form. The expression can be any expression or combination of expressions, but must ultimately resolve to one of three values, descend, prune, and keep.
+Let's learn about one of the stages in the aggregation framework that can help us protect information from unauthorized access, the *$redact* stage. The *$redact* stage has the following form.
 
-OK, at first these seem pretty cryptic. So let's examine what each of them does. First, let's look at prune and keep. Prune and keep are inverse of each other. Prune will exclude all fields at the current document level without further inspection, while keep will retain all fields at the current document level without further inspection.
+```javascript
+{ $redact: <expression> }
+```
+
+The *expression* can be any expression or combination of expressions, but must ultimately resolve to one of three values, $$DESCEND, $$PRUNE, and $$KEEP. OK, at first these seem pretty cryptic. So let's examine what each of them does. First, let's look at $$PRUNE, and $$KEEP. $$PRUNE, and $$KEEP are inverse of each other. $$PRUNE -- (Remove), will exclude all fields at the current document level without further inspection, while $$KEEP -- (Retain), will retain all fields at the current document level without further inspection.
 
 So what do we mean by further inspection? Let's look at this example document from the employees collection. Each colored square represents a document level. Specifying keep or prune at any given document level will perform the associated action and automatically apply this action to all levels of the document. Let's look at this example document from the employees collection.
 
