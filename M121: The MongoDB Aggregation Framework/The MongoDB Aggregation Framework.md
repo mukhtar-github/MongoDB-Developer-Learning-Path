@@ -7293,13 +7293,27 @@ This only supported a subset of what people want to do with the *output from an 
 db.coll.aggregate([{ pipeline }, ... 
     { $merge: { ... } }
 ]);
+
+// coll --> $merge --> coll2
+
+// coll2 -- can exist, -- same or different 'db', -- can be sharded.
 ```
 
-Now unlike $out stage, this new stage can output to any existing collection, whether it's sharded or unsharded You're allowed to output to a collection in a different database, and you can specify exactly how you want the new documents from this aggregation to be merged into the existing collection.
+Now unlike *$out* stage, this new stage can output to any existing collection, whether it's *sharded or unsharded*. You're allowed to output to a collection in a different database, and you can specify exactly how you want the new documents from this *aggregation* to be merged into the existing collection. That's why we call it *$merge*.
 
-That's why we call it *$merge*. Now, when documents from an aggregation are to be added to an existing collection, the question is, how should we merge them with the documents that already exist in this output collection? Since there are multiple ways you might want to handle this, merge provides you with options to describe exactly what you want. Let's look at *$merge* syntax now. The only required argument to *$merge* is target. You specify into and then the name of the collection that you want to *$merge* your output with.
+Now, when documents from an *aggregation* are to be added to an existing collection, the question is, how should we merge them with the documents that already exist in this output collection? Since there are multiple ways you might want to handle this, *$merge* provides you with options to describe exactly what you want. Let's look at *$merge* syntax now.
 
-The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*. Now, I said you might want to specify how to handle matching documents. But before we decide what to do on match, we have to understand how documents are matched. You can specify the fields on which to match the documents.
+```javascript
+{ 
+    $merge: { 
+        into: <target> 
+    } 
+}
+```
+
+The only required argument to *$merge* is *target*. You specify *into* and then the *name of the collection* that you want to *$merge* your output with. The simplest syntax of that is just to give it a string, which represents a *collection name in the same database* that you're running the *aggregation in*, but you can also specify *a full object with the name of the database in the name of the collection, if the output is supposed to go to a different database than the one that you are running the aggregate pipeline in*.
+
+Now, I said you might want to specify how to handle matching documents. But before we decide what to do on match, we have to understand how documents are matched. You can specify the fields on which to match the documents.
 
 When deciding how to match them, the documents that are incoming to the target collection, if the user doesn't specify the optional on argument, the server will use the field as the merging field for all unsharded target collections. And the combination of _id and your shard key if the collection is sharded. If that's how you want to merge documents, then you don't have to specify the field at all.
 
