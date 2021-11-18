@@ -7268,6 +7268,4 @@ db.movies.aggregate([
 
 So this *aggregation* here, where we match every document, perform some *grouping operation, unwind to create many documents*, and then try an *output to a new collection* would fail because it would result in *many documents with the same _id value*. And that covers the *$out* stage.
 
-This stage is very useful for performing an aggregation against existing data to do a migration, seed a collection with useful data, or distribute snapshots of data for analysis. Here are a few things to remember about the $out stage. It will create a new collection or overwrite an existing collection if specified.
-
-It honors indexes on existing collections. It will not create or overwrite data if pipeline errors. And it creates collections in the same database as the source collection.
+The *$out* stage is very useful for performing an *aggregation against existing data to do a migration, seed a collection with useful data, or distribute snapshots of data for analysis*. Here are a few things to remember about the *$out* stage. It will *create a new collection or overwrite an existing collection if specified*. It *honors indexes on existing collections*. It *will not create or overwrite data if pipeline errors*. And it *creates collections in the same database as the source collection*.
