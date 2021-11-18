@@ -7251,13 +7251,9 @@ The *$out* stage must be the *last stage in the pipeline*. As such, it can't be 
 { $out: "output_collection" }
 ```
 
-We specify the name of the *"output_collection"* that we want.
+We specify the name of the *"output_collection"* that we want. *MongoDB* will create the *collection with the name specified if none exists*. Otherwise it will *overwrite an existing collection* if an *existing collection name is specified*. Now there's a few things to know. It will only *create the new collection within the same database*. If an *existing collection* is replaced, *any indexes that existed on the original collection will still be in place*. If the *pipeline errors*, it will not *create or overwrite a collection*. This also means that *the output from $out must honor index restrictions*, such as *unique indexes*, can include the *_id* field.
 
 ```javascript
-db.movies.aggregate([
-    { $stage1 }, { $stage2 }, ..., { $stageN }, { $out: "output_collection" }
-]);
-
 // Must honor existing indexes if specifying an existing collection!
 
 db.movies.aggregate([
@@ -7270,11 +7266,7 @@ db.movies.aggregate([
 ]);
 ```
 
-*MongoDB* will create the *collection with the name specified if none exists*. Otherwise it will *overwrite an existing collection* if an *existing collection name is specified*. Now there's a few things to know. It will only create the new collection within the same database.
-
-If an existing collection is replaced, any indexes that existed on the original collection will still be in place. If the pipeline errors, it will not create or overwrite a collection. This also means that the output from out must honor index restrictions, such as unique indexes, can include the _id field.
-
-So this aggregation here where we match every document, perform some grouping operation, unwind to create many documents, and then try an output to a new collection would fail because it would result in many documents with the same _id value. And that covers the $out stage.
+So this *aggregation* here, where we match every document, perform some *grouping operation, unwind to create many documents*, and then try an *output to a new collection* would fail because it would result in *many documents with the same _id value*. And that covers the *$out* stage.
 
 This stage is very useful for performing an aggregation against existing data to do a migration, seed a collection with useful data, or distribute snapshots of data for analysis. Here are a few things to remember about the $out stage. It will create a new collection or overwrite an existing collection if specified.
 
