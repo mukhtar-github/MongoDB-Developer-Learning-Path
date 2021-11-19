@@ -7486,11 +7486,11 @@ If we are *not* expecting to find any matching documents in the *employee_data c
 
 Let's look at a few examples now using this new stage.
 
-|                   |            |          |
-|:-----------------:|------------|----------|
-|    mflix users    |            |          |
-|                   | --->  ---> | sv users |
-| mfriendbook users |            |          |
+|                   | Using $merge to populate/update user fields from other services |          |
+|:-----------------:|-----------------------------------------------------------------|----------|
+|    mflix users    |                                                                 |          |
+|                   |                           ---------->                           | sv users |
+| mfriendbook users |                                                                 |          |
 
 Single view example would be where you may be maintaining in a particular database a collection of users and, among other things, you want to track whatever arbitrary fields you know about the users from some-- maybe a third party API that you're pulling in for mflix service.
 
