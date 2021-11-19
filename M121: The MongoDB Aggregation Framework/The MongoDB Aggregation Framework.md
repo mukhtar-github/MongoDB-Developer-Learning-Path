@@ -7527,10 +7527,33 @@ Now you'd construct the *pipeline from mflix users collection and merge it into 
 |:----------------------------------------------------------------------:|
 | {  _id: "user235",  dob: ISODate( ... ),  f1: "yyy",  mflix: { ... } } |
 
-But when it does *match*, then it's going to do a *default merge*, which means that the fields here -- which _id of course matches. And then mflix has the full document from this mflix collection, so it will just get merged into an existing document. If there was an earlier mflix field here, it will get overwritten by the new document. Now you can run the exact same thing on your mfriendbook.users collection.
+But when it does *match*, then it's going to do a *default merge*, which means that the fields in the project -- which *_id* of course *matches*. And then *mflix* has the full document from the *mflix collection*, so it will just get *merged* into an *existing document*. If there was an earlier *mflix* field in the *single view users collection*, it will get overwritten by the new document.
 
-You have the same pipeline again transforming the username into the _id field.
+```javascript
+/*
+$merge updates fields from mfriendbook.users collection into sv.users collection.
+Our "_id" field is unique user name.
+*/
 
-And now here the mfriendbook field, which will get added, or set, or overwritten, if there was one there already, with whatever this new information is.
+mfriendbook_pipeline = [
+    { $project: {
+        "_id": "$userName",
+        "mfriendbook": "$$ROOT"
+    }},
+    {$merge: {
+        "into": {
+            "db": "sv",
+            "collection": "users"
+        },
+        "whenNotMatched": "discard"
+    }}
+]
+```
 
-Again, if a user doesn't match an existing _id value, it will just get discarded rather than inserted if that option was not there.
+Now you can run the exact same thing on your *mfriendbook.users collection*. You have the same *pipeline* again transforming the *username* into the *_id* field.
+
+|                                         sv.users                                        |
+|:---------------------------------------------------------------------------------------:|
+| { _id: "user235", dob: ISODate( ... ), f1: "yyy", mflix: { ... }, mfriendbook: { ... }} |
+
+And now here the *mfriendbook* field, which will get *added, or set, or overwritten*, if there was one there already, with whatever this new information is. Again, if a *user doesn't match an existing _id value*, it will just get *discarded rather than inserted if that option was not there*.
