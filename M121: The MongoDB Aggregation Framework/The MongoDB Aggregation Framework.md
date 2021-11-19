@@ -7419,18 +7419,16 @@ If you're incoming document has *underscore ID 37 total 64*, and then there's so
     $merge: { 
         into: <target>,
         whenMatched: [
-            { $addFields: {
-                total: { $sum: [ "$total", "$$new.total" ]}
-                }
-            }
+            { $replaceWith: { $mergeObjects: [
+                "$$new",
+                {total: {$sum: [ "$$new.total", "$total" ]}}
+            ]}}
         ]
     }
 }
 ```
 
-Compare this with example two where, on match, we're going to use replace with, which creates a new object.
-
-And that new object is merging the entire new incoming document-- that would be the one on the left here-- just with a single field object where total is computed as a sum of new total and existing total.
+Compare this with example two where, on match, we're going to use replace with, which creates a new object. And that new object is merging the entire new incoming document -- that would be the one on the left here-- just with a single field object where total is computed as a sum of new total and existing total.
 
 And here, you can see that the F1 field is actually inherited from incoming because it's in $$new.
 
