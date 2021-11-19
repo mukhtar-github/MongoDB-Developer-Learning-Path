@@ -7557,3 +7557,15 @@ Now you can run the exact same thing on your *mfriendbook.users collection*. You
 | { _id: "user235", dob: ISODate( ... ), f1: "yyy", mflix: { ... }, mfriendbook: { ... }} |
 
 And now here the *mfriendbook* field, which will get *added, or set, or overwritten*, if there was one there already, with whatever this new information is. Again, if a *user doesn't match an existing _id value*, it will just get *discarded rather than inserted if that option was not there*.
+
+### Using $merge for a Temporary Collection
+
+Now let's look at a completely different use case where you want to append from a temporary collection into some permanent collection. This might be a use case where you have a data collection, and periodically you get a new load of a subset of data, which you load into this collection called temp.
+
+You will now do some kind of cleansing and analyzing the records to make sure they're valid before appending them to the existing data collection. So your pipeline would be whatever it is that you do to validate that this data in temp collection is of the right format, and the right type, and the right whatever else you need to verify, which you will now append into data.
+
+Now, append here means that when there's no match, it will insert. And I've specified that when there is match, I want it to fail, because I don't expect ever to find a match here. The reason is that I would only find a match if I'd already loaded this data. And I don't really expect to ever run a job twice.
+
+So this is an example of having the pipeline raise an error if an unexpected event happens, such as finding that there's already a record that newly arriving data would match up to, which means something has gone wrong or not according my expectation.
+
+This is similar, if you're familiar with SQL, to SQL's INSERT INTO table 1 SELECT * from table 2. And it just says insert into this existing table. Now, if the table doesn't exist, it'll just insert into a new table.
