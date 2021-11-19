@@ -7521,19 +7521,9 @@ mflix_pipeline = [
 ]
 ```
 
-Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection. So you might have a project that creates this *_id* field, which is $username. So maybe the same user name is stored in username field there.
+Now you'd construct the *pipeline from mflix users collection and merge it into single view users collection*. So you might have a *project* that creates this *_id* field, which is *$username*. So maybe *the same user name is stored in username field* there. And now you *merge into*. You specify a *different database and collection name*. You say, *whenNotMatched, discard*.
 
-And now you merge into.
-
-You specify a different database and collection name.
-
-You see whenNotMatched, discard.
-
-This makes sense because you don't want this merging service to create a new record for a user that doesn't exist, because it would be missing a lot of required fields, for example.
-
-But when it does match, then it's going to do a default merge, which means that the fields here-- which _id of course matches.
-
-And then mflix has the full document from this mflix collection, so it will just get merged into an existing document.
+This makes sense because you don't want this merging service to create a new record for a user that doesn't exist, because it would be missing a lot of required fields, for example. But when it does match, then it's going to do a default merge, which means that the fields here -- which _id of course matches. And then mflix has the full document from this mflix collection, so it will just get merged into an existing document.
 
 If there was an earlier mflix field here, it will get overwritten by the new document.
 
