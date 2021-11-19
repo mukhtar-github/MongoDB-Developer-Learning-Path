@@ -7372,26 +7372,18 @@ When documents coming from the *source* to the *target*, either each incoming do
     $merge: { 
         into: <target>,
         whenNotMatched: "insert" | "discard" | "fail",
-        whenMatched: "merge"
+        whenMatched: "merge" | "replace" | "keepExisting" | "fail" | [ ... ]
     } 
 }
 ```
 
 We give you two fields in *$merge* to specify what action should be taken when there *isn't a match or when there is a match*. Both of them are optional. By default, when there is *no match, we will do an insert*. When there is *a match, we will merge the new incoming document with the existing document*. Now, a *merge* here means we will add *all the top level fields of the new document to existing document*, but that will preserve all the fields in the existing document that don't exist in the new incoming document. I'll show you an example of this later.
 
-But you can think of this as *sort of an update with an upsert option set to true*. Right? It says that update set these new fields into an existing document. If there isn't an existing document, then *insert* it. So the default action is like an *upsert into the target collection*. That's the easiest way to remember it. Now, the other options when there isn't a *match are discard and fail*. Both of these would probably be useful in a scenario where you always expect to find a matching document.
+But you can think of this as *sort of an update with an upsert option set to true*. Right? It says that update set these new fields into an existing document. If there isn't an existing document, then *insert* it. So the default action is like an *upsert into the target collection*. That's the easiest way to remember it. Now, the other options when there isn't a *match are discard and fail*. Both of these would probably be useful in a scenario where you always expect to find a *matching document*.
 
-And if a *match* is not found, then something is wrong. Imagine doing some kind of partial processing where you're calculating some additional information to be *merged* with an existing record, and if the existing record isn't found, that's an error. In that case, you would want to raise an exception. That would be *fail*. In other cases, it's OK if you don't find a record to update with the new information, but you also don't want to create that record, in which case that option would be *discard*.
+And if a *match* is not found, then something is wrong. Imagine doing some kind of *partial processing* where you're calculating some additional information to be *merged* with an *existing record*, and if the *existing record* isn't found, that's an error. In that case, you would want to raise an exception. That would be *fail*. In other cases, it's OK if you don't find a record to update with the new information, but you also don't want to create that record, in which case that option would be *discard*.
 
-Now, when there is a matching document found, you can specify four options to whenMatched, in addition to the default merge action.
-
-They are replace, keep existing, fail, and then one more special option here.
-
-Replace and keep existing is straightforward.
-
-Replace means the incoming document will completely overwrite or replace the matching document in the target collection.
-
-Keep existing will discard the incoming document and leave the existing document in the target collection as it is.
+Now, when there is a *matching document* found, you can specify *four options* to *whenMatched*, in addition to the default *merge* action. They are *replace, keep existing, fail*, and then one more special option in the array block. *Replace and keep existing* is straightforward. *Replace* means the incoming document will *completely overwrite or replace the matching document in the target collection*. *KeepExisting* will *discard the incoming document and leave the existing document in the target collection as it is*.
 
 And fail would be useful when you absolutely do not expect to find a match.
 
