@@ -7356,26 +7356,28 @@ So to recap, *$merge* allows you to output results of an *aggregation pipeline* 
 }
 ```
 
-Now that we know how new incoming documents will be matched to existing documents, it's good to understand what happens in each case by default, and what other options are available to you.
+Now that we know how *new incoming documents will be matched to existing documents*, it's good to understand what happens in each case by default, and what other options are available to you.
 
 #### Action
 
 * nothing matched: usually insert
-* document matched: overwrite? update?? ???
+* document matched: overwrite? update??  ???
 
 ##### source ----> target
 
-When documents coming from the *source* to the *target*, either each incoming document doesn't *match* anything in the *target*, or it *matches*. If nothing is *matched*, usually, you will want to *insert the new document*. If something is *matched*, you will probably want to somehow *overwrite this document*.
+When documents coming from the *source* to the *target*, either each incoming document doesn't *match* anything in the *target*, or it *matches*. If nothing is *matched*, usually, you will want to *insert the new document*. If something is *matched*, you will probably want to somehow *overwrite this document*. Right? Maybe update it with new information, or completely replace it.
 
-Right? Maybe update it with new information, or completely replace it.
+```javascript
+{ 
+    $merge: { 
+        into: <target>,
+        whenNotMatched: "insert",
+        whenMatched:
+    } 
+}
+```
 
-We give you two fields in $merge to specify what action should be taken when there isn't a match or when there is a match.
-
-Both of them are optional.
-
-By default, when there is no match, we will do an insert.
-
-When there is a match, we will merge the new incoming document with the existing document.
+We give you two fields in *$merge* to specify what action should be taken when there *isn't a match or when there is a match*. Both of them are optional. By default, when there is no match, we will do an insert. When there is a match, we will merge the new incoming document with the existing document.
 
 Now, a merge here means we will add all the top level fields of the new document to existing document, but that will preserve all the fields in the existing document that don't exist in the new incoming document.
 
