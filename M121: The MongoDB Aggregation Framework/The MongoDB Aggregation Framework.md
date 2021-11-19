@@ -7387,15 +7387,22 @@ Now, when there is a *matching document* found, you can specify *four options* t
 
 The last option you have when a document that's incoming *matches an existing document* is useful when you want to *merge* their values of fields somehow, but a simple *merge* option is not sufficient. The *Brackets* here represent that you can specify *your own custom pipeline* that will be used to compute a new document to be written to the *target collection*. You can compute it from fields of, both, the *incoming and existing versions of the document*.
 
-Now, the pipeline is limited to stages that do single document transformations, like project or $addFields, and it will be applied to existing matched document in the target collection.
+```javascript
+// $merge example
+{ 
+    $merge: { 
+        into: <target>,
+        whenMatched: [
+            { $addFields: {
+                total: { $sum: [ "$total", "$$new.total" ]}
+                }
+            }
+        ]
+    }
+}
+```
 
-Any field names, like $a or $total, are referring to fields in the existing document.
-
-But you can refer to fields in the incoming document with a special variable, $$new.
-
-Now, this may look to you, very much, like the new aggregation pipeline in update, which is new in 4.2.
-
-And it is.
+Now, the pipeline is limited to stages that do single document transformations, like project or $addFields, and it will be applied to existing matched document in the target collection. Any field names, like $a or $total, are referring to fields in the existing document. But you can refer to fields in the incoming document with a special variable, $$new. Now, this may look to you, very much, like the new aggregation pipeline in update, which is new in 4.2. And it is.
 
 It's the exact same implementation, and we even give you the same alias for ad fields, known as $set.
 
