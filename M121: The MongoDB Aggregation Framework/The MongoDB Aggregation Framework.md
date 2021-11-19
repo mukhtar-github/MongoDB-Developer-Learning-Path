@@ -7463,3 +7463,21 @@ Now, there's one other option that *merge syntax* allows. And that option is onl
 ```
 
 So a different way to *rewrite this particular pipeline* might be to add a *let*, which preserves just the *total* from the *new incoming document*. And *on a match*, it *sets total* in the existing document to a *sum of $total and $$itotal*, which is the variable of let.
+
+#### Problem 13
+
+Consider an *Aggregation Pipeline* using the *new $merge* stage that outputs to the *employee_data collection*. If we are *not* expecting to find any matching documents in the *employee_data collection*, which of the following stages should we use?
+
+#### Answer 13
+
+```javascript
+{
+  $merge: {
+    into: "employee_data",
+    whenNotMatched: "insert",
+    whenMatched: "fail"
+  }
+}
+```
+
+If we are *not* expecting to find any matching documents in the *employee_data collection*, then finding a matching document should raise a red flag. One way to deal with this is to throw an error, which is denoted by *whenMatched: "fail"*. Additionally, it would not make sense to *replace or merge* the documents in *employee_data* with the output documents, because we weren't expecting to find any matches.
