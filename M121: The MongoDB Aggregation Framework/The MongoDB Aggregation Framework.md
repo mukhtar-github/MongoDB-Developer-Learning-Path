@@ -7481,3 +7481,45 @@ Consider an *Aggregation Pipeline* using the *new $merge* stage that outputs to 
 ```
 
 If we are *not* expecting to find any matching documents in the *employee_data collection*, then finding a matching document should raise a red flag. One way to deal with this is to throw an error, which is denoted by *whenMatched: "fail"*. Additionally, it would not make sense to *replace or merge* the documents in *employee_data* with the output documents, because we weren't expecting to find any matches.
+
+### Using $merge for Single View
+
+Let's look at a few examples now using this new stage. Single view example would be where you may be maintaining in a particular database a collection of users and, among other things, you want to track whatever arbitrary fields you know about the users from some-- maybe a third party API that you're pulling in for mflix service.
+
+And the same thing for mfriendbook service.
+
+So you have multiple collections that represent that user information.
+
+You want to merge it in periodically into your single view.
+
+So imagine your single view is the user.
+
+The _id would be the unique merging key here that would be used, maybe a date of birth and some other fields.
+
+Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection.
+
+So you might have a project that creates this _id field, which is $username.
+
+So maybe the same user name is stored in username field there.
+
+And now you merge into.
+
+You specify a different database and collection name.
+
+You see whenNotMatched, discard.
+
+This makes sense because you don't want this merging service to create a new record for a user that doesn't exist, because it would be missing a lot of required fields, for example.
+
+But when it does match, then it's going to do a default merge, which means that the fields here-- which _id of course matches.
+
+And then mflix has the full document from this mflix collection, so it will just get merged into an existing document.
+
+If there was an earlier mflix field here, it will get overwritten by the new document.
+
+Now you can run the exact same thing on your mfriendbook.users collection.
+
+You have the same pipeline again transforming the username into the _id field.
+
+And now here the mfriendbook field, which will get added, or set, or overwritten, if there was one there already, with whatever this new information is.
+
+Again, if a user doesn't match an existing _id value, it will just get discarded rather than inserted if that option was not there.
