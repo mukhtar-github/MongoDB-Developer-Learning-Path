@@ -7439,13 +7439,27 @@ Compare this with *example two* where, *on match*, we're going to use *$replaceW
 { 
     $merge: { 
         into: <target>,
+        let: { new: "$$ROOT" },
         whenMatched: [ ... ]
     } 
 }
 ```
 
-Now, there's one other option that *merge syntax* allows. And that option is only allowed and only makes sense when you're using a *custom pipeline* for the *whenMatched field*, and that's let. Let allows you to define variables from your incoming or $$new document. And if you don't specify left, it's exactly as if you did specify left, but defining variable new to be $$ dollar route, which is the entire incoming document.
+Now, there's one other option that *merge syntax* allows. And that option is only allowed and only makes sense when you're using a *custom pipeline* for the *whenMatched field*, and that's *let*. *Let* allows you to define variables from your incoming or $$new document. And if you don't specify let, it's exactly as if you did specify left, but defining variable new to be $$ROOT, which is the entire incoming document.
 
-So a different way to rewrite this particular pipeline might be to add a let, which preserves just the total from the new incoming document.
+```javascript
+{ 
+    $merge: { 
+        into: <target>,
+        let: { itotal: "$total" },
+        whenMatched: [
+            { $set: {
+                total: { $sum: [ "$total", "$$itotal" ]}
+                }
+            }
+        ]
+    }
+}
+```
 
-And on a match, it sets total in the existing document to a sum of $total and $$itotal, which is this variable over here.
+So a different way to *rewrite this particular pipeline* might be to add a *let*, which preserves just the *total* from the *new incoming document*. And *on a match*, it *sets total* in the existing document to a *sum of $total and $$itotal*, which is the variable of let.
