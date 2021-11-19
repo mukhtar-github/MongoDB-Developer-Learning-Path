@@ -7372,30 +7372,14 @@ When documents coming from the *source* to the *target*, either each incoming do
     $merge: { 
         into: <target>,
         whenNotMatched: "insert",
-        whenMatched:
+        whenMatched: "merge"
     } 
 }
 ```
 
-We give you two fields in *$merge* to specify what action should be taken when there *isn't a match or when there is a match*. Both of them are optional. By default, when there is no match, we will do an insert. When there is a match, we will merge the new incoming document with the existing document.
+We give you two fields in *$merge* to specify what action should be taken when there *isn't a match or when there is a match*. Both of them are optional. By default, when there is *no match, we will do an insert*. When there is *a match, we will merge the new incoming document with the existing document*. Now, a *merge* here means we will add *all the top level fields of the new document to existing document*, but that will preserve all the fields in the existing document that don't exist in the new incoming document. I'll show you an example of this later.
 
-Now, a merge here means we will add all the top level fields of the new document to existing document, but that will preserve all the fields in the existing document that don't exist in the new incoming document.
-
-I'll show you an example of this later.
-
-But you can think of this as sort of an update with an upsert option set to true.
-
-Right?
-
-It says that update set these new fields into an existing document.
-
-If there isn't an existing document, then insert it.
-
-So the default action is like an upsert into the target collection.
-
-That's the easiest way to remember it.
-
-Now, the other options when there isn't a match are discard and fail.
+But you can think of this as sort of an update with an upsert option set to true. Right? It says that update set these new fields into an existing document. If there isn't an existing document, then insert it. So the default action is like an upsert into the target collection. That's the easiest way to remember it. Now, the other options when there isn't a match are discard and fail.
 
 Both of these would probably be useful in a scenario where you always expect to find a matching document.
 
