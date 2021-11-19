@@ -7383,19 +7383,9 @@ But you can think of this as *sort of an update with an upsert option set to tru
 
 And if a *match* is not found, then something is wrong. Imagine doing some kind of *partial processing* where you're calculating some additional information to be *merged* with an *existing record*, and if the *existing record* isn't found, that's an error. In that case, you would want to raise an exception. That would be *fail*. In other cases, it's OK if you don't find a record to update with the new information, but you also don't want to create that record, in which case that option would be *discard*.
 
-Now, when there is a *matching document* found, you can specify *four options* to *whenMatched*, in addition to the default *merge* action. They are *replace, keep existing, fail*, and then one more special option in the array block. *Replace and keep existing* is straightforward. *Replace* means the incoming document will *completely overwrite or replace the matching document in the target collection*. *KeepExisting* will *discard the incoming document and leave the existing document in the target collection as it is*.
+Now, when there is a *matching document* found, you can specify *four options* to *whenMatched*, in addition to the default *merge* action. They are *replace, keep existing, fail*, and then one more special option in the *bracket*. *Replace and keep existing* is straightforward. *Replace* means the incoming document will *completely overwrite or replace the matching document in the target collection*. *KeepExisting* will *discard the incoming document and leave the existing document in the target collection as it is*. And *fail would be useful when you absolutely do not expect to find a match*. I'll show you an example of that later.
 
-And fail would be useful when you absolutely do not expect to find a match.
-
-I'll show you an example of that later.
-
-The last option you have when a document that's incoming matches an existing document is useful when you want to merge their values of fields somehow, but a simple merge option is not sufficient.
-
-The.
-
-Brackets here represent that you can specify your own custom pipeline that will be used to compute a new document to be written to the target collection.
-
-You can compute it from fields of, both, the incoming and existing versions of the document.
+The last option you have when a document that's incoming *matches an existing document* is useful when you want to *merge* their values of fields somehow, but a simple *merge* option is not sufficient. The *Brackets* here represent that you can specify *your own custom pipeline* that will be used to compute a new document to be written to the *target collection*. You can compute it from fields of, both, the *incoming and existing versions of the document*.
 
 Now, the pipeline is limited to stages that do single document transformations, like project or $addFields, and it will be applied to existing matched document in the target collection.
 
