@@ -7406,19 +7406,12 @@ Now, the *pipeline* is limited to *stages that do single document transformation
 
 And what this *pipeline* is doing is, for *matched document*, it's going to *set a field total to a sum of already existing dollar total*. And *$$new.total*, that's the total from the document that's flowing through the *pipeline*. Here's an example.
 
-If you're incoming document has underscore ID 37 total 64, and then there's some other field F1.
+| Incoming                             | Target                                     |
+|--------------------------------------|--------------------------------------------|
+| {  _id: "37",  total: 64,  f1: "x" } | {   _id: "37",   total: 245,   f1: "yyy" } |
+| Result:                              | {   _id: "37",   total: 309,   f1: "x" }   |
 
-And our target has the same idea, obviously.
-
-That's how they merge.
-
-And it has an already existing total in some other F1.
-
-This pipeline will only modify the total field.
-
-It will set total to be the sum of the two.
-
-The other two fields will be left alone.
+If you're incoming document has *underscore ID 37 total 64*, and then there's some other *field F1*. And our *target* has the same *_id*, obviously. That's how they *merge*. And it has an already existing *total and some other F1*. This *pipeline* will only modify the *total* field. It will set *total* to be the *sum of the two*. The other *two fields* will be left alone.
 
 Compare this with example two where, on match, we're going to use replace with, which creates a new object.
 
