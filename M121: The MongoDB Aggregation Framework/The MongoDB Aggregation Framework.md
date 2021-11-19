@@ -7498,7 +7498,30 @@ Let's look at a few examples now using this new stage.
 |:-----------------------------------------------------:|
 | {  _id: "user235",  dob: ISODate( ... ),  f1: "yyy" } |
 
-So imagine your *single view is the user*. The *_id* would be the *unique merging key* here that would be used, maybe a date of birth and some other fields. Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection. So you might have a project that creates this *_id* field, which is $username. So maybe the same user name is stored in username field there.
+So imagine your *single view is the user*. The *_id* would be the *unique merging key* here that would be used, maybe a *date of birth and some other fields*.
+
+```javascript
+/*
+$merge updates fields from mflix.users collection into sv.users collection.
+Our "_id" field is unique user name.
+*/
+
+mflix_pipeline = [
+    { $project: {
+        "_id": "$userName",
+        "mflix": "$$ROOT"
+    }},
+    {$merge: {
+        "into": {
+            "db": "sv",
+            "collection": "users"
+        },
+        "whenNotMatched": "discard"
+    }}
+]
+```
+
+Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection. So you might have a project that creates this *_id* field, which is $username. So maybe the same user name is stored in username field there.
 
 And now you merge into.
 
