@@ -7409,12 +7409,12 @@ And what this *pipeline* is doing is, for *matched document*, it's going to *set
 | Incoming                             | Target                                     |
 |--------------------------------------|--------------------------------------------|
 | {  _id: "37",  total: 64,  f1: "x" } | {   _id: "37",   total: 245,   f1: "yyy" } |
-| Result:                              | {   _id: "37",   total: 309,   f1: "x" }   |
+| Result:                              | {   _id: "37",   total: 309,   f1: "yyy" } |
 
 If you're incoming document has *underscore ID 37 total 64*, and then there's some other *field F1*. And our *target* has the same *_id*, obviously. That's how they *merge*. And it has an already existing *total and some other F1*. This *pipeline* will only modify the *total* field. It will set *total* to be the *sum of the two*. The other *two fields* will be left alone.
 
 ```javascript
-// $merge example 1
+// $merge example 2
 { 
     $merge: { 
         into: <target>,
@@ -7428,19 +7428,23 @@ If you're incoming document has *underscore ID 37 total 64*, and then there's so
 }
 ```
 
-Compare this with example two where, on match, we're going to use replace with, which creates a new object. And that new object is merging the entire new incoming document -- that would be the one on the left here-- just with a single field object where total is computed as a sum of new total and existing total.
+| Incoming                             | Target                                     |
+|--------------------------------------|--------------------------------------------|
+| {  _id: "37",  total: 64,  f1: "x" } | {   _id: "37",   total: 245,   f1: "yyy" } |
+| Result:                              | {   _id: "37",   total: 309,   f1: "x" }   |
 
-And here, you can see that the F1 field is actually inherited from incoming because it's in $$new.
+Compare this with *example two* where, *on match*, we're going to use *$replaceWith*, which creates a *new object*. And that *new object* is *merging* the entire *new incoming document* -- that would be the one on the left of the table -- just with a *single field object* where *total* is computed as a sum of *new total - incoming* and *existing total - target*. And here, you can see that the *F1 field* is actually inherited from *incoming because it's in $$new*. And the only field from $$new that's being changed is the total.
 
-And the only field from $$new that's being changed is the total.
+```javascript
+{ 
+    $merge: { 
+        into: <target>,
+        whenMatched: [ ... ]
+    } 
+}
+```
 
-Now, there's one other option that merge syntax allows.
-
-And that option is only allowed and only makes sense when you're using a custom pipeline for the whenMatched field, and that's let.
-
-Let allows you to define variables from your incoming or $$new document.
-
-And if you don't specify left, it's exactly as if you did specify left, but defining variable new to be $$ dollar route, which is the entire incoming document.
+Now, there's one other option that *merge syntax* allows. And that option is only allowed and only makes sense when you're using a *custom pipeline* for the *whenMatched field*, and that's let. Let allows you to define variables from your incoming or $$new document. And if you don't specify left, it's exactly as if you did specify left, but defining variable new to be $$ dollar route, which is the entire incoming document.
 
 So a different way to rewrite this particular pipeline might be to add a let, which preserves just the total from the new incoming document.
 
