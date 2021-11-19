@@ -2,7 +2,6 @@ sudo systemctl start mongod
 sudo systemctl status mongod
 sudo systemctl stop mongod
 
-
 mongo --port 27000.
 mongoimport --db mongo-exercises --collection courses --drop --file exercise-data.json --jsonArray
 
