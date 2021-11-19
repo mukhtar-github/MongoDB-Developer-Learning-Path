@@ -7484,7 +7484,14 @@ If we are *not* expecting to find any matching documents in the *employee_data c
 
 ### Using $merge for Single View
 
-Let's look at a few examples now using this new stage. Single view example would be where you may be maintaining in a particular database a collection of users and, among other things, you want to track whatever arbitrary fields you know about the users from some-- maybe a third party API that you're pulling in for mflix service.
+Let's look at a few examples now using this new stage.
+
+|    mflix users    |           |          |
+|:-----------------:|-----------|----------|
+|                   | \|-> \|-> | sv users |
+| mfriendbook users |           |          |
+
+Single view example would be where you may be maintaining in a particular database a collection of users and, among other things, you want to track whatever arbitrary fields you know about the users from some-- maybe a third party API that you're pulling in for mflix service.
 
 And the same thing for mfriendbook service.
 
