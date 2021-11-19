@@ -7492,7 +7492,7 @@ Let's look at a few examples now using this new stage.
 |                   |                           ---------->                           | sv users |
 | mfriendbook users |                                                                 |          |
 
-*Single view* example, would be where you may be maintaining in a particular *database a collection of users* and, among other things, you want to track whatever *arbitrary fields* you know about the *users* from some -- maybe a *third party API* that you're pulling in for *mflix* service. And the same thing for *mfriendbook* service. So you have *multiple collections* that represent that *user* information. You want to *merge* it in periodically into your *single view - sv*.
+*Single view* example, would be where you may be maintaining in a particular *database, a collection of users* and, among other things, you want to track whatever *arbitrary fields* you know about the *users* from some -- maybe a *third party API* that you're pulling in for *mflix* service. And the same thing for *mfriendbook* service. So you have *multiple collections* that represent that *user* information. You want to *merge* it in periodically into your *single view - sv*.
 
 |                        sv.users                       |
 |:-----------------------------------------------------:|
