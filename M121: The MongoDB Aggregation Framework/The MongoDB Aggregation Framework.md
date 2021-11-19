@@ -7413,6 +7413,21 @@ And what this *pipeline* is doing is, for *matched document*, it's going to *set
 
 If you're incoming document has *underscore ID 37 total 64*, and then there's some other *field F1*. And our *target* has the same *_id*, obviously. That's how they *merge*. And it has an already existing *total and some other F1*. This *pipeline* will only modify the *total* field. It will set *total* to be the *sum of the two*. The other *two fields* will be left alone.
 
+```javascript
+// $merge example 1
+{ 
+    $merge: { 
+        into: <target>,
+        whenMatched: [
+            { $addFields: {
+                total: { $sum: [ "$total", "$$new.total" ]}
+                }
+            }
+        ]
+    }
+}
+```
+
 Compare this with example two where, on match, we're going to use replace with, which creates a new object.
 
 And that new object is merging the entire new incoming document-- that would be the one on the left here-- just with a single field object where total is computed as a sum of new total and existing total.
