@@ -7492,23 +7492,9 @@ Let's look at a few examples now using this new stage.
 |                   |                           ---------->                           | sv users |
 | mfriendbook users |                                                                 |          |
 
-Single view example would be where you may be maintaining in a particular database a collection of users and, among other things, you want to track whatever arbitrary fields you know about the users from some-- maybe a third party API that you're pulling in for mflix service.
+*Single view* example, would be where you may be maintaining in a particular *database a collection of users* and, among other things, you want to track whatever *arbitrary fields* you know about the *users* from some -- maybe a *third party API* that you're pulling in for *mflix* service. And the same thing for *mfriendbook* service. So you have *multiple collections* that represent that *user* information. You want to *merge* it in periodically into your *single view - sv*.
 
-And the same thing for mfriendbook service.
-
-So you have multiple collections that represent that user information.
-
-You want to merge it in periodically into your single view.
-
-So imagine your single view is the user.
-
-The _id would be the unique merging key here that would be used, maybe a date of birth and some other fields.
-
-Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection.
-
-So you might have a project that creates this _id field, which is $username.
-
-So maybe the same user name is stored in username field there.
+So imagine your single view is the user. The *_id* would be the unique merging key here that would be used, maybe a date of birth and some other fields. Now you'd construct a pipeline from mflix.users collection and merge it into single view users collection. So you might have a project that creates this *_id* field, which is $username. So maybe the same user name is stored in username field there.
 
 And now you merge into.
 
