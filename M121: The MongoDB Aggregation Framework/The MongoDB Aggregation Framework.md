@@ -7388,7 +7388,7 @@ Now, when there is a *matching document* found, you can specify *four options* t
 The last option you have when a document that's incoming *matches an existing document* is useful when you want to *merge* their values of fields somehow, but a simple *merge* option is not sufficient. The *Brackets* here represent that you can specify *your own custom pipeline* that will be used to compute a new document to be written to the *target collection*. You can compute it from fields of, both, the *incoming and existing versions of the document*.
 
 ```javascript
-// $merge example
+// $merge example 1
 { 
     $merge: { 
         into: <target>,
@@ -7402,15 +7402,9 @@ The last option you have when a document that's incoming *matches an existing do
 }
 ```
 
-Now, the pipeline is limited to stages that do single document transformations, like project or $addFields, and it will be applied to existing matched document in the target collection. Any field names, like $a or $total, are referring to fields in the existing document. But you can refer to fields in the incoming document with a special variable, $$new. Now, this may look to you, very much, like the new aggregation pipeline in update, which is new in 4.2. And it is.
+Now, the *pipeline* is limited to *stages that do single document transformations*, like *project or $addFields*, and it will be applied to *existing matched document in the target collection*. Any field names, like *$a or $total*, are referring to *fields in the existing document*. But you can refer to *fields in the incoming document* with a special variable, *$$new*. Now, this may look to you, very much, like the new *aggregation pipeline in update*, which is new in *4.2*. And it is. It's the exact same implementation, and we even give you the same alias for *$addFields, known as $set*.
 
-It's the exact same implementation, and we even give you the same alias for ad fields, known as $set.
-
-And what this pipeline is doing is, for matched document, it's going to set a field total to a sum of already existing dollar total, right here.
-
-And $$newtotal, that's the total from the document that's flowing through the pipeline.
-
-Here's an example.
+And what this *pipeline* is doing is, for *matched document*, it's going to *set a field total to a sum of already existing dollar total*. And *$$new.total*, that's the total from the document that's flowing through the *pipeline*. Here's an example.
 
 If you're incoming document has underscore ID 37 total 64, and then there's some other field F1.
 
