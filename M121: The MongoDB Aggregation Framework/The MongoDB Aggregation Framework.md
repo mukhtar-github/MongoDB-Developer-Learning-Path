@@ -8178,7 +8178,23 @@ In this lesson, we're going to talk about the *aggregation pipeline on a sharded
 |---------|---------|--------|---------|---------|
 | SHARD A | SHARD B |        | SHARD C | SHARD D |
 
-In a *sharded cluster*, since our *data* is partitioned across different *shards*, this become slightly more difficult. Fortunately, MongoDB has some good tricks up its sleeve to address these issues. For example, here we have the simple aggregation query where I'm using match to find all the restaurants in New York state. I'm then using group to group by each state and then average the amount of stars for that given state.
+In a *sharded cluster*, since our *data* is partitioned across different *shards*, this become slightly more difficult. Fortunately, *MongoDB* has some good tricks up its sleeve to address these issues.
+
+```javascript
+db.orders.aggregate([
+    { 
+        $match: { "address.state": "NY" } 
+    },
+    {
+        $group: {
+            _id: "address.state",
+            avgStars: { $avg: "$stars" }
+        }
+    }
+]);
+```
+
+For example, here we have the simple aggregation query where I'm using match to find all the restaurants in New York state. I'm then using group to group by each state and then average the amount of stars for that given state.
 
 Since my shard key is on state, all of the restaurants in New York are going to be on the same shard. This means that the server is able to simply route the aggregate query to that shard, where it can run the aggregation and return the results back to the Mongo S and then back to the client. Very straightforward. Now look at this example. I've changed the query slightly so we're no longer using the match stage. So now we're talking about all documents in our sharded collection.
 
