@@ -7695,35 +7695,47 @@ This is the correct use of *$merge*. We merge into a collection called *analytic
 
 ### Views
 
-Let's now discuss a powerful feature of *MongoDB -- Views*. *MongoDB* enables non-materialized views, meaning they are computed every time a rate operation is performed against that view.
+Let's now discuss a powerful feature of *MongoDB -- Views*. *MongoDB* enables *non-materialized views*, meaning they are computed every time a rate operation is performed against that *view*. There are a way to use an *aggregation pipeline as a collection*. From the *user perspective, views are perceived as collections*, with some key differences we'll go over later in the lesson. So what might *Views* be useful for?
 
-There are a way to use an aggregation pipeline as a collection.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.findOne();
+{
+    "_id" : ObjectId("59d235860e3733b153a3d670"),
+    "userID" : "5e63c73b-de13-4776-a41b-bba0527fdbbe",
+    "balance" : NumberDecimal("1726.95"),
+    "age" : 21,
+    "name" : {
+        "first" : "Deidre",
+        "last" : "Mcdowell"
+    },
+    "accountType" : "gold",
+    "accountNumber" : "571-44-8361",
+    "accessNumber" : 95980,
+    "gender" : "female",
+    "employer" : "CYTREK",
+    "email" : "deidremcdowell@cytrek.com",
+    "phone" : "+1 (844) 416-3931",
+    "address" : "584 Junius Street, Hailesboro, Virgin Islands, 9140",
+    "challenge" : [
+        {
+            "phrase" : "dolor officia ipsum",
+            "answer" : "elit"
+        },
+        {
+            "phrase" : "deserunt officia cupidatat",
+            "answer" : "ex"
+        },
+        {
+            "phrase" : "veniam enim irure",
+            "answer" : "tempor"
+        }
+    ]
+}
+```
 
-From the user perspective, views are perceived as collections, with some key differences we'll go over later in the lesson.
+Suppose we're a large financial institution with customers of different tiers. We've just recently launched a big promotion and are conducting a phone campaign. We've hired a temporary staffing agency with several regional offices. We'll assign a different tier to each regional office. This is a sample of one record from our customers collection. As we can see, there is sensitive and potentially biasing information that we do not want to allow access to.
 
-So what might Views be useful for?
-
-Suppose we're a large financial institution with customers of different tiers.
-
-We've just recently launched a big promotion and are conducting a phone campaign.
-
-We've hired a temporary staffing agency with several regional offices.
-
-We'll assign a different tier to each regional office.
-
-This is a sample of one record from our customers collection.
-
-As we can see, there is sensitive and potentially biasing information that we do not want to allow access to.
-
-Views allow us to create vertical and horizontal slices of our collection.
-
-What do we mean by a horizontal and vertical slice?
-
-Vertical slicing is performed through the use of a project stage, and other similar stages that change the shape of the document being returned.
-
-Here we've vertically sliced our document to only retain the accountType field.
-
-Vertical slices will change the shape being returned, but not the number of documents being returned.
+Views allow us to create vertical and horizontal slices of our collection. What do we mean by a horizontal and vertical slice? Vertical slicing is performed through the use of a project stage, and other similar stages that change the shape of the document being returned. Here we've vertically sliced our document to only retain the accountType field. Vertical slices will change the shape being returned, but not the number of documents being returned.
 
 Horizontal slicing is performed through the use of match stages.
 
