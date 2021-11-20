@@ -7764,7 +7764,7 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.aggregate([
 Type "it" for more
 ```
 
-*Views* allow us to create *vertical and horizontal slices of our collection*. What do we mean by a *horizontal and vertical slice*? *Vertical slicing is performed through the use of a project stage*, and other similar stages that change the shape of the document being returned. Here we've vertically sliced our document to only retain the accountType field. Vertical slices will change the shape being returned, but not the number of documents being returned.
+*Views allow us to create vertical and horizontal slices of our collection*. What do we mean by a *horizontal and vertical slice*? *Vertical slicing is performed through the use of a project stage*, and other similar stages that change the shape of the document being returned. Here we've *vertically sliced our document to only retain the accountType field*. *Vertical slices will change the shape being returned, but not the number of documents being returned*.
 
 Horizontal slicing is performed through the use of match stages.
 
