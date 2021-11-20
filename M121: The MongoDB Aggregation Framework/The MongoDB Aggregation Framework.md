@@ -8265,7 +8265,30 @@ db.restaurants.aggregate([
 ]);
 ```
 
-Similarly, we can reduce the number of documents that we need to examine by moving the limit after a skip in front of it. Notice that the query planner updates the values accordingly to support this optimization. Other than moving stages around, the server is also able to combine certain stages together.
+Similarly, we can *reduce the number of documents* that we need to examine by moving the *limit after a skip in front of it*. Notice that the *query planner* updates the values accordingly to support this *optimization*.
+
+```javascript
+db.restaurants.aggregate([
+    {
+        $limit: 10
+    },
+    {
+        $limit: 5
+    }
+]);
+
+|  |
+|  |
+V  V
+
+db.restaurants.aggregate([
+    {
+        $limit: 15
+    }
+]);
+```
+
+Other than moving *stages around*, the *server* is also able to *combine certain stages together*.
 
 Here we're going to see where we're combining two limits into one. Same thing with skip. And finally, we're seeing the same thing with match. Now all these optimizations will automatically be attempted by the query optimizer. That being said, I think it's important to point out these optimizations so that you can more carefully consider your own aggregation pipelines and the performance implications. And that should give you a good overview of the aggregation pipeline on a sharded cluster.
 
