@@ -8148,9 +8148,19 @@ db.orders.aggregate([
 
 If you're doing a *limit and doing a sort*, you want to make sure that they're near each other and at the *front of the pipeline*. When this happens, the *server* is able to do a *top-k sorting algorithm*. This is when the *server* is able to only *allocate memory for the final number of documents*, in this case, *10*. This can happen even without *indexes*. This is one of the most *highly performant non-index* situations that you can be in. *Optimizations* like this are performed by the *query optimizer* whenever possible. But if there is a chance that this *optimization* can change the *output* results, then the *query engine* will not perform this kind of *optimization*. That's why understanding these *underlying principles is important*.
 
-Now those are the *basic aggregation optimizations* that you can do. Now let's discuss some of the *memory constraints* that you should be aware of when doing *aggregation*. First of all, your results are all subject to the *16 megabyte* document limit that exist in *MongoDB*. *Aggregation* generally *outputs a single document*, and that *single document* will be susceptible to this *limit*. Now this *limit* does not apply to documents as they *flow through the pipeline*.
+Now those are the *basic aggregation optimizations* that you can do. Now let's discuss some of the *memory constraints* that you should be aware of when doing *aggregation*. First of all, your results are all subject to the *16 megabyte* document limit that exist in *MongoDB*. *Aggregation* generally *outputs a single document*, and that *single document* will be susceptible to this *limit*.
 
-As you transform documents, they can actually exceed the 16 megabyte limit, but whatever is actually returned will still fall under the 16 megabyte limit. The best way to mitigate this issue is by using $limit and $project to reduce your resulting document size. Another limitation that you're going to want to be aware of is that for each stage in our pipeline, there's a 100 megabyte limit of RAM usage. Now the absolute best way to mitigate this is to ensure that your largest stages are able to utilize indexes.
+```javascript
+db.orders.aggregate([
+    { $<operator>: <predicate> },
+
+    { $<operator>: <predicate> },
+
+    ...
+]);
+```
+
+Now this *limit* does not apply to documents as they *flow through the pipeline*. As you *transform* documents, they can actually exceed the *16 megabyte limit*, but whatever is actually returned will still fall under the *16 megabyte limit*. The best way to mitigate this issue is by using *$limit and $project* to *reduce your resulting document size*. Another limitation that you're going to want to be aware of is that for *each stage in our pipeline*, there's a *100 megabyte limit of RAM usage*. Now the absolute best way to mitigate this is to ensure that your *largest stages are able to utilize indexes*.
 
 This will reduce your memory requirements, since indexes are generally much smaller than the documents they reference. Moreover, with sorting, they dramatically reduce memory requirements, because you don't need to allocate extra memory for that sorting. Now if you're still running into this 100 megabyte limit even if you're using indexes, then there's an additional way to get around it. And that is by specifying allowDiskUse true on your aggregation query.
 
