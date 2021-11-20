@@ -7733,9 +7733,38 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.findOne();
 }
 ```
 
-Suppose we're a large financial institution with customers of different tiers. We've just recently launched a big promotion and are conducting a phone campaign. We've hired a temporary staffing agency with several regional offices. We'll assign a different tier to each regional office. This is a sample of one record from our customers collection. As we can see, there is sensitive and potentially biasing information that we do not want to allow access to.
+Suppose we're a large financial institution with *customers of different tiers*. We've just recently launched a big promotion and are conducting a phone campaign. We've hired a temporary staffing agency with several regional offices. We'll assign a different tier to each regional office. This is a *sample of one record from our customers collection*. As we can see, there is *sensitive and potentially biasing information that we do not want to allow access to*.
 
-Views allow us to create vertical and horizontal slices of our collection. What do we mean by a horizontal and vertical slice? Vertical slicing is performed through the use of a project stage, and other similar stages that change the shape of the document being returned. Here we've vertically sliced our document to only retain the accountType field. Vertical slices will change the shape being returned, but not the number of documents being returned.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.aggregate([
+...     {
+...         $project: { _id: 0, accountType: 1 }
+...     }
+... ]);
+{ "accountType" : "gold" }
+{ "accountType" : "gold" }
+{ "accountType" : "gold" }
+{ "accountType" : "silver" }
+{ "accountType" : "platinum" }
+{ "accountType" : "silver" }
+{ "accountType" : "gold" }
+{ "accountType" : "silver" }
+{ "accountType" : "silver" }
+{ "accountType" : "silver" }
+{ "accountType" : "silver" }
+{ "accountType" : "platinum" }
+{ "accountType" : "gold" }
+{ "accountType" : "platinum" }
+{ "accountType" : "silver" }
+{ "accountType" : "silver" }
+{ "accountType" : "bronze" }
+{ "accountType" : "platinum" }
+{ "accountType" : "platinum" }
+{ "accountType" : "gold" }
+Type "it" for more
+```
+
+*Views* allow us to create *vertical and horizontal slices of our collection*. What do we mean by a *horizontal and vertical slice*? *Vertical slicing is performed through the use of a project stage*, and other similar stages that change the shape of the document being returned. Here we've vertically sliced our document to only retain the accountType field. Vertical slices will change the shape being returned, but not the number of documents being returned.
 
 Horizontal slicing is performed through the use of match stages.
 
