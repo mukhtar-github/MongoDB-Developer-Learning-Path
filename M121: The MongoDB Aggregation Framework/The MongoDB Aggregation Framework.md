@@ -7767,14 +7767,35 @@ Type "it" for more
 *Views allow us to create vertical and horizontal slices of our collection*. What do we mean by a *horizontal and vertical slice*? *Vertical slicing is performed through the use of a project stage*, and other similar stages that change the shape of the document being returned. Here we've *vertically sliced our document to only retain the accountType field*. *Vertical slices will change the shape being returned, but not the number of documents being returned*.
 
 ```javascript
-{
-  $merge: {
-      into: "analytics",
-      on: "name",
-      whenMatched: "merge",
-      whenNotMatched: "insert"
-  }
-}
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.aggregate([
+...     {
+...         $match: { accountType: "bronze" }
+...     },
+...     {
+...         $project: { _id: 0, accountType: 1 }
+...     }
+... ]);
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+{ "accountType" : "bronze" }
+Type "it" for more
 ```
 
 Horizontal slicing is performed through the use of match stages. We select only a subset of documents based on some criteria. Here, we horizontally slice our collection with the value of the account type. In fact, the documents that are grayed out would not be operated on at all by the following project stage. We could further slice this data horizontally, by only selecting accounts that had a specified minimum balance, and are within a desired age range, and, you get the idea.
