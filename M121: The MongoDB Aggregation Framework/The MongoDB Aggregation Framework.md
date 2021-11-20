@@ -8098,9 +8098,9 @@ db.orders.aggregate([
 ])
 ```
 
-But more importantly, since data moves through our pipeline from the first operator to the last, once the server encounters a stage that is not able to use indexes, all of the following stages will no longer be able to use indexes either.
+But more importantly, since *data* moves through our *pipeline* from the *first operator to the last*, once the server encounters a stage that is not able to use *indexes*, all of the *following stages* will no longer be able to use *indexes* either. Fortunately for us, the *query optimizer* tries its best to detect when a stage can be moved forward so that *indexes* can be utilized. But if you understand the underlying principles of how this works, you can be more confident in your *query performance*, and you'll have to rely less on the *query optimizer*.
 
-Fortunately for us, the query optimizer tries its best to detect when a stage can be moved forward so that indexes can be utilized. But if you understand the underlying principles of how this works, you can be more confident in your query performance, and you'll have to rely less on the query optimizer. In order for us to determine how aggregation queries is are executed and whether or not indexes are being utilized, we can pass the explain true document as an option to the aggregation method.
+In order for us to determine how aggregation queries is are executed and whether or not indexes are being utilized, we can pass the explain true document as an option to the aggregation method.
 
 This will produce an explain output similar to what we are used to seeing with find. Now for the rest of these examples, we're going to be dealing with this hypothetical orders collection. And we're going to go ahead and assume that we have an index on customer ID. Unsurprisingly, the $match operator is able to utilize indexes. This is especially true if it's at the beginning of a pipeline. You'll see a natural theme here of that we want to see operators that use indexes at the front of our pipelines.
 
