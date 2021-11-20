@@ -8100,11 +8100,34 @@ db.orders.aggregate([
 
 But more importantly, since *data* moves through our *pipeline* from the *first operator to the last*, once the server encounters a stage that is not able to use *indexes*, all of the *following stages* will no longer be able to use *indexes* either. Fortunately for us, the *query optimizer* tries its best to detect when a stage can be moved forward so that *indexes* can be utilized. But if you understand the underlying principles of how this works, you can be more confident in your *query performance*, and you'll have to rely less on the *query optimizer*.
 
-In order for us to determine how aggregation queries is are executed and whether or not indexes are being utilized, we can pass the explain true document as an option to the aggregation method.
+```javascript
+db.orders.aggregate([
+    { $<operator>: <predicate> },
 
-This will produce an explain output similar to what we are used to seeing with find. Now for the rest of these examples, we're going to be dealing with this hypothetical orders collection. And we're going to go ahead and assume that we have an index on customer ID. Unsurprisingly, the $match operator is able to utilize indexes. This is especially true if it's at the beginning of a pipeline. You'll see a natural theme here of that we want to see operators that use indexes at the front of our pipelines.
+    { $<operator>: <predicate> },
 
-Similarly, we're always going to want to put sort stages as close to the front as possible. We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index. For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting. If you're doing a limit and doing a sort, you want to make sure that they're near each other and at the front of the pipeline.
+    ...
+], { explain: true });
+```
+
+In order for us to determine how *aggregation queries* are executed and whether or not *indexes* are being utilized, we can pass the *explain true* document as an option to the *aggregation* method. This will produce an *explain output* similar to what we are used to seeing with *find*.
+
+```javascript
+db.orders.createIndex({ cust_id: 1 });
+```
+
+Now for the rest of these examples, we're going to be dealing with this *hypothetical orders collection*. And we're going to go ahead and assume that we have an *index on customer ID*.
+
+```javascript
+db.orders.aggregate([
+    { $match: { cust_id: "287" } },
+    ...
+]);
+```
+
+Unsurprisingly, the *$match* operator is able to utilize *indexes*. This is especially true if it's at the beginning of a *pipeline*. You'll see a natural theme here, that we want to see *operators that use indexes* at the *front of our pipelines*. Similarly, we're always going to want to put sort stages as close to the front as possible. We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index. For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting.
+
+If you're doing a limit and doing a sort, you want to make sure that they're near each other and at the front of the pipeline.
 
 When this happens, the server is able to do a top-k sort. This is when the server is able to only allocate memory for the final number of documents, in this case, 10. This can happen even without indexes. This is one of the most highly performant non-index situations that you can be in. Optimizations like this are performed by the query optimizer whenever possible. But if there is a chance that this optimization can change the output it results, then the query engine will not perform this kind of optimization.
 
