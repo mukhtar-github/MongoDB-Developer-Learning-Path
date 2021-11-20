@@ -8125,7 +8125,17 @@ db.orders.aggregate([
 ]);
 ```
 
-Unsurprisingly, the *$match* operator is able to utilize *indexes*. This is especially true if it's at the beginning of a *pipeline*. You'll see a natural theme here, that we want to see *operators that use indexes* at the *front of our pipelines*. Similarly, we're always going to want to put sort stages as close to the front as possible. We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index. For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting.
+Unsurprisingly, the *$match* operator is able to utilize *indexes*. This is especially true if it's at the beginning of a *pipeline*. You'll see a natural theme here, that we want to see *operators that use indexes* at the *front of our pipelines*.
+
+```javascript
+db.orders.aggregate([
+    { $match: { cust_id: { $lt: 50 } } },
+    { $sort: { cust_id: 1 } },
+    ...
+]);
+```
+
+Similarly, we're always going to want to put *sort* stages as close to the *front* as possible. We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index. For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting.
 
 If you're doing a limit and doing a sort, you want to make sure that they're near each other and at the front of the pipeline.
 
