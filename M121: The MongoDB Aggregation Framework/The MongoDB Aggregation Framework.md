@@ -7582,10 +7582,6 @@ db.temp.aggregate([
 ]);
 ```
 
-So your pipeline would be whatever it is that you do to validate that this data in temp collection is of the right format, and the right type, and the right whatever else you need to verify, which you will now append into data.
+So your pipeline would be whatever it is that you do to validate that this *data in temp collection* is of the *right format, and the right type*, and the right whatever else you need to verify, which you will now *append into data*. Now, *append* here means that when there's *no match*, it will *insert*. And I've specified that when there is *match*, I want it to *fail*, because I don't expect ever to find a *match* here. The reason is that I would only find a *match* if I'd already *loaded this data*. And I don't really expect to ever run a *job twice*.
 
-Now, append here means that when there's no match, it will insert. And I've specified that when there is match, I want it to fail, because I don't expect ever to find a match here. The reason is that I would only find a match if I'd already loaded this data. And I don't really expect to ever run a job twice.
-
-So this is an example of having the pipeline raise an error if an unexpected event happens, such as finding that there's already a record that newly arriving data would match up to, which means something has gone wrong or not according my expectation.
-
-This is similar, if you're familiar with SQL, to SQL's INSERT INTO table 1 SELECT * from table 2. And it just says insert into this existing table. Now, if the table doesn't exist, it'll just insert into a new table.
+So this is an example of having the pipeline raise an error if an unexpected event happens, such as finding that there's already a record that newly arriving data would match up to, which means something has gone wrong or not according my expectation. This is similar, if you're familiar with SQL, to SQL's INSERT INTO table 1 SELECT * from table 2. And it just says insert into this existing table. Now, if the table doesn't exist, it'll just insert into a new table.
