@@ -8146,9 +8146,7 @@ db.orders.aggregate([
 ]);
 ```
 
-If you're doing a *limit and doing a sort*, you want to make sure that they're near each other and at the *front of the pipeline*. When this happens, the *server* is able to do a *top-k sorting algorithm*. This is when the server is able to only allocate memory for the final number of documents, in this case, 10. This can happen even without indexes. This is one of the most highly performant non-index situations that you can be in.
-
-Optimizations like this are performed by the query optimizer whenever possible. But if there is a chance that this optimization can change the output it results, then the query engine will not perform this kind of optimization.
+If you're doing a *limit and doing a sort*, you want to make sure that they're near each other and at the *front of the pipeline*. When this happens, the *server* is able to do a *top-k sorting algorithm*. This is when the *server* is able to only *allocate memory for the final number of documents*, in this case, *10*. This can happen even without *indexes*. This is one of the most *highly performant non-index* situations that you can be in. *Optimizations* like this are performed by the *query optimizer* whenever possible. But if there is a chance that this *optimization* can change the *output* results, then the *query engine* will not perform this kind of *optimization*.
 
 That's why understanding these underlying principles is important. Now those are the basic aggregation optimizations that you can do. Now let's discuss some of the memory constraints that you should be aware of when doing aggregation. First of all, your results are all subject to the 16 megabyte document limit that exist in MongoDB. Aggregation generally outputs a single document, and that single document will be susceptible to this limit. Now this limit does not apply to documents as they flow through the pipeline.
 
