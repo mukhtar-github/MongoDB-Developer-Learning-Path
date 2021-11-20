@@ -8028,13 +8028,32 @@ db.createView( <view>, <source>,<pipeline>, <collation> )
 db.createCollectons( <name>, <options> )
 ```
 
-*Views* can be created in two different ways. We have the *shell helper method -- db.createView*, which we already saw, and the *createCollection method* here. A view consists in the name, a source collection, an aggregation pipeline, and if required, a specific collation. In essence, one would call a view and will be executing the aggregation pipeline that is used to define the view. New meta information to include the pipeline that computes the view, is stored in the system.views collection. Let's look at this information.
+*Views* can be created in two different ways. We have the *shell helper method -- db.createView*, which we already saw, and the *createCollection method* here. A *view* consists in the *name, a source collection, an aggregation pipeline, and if required, a specific collation*. In essence, when we call a *view*, we will be executing the *aggregation pipeline* that is used to define the *view*. New meta information to include the *pipeline that computes the view, is stored in the system.views collection*. Let's look at this information.
 
-Again, we can see the same information we saw before with the get collection info command, but now only for our views. Hopefully, this illustrates that the only information stored about a view is the name, the source collection, the pipeline that defines it, and optionally, the collation. All collection read operations are available as views. And yes, we can perform aggregations on views too.
+```javascript
+// getting information on views only
+db.system.views.find().pretty();
+```
 
-Views do have some restrictions-- no write operations. Views are read-only and computed when we issue a rate operation against them. They are a reflection of the defined aggregation on the source collection. No index operations-- since the views use the source collection to get their data, the index operations need to be performed on that source collection. Views will use the source collections indexes during their creation.
+Again, we can see the same information we saw before with the *get collection info* command, but now only for our *views*. Hopefully, this illustrates that the only information stored about a *view is the name, the source collection, the pipeline that defines it, and optionally, the collation*.
 
-No renaming-- view names are immutable, so they cannot be renamed. That said, we can always drop a view and create it again, with a new pipeline, without affecting the I/O of the server. No dollar text-- the text query operator can only be used in the first stage of an aggregation pipeline. And a view will execute the defined pipeline first. This query operator cannot be used in a view.
+```javascript
+db.view.find()
+
+db.view.findOne()
+
+db.view.count()
+
+db.view.distinct()
+
+db.view.aggregate() ( so meta )
+```
+
+All *collection read operations are available as views*. And yes, we can perform *aggregations on views* too. *Views* do have some *restrictions* --
+
+* No write operations -- *Views are read-only* and computed when we issue a *read operation* against them. They are a reflection of the *defined aggregation on the source collection*.
+* No index operations (create, update) -- since the *views* use the *source collection* to get their data, the *index operations* need to be performed on that *source collection*. *Views* will use the *source collections indexes* during their creation.
+* No renaming -- view *names* are immutable, so they cannot be *renamed*. That said, we can always drop a view and create it again, with a *new pipeline*, without affecting the I/O of the server. No dollar text-- the text query operator can only be used in the first stage of an aggregation pipeline. And a view will execute the defined pipeline first. This query operator cannot be used in a view.
 
 No geoNear or the geoNear stage. Same as with test, junior is required to be the first stage of our pipeline. Collation restrictions-- views have collation restrictions, such as views do not inherit the default collation of the source collection as specified. There are other collations specific concerns which you can read about by following the link below this video.
 
