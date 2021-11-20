@@ -8080,7 +8080,7 @@ All right. That sums up *Views*. Here are a few things to remember.
 
 ### Aggregation Performance
 
-In this lesson, we're going talk about aggregation performance. And specifically, we're going to discuss how we can utilize indexes when we run aggregation queries. And we're also going to discuss some of the memory constraints that apply to aggregation in MongoDB. Before we get into these different topics, I first want to point out that there are two high-level categories of aggregation queries.
+In this lesson, we're going talk about *aggregation performance*. And specifically, we're going to discuss how we can utilize *indexes* when we run *aggregation queries*. And we're also going to discuss some of the *memory constraints* that apply to *aggregation in MongoDB*. Before we get into these different topics, I first want to point out that there are two high-level categories of *aggregation queries*.
 
 First of all, there are real time processing queries and then there are batch processed queries. "real time" is in quotes here because you can never have truly real time processing. There will always be some kind of delay between when a query is executed and when that query responds. Real time processing is so that we can provide data to applications. This means that performance is more important.
 
