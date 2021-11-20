@@ -8239,9 +8239,33 @@ db.restaurants.aggregate([
 ]);
 ```
 
-Here we have a sort followed by a match. Now the query optimizer will move the match in front of the sort to reduce the number of documents that need to be sorted.
+Here we have a *sort* followed by a *match*. Now the *query optimizer* will move the *match* in front of the *sort* to *reduce the number of documents that need to be sorted*. This is particularly useful in *sharded clusters* when we have a *split in our pipeline* and when you want to *reduce the amount of data* being transferred over the wire to our *merging shard*.
 
-This is particularly useful in sharded clusters when we have a split in our pipeline and when you want to reduce the amount of data being transferred over the wire to our merging shard. Similarly, we can reduce the number of documents that we need to examine by moving the limit after a skip in front of it. Notice that the query planner updates the values accordingly to support this optimization. Other than moving stages around, the server is also able to combine certain stages together.
+```javascript
+db.restaurants.aggregate([
+    {
+        $skip: 10
+    },
+    {
+        $limit: 5
+    }
+]);
+
+|  |
+|  |
+V  V
+
+db.restaurants.aggregate([
+    {
+        $limit: 15
+    },
+    {
+        $skip: 10
+    }
+]);
+```
+
+Similarly, we can reduce the number of documents that we need to examine by moving the limit after a skip in front of it. Notice that the query planner updates the values accordingly to support this optimization. Other than moving stages around, the server is also able to combine certain stages together.
 
 Here we're going to see where we're combining two limits into one. Same thing with skip. And finally, we're seeing the same thing with match. Now all these optimizations will automatically be attempted by the query optimizer. That being said, I think it's important to point out these optimizations so that you can more carefully consider your own aggregation pipelines and the performance implications. And that should give you a good overview of the aggregation pipeline on a sharded cluster.
 
