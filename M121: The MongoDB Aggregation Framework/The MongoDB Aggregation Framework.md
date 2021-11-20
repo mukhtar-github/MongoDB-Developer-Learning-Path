@@ -8283,7 +8283,7 @@ V  V
 
 db.restaurants.aggregate([
     {
-        $limit: 15
+        $limit: 5
     }
 ]);
 ```
@@ -8340,3 +8340,33 @@ db.restaurants.aggregate([
 And finally, we're seeing the same thing with *match*. Now all these *optimizations* will automatically be attempted by the *query optimizer*. That being said, I think it's important to point out these *optimizations* so that you can more carefully consider your own *aggregation pipelines and the performance implications*. And that should give you a good overview of the *aggregation pipeline on a sharded cluster*.
 
 Let's recap what we learned. We discussed *how the aggregation pipeline works on a sharded environment*. And specifically we looked at where the *different operations happen when we're using sharding*. And finally, we looked at some *optimizations that the server will try to do when running aggregation queries*.
+
+### Pipeline Optimization - Part 1
+
+Let's talk about pipeline optimization. We've already learned about using match and sort stages early, and to use indexes using limit and sort stages to produce top K results, and how to allow the use of more than 100 megabytes of memory. Let's dive further and look at pipelines themselves and how they might be optimized. Let's consider the following aggregation that gives the length of movie titles that begin with vowels and sorts them by the frequency.
+
+So we begin with our match stage, looking for titles that begin with a vowel, ignoring the case. We then project our title size, composing size and split together, and splitting the title on spaces. In our group stage, we're grouping like documents together based on that title size we just calculated and getting a count. Finally, we're going to sort in descending direction. So the highest frequency should be coming back first. Let's run this to get an idea of the results.
+
+We can see that the most common length for a movie title appears to be three words and there were 1,450 documents that fell into this group. We can also see that the most uncommon length for a movie title is 17 words, with only one document in this group. Let's now examine the explain information for this aggregation. So we have the same pipeline as before. But this time we're appending explain true to get the explain output. Let's take a look at the results.
+
+There is a lot of interesting information here. We can see what our query was, the fields that were kept which happened to be title and _id, and then the query planner. A little further down, we can also the winning plan that used a fetch stage followed by an index scan. We can probably do a little better than this, because we know that we have an index that should support this query. We can also see the stages that were executed.
+
+Here's our converted project stage where we see *_id* true -- this is implicit, remember -- the title size where we calculated the size of our title, and then we can see our group and our sort along with the sort key; pretty interesting information. So let's see if we can do better. Our goal is to try and get this to be a covered query, meaning there is no fetch stage. So this aggregation pipeline is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field.
+
+Remember, the project stage implicitly keeps it unless we tell it not to. Let's see if we get the same results. And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
+
+And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
+
+When we see a fetch stage, it means MongoDB had to go to the document for more information, rather than just using information from the index alone. Of some interest here, we can also see that _id was now projected as false. This is because we explicitly provided that information. So let's see if we can do even better. So here's our new modified pipeline, where we have the same match stage. However, this time we have no project stage.
+
+Instead, we perform the logic we need within group and then sort on those results. Let's see it in action. All right, pretty cool. We got the same results, three words, count of 1,450 documents. Let's check the explain output to see the difference between this pipeline and our previous pipeline. All right, let's look at the explain output. We can see that the query is the same. We can see that the fields are the same as well-- title 1, _id is 0.
+
+How did the aggregation framework know to do this when we didn't specify a project stage? Let's cover that in a moment. Down in our winning plan, we can see there was no fetch stage, which meant that this is a covered query. If we scroll all the way down to the bottom to look at the rest of our pipeline stages, we can see the next stage after our query is group, then our sort, and we're done. A key takeaway here is to avoid needless projects.
+
+As we saw, the aggregation framework assumed we knew what we were doing with each project. However, if the aggregation framework can determine the shape of the final document based only on initial input, internally it will project away unnecessary fields. That was a mouthful. So let me explain that in a little more detail. In the first match stage, the only field we cared about was the title.
+
+In the group stage, again, the only field we care about is the title. We use this composition of expressions to get the number of words in the title. But we can do that in line by evaluating first splitting the title on spaces into an array, and then getting in the size of the array. There's no need for an intermediary project stage, because we can just calculate that value in line here. This is a very powerful feature.
+
+We should always strive to let the optimizer work for us. Additionally, this removes a stage that ultimately adds time to the pipeline. Let's think about that. Say we have 100,000 documents in our movies collection. In the match, we filter down to 10,000. Now in group, we have 10,000 documents come through. And in sort, we have maybe 15. Well, with that intermediary project stage that we really didn't need, we had 100,000 come in, then we have 10,000, and we'd send all 10,000 through that intermediary project before they got to the group stage.
+
+That's 10,000 additional iterations that we just avoided. So as a general rule, don't project unless you are doing some real work in this stage. And remember that add fields is available. OK, one last note before we move on, we could replace group and sort by sort by count. It really is the same under the hood. It just saves us on typing. Keep that in mind.
