@@ -8080,134 +8080,34 @@ All right. That sums up *Views*. Here are a few things to remember.
 
 ### Aggregation Performance
 
-In this lesson, we're going talk about aggregation performance.
+In this lesson, we're going talk about aggregation performance. And specifically, we're going to discuss how we can utilize indexes when we run aggregation queries. And we're also going to discuss some of the memory constraints that apply to aggregation in MongoDB. Before we get into these different topics, I first want to point out that there are two high-level categories of aggregation queries.
 
-And specifically, we're going to discuss how we can utilize indexes when we run aggregation queries.
+First of all, there are real time processing queries and then there are batch processed queries. "real time" is in quotes here because you can never have truly real time processing. There will always be some kind of delay between when a query is executed and when that query responds. Real time processing is so that we can provide data to applications. This means that performance is more important.
 
-And we're also going to discuss some of the memory constraints that apply to aggregation in MongoDB.
+A user is going to perform some kind of action, the action is going to trigger an aggregation query, and then the results of that query need to be provided back to the user in a reasonable amount of time. With batch processing, on the other hand, we're generally talking about doing aggregation to provide analytics. And since we're providing analytics, that means that these jobs are typically run on some kind of periodic basis.
 
-Before we get into these different topics, I first want to point out that there are two high-level categories of aggregation queries.
+And the results are not inspected until minutes, hours, or even days later from when that query was actually ran. This means that query performance is less important than with real time processing. Throughout this lesson, we're going to focus on the first type, real time processing. Now some of these principles will also apply to the batch processing category. But for the most part we'll be discussing strategies to optimize aggregation performance for real time processing.
 
-First of all, there are real time processing queries and then there are batch processed queries.
+Now with that out of the way, let's go ahead and discuss the meat of this lesson, index usage for aggregation queries. Now as you come to learn in this course, indexes are a vital part of good query performance. And this same idea applies to aggregation queries. Basically, we want to ensure that our aggregation queries are able to use indexes as much as possible. Now naturally, since aggregation is a bit different than your typical find query, determining index usage is a bit different as well.
 
-"real time" is in quotes here because you can never have truly real time processing.
+With an aggregation query, we form a pipeline of different aggregation operators, which transform our data into the format that we desire. Now some of these aggregation operators are able to use indexes, and some of them are not. But more importantly, since data moves through our pipeline from the first operator to the last, once the server encounters a stage that is not able to use indexes, all of the following stages will no longer be able to use indexes either.
 
-There will always be some kind of delay between when a query is executed and when that query responds.
+Fortunately for us, the query optimizer tries its best to detect when a stage can be moved forward so that indexes can be utilized. But if you understand the underlying principles of how this works, you can be more confident in your query performance, and you'll have to rely less on the query optimizer. In order for us to determine how aggregation queries is are executed and whether or not indexes are being utilized, we can pass the explain true document as an option to the aggregation method.
 
-Real time processing is so that we can provide data to applications.
+This will produce an explain output similar to what we are used to seeing with find. Now for the rest of these examples, we're going to be dealing with this hypothetical orders collection. And we're going to go ahead and assume that we have an index on customer ID. Unsurprisingly, the $match operator is able to utilize indexes. This is especially true if it's at the beginning of a pipeline. You'll see a natural theme here of that we want to see operators that use indexes at the front of our pipelines.
 
-This means that performance is more important.
+Similarly, we're always going to want to put sort stages as close to the front as possible. We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index. For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting. If you're doing a limit and doing a sort, you want to make sure that they're near each other and at the front of the pipeline.
 
-A user is going to perform some kind of action, the action is going to trigger an aggregation query, and then the results of that query need to be provided back to the user in a reasonable amount of time.
+When this happens, the server is able to do a top-k sort. This is when the server is able to only allocate memory for the final number of documents, in this case, 10. This can happen even without indexes. This is one of the most highly performant non-index situations that you can be in. Optimizations like this are performed by the query optimizer whenever possible. But if there is a chance that this optimization can change the output it results, then the query engine will not perform this kind of optimization.
 
-With batch processing, on the other hand, we're generally talking about doing aggregation to provide analytics.
+That's why understanding these underlying principles is important. Now those are the basic aggregation optimizations that you can do. Now let's discuss some of the memory constraints that you should be aware of when doing aggregation. First of all, your results are all subject to the 16 megabyte document limit that exist in MongoDB. Aggregation generally outputs a single document, and that single document will be susceptible to this limit. Now this limit does not apply to documents as they flow through the pipeline.
 
-And since we're providing analytics, that means that these jobs are typically run on some kind of periodic basis.
+As you transform documents, they can actually exceed the 16 megabyte limit, but whatever is actually returned will still fall under the 16 megabyte limit. The best way to mitigate this issue is by using $limit and $project to reduce your resulting document size. Another limitation that you're going to want to be aware of is that for each stage in our pipeline, there's a 100 megabyte limit of RAM usage. Now the absolute best way to mitigate this is to ensure that your largest stages are able to utilize indexes.
 
-And the results are not inspected until minutes, hours, or even days later from when that query was actually ran.
+This will reduce your memory requirements, since indexes are generally much smaller than the documents they reference. Moreover, with sorting, they dramatically reduce memory requirements, because you don't need to allocate extra memory for that sorting. Now if you're still running into this 100 megabyte limit even if you're using indexes, then there's an additional way to get around it. And that is by specifying allowDiskUse true on your aggregation query.
 
-This means that query performance is less important than with real time processing.
+This will allow you to spill to disk, rather than doing everything in memory. Now this is important to understand that this is a absolute last resort measure. Hard drives are thousands of times slower to access than memory, so by splitting to disk, you're going to see serious performance degration. In some situations, this is necessary, but you need to be aware that this will seriously decrease performance.
 
-Throughout this lesson, we're going to focus on the first type, real time processing.
+Since allowDiskUse true will seriously impact performance, you'll see this more often on the batch processing kind of jobs, rather than real time processing. And the last thing I want to point out here is that allow disk usage does not work with $ graphLookup, and that's because $graphLookup doesn't currently support splitting to disk.
 
-Now some of these principles will also apply to the batch processing category.
-
-But for the most part we'll be discussing strategies to optimize aggregation performance for real time processing.
-
-Now with that out of the way, let's go ahead and discuss the meat of this lesson, index usage for aggregation queries.
-
-Now as you come to learn in this course, indexes are a vital part of good query performance.
-
-And this same idea applies to aggregation queries.
-
-Basically, we want to ensure that our aggregation queries are able to use indexes as much as possible.
-
-Now naturally, since aggregation is a bit different than your typical find query, determining index usage is a bit different as well.
-
-With an aggregation query, we form a pipeline of different aggregation operators, which transform our data into the format that we desire.
-
-Now some of these aggregation operators are able to use indexes, and some of them are not.
-
-But more importantly, since data moves through our pipeline from the first operator to the last, once the server encounters a stage that is not able to use indexes, all of the following stages will no longer be able to use indexes either.
-
-Fortunately for us, the query optimizer tries its best to detect when a stage can be moved forward so that indexes can be utilized.
-
-But if you understand the underlying principles of how this works, you can be more confident in your query performance, and you'll have to rely less on the query optimizer.
-
-In order for us to determine how aggregation queries is are executed and whether or not indexes are being utilized, we can pass the explain true document as an option to the aggregation method.
-
-This will produce an explain output similar to what we are used to seeing with find.
-
-Now for the rest of these examples, we're going to be dealing with this hypothetical orders collection.
-
-And we're going to go ahead and assume that we have an index on customer ID.
-
-Unsurprisingly, the $match operator is able to utilize indexes.
-
-This is especially true if it's at the beginning of a pipeline.
-
-You'll see a natural theme here of that we want to see operators that use indexes at the front of our pipelines.
-
-Similarly, we're always going to want to put sort stages as close to the front as possible.
-
-We saw with find queries how serious our performance can be degraded when sorting isn't able to use an index.
-
-For this reason, we want to make sure that our sort stages come before any kind of transformations so that we can make sure that we utilize indexes for sorting.
-
-If you're doing a limit and doing a sort, you want to make sure that they're near each other and at the front of the pipeline.
-
-When this happens, the server is able to do a top-k sort.
-
-This is when the server is able to only allocate memory for the final number of documents, in this case, 10.
-
-This can happen even without indexes.
-
-This is one of the most highly performant non-index situations that you can be in.
-
-Optimizations like this are performed by the query optimizer whenever possible.
-
-But if there is a chance that this optimization can change the output it results, then the query engine will not perform this kind of optimization.
-
-That's why understanding these underlying principles is important.
-
-Now those are the basic aggregation optimizations that you can do.
-
-Now let's discuss some of the memory constraints that you should be aware of when doing aggregation.
-
-First of all, your results are all subject to the 16 megabyte document limit that exist in MongoDB.
-
-Aggregation generally outputs a single document, and that single document will be susceptible to this limit.
-
-Now this limit does not apply to documents as they flow through the pipeline.
-
-As you transform documents, they can actually exceed the 16 megabyte limit, but whatever is actually returned will still fall under the 16 megabyte limit.
-
-The best way to mitigate this issue is by using $limit and $project to reduce your resulting document size.
-
-Another limitation that you're going to want to be aware of is that for each stage in our pipeline, there's a 100 megabyte limit of RAM usage.
-
-Now the absolute best way to mitigate this is to ensure that your largest stages are able to utilize indexes.
-
-This will reduce your memory requirements, since indexes are generally much smaller than the documents they reference.
-
-Moreover, with sorting, they dramatically reduce memory requirements, because you don't need to allocate extra memory for that sorting.
-
-Now if you're still running into this 100 megabyte limit even if you're using indexes, then there's an additional way to get around it.
-
-And that is by specifying allowDiskUse true on your aggregation query.
-
-This will allow you to spill to disk, rather than doing everything in memory.
-
-Now this is important to understand that this is a absolute last resort measure.
-
-Hard drives are thousands of times slower to access than memory, so by splitting to disk, you're going to see serious performance degration.
-
-In some situations, this is necessary, but you need to be aware that this will seriously decrease performance.
-
-Since allowDiskUse true will seriously impact performance, you'll see this more often on the batch processing kind of jobs, rather than real time processing.
-
-And the last thing I want to point out here is that allow disk usage does not work with $ graphLookup, and that's because $graphLookup doesn't currently support splitting to disk.
-
-Let's recap what we've learned.
-
-So in this lesson, we discussed some of the different optimization strategies for utilizing indexes with your queries for aggregation, and we also discussed some of the member constraints that apply to aggregation, and how you can mitigate and get around those issues.
+Let's recap what we've learned. So in this lesson, we discussed some of the different optimization strategies for utilizing indexes with your queries for aggregation, and we also discussed some of the member constraints that apply to aggregation, and how you can mitigate and get around those issues.
