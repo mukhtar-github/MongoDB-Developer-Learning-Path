@@ -7798,15 +7798,228 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.customers.aggregate([
 Type "it" for more
 ```
 
-Horizontal slicing is performed through the use of match stages. We select only a subset of documents based on some criteria. Here, we horizontally slice our collection with the value of the account type. In fact, the documents that are grayed out would not be operated on at all by the following project stage. We could further slice this data horizontally, by only selecting accounts that had a specified minimum balance, and are within a desired age range, and, you get the idea.
+*Horizontal slicing is performed through the use of match stages*. We select only a *subset of documents* based on some criteria. Here, we *horizontally slice our collection* with the value of the *accountType*. In fact, the documents that are grayed out would not be operated on at all by the following *project stage*. We could further slice this data horizontally, by only selecting accounts that had a *specified minimum balance*, and are within a *desired age range*, and, you get the idea. It may even be necessary to use an intermediary *shaping stage* to calculate a value that we wish to *filter documents on*. *Horizontal slices* will affect the *number of documents returned, not their shape*.
 
-It may even be necessary to use an intermediary shaping stage to calculate a value that we wish to filter documents on. Horizontal slices will affect the number of documents returned, not their shape. Let's look at another example of this, with documents that have the following schema. I would like to vertically slice the documents to remove sensitive information, as well as make the name and gender information available, but present it in a more formal format for the call center employees.
+```javascript
+{
+    "_id" : ObjectId("59d235860e3733b153a3d670"),
+    "userID" : "5e63c73b-de13-4776-a41b-bba0527fdbbe",
+    "balance" : NumberDecimal("1726.95"),
+    "age" : 21,
+    "name" : {
+        "first" : "Deidre",
+        "last" : "Mcdowell"
+    },
+    "accountType" : "gold",
+    "accountNumber" : "571-44-8361",
+    "accessNumber" : 95980,
+    "gender" : "female",
+    "employer" : "CYTREK",
+    "email" : "deidremcdowell@cytrek.com",
+    "phone" : "+1 (844) 416-3931",
+    "address" : "584 Junius Street, Hailesboro, Virgin Islands, 9140",
+    ...
+}
+```
 
-I would also like to horizontally slice our collection, by filtering out documents that do not have an account type of bronze. Here's an example of creating a view that performs both horizontal and vertical slicing. To make data available for the call center, we're going to assign bronze tier members. We specify the name of the view, the source collection, and then the pipeline that will get stored to compute this view.
+Let's look at another example of this, with documents that have the following *schema*. I would like to *vertically slice* the documents to remove *sensitive information*, as well as make the *name and gender information available*, but present it in a more *formal format for the call center employees*. I would also like to *horizontally slice our collection, by filtering out documents that do not have an account type of bronze*.
 
-Within the pipeline, we perform our initial horizontal slice with a match stage, selecting only bronze tier members. Then, within the project stage, we perform our vertical slicing, retaining fields we want and reassigning the name field with a more formally formatted name. You can see this view in action yourself. Let's run the command to get collection information for the current database.
+```javascript
+// this is the command we used to create the bronze_banking view in the database
+// identical commands were used to create the silver and gold views, the only
+// change was in the $match stage
+db.createView("bronze_banking", "customers", [
+  {
+    "$match": { "accountType": "bronze" }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "name": {
+        "$concat": [
+          { "$cond": [{ "$eq": ["$gender", "female"] }, "Miss", "Mr."] },
+          " ",
+          "$name.first",
+          " ",
+          "$name.last"
+        ]
+      },
+      "phone": 1,
+      "email": 1,
+      "address": 1,
+      "account_ending": { "$substr": ["$accountNumber", 7, -1] }
+    }
+  }
+]);
+```
 
-Here, we see information about every collection. I've already created three views-- bronze banking, silver banking, and gold banking. We can see, they show up just like collections, except their type is view. And then in the options we can see the view that they are on, and the pipeline that funds them. You won't be able to create views on the class atlas cluster.
+Here's an example of creating a *view* that performs both *horizontal and vertical slicing*. To make data available for the call center, we're going to assign *bronze tier members*. We specify the name of the *view*, the *source collection*, and then the *pipeline that will get stored to compute this view*. Within the *pipeline*, we perform our initial *horizontal slice with a match stage*, selecting only *bronze tier members*. Then, within the *project stage*, we perform our *vertical slicing*, retaining fields we want and reassigning the name field with a *more formally formatted name*. You can see this *view* in action yourself. Let's run the command to get *collection information for the current database*.
+
+```javascript
+// getting all collections in a database and seeing their information
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.getCollectionInfos();
+[
+        {
+            "name" : "bronze_banking",
+            "type" : "view",
+            "options" : {
+                "viewOn" : "customers",
+                "pipeline" : [
+                    {
+                        "$match" : {
+                            "accountType" : "bronze"
+                        }
+                    },
+                    {
+                        "$project" : {
+                            "_id" : 0,
+                            "name" : {
+                                "$concat" : [
+                                    {
+                                        "$cond" : [
+                                            {
+                                                "$eq" : [
+                                                    "$gender",
+                                                    "female"
+                                                ]
+                                            },
+                                            "Miss",
+                                            "Mr."
+                                        ]
+                                    },
+                                    " ",
+                                    "$name.first",
+                                    " ",
+                                    "$name.last"
+                                ]
+                            },
+                            "phone" : 1,
+                            "email" : 1,
+                            "address" : 1,
+                            "account_ending" : {
+                                "$substr" : [
+                                    "$accountNumber",
+                                    7,
+                                    -1
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            "info" : {
+                "readOnly" : true
+            }
+        },
+        {
+            "name" : "gold_banking",
+            "type" : "view",
+            "options" : {
+                "viewOn" : "customers",
+                "pipeline" : [
+                    {
+                        "$match" : {
+                            "accountType" : "gold"
+                        }
+                    },
+                    {
+                        "$project" : {
+                            "_id" : 0,
+                            "name" : {
+                                "$concat" : [
+                                    {
+                                        "$cond" : [
+                                            {
+                                                "$eq" : [
+                                                    "$gender",
+                                                    "female"
+                                                ]
+                                            },
+                                            "Miss",
+                                            "Mr."
+                                        ]
+                                    },
+                                    " ",
+                                    "$name.first",
+                                    " ",
+                                    "$name.last"
+                                ]
+                            },
+                            "phone" : 1,
+                            "email" : 1,
+                            "address" : 1,
+                            "account_ending" : {
+                                "$substr" : [
+                                    "$accountNumber",
+                                    7,
+                                    -1
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            "info" : {
+                "readOnly" : true
+            }
+        },
+        {
+            "name" : "silver_banking",
+            "type" : "view",
+            "options" : {
+                "viewOn" : "customers",
+                "pipeline" : [
+                    {
+                        "$match" : {
+                            "accountType" : "silver"
+                        }
+                    },
+                    {
+                        "$project" : {
+                            "_id" : 0,
+                            "name" : {
+                                "$concat" : [
+                                    {
+                                        "$cond" : [
+                                            {
+                                                "$eq" : [
+                                                    "$gender",
+                                                    "female"
+                                                ]
+                                            },
+                                            "Miss",
+                                            "Mr."
+                                        ]
+                                    },
+                                    " ",
+                                    "$name.first",
+                                    " ",
+                                    "$name.last"
+                                ]
+                            },
+                            "phone" : 1,
+                            "email" : 1,
+                            "address" : 1,
+                            "account_ending" : {
+                                "$substr" : [
+                                    "$accountNumber",
+                                    7,
+                                    -1
+                                ]
+                            }
+                        }
+                    }
+                ]
+            },
+            "info" : {
+                "readOnly" : true
+            }
+        }
+]
+
+```
+
+Here, we see information about every collection. I've already created three *views* -- *bronze banking*, *silver banking*, *and gold banking*. We can see, they show up just like *collections*, except their type is *view*. And then in the options we can see the view that they are on, and the pipeline that funds them. You won't be able to create views on the class atlas cluster.
 
 If you'd like to see these views in action and how restrictive they can be, along with proper role-based access control, the login credentials are contained in the handout in this lesson. If you'd like to learn more about role-based access control, refer to our security course, which is linked below this video. Views can be created in two different ways. We have the shell helper method, db.createView, which we already saw, and the createCollection method here.
 
