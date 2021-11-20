@@ -7588,7 +7588,13 @@ So this is an example of having the *pipeline raise an error* if an unexpected e
 
 ### Using $merge for Rollups
 
-Now the last example I have would show you how you might want to create a rollup table with some kind of a summary from an existing collection that has detailed information. And in this case, we're going to say that an existing collection has all of the registration for all of the events that we're doing, and I want to create a registration summary where I show the number of people who registered by day, where the day represents the date that the registration came in.
+Now the last example I have would show you how you might want to create a *rollup table* with some kind of a summary from an *existing collection that has detailed information*.
+
+|                      | Using $merge to incrementally update periodic roll-ups in summary |                    |
+|----------------------|:-----------------------------------------------------------------:|--------------------|
+| real (registrations) |                            ---------->                            | real (reg-summary) |
+
+And in this case, we're going to say that an existing collection has all of the registration for all of the events that we're doing, and I want to create a registration summary where I show the number of people who registered by day, where the day represents the date that the registration came in.
 
 And in this case, I might create the registration summary collection first by analyzing all of the existing data, and then incrementally update by doing periodic rollups into the summary. So here, rather than merging on _ID, we're going to merge on the event and date, that's the unique identifier for each record in the summary table. And we're going to create a unique index on event date so that things will get matched up correctly.
 
