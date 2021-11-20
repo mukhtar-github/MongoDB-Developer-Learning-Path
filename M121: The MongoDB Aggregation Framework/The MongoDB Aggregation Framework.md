@@ -8337,6 +8337,6 @@ db.restaurants.aggregate([
 ]);
 ```
 
-And finally, we're seeing the same thing with *match*. Now all these optimizations will automatically be attempted by the query optimizer. That being said, I think it's important to point out these optimizations so that you can more carefully consider your own aggregation pipelines and the performance implications. And that should give you a good overview of the aggregation pipeline on a sharded cluster.
+And finally, we're seeing the same thing with *match*. Now all these *optimizations* will automatically be attempted by the *query optimizer*. That being said, I think it's important to point out these *optimizations* so that you can more carefully consider your own *aggregation pipelines and the performance implications*. And that should give you a good overview of the *aggregation pipeline on a sharded cluster*.
 
-Let's recap what we learned. We discussed how the aggregation pipeline works on a sharded environment. And specifically we looked at where the different operations happen when we're using sharding. And finally, we looked at some optimizations that the server will try to do when running aggregation queries.
+Let's recap what we learned. We discussed *how the aggregation pipeline works on a sharded environment*. And specifically we looked at where the *different operations happen when we're using sharding*. And finally, we looked at some *optimizations that the server will try to do when running aggregation queries*.
