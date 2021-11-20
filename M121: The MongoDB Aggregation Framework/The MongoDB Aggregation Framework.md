@@ -7628,9 +7628,15 @@ db.registrations.aggregate([
 ])
 ```
 
-And now for the very first run, we're going to say I would like to -- and by the way, I'm let's say doing analysis for MongoDB World 19 registrations. I'm going to match where event_id is MDBW19. I'm going to group by data string here. We'll create a string of a particular normalized format. So that's what I'm going to group on here, and I'm going to count up how many in total there are.
+And now for the very first run, we're going to say I would like to -- and by the way, I'm let's say doing analysis for *MongoDB World 19 registrations*. I'm going to *match* where *event_id is MDBW19*. I'm going to *group by $dateToString*. We'll create a string of a particular *normalized format*. So that's what I'm going to group on, and I'm going to *count up* how many in total there are. And then I'm going to *project the new document* where *event is MDBW19*. Date is, you know, whatever the *grouping showed me*, and *total is the count*. And then I'm going to *output that or merge into regsummary, merging on event and date fields*.
 
-And then I'm going to project the new document where event is MDBW19. Date is you this grouping showed me, and total is the count. And then I'm going to output that or merge into regsummary, merging on event and date fields. So this is what's coming out here, and it's going to get inserted into the collection. If the collection already existed with data, it will overwrite for every day with the new total. And there we have maybe a whole bunch of days in this collection.
+```javascript
+{"evevnt": "MDBW19", "date": "2019-05-19", "total": 33},
+{"evevnt": "MDBW19", "date": "2019-05-20", "total": 15},
+{"evevnt": "MDBW19", "date": "2019-05-21", "total": 24}
+```
+
+So this is what's coming out here, and it's going to get inserted into the collection. If the collection already existed with data, it will overwrite for every day with the new total. And there we have maybe a whole bunch of days in this collection.
 
 Now another day or two goes by and I say, hey, I last ran this on the 22nd. It's now the 24th, I'd like to run this for the 22nd. I'd like to run this for the 23rd. For a single day, I might run something like this. I'll still match the event_id MDBW19, but I'm going to now limit things where the date is, basically, during May 22nd. Right? It's greater than midnight 22nd, but less than midnight of the 23rd.
 
