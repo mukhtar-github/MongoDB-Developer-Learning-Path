@@ -8288,8 +8288,55 @@ db.restaurants.aggregate([
 ]);
 ```
 
-Other than moving *stages around*, the *server* is also able to *combine certain stages together*.
+Other than moving *stages around*, the *server* is also able to *combine certain stages together*. Here we're going to see where we're combining two *limits into one*.
 
-Here we're going to see where we're combining two limits into one. Same thing with skip. And finally, we're seeing the same thing with match. Now all these optimizations will automatically be attempted by the query optimizer. That being said, I think it's important to point out these optimizations so that you can more carefully consider your own aggregation pipelines and the performance implications. And that should give you a good overview of the aggregation pipeline on a sharded cluster.
+```javascript
+db.restaurants.aggregate([
+    {
+        $skip: 10
+    },
+    {
+        $skip: 5
+    }
+]);
+
+|  |
+|  |
+V  V
+
+db.restaurants.aggregate([
+    {
+        $skip: 15
+    }
+]);
+```
+
+Same thing with *skip*.
+
+```javascript
+db.restaurants.aggregate([
+    {
+        $match: { cuisine: "Sushi" }
+    },
+    {
+        $match: { stars: 5.0 }
+    }
+]);
+
+|  |
+|  |
+V  V
+
+db.restaurants.aggregate([
+    {
+        $match: {
+            cuisine: "Sushi",
+            stars: 5.0
+        }
+    }
+]);
+```
+
+And finally, we're seeing the same thing with *match*. Now all these optimizations will automatically be attempted by the query optimizer. That being said, I think it's important to point out these optimizations so that you can more carefully consider your own aggregation pipelines and the performance implications. And that should give you a good overview of the aggregation pipeline on a sharded cluster.
 
 Let's recap what we learned. We discussed how the aggregation pipeline works on a sharded environment. And specifically we looked at where the different operations happen when we're using sharding. And finally, we looked at some optimizations that the server will try to do when running aggregation queries.
