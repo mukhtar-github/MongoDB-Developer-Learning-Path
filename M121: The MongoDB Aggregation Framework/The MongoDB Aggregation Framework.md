@@ -7657,8 +7657,198 @@ db.registrations.aggregate([
 ])
 ```
 
-I'll still *match the event_id MDBW19*, but I'm going to now limit things where the date is, basically, during May 22nd. Right? It's greater than midnight 22nd, but less than midnight of the 23rd.
+I'll still *match the event_id MDBW19*, but I'm going to now limit things where the *date is, basically, during May 22nd*. Right? It's greater than *midnight 22nd, but less than midnight of the 23rd*. I'm going to *count up the total*. Now I'm going to create *$addFields* record where *"MDBW19"* is the *event*. *"2019-05-22"* is the *date*. Right? That's the *date I'm querying* by so that's the date I'm having field on. I'm now *merging into regsummary on event and date*, and the record is going to look like this.
 
-I'm going to count up the total. Now I'm going to create this record where this is the event. This is the date. Right? That's the then I'm querying by so that's the date I'm having field on. I'm now merging into regsummary on event and date, and the record is going to look like this. And if that date was already there because maybe we got a partial result for the 22nd when we ran it before, now that it's after the 22nd, it's going to give me the entire total and overwrite whatever the previous total was.
+```javascript
+{ "total": 34, "evevnt": "MDBW19", "date": "2019-05-22" }
+```
 
-So because I'm doing a total sum here, I don't want to merge it or add it to an existing value. I just want to write that that's the total of registrations we got on that day.
+And if that *date* was already there, because maybe we got a partial result for the *22nd* when we ran it before, now that it's after the *22nd*, it's going to give me the *entire total and overwrite whatever the previous total was*. So because I'm doing a *total sum* here, I don't want to *merge it or add it to an existing value*. I just want to write that that's the total of registrations we got on that day.
+
+### Homework: Using $merge
+
+#### Problem 14
+
+Consider a potential $merge stage that:
+
+* outputs results to a collection called analytics.
+* merges the results of the $merge stage with current analytics documents using the value of the name field.
+* updates existing analytics documents to include any modified information from the resulting $merge documents.
+* creates a new analytics document if an existing document with the resulting document's name does not exist.
+
+Which of the following $merge stages will perform all of the above functionality?
+
+#### Answer 14
+
+```javascript
+{
+  $merge: {
+      into: "analytics",
+      on: "name",
+      whenMatched: "merge",
+      whenNotMatched: "insert"
+  }
+}
+```
+
+This is the correct use of *$merge*. We merge into a collection called *analytics*, merging on the *name* field of each document. When a matching document is found, it is merged with the information from the resulting document. When no matching document is found, a new document is created with the resulting document's information. It is worth noting that *merge and insert* are the default values of *whenMatched and whenNotMatched*, respectively. So, we could have left out these two fields, and this *$merge* operation would still have worked as intended.
+
+### Views
+
+Let's now discuss a powerful feature of *MongoDB -- Views*. *MongoDB* enables non-materialized views, meaning they are computed every time a rate operation is performed against that view.
+
+There are a way to use an aggregation pipeline as a collection.
+
+From the user perspective, views are perceived as collections, with some key differences we'll go over later in the lesson.
+
+So what might Views be useful for?
+
+Suppose we're a large financial institution with customers of different tiers.
+
+We've just recently launched a big promotion and are conducting a phone campaign.
+
+We've hired a temporary staffing agency with several regional offices.
+
+We'll assign a different tier to each regional office.
+
+This is a sample of one record from our customers collection.
+
+As we can see, there is sensitive and potentially biasing information that we do not want to allow access to.
+
+Views allow us to create vertical and horizontal slices of our collection.
+
+What do we mean by a horizontal and vertical slice?
+
+Vertical slicing is performed through the use of a project stage, and other similar stages that change the shape of the document being returned.
+
+Here we've vertically sliced our document to only retain the accountType field.
+
+Vertical slices will change the shape being returned, but not the number of documents being returned.
+
+Horizontal slicing is performed through the use of match stages.
+
+We select only a subset of documents based on some criteria.
+
+Here, we horizontally slice our collection with the value of the account type.
+
+In fact, the documents that are grayed out would not be operated on at all by the following project stage.
+
+We could further slice this data horizontally, by only selecting accounts that had a specified minimum balance, and are within a desired age range, and, you get the idea.
+
+It may even be necessary to use an intermediary shaping stage to calculate a value that we wish to filter documents on.
+
+Horizontal slices will affect the number of documents returned, not their shape.
+
+Let's look at another example of this, with documents that have the following schema.
+
+I would like to vertically slice the documents to remove sensitive information, as well as make the name and gender information available, but present it in a more formal format for the call center employees.
+
+I would also like to horizontally slice our collection, by filtering out documents that do not have an account type of bronze.
+
+Here's an example of creating a view that performs both horizontal and vertical slicing.
+
+To make data available for the call center, we're going to assign bronze tier members.
+
+We specify the name of the view, the source collection, and then the pipeline that will get stored to compute this view.
+
+Within the pipeline, we perform our initial horizontal slice with a match stage, selecting only bronze tier members.
+
+Then, within the project stage, we perform our vertical slicing, retaining fields we want and reassigning the name field with a more formally formatted name.
+
+You can see this view in action yourself.
+
+Let's run the command to get collection information for the current database.
+
+Here, we see information about every collection.
+
+I've already created three views-- bronze banking, silver banking, and gold banking.
+
+We can see, they show up just like collections, except their type is view.
+
+And then in the options we can see the view that they are on, and the pipeline that funds them.
+
+You won't be able to create views on the class atlas cluster.
+
+If you'd like to see these views in action and how restrictive they can be, along with proper role-based access control, the login credentials are contained in the handout in this lesson.
+
+If you'd like to learn more about role-based access control, refer to our security course, which is linked below this video.
+
+Views can be created in two different ways.
+
+We have the shell helper method, db.createView, which we already saw, and the createCollection method here.
+
+A view consists in the name, a source collection, an aggregation pipeline, and if required, a specific collation.
+
+In essence, one would call a view and will be executing the aggregation pipeline that is used to define the view.
+
+New meta information to include the pipeline that computes the view, is stored in the system.views collection.
+
+Let's look at this information.
+
+Again, we can see the same information we saw before with the get collection info command, but now only for our views.
+
+Hopefully, this illustrates that the only information stored about a view is the name, the source collection, the pipeline that defines it, and optionally, the collation.
+
+All collection read operations are available as views.
+
+And yes, we can perform aggregations on views too.
+
+Views do have some restrictions-- no write operations.
+
+Views are read-only and computed when we issue a rate operation against them.
+
+They are a reflection of the defined aggregation on the source collection.
+
+No index operations-- since the views use the source collection to get their data, the index operations need to be performed on that source collection.
+
+Views will use the source collections indexes during their creation.
+
+No renaming-- view names are immutable, so they cannot be renamed.
+
+That said, we can always drop a view and create it again, with a new pipeline, without affecting the I/O of the server.
+
+No dollar text-- the text query operator can only be used in the first stage of an aggregation pipeline.
+
+And a view will execute the defined pipeline first.
+
+This query operator cannot be used in a view.
+
+No geoNear or the geoNear stage.
+
+Same as with test, junior is required to be the first stage of our pipeline.
+
+Collation restrictions-- views have collation restrictions, such as views do not inherit the default collation of the source collection as specified.
+
+There are other collations specific concerns which you can read about by following the link below this video.
+
+Lastly, find operations with the following projection operators are not permitted.
+
+Removing and retaining fields is allowed, but trying to use any of these operators will fail.
+
+View definitions are public.
+
+Any role that can list collections on a database can see a view definition as we saw earlier.
+
+Avoid referring to sensitive information within the defining pipeline.
+
+All right.
+
+That sums up Views.
+
+Here are a few things to remember.
+
+Views contain no data themselves.
+
+They are created on demand and reflect the data in the source collection.
+
+Views are read-only.
+
+Write operations to Views will error.
+
+Views have some restrictions.
+
+They must abide by the rules of the aggregation framework, and cannot contain find projection operators.
+
+Horizontal slicing is performed with the matched stage, reducing the number of documents that are returned.
+
+Vertical slicing is performed with a project or other shaping stage, modifying individual documents.
