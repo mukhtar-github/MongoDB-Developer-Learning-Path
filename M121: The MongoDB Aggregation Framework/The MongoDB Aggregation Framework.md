@@ -8174,7 +8174,12 @@ Let's recap what we've learned. So in this lesson, we discussed some of the diff
 
 In this lesson, we're going to talk about the *aggregation pipeline on a sharded cluster*. Specifically we're going to discuss *how it works*, *where operations are completed*, and we'll also look into *how pipelines are optimized* to perform well on *sharded clusters*. Let's go ahead and talk about how *aggregation works in a sharded cluster*. When we run *aggregation queries* on a *replica set or standalone MongoDB*, it's much easier for the *server* to reason about because all the *data is located in one place*.
 
-In a sharded cluster, since our data is partitioned across different shards, this become slightly more difficult. Fortunately, MongoDB has some good tricks up its sleeve to address these issues. For example, here we have the simple aggregation query where I'm using match to find all the restaurants in New York state. I'm then using group to group by each state and then average the amount of stars for that given state.
+|         |         | mongos |         |         |
+|---------|---------|--------|---------|---------|
+|         |         |   \|   |         |         |
+| SHARD A | SHARD B |    -   | SHARD C | SHARD D |
+
+In a *sharded cluster*, since our *data* is partitioned across different *shards*, this become slightly more difficult. Fortunately, MongoDB has some good tricks up its sleeve to address these issues. For example, here we have the simple aggregation query where I'm using match to find all the restaurants in New York state. I'm then using group to group by each state and then average the amount of stars for that given state.
 
 Since my shard key is on state, all of the restaurants in New York are going to be on the same shard. This means that the server is able to simply route the aggregate query to that shard, where it can run the aggregation and return the results back to the Mongo S and then back to the client. Very straightforward. Now look at this example. I've changed the query slightly so we're no longer using the match stage. So now we're talking about all documents in our sharded collection.
 
