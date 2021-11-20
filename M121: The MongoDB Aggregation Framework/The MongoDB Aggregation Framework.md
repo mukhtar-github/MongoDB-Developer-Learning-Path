@@ -7560,7 +7560,13 @@ And now here the *mfriendbook* field, which will get *added, or set, or overwrit
 
 ### Using $merge for a Temporary Collection
 
-Now let's look at a completely different use case where you want to append from a temporary collection into some permanent collection. This might be a use case where you have a data collection, and periodically you get a new load of a subset of data, which you load into this collection called temp.
+#### APPEND from TEMP collection EXAMPLE
+
+|             | Using $merge to append loaded and cleansed records loaded into db |             |
+|-------------|:-----------------------------------------------------------------:|-------------|
+| real (temp) |                            ---------->                            | real (data) |
+
+Now let's look at a completely different use case where you want to *append from a temporary collection into some permanent collection*. This might be a use case where you have a data collection, and periodically you get a new load of a subset of data, which you load into this collection called temp.
 
 You will now do some kind of cleansing and analyzing the records to make sure they're valid before appending them to the existing data collection. So your pipeline would be whatever it is that you do to validate that this data in temp collection is of the right format, and the right type, and the right whatever else you need to verify, which you will now append into data.
 
