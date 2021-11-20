@@ -8016,14 +8016,19 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.getCollectionInfos();
             }
         }
 ]
-
 ```
 
-Here, we see information about every collection. I've already created three *views* -- *bronze banking*, *silver banking*, *and gold banking*. We can see, they show up just like *collections*, except their type is *view*. And then in the options we can see the view that they are on, and the pipeline that funds them. You won't be able to create views on the class atlas cluster.
+Here, we see information about every collection. I've already created three *views* -- *bronze banking*, *silver banking*, *and gold banking*. We can see, they show up just like *collections*, except their type is *view*. And then in the options we can see the *view* that they are on, and the *pipeline that defines them*. You won't be able to *create views on the class atlas cluster*.
 
-If you'd like to see these views in action and how restrictive they can be, along with proper role-based access control, the login credentials are contained in the handout in this lesson. If you'd like to learn more about role-based access control, refer to our security course, which is linked below this video. Views can be created in two different ways. We have the shell helper method, db.createView, which we already saw, and the createCollection method here.
+If you'd like to see these *views* in action and how restrictive they can be, along with proper *role-based access control*, the login credentials are contained in the handout in this lesson. If you'd like to learn more about *role-based access control*, refer to our *security course*.
 
-A view consists in the name, a source collection, an aggregation pipeline, and if required, a specific collation. In essence, one would call a view and will be executing the aggregation pipeline that is used to define the view. New meta information to include the pipeline that computes the view, is stored in the system.views collection. Let's look at this information.
+```javascript
+db.createView( <view>, <source>,<pipeline>, <collation> )
+
+db.createCollectons( <name>, <options> )
+```
+
+*Views* can be created in two different ways. We have the *shell helper method -- db.createView*, which we already saw, and the *createCollection method* here. A view consists in the name, a source collection, an aggregation pipeline, and if required, a specific collation. In essence, one would call a view and will be executing the aggregation pipeline that is used to define the view. New meta information to include the pipeline that computes the view, is stored in the system.views collection. Let's look at this information.
 
 Again, we can see the same information we saw before with the get collection info command, but now only for our views. Hopefully, this illustrates that the only information stored about a view is the name, the source collection, the pipeline that defines it, and optionally, the collation. All collection read operations are available as views. And yes, we can perform aggregations on views too.
 
