@@ -8181,7 +8181,9 @@ In this lesson, we're going to talk about the *aggregation pipeline on a sharded
 In a *sharded cluster*, since our *data* is partitioned across different *shards*, this become slightly more difficult. Fortunately, *MongoDB* has some good tricks up its sleeve to address these issues.
 
 ```javascript
-db.orders.aggregate([
+sh.shardCollection("m201.restaurants", { "address.state": 1 })
+
+db.restaurants.aggregate([
     { 
         $match: { "address.state": "NY" } 
     },
@@ -8194,11 +8196,20 @@ db.orders.aggregate([
 ]);
 ```
 
-For example, here we have the simple aggregation query where I'm using match to find all the restaurants in New York state. I'm then using group to group by each state and then average the amount of stars for that given state.
+For example, here we have the simple *aggregation query* where I'm using *match to find all the restaurants in New York state*. I'm then using *$group* to group by each *state and then average the amount of stars* for that given state. Since my *shard key is on state*, all of the r*estaurants in New York* are going to be on *the same shard*. This means that the *server* is able to simply route the *aggregate query to that shard*, where it can run the *aggregation* and *return the results back to the MongoS* and then back to the *client*. Very straightforward.
 
-Since my shard key is on state, all of the restaurants in New York are going to be on the same shard. This means that the server is able to simply route the aggregate query to that shard, where it can run the aggregation and return the results back to the Mongo S and then back to the client. Very straightforward. Now look at this example. I've changed the query slightly so we're no longer using the match stage. So now we're talking about all documents in our sharded collection.
+```javascript
+db.restaurants.aggregate([
+    {
+        $group: {
+            _id: "address.state",
+            avgStars: { $avg: "$stars" }
+        }
+    }
+]);
+```
 
-Now since these documents are spread across multiple shards, we're going to need to do some computing on each shard, but then we'll also need to somehow get all of those results to one place, where we can merge the results together. In this case, our pipeline needs to be split. The server will determine which stages need to be executed on each shard, and then what stages need to be executed on a single shard where the results from the other shards will be merged together.
+Now look at this example. I've changed the query slightly so we're no longer using the *match stage*. So now we're talking about all documents in our *sharded collection*. Now since these documents are spread across *multiple shards*, we're going to need to do some computing on each *shard*, but then we'll also need to somehow get all of those results to one place, where we can *merge the results together*. In this case, our *pipeline needs to be split*. The *server* will determine which *stages need to be executed on each shard*, and then what *stages need to be executed on a single shard* where the results from the other *shards will be merged together*.
 
 Generally, merging will happen on a random shard, but there are certain circumstances where this is not the case. This isn't the case when we use $out or $facet or $lookup or $graphLookup. For these queries, the primary shard will do the work of merging our results. And this is important to understand because if we're running these operations very frequently, then one of our shards, the primary shard, will be under a lot more load than the rest of our cluster, degrading the benefits of our horizontal scaling.
 
