@@ -7636,9 +7636,28 @@ And now for the very first run, we're going to say I would like to -- and by the
 {"evevnt": "MDBW19", "date": "2019-05-21", "total": 24}
 ```
 
-So this is what's coming out here, and it's going to get inserted into the collection. If the collection already existed with data, it will overwrite for every day with the new total. And there we have maybe a whole bunch of days in this collection.
+So this is what's coming out here, and it's going to get *inserted into the collection*. If the *collection already existed with data*, it will *overwrite for every day with the new total*. And there we have maybe a whole bunch of days in this collection. Now another day or two goes by and I say, hey, I last ran this on the 22nd. It's now the 24th, I'd like to run this for the 22nd. I'd like to run this for the 23rd. For a single day, I might run something like this.
 
-Now another day or two goes by and I say, hey, I last ran this on the 22nd. It's now the 24th, I'd like to run this for the 22nd. I'd like to run this for the 23rd. For a single day, I might run something like this. I'll still match the event_id MDBW19, but I'm going to now limit things where the date is, basically, during May 22nd. Right? It's greater than midnight 22nd, but less than midnight of the 23rd.
+```javascript
+/*
+$merge to create/update periodic rollups in summary collection (for a single day).
+*/
+
+db.registrations.aggregate([
+    {$match: { 
+        event_id: "MDBW19" }},
+        date: {$gte: ISODate(2019-05-22), $lt: ISODate(2019-05-23)}
+    }},
+    {$count: "total"},
+    {$addFields: {event: "MDBW19", date: "2019-05-22"}},
+    {$merge: {
+        into: "regsummary",
+        on: ["event", "date"]
+    }}
+])
+```
+
+I'll still *match the event_id MDBW19*, but I'm going to now limit things where the date is, basically, during May 22nd. Right? It's greater than midnight 22nd, but less than midnight of the 23rd.
 
 I'm going to count up the total. Now I'm going to create this record where this is the event. This is the date. Right? That's the then I'm querying by so that's the date I'm having field on. I'm now merging into regsummary on event and date, and the record is going to look like this. And if that date was already there because maybe we got a partial result for the 22nd when we ran it before, now that it's after the 22nd, it's going to give me the entire total and overwrite whatever the previous total was.
 
