@@ -7588,17 +7588,47 @@ So this is an example of having the *pipeline raise an error* if an unexpected e
 
 ### Using $merge for Rollups
 
+Now the last example I have would show you how you might want to create a *rollup table* with some kind of a *summary* from an *existing collection that has detailed information*.
+
 #### POPULATE rollups in summary table EXAMPLE
 
 |                      | Using $merge to incrementally update periodic roll-ups in summary |                    |
 |----------------------|:-----------------------------------------------------------------:|--------------------|
 | real (registrations) |                            ---------->                            | real (reg-summary) |
 
-Now the last example I have would show you how you might want to create a *rollup table* with some kind of a summary from an *existing collection that has detailed information*. And in this case, we're going to say that an existing collection has all of the registration for all of the events that we're doing, and I want to create a registration summary where I show the number of people who registered by day, where the day represents the date that the registration came in.
+And in this case, we're going to say that an *existing collection* has all of the *registration* for all of the events that we're doing, and I want to create a *registration summary* where I show the *number of people who registered by day*, where the *day represents the date that the registration came in*. And in this case, I might create the *registration summary collection* first by *analyzing all of the existing data*, and then *incrementally update* by *doing periodic rollups into the summary*.
 
-And in this case, I might create the registration summary collection first by analyzing all of the existing data, and then incrementally update by doing periodic rollups into the summary. So here, rather than merging on _ID, we're going to merge on the event and date, that's the unique identifier for each record in the summary table. And we're going to create a unique index on event date so that things will get matched up correctly.
+```javascript
+/*
+$merge to create/update periodic rollups in summary collection (for all days).
+*/
 
-And now for the very first run, we're going to say I would like to-- and by the way, I'm let's say doing analysis for MongoDB World 19 registrations. I'm going to match where event_id is MDBW19. I'm going to group by data string here. We'll create a string of a particular normalized format. So that's what I'm going to group on here, and I'm going to count up how many in total there are.
+db.regsummary.createIndex({ evevnt: 1, date: 1 }, { unique: true });
+```
+
+So here, rather than *merging* on *_id*, we're going to *merge* on the *event and date*, that's the *unique identifier* for each record in the *summary table*. And we're going to create a *unique index on event date* so that things will get *matched* up correctly.
+
+```javascript
+/*
+$merge to create/update periodic rollups in summary collection (for all days).
+*/
+
+db.regsummary.createIndex({ evevnt: 1, date: 1 }, { unique: true });
+db.registrations.aggregate([
+    {$match: { event_id: "MDBW19" }},
+    {$group: {
+        _id: {$dateToString: {date: "$date", format: "%Y-%m-%d"}},
+        count: {$sum: 1}
+    }},
+    {$project: {_id: 0, event: "MDBW19", date: "$_id", total: "$count"}},
+    {$merge: {
+        into: "regsummary",
+        on: ["event", "date"]
+    }}
+])
+```
+
+And now for the very first run, we're going to say I would like to -- and by the way, I'm let's say doing analysis for MongoDB World 19 registrations. I'm going to match where event_id is MDBW19. I'm going to group by data string here. We'll create a string of a particular normalized format. So that's what I'm going to group on here, and I'm going to count up how many in total there are.
 
 And then I'm going to project the new document where event is MDBW19. Date is you this grouping showed me, and total is the count. And then I'm going to output that or merge into regsummary, merging on event and date fields. So this is what's coming out here, and it's going to get inserted into the collection. If the collection already existed with data, it will overwrite for every day with the new total. And there we have maybe a whole bunch of days in this collection.
 
