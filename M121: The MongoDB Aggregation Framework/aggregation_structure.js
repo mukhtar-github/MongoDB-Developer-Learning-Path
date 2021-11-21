@@ -1118,4 +1118,4 @@ db.stocks.aggregate([
       }
     }
   }
-])
+]);

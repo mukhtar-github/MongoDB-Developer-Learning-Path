@@ -9845,11 +9845,63 @@ This is a visualization of *our new pipeline. Our new pipeline produced function
 
 [![Screenshot-from-2021-11-21-19-56-56.png](https://i.postimg.cc/XqVky6DT/Screenshot-from-2021-11-21-19-56-56.png)](https://postimg.cc/JD2k9v8q)
 
-And in the *shard environment*, the benefits are tangible as well. We've kept *all work distributed among the shards*. All right, but wait -- but wait. That's all fine for *essentially binary input, when we want to count the occurrence of something*. But what if we want to do something more meaningful? What if we'd like to find *how many times a specific stock was bought, sold, and what the total price was for each?*
+And in the *shard environment*, the benefits are tangible as well. We've kept *all work distributed among the shards*. All right, but wait -- but wait. That's all fine for *essentially binary input, when we want to count the occurrence of something*. But what if we want to do something more meaningful? What if we'd like to find *how many times a specific stock was bought, sold, and what the total price was for each?* Let's find that information out for *MongoDB stock*. Again, *map, reduce, filter, and the accumulator expressions* available on the *project stage* are amazing tools.
 
-Let's find that information out for MongoDB stock. Again, map, reduce, filter, and the accumulator expressions available on the project stage are amazing tools. So this is one example pipeline that would produce those results for us. First, we specify the reduced expression. As the input array, we'll go ahead and filter the trades array, filtering out any stock ticker that isn't equal to MongoDB.
+```javascript
+/*
+Remember, expression composition is powerful. Be creative, and things
+that can be done inline. Notice that there is no intermediary stage to
+filter the trades array first, it's just done as part of the argument to
+the reduce expression.
+*/
 
-The initial value and the value that will be used as the accumulator value, dollar-dollar value-- we're going to specify this document, with two keys -- buy and sell -- that are each documents, with keys of total count and total value. Here, an in is our logic. We start with this conditional expression, where we check if this dot action is equal to buy. Remember, dollar-dollar this refers to the current element of the input array. Remember, we filtered that, so we know we're only going to get documents that had MDB as the ticker symbol.
+db.stocks.aggregate([
+  {
+    $project: {
+      _id: 0,
+      mdb_only: {
+        $reduce: {
+          input: {
+            $filter: {
+              input: "$trades",
+              cond: { $eq: ["$$this.ticker", "MDB"] }
+            }
+          },
+          initialValue: {
+            buy: { total_count: 0, total_value: 0 },
+            sell: { total_count: 0, total_value: 0 }
+          },
+          in: {
+            $cond: [
+              { $eq: ["$$this.action", "buy"] },
+              {
+                buy: {
+                  total_count: { $add: ["$$value.buy.total_count", 1] },
+                  total_value: {
+                    $add: ["$$value.buy.total_value", "$$this.price"]
+                  }
+                },
+                sell: "$$value.sell"
+              },
+              {
+                sell: {
+                  total_count: { $add: ["$$value.sell.total_count", 1] },
+                  total_value: {
+                    $add: ["$$value.sell.total_value", "$$this.price"]
+                  }
+                },
+                buy: "$$value.buy"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+]);
+```
+
+So this is *one example pipeline* that would produce those results for us. First, we specify the *reduced expression*. As the input array, we'll go ahead and *filter the trades array, filtering out any stock ticker that isn't equal to MongoDB*. The *initial value and the value that will be used as the accumulator value, dollar-dollar value*. We're going to specify this document, with two keys -- *buy and sell* -- that are each documents, with keys of *total count and total value*. Here, in *in* is our logic. We start with this *conditional expression*, where we check if *this.action is equal to buy*. Remember, *$$this* refers to the *current element of the input array*. Remember, we filtered that, so we know we're only going to get documents that had *MDB as the ticker* symbol.
 
 So if it is a buy action, we modify the total count by adding one to dollar-dollar value, dot buy, dot total count. Remember, dollar-dollar value refers to the accumulator, which we set initially to be this value right here. We also modify total value by adding this dot price to dollar-dollar value, dot buy, dot total value. And if this was a buy action, we don't modify sell in any way. We just reassign it back to itself.
 
