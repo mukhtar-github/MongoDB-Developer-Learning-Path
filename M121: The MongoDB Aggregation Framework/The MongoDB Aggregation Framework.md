@@ -9295,7 +9295,28 @@ There's no need for an intermediary *project stage*, because we can just calcula
 }
 ```
 
-All right, let's now discuss another *common operation that developers encounter* when using a *one-to-end pattern*, like the *attribute or the subset patterns*, such as *stocks traded in a given moment or the top 20 customer reviews for a product*. How do we efficiently work with that data if we'd like to perform some aggregation framework analysis? Let's imagine we're working with documents of this schema, that is tracking all buy and sell transactions on our trading platform.
+All right, let's now discuss another *common operation that developers encounter* when using a *one-to-end pattern*, like the *attribute or the subset patterns*, such as *stocks traded in a given moment or the top 20 customer reviews for a product*. How do we efficiently work with that *data* if we'd like to perform some *aggregation framework analysis*? 
+
+```javascript
+{
+    "_id" : ISODate("41628-09-13T05:21:57Z"),
+    "trades" : [
+        {
+            "action" : "buy",
+            "ticker" : "IBM",
+            "price" : NumberDecimal("25.52")
+        },
+        {
+            "action" : "sell",
+            "ticker" : "AAPL",
+            "price" : NumberDecimal("25.72")
+        },
+    ]
+    ...
+}
+```
+
+Let's imagine we're working with documents of this schema, that is tracking all buy and sell transactions on our trading platform.
 
 We'd like to analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline. In other words, we want to group data in the document, not across documents.
 
