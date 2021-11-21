@@ -1003,6 +1003,10 @@ db.movies.aggregate([
   }
 ]);
 
+
+
+// Pipeline Optimization - Part 2
+
 // a naive way to get the number of trades by action. We unwind the trades
 // array first thing. We get the results we want, but maybe there is a better
 // way
