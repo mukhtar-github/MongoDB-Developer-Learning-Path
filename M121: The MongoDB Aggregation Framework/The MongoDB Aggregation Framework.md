@@ -9656,31 +9656,11 @@ Sadly, it gets worse. Let's examine how this inefficiency impacts *operations in
 
 [![Screenshot-from-2021-11-21-17-24-39.png](https://i.postimg.cc/HLTb9Z8Q/Screenshot-from-2021-11-21-17-24-39.png)](https://postimg.cc/TKHyRc9w)
 
-Initial processing for the *first group stage will be done on the shards*. But the *final grouping has to happen in a single location*. Every other stage, including the *entirety of the second group, would then take place on that location. Imagine if three or four other stages followed*.
+Initial processing for the *first group stage will be done on the shards*. But the *final grouping has to happen in a single location*. Every *other stage*, including the *entirety of the second group, would then take place on that location. Imagine if three or four other stages followed*. When *not grouping across documents, this causes needless overhead in network traffic and causes all stage, after the group, to be run in the location of the merge, rather than remain distributed*. Here, we're shown that *the grouping is happening on Shard A*. In reality, it could happen anywhere *at random in our cluster*.
 
-When not grouping across documents, this causes needless overhead in network traffic and causes [INAUDIBLE],, after the group, to be run in the location of the merge, rather than remain distributed. Here, we're shown that the grouping is happening on Shard A. In reality, it could happen anywhere at random in our cluster. So we really need a way to iterate over the array and perform our desired logic within the document.
+So we really need a way to iterate over the array and perform our desired logic within the document. Thankfully, we have map, reduce, filter, and the accumulator expressions available in the project stage to remedy this problem. Let's examine this pipeline. We'll get the size of the resultant arrays by filtering to remove the action we don't want for that field. In this case, we only allow documents through that had the buy action-- here, the sell action.
 
-Thankfully, we have map, reduce, filter, and the accumulator expressions available in the project stage to remedy this problem.
-
-Let's examine this pipeline.
-
-We'll get the size of the resultant arrays by filtering to remove the action we don't want for that field.
-
-In this case, we only allow documents through that had the buy action-- here, the sell action.
-
-Lastly, we'll just get the size of the trades array to get how many total trades we had.
-
-Now, this seems almost too simple, so let's look at it in action.
-
-Again, this is the same pipeline as on the previous slide.
-
-The sort stage is added just to ensure we get consistent results, so that we can do comparisons later.
-
-Awesome-- functionally-identical results.
-
-And I'd argue that this format is easier to reason about.
-
-Let's look at the previous output to compare.
+Lastly, we'll just get the size of the trades array to get how many total trades we had. Now, this seems almost too simple, so let's look at it in action. Again, this is the same pipeline as on the previous slide. The sort stage is added just to ensure we get consistent results, so that we can do comparisons later. Awesome-- functionally-identical results. And I'd argue that this format is easier to reason about. Let's look at the previous output to compare.
 
 And here are the results from that previous pipeline where we used the double group.
 
