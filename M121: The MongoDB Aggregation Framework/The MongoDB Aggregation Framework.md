@@ -9010,7 +9010,42 @@ db.movies.aggregate([
 
 So here's our new modified *pipeline*, where we have the same *match stage*. However, this time we have no *project stage*. Instead, we *perform the logic we need within group and then sort on those results*. Let's see it in action.
 
-
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     $match: {
+...       title: /^[aeiou]/i
+...     }
+...   },
+...   {
+...     $group: {
+...       _id: {
+...         $size: { $split: ["$title", " "] }
+...       },
+...       count: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $sort: { count: -1 }
+...   }
+... ]);
+{ "_id" : 3, "count" : 1450 }
+{ "_id" : 2, "count" : 1372 }
+{ "_id" : 1, "count" : 1200 }
+{ "_id" : 4, "count" : 1166 }
+{ "_id" : 5, "count" : 647 }
+{ "_id" : 6, "count" : 285 }
+{ "_id" : 7, "count" : 149 }
+{ "_id" : 8, "count" : 85 }
+{ "_id" : 9, "count" : 39 }
+{ "_id" : 10, "count" : 21 }
+{ "_id" : 11, "count" : 17 }
+{ "_id" : 12, "count" : 6 }
+{ "_id" : 15, "count" : 4 }
+{ "_id" : 14, "count" : 3 }
+{ "_id" : 13, "count" : 2 }
+{ "_id" : 17, "count" : 1 }
+```
 
 All right, pretty cool. We got the same results, three words, count of 1,450 documents. Let's check the explain output to see the difference between this pipeline and our previous pipeline. All right, let's look at the explain output. We can see that the query is the same. We can see that the fields are the same as well-- title 1, _id is 0.
 
