@@ -9316,13 +9316,7 @@ All right, let's now discuss another *common operation that developers encounter
 }
 ```
 
-Let's imagine we're working with documents of this schema, that is tracking all buy and sell transactions on our trading platform.
-
-We'd like to analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline. In other words, we want to group data in the document, not across documents.
-
-Let's take a look at the collection and think about how we might accomplish this.
-
-OK, so we have our time stamp, and then we have our trades array with many, many documents.
+Let's imagine we're working with *documents of this schema*, that is *tracking all buy and sell transactions on our trading platform*. We'd like to *analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline*. In other words, we want to *group data in the document, not across documents*. Let's take a look at the collection and think about how we might accomplish this. OK, so we have our time stamp, and then we have our trades array with many, many documents.
 
 OK, this might be our first approach, where we unwind the trades array, and then group on the time and the action, [INAUDIBLE] account.
 
