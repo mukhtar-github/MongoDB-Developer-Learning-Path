@@ -9295,7 +9295,7 @@ There's no need for an intermediary *project stage*, because we can just calcula
 }
 ```
 
-All right, let's now discuss another *common operation that developers encounter* when using a *one-to-end pattern*, like the *attribute or the subset patterns*, such as *stocks traded in a given moment or the top 20 customer reviews for a product*. How do we efficiently work with that *data* if we'd like to perform some *aggregation framework analysis*? 
+All right, let's now discuss another *common operation that developers encounter* when using a *one-to-end pattern*, like the *attribute or the subset patterns*, such as *stocks traded in a given moment or the top 20 customer reviews for a product*. How do we efficiently work with that *data* if we'd like to perform some *aggregation framework analysis*?
 
 ```javascript
 {
@@ -9316,9 +9316,158 @@ All right, let's now discuss another *common operation that developers encounter
 }
 ```
 
-Let's imagine we're working with *documents of this schema*, that is *tracking all buy and sell transactions on our trading platform*. We'd like to *analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline*. In other words, we want to *group data in the document, not across documents*. Let's take a look at the collection and think about how we might accomplish this. OK, so we have our time stamp, and then we have our trades array with many, many documents.
+Let's imagine we're working with *documents of this schema*, that is *tracking all buy and sell transactions on our trading platform*. We'd like to *analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline*. In other words, we want to *group data in the document, not across documents*. Let's take a look at the *collection* and think about how we might accomplish this.
 
-OK, this might be our first approach, where we unwind the trades array, and then group on the time and the action, [INAUDIBLE] account.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.stocks.findOne();
+{
+        "_id" : ObjectId("59de66b90e3733b1538628cc"),
+        "id" : ISODate("3285-04-29T14:15:17Z"),
+        "trades" : [
+            {
+                "action" : "buy",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.35")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "MDB",
+                "price" : NumberDecimal("25.63")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.57")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.05")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.45")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.77")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "GOOG",
+                "price" : NumberDecimal("25.88")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "MDB",
+                "price" : NumberDecimal("25.03")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "MDB",
+                "price" : NumberDecimal("25.45")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "MDB",
+                "price" : NumberDecimal("25.43")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.85")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "GOOG",
+                "price" : NumberDecimal("25.16")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.77")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.11")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.34")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.25")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "AAPL",
+                "price" : NumberDecimal("25.57")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "GOOG",
+                "price" : NumberDecimal("25.23")
+            },
+            {
+                "action" : "sell",
+                "ticker" : "FB",
+                "price" : NumberDecimal("25.46")
+            },
+            {
+                "action" : "buy",
+                "ticker" : "IBM",
+                "price" : NumberDecimal("25.34")
+            }
+        ]
+}
+```
+
+OK, so we have our *time stamp*, and then we have our *trades array with many, many documents*.
+
+```javascript
+/*
+A naive way to get the number of trades by action. We unwind the trades
+array first thing. We get the results we want, but maybe there is a better way.
+*/
+
+db.stocks.aggregate([
+  {
+    $unwind: "$trades"
+  },
+  {
+    $group: {
+      _id: {
+        time: "$id",
+        action: "$trades.action"
+      },
+      trades: { $sum: 1 }
+    }
+  },
+  {
+    $group: {
+      _id: "$_id.time",
+      actions: {
+        $push: {
+          type: "$_id.action",
+          count: "$trades"
+        }
+      },
+      total_trades: { $sum: "$trades" }
+    }
+  },
+  {
+    $sort: { total_trades: -1 }
+  }
+]);
+```
+
+OK, this might be our first approach, where we *unwind the trades array*, and then group on the time and the action, [INAUDIBLE] account.
 
 And then group again, just on the time, and pushing the action and account for that type of action into an array, and then getting the total number of actions we performed per that time stamp.
 
