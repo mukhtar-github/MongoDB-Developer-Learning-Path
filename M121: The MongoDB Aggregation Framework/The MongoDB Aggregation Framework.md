@@ -8760,7 +8760,231 @@ db.movies.aggregate(
 );
 ```
 
-Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function. And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
+Again, *the same pipeline* we just used also *projecting out _id*, just adding the *explain-true* option to the *aggregation function*.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(
+...   [
+...     {
+...       $match: {
+...         title: /^[aeiou]/i
+...       }
+...     },
+...     {
+...       $project: {
+...         _id: 0,
+...         title_size: { $size: { $split: ["$title", " "] } }
+...       }
+...     },
+...     {
+...       $group: {
+...         _id: "$title_size",
+...         count: { $sum: 1 }
+...       }
+...     },
+...     {
+...       $sort: { count: -1 }
+...     }
+...   ],
+...   { explain: true }
+... );
+{
+        "stages" : [
+            {
+                "$cursor" : {
+                    "query" : {
+                        "title" : /^[aeiou]/i
+                    },
+                    "fields" : {
+                        "title" : 1,
+                        "_id" : 0
+                    },
+                    "queryPlanner" : {
+                        "plannerVersion" : 1,
+                        "namespace" : "aggregations.movies",
+                        "indexFilterSet" : false,
+                        "parsedQuery" : {
+                            "title" : {
+                                "$regex" : "^[aeiou]",
+                                "$options" : "i"
+                            }
+                        },
+                        "queryHash" : "68724CCB",
+                        "planCacheKey" : "022FFC72",
+                        "winningPlan" : {
+                            "stage" : "PROJECTION_COVERED",
+                            "transformBy" : {
+                                "title" : 1,
+                                "_id" : 0
+                            },
+                            "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "filter" : {
+                                    "title" : {
+                                        "$regex" : "^[aeiou]",
+                                        "$options" : "i"
+                                    }
+                                },
+                                "keyPattern" : {
+                                    "title" : 1,
+                                    "imdb.rating" : 1
+                                },
+                                "indexName" : "title_1_imdb.rating_1",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                    "title" : [ ],
+                                    "imdb.rating" : [ ]
+                                },
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : false,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                    "title" : [
+                                        "[\"\", {})",
+                                        "[/^[aeiou]/i, /^[aeiou]/i]"
+                                    ],
+                                    "imdb.rating" : [
+                                        "[MinKey, MaxKey]"
+                                    ]
+                                }
+                            }
+                        },
+                        "rejectedPlans" : [
+                            {
+                                "stage" : "PROJECTION_COVERED",
+                                "transformBy" : {
+                                    "title" : 1,
+                                    "_id" : 0
+                                },
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1
+                                    },
+                                    "indexName" : "title_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "stage" : "PROJECTION_COVERED",
+                                "transformBy" : {
+                                    "title" : 1,
+                                    "_id" : 0
+                                },
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1,
+                                        "year" : 1
+                                    },
+                                    "indexName" : "title_1_year_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ],
+                                        "year" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ],
+                                        "year" : [
+                                            "[MinKey, MaxKey]"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "$project" : {
+                    "_id" : false,
+                    "title_size" : {
+                        "$size" : [
+                            {
+                                "$split" : [
+                                    "$title",
+                                    {
+                                        "$const" : " "
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$title_size",
+                    "count" : {
+                        "$sum" : {
+                            "$const" : 1
+                        }
+                    }
+                }
+            },
+            {
+                "$sort" : {
+                    "sortKey" : {
+                        "count" : -1
+                    }
+                }
+            }
+        ],
+        "serverInfo" : {
+            "host" : "cluster0-shard-00-02-jxeqq.mongodb.net",
+            "port" : 27017,
+            "version" : "4.2.17",
+            "gitVersion" : "be089838c55d33b6f6039c4219896ee4a3cd704f"
+        },
+        "ok" : 1,
+        "$clusterTime" : {
+            "clusterTime" : Timestamp(1637498460, 1),
+            "signature" : {
+                "hash" : BinData(0,"ny7eR+76b4AaZmiB9qCwS3x5hwM="),
+                "keyId" : NumberLong("6994818544680566786")
+            }
+        },
+        "operationTime" : Timestamp(1637498460, 1)
+}
+```
+
+And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
 
 When we see a fetch stage, it means MongoDB had to go to the document for more information, rather than just using information from the index alone. Of some interest here, we can also see that _id was now projected as false. This is because we explicitly provided that information. So let's see if we can do even better. So here's our new modified pipeline, where we have the same match stage. However, this time we have no project stage.
 
