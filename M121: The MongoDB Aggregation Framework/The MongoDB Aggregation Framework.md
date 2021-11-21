@@ -9467,31 +9467,184 @@ db.stocks.aggregate([
 ]);
 ```
 
-OK, this might be our first approach, where we *unwind the trades array*, and then group on the time and the action, [INAUDIBLE] account.
+OK, this might be our first approach, where we *unwind the trades array*, and then *group on the time and the action*, getting *account*. And then *group again, just on the time, and pushing the action and account for that type of action into an array, and then getting the total number of actions we performed per that time stamp*. So we should get total actions per document with the *individual numbers of buy and sell actions*. Let's test it up.
 
-And then group again, just on the time, and pushing the action and account for that type of action into an array, and then getting the total number of actions we performed per that time stamp.
+OK, we can see that it's the same *pipeline* as that from the previous slide. We *unwind the trades array, group on the time stamp and the action, and then group again just on the time stamp*. We've added the *sort stage* here, just to ensure we get *consistent ordering* for comparison later on.
 
-So we should get total actions per document with the individual numbers of buy and sell actions.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.stocks.aggregate([
+  {
+    $unwind: "$trades"
+  },
+  {
+    $group: {
+      _id: {
+        time: "$id",
+        action: "$trades.action"
+      },
+      trades: { $sum: 1 }
+    }
+  },
+  {
+    $group: {
+      _id: "$_id.time",
+      actions: {
+        $push: {
+          type: "$_id.action",
+          count: "$trades"
+        }
+      },
+      total_trades: { $sum: "$trades" }
+    }
+  },
+  {
+    $sort: { total_trades: -1 }
+  }
+]).pretty();
+    {
+        "_id" : ISODate("7087-12-23T11:35:17Z"),
+        "actions" : [
+            {
+                "type" : "sell",
+                "count" : 255
+            },
+            {
+                "type" : "buy",
+                "count" : 244
+            }
+        ],
+        "total_trades" : 499
+    }
+    {
+        "_id" : ISODate("41628-09-13T05:21:57Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 244
+            },
+            {
+                "type" : "sell",
+                "count" : 255
+            }
+        ],
+        "total_trades" : 499
+    }
+    {
+        "_id" : ISODate("78704-07-11T21:21:57Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 255
+            },
+            {
+                "type" : "sell",
+                "count" : 243
+            }
+        ],
+        "total_trades" : 498
+    }
+    {
+        "_id" : ISODate("6137-04-25T06:15:17Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 228
+            },
+            {
+                "type" : "sell",
+                "count" : 269
+            }
+        ],
+        "total_trades" : 497
+    }
+    {
+        "_id" : ISODate("3602-03-20T08:01:57Z"),
+        "actions" : [
+            {
+                "type" : "sell",
+                "count" : 246
+            },
+            {
+                "type" : "buy",
+                "count" : 251
+            }
+        ],
+        "total_trades" : 497
+    }
+    {
+        "_id" : ISODate("5503-07-17T18:41:57Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 246
+            },
+            {
+                "type" : "sell",
+                "count" : 235
+            }
+        ],
+        "total_trades" : 481
+    }
+    {
+        "_id" : ISODate("104055-07-08T03:35:17Z"),
+        "actions" : [
+            {
+                "type" : "sell",
+                "count" : 246
+            },
+            {
+                "type" : "buy",
+                "count" : 234
+            }
+        ],
+        "total_trades" : 480
+    }
+    {
+        "_id" : ISODate("39093-08-08T07:08:37Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 218
+            },
+            {
+                "type" : "sell",
+                "count" : 261
+            }
+        ],
+        "total_trades" : 479
+    }
+    {
+        "_id" : ISODate("9939-12-19T03:35:17Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 239
+            },
+            {
+                "type" : "sell",
+                "count" : 239
+            }
+        ],
+        "total_trades" : 478
+    }
+    {
+        "_id" : ISODate("79972-01-28T20:28:37Z"),
+        "actions" : [
+            {
+                "type" : "sell",
+                "count" : 249
+            },
+            {
+                "type" : "buy",
+                "count" : 227
+            }
+        ],
+        "total_trades" : 476
+    }
+    Type "it" for more
+```
 
-Let's test it up.
-
-OK, we can see that it's the same pipeline as that from the previous slide.
-
-We unwind the trades array, group on the time stamp and the action, and then group again just on the time stamp.
-
-We've added this sort stage here, just to ensure we get consistent ordering for comparison later on.
-
-All right, it gives us the results we expected-- total actions and the number of buy and sell actions per document.
-
-This is a visual representation of the previous pipeline.
-
-The black squares are our documents.
-
-If we start with four documents and unwind a field with just three entries per document, we now have 12 documents.
-
-We then group our documents twice to produce the desired results, ending up with the same number of documents we started with.
-
-This should start to feel horribly inefficient.
+All right, it gives us the results we expected -- total actions and the number of buy and sell actions per document. This is a visual representation of the previous pipeline. The black squares are our documents. If we start with four documents and unwind a field with just three entries per document, we now have 12 documents. We then group our documents twice to produce the desired results, ending up with the same number of documents we started with. This should start to feel horribly inefficient.
 
 Sadly, it gets worse.
 
