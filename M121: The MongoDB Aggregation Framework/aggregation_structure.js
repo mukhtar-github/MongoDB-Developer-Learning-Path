@@ -1003,7 +1003,7 @@ db.movies.aggregate([
   }
 ]);
 
-// a naive way to get teh number of trades by action. We unwind the trades
+// a naive way to get the number of trades by action. We unwind the trades
 // array first thing. We get the results we want, but maybe there is a better
 // way
 db.stocks.aggregate([

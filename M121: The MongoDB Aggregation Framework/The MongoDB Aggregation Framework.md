@@ -9266,6 +9266,160 @@ All right, let's look at the *explain output*. We can see that the *query* is th
 
 As we saw, the *aggregation framework* assumed we knew what we were doing with each *project*. However, if the *aggregation framework* can determine the *shape of the final document based only on initial input*, internally it will *project away unnecessary fields*. That was a mouthful. So let me explain that in a little more detail. In the first *match stage*, the only field we cared about was the *title*. In the *group stage*, again, the only field we care about is the *title*. We use this - *$size: { $split: ["$title", " "] }*, composition of expressions to get the number of words in the *title*. But we can do that in line by evaluating first *splitting the title on spaces into an array, and then getting in the size of the array*.
 
-There's no need for an intermediary *project stage*, because we can just calculate that value in line here. This is a very powerful feature. We should always strive to let the *optimizer work for us*. Additionally, this *removes a stage that ultimately adds time to the pipeline*. Let's think about that. Say we have *100,000 documents in our movies collection*. In the *match, we filter down to 10,000*. Now *in group, we have 10,000 documents come through*. And in *sort, we have maybe 15*. Well, with that intermediary *project stage* that we really didn't need, *we had 100,000 come in, then we have 10,000, and we'd send all 10,000 through that intermediary project before they got to the group stage*.
+There's no need for an intermediary *project stage*, because we can just calculate that value in line here. This is a very powerful feature. We should always strive to let the *optimizer work for us*. Additionally, this *removes a stage that ultimately adds time to the pipeline*. Let's think about that. Say we have *100,000 documents in our movies collection*. In the *match, we filter down to 10,000*. Now *in group, we have 10,000 documents come through*. And in *sort, we have maybe 15*. Well, with that intermediary *project stage* that we really didn't need, *we had 100,000 come in, then we have 10,000, and we'd send all 10,000 through that intermediary project before they got to the group stage*. *That's 10,000 additional iterations that we just avoided*.
 
-That's 10,000 additional iterations that we just avoided. So as a general rule, don't project unless you are doing some real work in this stage. And remember that add fields is available. OK, one last note before we move on, we could replace group and sort by sort by count. It really is the same under the hood. It just saves us on typing. Keep that in mind.
+> So as a general rule, don't project unless you are doing some *real work* in the stage. And remember that *add fields is available*. OK, one last note before we move on, we could *replace group and sort by sort by count*. It really is the same under the hood. It just saves us on typing. Keep that in mind.
+
+### Pipeline Optimization - Part 2
+
+All right, let's now discuss another common operation that developers encounter when using a one-to-end pattern, like the attribute or the subset patterns, such as stocks traded in a given moment or the top 20 customer reviews for a product. How do we efficiently work with that data if we'd like to perform some aggregation framework analysis? Let's imagine we're working with documents of this schema, that is tracking all buy and sell transactions on our trading platform.
+
+We'd like to analyze how many total transactions we have, as well as how many buys and sells were performed per time stamp, and then use this data later in our pipeline. In other words, we want to group data in the document, not across documents.
+
+Let's take a look at the collection and think about how we might accomplish this.
+
+OK, so we have our time stamp, and then we have our trades array with many, many documents.
+
+OK, this might be our first approach, where we unwind the trades array, and then group on the time and the action, [INAUDIBLE] account.
+
+And then group again, just on the time, and pushing the action and account for that type of action into an array, and then getting the total number of actions we performed per that time stamp.
+
+So we should get total actions per document with the individual numbers of buy and sell actions.
+
+Let's test it up.
+
+OK, we can see that it's the same pipeline as that from the previous slide.
+
+We unwind the trades array, group on the time stamp and the action, and then group again just on the time stamp.
+
+We've added this sort stage here, just to ensure we get consistent ordering for comparison later on.
+
+All right, it gives us the results we expected-- total actions and the number of buy and sell actions per document.
+
+This is a visual representation of the previous pipeline.
+
+The black squares are our documents.
+
+If we start with four documents and unwind a field with just three entries per document, we now have 12 documents.
+
+We then group our documents twice to produce the desired results, ending up with the same number of documents we started with.
+
+This should start to feel horribly inefficient.
+
+Sadly, it gets worse.
+
+Let's examine how this inefficiency impacts operations in Shard D environment.
+
+Each shard performs the unwind.
+
+Initial processing for the first group stage will be done on the shards.
+
+But the final grouping has to happen in a single location.
+
+Every other stage, including the entirety of the second group, would then take place on that location.
+
+Imagine if three or four other stages followed.
+
+When not grouping across documents, this causes needless overhead in network traffic and causes [INAUDIBLE],, after the group, to be run in the location of the merge, rather than remain distributed.
+
+Here, we're shown that the grouping is happening on Shard A.
+
+In reality, it could happen anywhere at random in our cluster.
+
+So we really need a way to iterate over the array and perform our desired logic within the document.
+
+Thankfully, we have map, reduce, filter, and the accumulator expressions available in the project stage to remedy this problem.
+
+Let's examine this pipeline.
+
+We'll get the size of the resultant arrays by filtering to remove the action we don't want for that field.
+
+In this case, we only allow documents through that had the buy action-- here, the sell action.
+
+Lastly, we'll just get the size of the trades array to get how many total trades we had.
+
+Now, this seems almost too simple, so let's look at it in action.
+
+Again, this is the same pipeline as on the previous slide.
+
+The sort stage is added just to ensure we get consistent results, so that we can do comparisons later.
+
+Awesome-- functionally-identical results.
+
+And I'd argue that this format is easier to reason about.
+
+Let's look at the previous output to compare.
+
+And here are the results from that previous pipeline where we used the double group.
+
+We can see the information we still want is embedded within this actions array.
+
+This is a visualization of our new pipeline.
+
+Our new pipeline produced functionally-identical results, but visually-- we can see in the execution-- is much different.
+
+Rather than performing unnecessary work and possibly moving and collapsing our pipeline to a single location, causing a slowdown in extra network usage, we retain the same number of documents performing the work in a targeted manner and in place.
+
+And in the shard environment, the benefits are tangible as well.
+
+We've kept all work distributed among the shards.
+
+All right, but wait-- but wait.
+
+That's all fine for essentially binary input, when we want to count the occurrence of something.
+
+But what if we want to do something more meaningful?
+
+What if we'd like to find how many times a specific stock was bought, sold, and what the total price was for each?
+
+Let's find that information out for MongoDB stock.
+
+Again, map, reduce, filter, and the accumulator expressions available on the project stage are amazing tools.
+
+So this is one example pipeline that would produce those results for us.
+
+First, we specify the reduced expression.
+
+As the input array, we'll go ahead and filter the trades array, filtering out any stock ticker that isn't equal to MongoDB.
+
+The initial value and the value that will be used as the accumulator value, dollar-dollar value-- we're going to specify this document, with two keys-- buy and sell-- that are each documents, with keys of total count and total value.
+
+Here, an in is our logic.
+
+We start with this conditional expression, where we check if this dot action is equal to buy.
+
+Remember, dollar-dollar this refers to the current element of the input array.
+
+Remember, we filtered that, so we know we're only going to get documents that had MDB as the ticker symbol.
+
+So if it is a buy action, we modify the total count by adding one to dollar-dollar value, dot buy, dot total count.
+
+Remember, dollar-dollar value refers to the accumulator, which we set initially to be this value right here.
+
+We also modify total value by adding this dot price to dollar-dollar value, dot buy, dot total value.
+
+And if this was a buy action, we don't modify sell in any way.
+
+We just reassign it back to itself.
+
+If it is a sell action, we essentially do the same thing, adding one to sell-total-count and adding this stock price to sell-total-value, and then finally re-assigning buy back to itself, because this was a sell.
+
+We can see that, based on MongoDB only, the buy total count was 10, and the sell total count was five for this specific document.
+
+We can also see the dollar value associated with all the transactions.
+
+Again, we see 22 and 19 and the value associated.
+
+All right, we've covered a lot of information in this lesson.
+
+Let's go ahead and summarize what we talked about.
+
+First, avoid unnecessary stages.
+
+The aggregation framework can project fields automatically if the final shape of the output document can be determined from initial input.
+
+Second, use accumulator expressions-- as well as dollar-map, dollar-reduce, and dollar-filter expressions-- in project stages before an unwind, if possible.
+
+Again, this only applies if you need to group within a document, not among your documents.
+
+Lastly, every high-order array function can be implemented with dollar-reduce if the provided expressions do not meet your needs.
