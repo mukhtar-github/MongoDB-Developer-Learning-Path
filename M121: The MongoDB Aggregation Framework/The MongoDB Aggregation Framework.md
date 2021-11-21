@@ -8686,7 +8686,50 @@ db.movies.aggregate([
 ]);
 ```
 
-So this aggregation pipeline is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field. Remember, the project stage implicitly keeps it unless we tell it not to. Let's see if we get the same results. And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
+So this *aggregation pipeline* is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field. Remember, the *project stage* implicitly keeps it unless we tell it not to. Let's see if we get the same results.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     $match: {
+...       title: /^[aeiou]/i
+...     }
+...   },
+...   {
+...     $project: {
+...       _id: 0,
+...       title_size: { $size: { $split: ["$title", " "] } }
+...     }
+...   },
+...   {
+...     $group: {
+...       _id: "$title_size",
+...       count: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $sort: { count: -1 }
+...   }
+... ]);
+{ "_id" : 3, "count" : 1450 }
+{ "_id" : 2, "count" : 1372 }
+{ "_id" : 1, "count" : 1200 }
+{ "_id" : 4, "count" : 1166 }
+{ "_id" : 5, "count" : 647 }
+{ "_id" : 6, "count" : 285 }
+{ "_id" : 7, "count" : 149 }
+{ "_id" : 8, "count" : 85 }
+{ "_id" : 9, "count" : 39 }
+{ "_id" : 10, "count" : 21 }
+{ "_id" : 11, "count" : 17 }
+{ "_id" : 12, "count" : 6 }
+{ "_id" : 15, "count" : 4 }
+{ "_id" : 14, "count" : 3 }
+{ "_id" : 13, "count" : 2 }
+{ "_id" : 17, "count" : 1 }
+```
+
+And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
 
 And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
 
