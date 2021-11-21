@@ -9656,19 +9656,192 @@ Sadly, it gets worse. Let's examine how this inefficiency impacts *operations in
 
 [![Screenshot-from-2021-11-21-17-24-39.png](https://i.postimg.cc/HLTb9Z8Q/Screenshot-from-2021-11-21-17-24-39.png)](https://postimg.cc/TKHyRc9w)
 
-Initial processing for the *first group stage will be done on the shards*. But the *final grouping has to happen in a single location*. Every *other stage*, including the *entirety of the second group, would then take place on that location. Imagine if three or four other stages followed*. When *not grouping across documents, this causes needless overhead in network traffic and causes all stage, after the group, to be run in the location of the merge, rather than remain distributed*. Here, we're shown that *the grouping is happening on Shard A*. In reality, it could happen anywhere *at random in our cluster*.
+Initial processing for the *first group stage will be done on the shards*. But the *final grouping has to happen in a single location*. Every *other stage*, including the *entirety of the second group, would then take place on that location. Imagine if three or four other stages followed*. When *not grouping across documents, this causes needless overhead in network traffic and causes all stage, after the group, to be run in the location of the merge, rather than remain distributed*. Here, we're shown that *the grouping is happening on Shard A*. In reality, it could happen anywhere *at random in our cluster*. So we really need a way to *iterate over the array and perform our desired logic within the document*. Thankfully, we have *map, reduce, filter, and the accumulator expressions* available in the *project stage* to remedy this problem.
 
-So we really need a way to iterate over the array and perform our desired logic within the document. Thankfully, we have map, reduce, filter, and the accumulator expressions available in the project stage to remedy this problem. Let's examine this pipeline. We'll get the size of the resultant arrays by filtering to remove the action we don't want for that field. In this case, we only allow documents through that had the buy action-- here, the sell action.
+```javascript
+/*
+Working within the arrays is always better if we want to do analysis within
+a document. We get the same results in a slighlty easier to work with format
+and didn't incur the cost of a $group stage
+*/
 
-Lastly, we'll just get the size of the trades array to get how many total trades we had. Now, this seems almost too simple, so let's look at it in action. Again, this is the same pipeline as on the previous slide. The sort stage is added just to ensure we get consistent results, so that we can do comparisons later. Awesome-- functionally-identical results. And I'd argue that this format is easier to reason about. Let's look at the previous output to compare.
+db.stocks.aggregate([
+  {
+    $project: {
+      buy_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "buy"] }
+          }
+        }
+      },
+      sell_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "sell"] }
+          }
+        }
+      },
+      total_trades: { $size: "$trades" }
+    }
+  },
+  {
+    $sort: { total_trades: -1 }
+  }
+]);
+```
 
-And here are the results from that previous pipeline where we used the double group.
+Let's examine this *pipeline*. We'll get the *size of the resultant arrays* by filtering to remove the action we don't want for that field. In this case, *we only allow documents through that had the buy action -- then the sell action*. Lastly, we'll just get the *size of the trades array* to get how many *total trades* we had. Now, this seems almost too simple, so let's look at it in action. Again, this is the same *pipeline* as on the previous slide. The *sort stage* is added just to ensure we get *consistent results*, so that we can do comparisons later.
 
-We can see the information we still want is embedded within this actions array.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.stocks.aggregate([
+  {
+    $project: {
+      buy_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "buy"] }
+          }
+        }
+      },
+      sell_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "sell"] }
+          }
+        }
+      },
+      total_trades: { $size: "$trades" }
+    }
+  },
+  {
+    $sort: { total_trades: -1 }
+  }
+])db.stocks.aggregate([
+  {
+    $project: {
+      buy_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "buy"] }
+          }
+        }
+      },
+      sell_actions: {
+        $size: {
+          $filter: {
+            input: "$trades",
+            cond: { $eq: ["$$this.action", "sell"] }
+          }
+        }
+      },
+      total_trades: { $size: "$trades" }
+    }
+  },
+  {
+    $sort: { total_trades: -1 }
+  }
+]).pretty();
+    {
+        "_id" : ObjectId("59de66b90e3733b1538628db"),
+        "buy_actions" : 244,
+        "sell_actions" : 255,
+        "total_trades" : 499
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b15386295b"),
+        "buy_actions" : 244,
+        "sell_actions" : 255,
+        "total_trades" : 499
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b1538629ee"),
+        "buy_actions" : 255,
+        "sell_actions" : 243,
+        "total_trades" : 498
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b1538628d2"),
+        "buy_actions" : 251,
+        "sell_actions" : 246,
+        "total_trades" : 497
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b1538628d7"),
+        "buy_actions" : 228,
+        "sell_actions" : 269,
+        "total_trades" : 497
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b1538628fb"),
+        "buy_actions" : 222,
+        "sell_actions" : 272,
+        "total_trades" : 494
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b1538629c0"),
+        "buy_actions" : 222,
+        "sell_actions" : 272,
+        "total_trades" : 494
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b153862a7b"),
+        "buy_actions" : 266,
+        "sell_actions" : 226,
+        "total_trades" : 492
+    }
+    {
+        "_id" : ObjectId("59de66b90e3733b153862924"),
+        "buy_actions" : 246,
+        "sell_actions" : 230,
+        "total_trades" : 476
+    }
+Type "it" for more
+```
 
-This is a visualization of our new pipeline.
+Awesome -- *functionally-identical* results. And I'd argue that this format is easier to reason about. Let's look at the *previous output* to compare.
 
-Our new pipeline produced functionally-identical results, but visually-- we can see in the execution-- is much different.
+```javascript
+{
+        "_id" : ISODate("7087-12-23T11:35:17Z"),
+        "actions" : [
+            {
+                "type" : "sell",
+                "count" : 255
+            },
+            {
+                "type" : "buy",
+                "count" : 244
+            }
+        ],
+        "total_trades" : 499
+    }
+    {
+        "_id" : ISODate("41628-09-13T05:21:57Z"),
+        "actions" : [
+            {
+                "type" : "buy",
+                "count" : 244
+            },
+            {
+                "type" : "sell",
+                "count" : 255
+            }
+        ],
+        "total_trades" : 499
+    }
+```
+
+And here are the results from that *previous pipeline* where we used the *double group*. We can see the information we still want is embedded within the *actions array*.
+
+[![Screenshot-from-2021-11-21-19-08-44.png](https://i.postimg.cc/02MTMHyQ/Screenshot-from-2021-11-21-19-08-44.png)](https://postimg.cc/Cz0P97DT)
+
+This is a visualization of *our new pipeline. Our new pipeline produced functionally-identical results*, but visually -- we can see in the execution -- is much different.
 
 Rather than performing unnecessary work and possibly moving and collapsing our pipeline to a single location, causing a slowdown in extra network usage, we retain the same number of documents performing the work in a targeted manner and in place.
 
