@@ -8343,13 +8343,319 @@ Let's recap what we learned. We discussed *how the aggregation pipeline works on
 
 ### Pipeline Optimization - Part 1
 
-Let's talk about pipeline optimization. We've already learned about using match and sort stages early, and to use indexes using limit and sort stages to produce top K results, and how to allow the use of more than 100 megabytes of memory. Let's dive further and look at pipelines themselves and how they might be optimized. Let's consider the following aggregation that gives the length of movie titles that begin with vowels and sorts them by the frequency.
+Let's talk about *pipeline optimization*. We've already learned about using *match and sort* stages early, and to use *indexes* using *limit and sort* stages to produce *top K* results, and how to allow the use of *more than 100 megabytes of memory*. Let's dive further and look at pipelines themselves and how they might be optimized.
 
-So we begin with our match stage, looking for titles that begin with a vowel, ignoring the case. We then project our title size, composing size and split together, and splitting the title on spaces. In our group stage, we're grouping like documents together based on that title size we just calculated and getting a count. Finally, we're going to sort in descending direction. So the highest frequency should be coming back first. Let's run this to get an idea of the results.
+```javascript
+/*
+an initial aggregatioin finding all movies where the title begins
+with a vowel. Notice the $project stage that will prevent a covered
+query!
+*/
+db.movies.aggregate([
+  {
+    $match: {
+      title: /^[aeiou]/i
+    }
+  },
+  {
+    $project: {
+      title_size: { $size: { $split: ["$title", " "] } }
+    }
+  },
+  {
+    $group: {
+      _id: "$title_size",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { count: -1 }
+  }
+]);
+```
 
-We can see that the most common length for a movie title appears to be three words and there were 1,450 documents that fell into this group. We can also see that the most uncommon length for a movie title is 17 words, with only one document in this group. Let's now examine the explain information for this aggregation. So we have the same pipeline as before. But this time we're appending explain true to get the explain output. Let's take a look at the results.
+Let's consider the following *aggregation* that gives the *length of movie titles* that begin with *vowels and sorts* them by the *frequency*. So we begin with our *match* stage, looking for *titles* that begin with a *vowel*, ignoring the case. We then *project our title size, composing size and split together, and splitting the title on spaces*. In our *group* stage, we're *grouping like documents* together based on that *title size* we just calculated and getting a *count*. Finally, we're going to *sort* in descending direction. So the *highest frequency* should be coming back first. Let's run this to get an idea of the results.
 
-There is a lot of interesting information here. We can see what our query was, the fields that were kept which happened to be title and _id, and then the query planner. A little further down, we can also the winning plan that used a fetch stage followed by an index scan. We can probably do a little better than this, because we know that we have an index that should support this query. We can also see the stages that were executed.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
+...   {
+...     $match: {
+...       title: /^[aeiou]/i
+...     }
+...   },
+...   {
+...     $project: {
+...       title_size: { $size: { $split: ["$title", " "] } }
+...     }
+...   },
+...   {
+...     $group: {
+...       _id: "$title_size",
+...       count: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $sort: { count: -1 }
+...   }
+... ]);
+{ "_id" : 3, "count" : 1450 }
+{ "_id" : 2, "count" : 1372 }
+{ "_id" : 1, "count" : 1200 }
+{ "_id" : 4, "count" : 1166 }
+{ "_id" : 5, "count" : 647 }
+{ "_id" : 6, "count" : 285 }
+{ "_id" : 7, "count" : 149 }
+{ "_id" : 8, "count" : 85 }
+{ "_id" : 9, "count" : 39 }
+{ "_id" : 10, "count" : 21 }
+{ "_id" : 11, "count" : 17 }
+{ "_id" : 12, "count" : 6 }
+{ "_id" : 15, "count" : 4 }
+{ "_id" : 14, "count" : 3 }
+{ "_id" : 13, "count" : 2 }
+{ "_id" : 17, "count" : 1 }
+```
+
+We can see that the *most common length for a movie title appears to be three words and there were 1,450 documents* that fell into this group. We can also see that the *most uncommon length for a movie title is 17 words, with only one document* in this group. Let's now examine the *explain information for this aggregation*.
+
+```javascript
+// showing the query isn't covered
+db.movies.aggregate(
+  [
+    {
+      $match: {
+        title: /^[aeiou]/i
+      }
+    },
+    {
+      $project: {
+        title_size: { $size: { $split: ["$title", " "] } }
+      }
+    },
+    {
+      $group: {
+        _id: "$title_size",
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1 }
+    }
+  ], { explain: true }
+);
+```
+
+So we have the *same pipeline* as before. But this time we're *appending explain - true* to get the explain output. Let's take a look at the results.
+
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(
+...   [
+...     {
+...       $match: {
+...         title: /^[aeiou]/i
+...       }
+...     },
+...     {
+...       $project: {
+...         title_size: { $size: { $split: ["$title", " "] } }
+...       }
+...     },
+...     {
+...       $group: {
+...         _id: "$title_size",
+...         count: { $sum: 1 }
+...       }
+...     },
+...     {
+...       $sort: { count: -1 }
+...     }
+...   ], { explain: true }
+... );
+{
+        "stages" : [
+            {
+                "$cursor" : {
+                    "query" : {
+                        "title" : /^[aeiou]/i
+                    },
+                    "fields" : {
+                        "title" : 1,
+                        "_id" : 1
+                    },
+                    "queryPlanner" : {
+                        "plannerVersion" : 1,
+                        "namespace" : "aggregations.movies",
+                        "indexFilterSet" : false,
+                        "parsedQuery" : {
+                            "title" : {
+                                "$regex" : "^[aeiou]",
+                                "$options" : "i"
+                            }
+                        },
+                        "queryHash" : "02536D35",
+                        "planCacheKey" : "9088CA72",
+                        "winningPlan" : {
+                            "stage" : "FETCH",
+                            "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "filter" : {
+                                    "title" : {
+                                        "$regex" : "^[aeiou]",
+                                        "$options" : "i"
+                                    }
+                                },
+                                "keyPattern" : {
+                                    "title" : 1,
+                                    "imdb.rating" : 1
+                                },
+                                "indexName" : "title_1_imdb.rating_1",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                    "title" : [ ],
+                                    "imdb.rating" : [ ]
+                                },
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : false,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                    "title" : [
+                                        "[\"\", {})",
+                                        "[/^[aeiou]/i, /^[aeiou]/i]"
+                                    ],
+                                    "imdb.rating" : [
+                                        "[MinKey, MaxKey]"
+                                    ]
+                                }
+                            }
+                        },
+                        "rejectedPlans" : [
+                            {
+                                "stage" : "FETCH",
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1
+                                    },
+                                    "indexName" : "title_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "stage" : "FETCH",
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1,
+                                        "year" : 1
+                                    },
+                                    "indexName" : "title_1_year_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ],
+                                        "year" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ],
+                                        "year" : [
+                                            "[MinKey, MaxKey]"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "$project" : {
+                    "_id" : true,
+                    "title_size" : {
+                        "$size" : [
+                            {
+                                "$split" : [
+                                    "$title",
+                                    {
+                                        "$const" : " "
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : "$title_size",
+                    "count" : {
+                        "$sum" : {
+                            "$const" : 1
+                        }
+                    }
+                }
+            },
+            {
+                "$sort" : {
+                    "sortKey" : {
+                        "count" : -1
+                    }
+                }
+            }
+        ],
+        "serverInfo" : {
+            "host" : "cluster0-shard-00-02-jxeqq.mongodb.net",
+            "port" : 27017,
+            "version" : "4.2.17",
+            "gitVersion" : "be089838c55d33b6f6039c4219896ee4a3cd704f"
+        },
+        "ok" : 1,
+        "$clusterTime" : {
+            "clusterTime" : Timestamp(1637494940, 1),
+            "signature" : {
+                "hash" : BinData(0,"JsPFb74vmH+G/WXsE+h5cmbHAiI="),
+                "keyId" : NumberLong("6994818544680566786")
+            }
+        },
+        "operationTime" : Timestamp(1637494940, 1)
+}
+```
+
+There is a lot of interesting information here. We can see what our *query* was, the fields that were kept which happened to be *title and _id*, and then the *query planner*. A little further down, we can also the *rejectedPlans* that used a *fetch stage followed by an index scan*. We can probably do a little better than this, because we know that we have an *index that should support this query*. We can also see the stages that were executed.
 
 Here's our converted project stage where we see *_id* true -- this is implicit, remember -- the title size where we calculated the size of our title, and then we can see our group and our sort along with the sort key; pretty interesting information. So let's see if we can do better. Our goal is to try and get this to be a covered query, meaning there is no fetch stage. So this aggregation pipeline is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field.
 
