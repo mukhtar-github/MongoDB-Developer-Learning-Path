@@ -9841,69 +9841,19 @@ And here are the results from that *previous pipeline* where we used the *double
 
 [![Screenshot-from-2021-11-21-19-08-44.png](https://i.postimg.cc/02MTMHyQ/Screenshot-from-2021-11-21-19-08-44.png)](https://postimg.cc/Cz0P97DT)
 
-This is a visualization of *our new pipeline. Our new pipeline produced functionally-identical results*, but visually -- we can see in the execution -- is much different.
+This is a visualization of *our new pipeline. Our new pipeline produced functionally-identical results*, but *visually -- we can see in the execution -- is much different*. Rather than *performing unnecessary work and possibly moving and collapsing our pipeline to a single location, causing a slowdown in extra network usage*, we retain the same number of documents performing the work in a targeted manner and in place.
 
-Rather than performing unnecessary work and possibly moving and collapsing our pipeline to a single location, causing a slowdown in extra network usage, we retain the same number of documents performing the work in a targeted manner and in place.
+And in the shard environment, the benefits are tangible as well. We've kept all work distributed among the shards. All right, but wait-- but wait. That's all fine for essentially binary input, when we want to count the occurrence of something. But what if we want to do something more meaningful? What if we'd like to find how many times a specific stock was bought, sold, and what the total price was for each?
 
-And in the shard environment, the benefits are tangible as well.
+Let's find that information out for MongoDB stock. Again, map, reduce, filter, and the accumulator expressions available on the project stage are amazing tools. So this is one example pipeline that would produce those results for us. First, we specify the reduced expression. As the input array, we'll go ahead and filter the trades array, filtering out any stock ticker that isn't equal to MongoDB.
 
-We've kept all work distributed among the shards.
+The initial value and the value that will be used as the accumulator value, dollar-dollar value-- we're going to specify this document, with two keys-- buy and sell-- that are each documents, with keys of total count and total value. Here, an in is our logic. We start with this conditional expression, where we check if this dot action is equal to buy. Remember, dollar-dollar this refers to the current element of the input array. Remember, we filtered that, so we know we're only going to get documents that had MDB as the ticker symbol.
 
-All right, but wait-- but wait.
+So if it is a buy action, we modify the total count by adding one to dollar-dollar value, dot buy, dot total count. Remember, dollar-dollar value refers to the accumulator, which we set initially to be this value right here. We also modify total value by adding this dot price to dollar-dollar value, dot buy, dot total value. And if this was a buy action, we don't modify sell in any way. We just reassign it back to itself.
 
-That's all fine for essentially binary input, when we want to count the occurrence of something.
+If it is a sell action, we essentially do the same thing, adding one to sell-total-count and adding this stock price to sell-total-value, and then finally re-assigning buy back to itself, because this was a sell. We can see that, based on MongoDB only, the buy total count was 10, and the sell total count was five for this specific document. We can also see the dollar value associated with all the transactions.
 
-But what if we want to do something more meaningful?
-
-What if we'd like to find how many times a specific stock was bought, sold, and what the total price was for each?
-
-Let's find that information out for MongoDB stock.
-
-Again, map, reduce, filter, and the accumulator expressions available on the project stage are amazing tools.
-
-So this is one example pipeline that would produce those results for us.
-
-First, we specify the reduced expression.
-
-As the input array, we'll go ahead and filter the trades array, filtering out any stock ticker that isn't equal to MongoDB.
-
-The initial value and the value that will be used as the accumulator value, dollar-dollar value-- we're going to specify this document, with two keys-- buy and sell-- that are each documents, with keys of total count and total value.
-
-Here, an in is our logic.
-
-We start with this conditional expression, where we check if this dot action is equal to buy.
-
-Remember, dollar-dollar this refers to the current element of the input array.
-
-Remember, we filtered that, so we know we're only going to get documents that had MDB as the ticker symbol.
-
-So if it is a buy action, we modify the total count by adding one to dollar-dollar value, dot buy, dot total count.
-
-Remember, dollar-dollar value refers to the accumulator, which we set initially to be this value right here.
-
-We also modify total value by adding this dot price to dollar-dollar value, dot buy, dot total value.
-
-And if this was a buy action, we don't modify sell in any way.
-
-We just reassign it back to itself.
-
-If it is a sell action, we essentially do the same thing, adding one to sell-total-count and adding this stock price to sell-total-value, and then finally re-assigning buy back to itself, because this was a sell.
-
-We can see that, based on MongoDB only, the buy total count was 10, and the sell total count was five for this specific document.
-
-We can also see the dollar value associated with all the transactions.
-
-Again, we see 22 and 19 and the value associated.
-
-All right, we've covered a lot of information in this lesson.
-
-Let's go ahead and summarize what we talked about.
-
-First, avoid unnecessary stages.
-
-The aggregation framework can project fields automatically if the final shape of the output document can be determined from initial input.
-
-Second, use accumulator expressions-- as well as dollar-map, dollar-reduce, and dollar-filter expressions-- in project stages before an unwind, if possible.
+Again, we see 22 and 19 and the value associated. All right, we've covered a lot of information in this lesson. Let's go ahead and summarize what we talked about. First, avoid unnecessary stages. The aggregation framework can project fields automatically if the final shape of the output document can be determined from initial input. Second, use accumulator expressions-- as well as dollar-map, dollar-reduce, and dollar-filter expressions-- in project stages before an unwind, if possible.
 
 Again, this only applies if you need to group within a document, not among your documents.
 
