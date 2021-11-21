@@ -9432,8 +9432,8 @@ OK, so we have our *time stamp*, and then we have our *trades array with many, m
 
 ```javascript
 /*
-A naive way to get the number of trades by action. We unwind the trades
-array first thing. We get the results we want, but maybe there is a better way.
+A naive way to get the number of trades by action. We unwind the trades array first thing.
+We get the results we want, but maybe there is a better way.
 */
 
 db.stocks.aggregate([
@@ -9644,7 +9644,11 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.stocks.aggregate([
     Type "it" for more
 ```
 
-All right, it gives us the results we expected -- total actions and the number of buy and sell actions per document. This is a visual representation of the previous pipeline. The black squares are our documents. If we start with four documents and unwind a field with just three entries per document, we now have 12 documents. We then group our documents twice to produce the desired results, ending up with the same number of documents we started with. This should start to feel horribly inefficient.
+All right, it gives us the results we expected -- *total actions and the number of buy and sell actions per document*.
+
+[![Screenshot-from-2021-11-21-16-49-09.png](https://i.postimg.cc/PrYjBXK5/Screenshot-from-2021-11-21-16-49-09.png)](https://postimg.cc/kBJzSdk0)
+
+This is a visual representation of the previous pipeline. The black squares are our documents. If we start with four documents and unwind a field with just three entries per document, we now have 12 documents. We then group our documents twice to produce the desired results, ending up with the same number of documents we started with. This should start to feel horribly inefficient.
 
 Sadly, it gets worse.
 
