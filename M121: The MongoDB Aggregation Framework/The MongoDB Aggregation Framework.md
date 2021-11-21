@@ -9047,11 +9047,224 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 { "_id" : 17, "count" : 1 }
 ```
 
-All right, pretty cool. We got the same results, three words, count of 1,450 documents. Let's check the explain output to see the difference between this pipeline and our previous pipeline. All right, let's look at the explain output. We can see that the query is the same. We can see that the fields are the same as well-- title 1, _id is 0.
+All right, pretty cool. We got the same results, *three words, count of 1,450 documents*. Let's check the explain output to see the difference between this *pipeline and our previous pipeline*.
 
-How did the aggregation framework know to do this when we didn't specify a project stage? Let's cover that in a moment. Down in our *rejectedPlans*, we can see there was no fetch stage, which meant that this is a covered query. If we scroll all the way down to the bottom to look at the rest of our pipeline stages, we can see the next stage after our query is group, then our sort, and we're done. A key takeaway here is to avoid needless projects.
+```javascript
+// proof
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(
+...   [
+...     {
+...       $match: {
+...         title: /^[aeiou]/i
+...       }
+...     },
+...     {
+...       $group: {
+...         _id: {
+...           $size: { $split: ["$title", " "] }
+...         },
+...         count: { $sum: 1 }
+...       }
+...     },
+...     {
+...       $sort: { count: -1 }
+...     }
+...   ],
+...   { explain: true }
+... );
+{
+        "stages" : [
+            {
+                "$cursor" : {
+                    "query" : {
+                        "title" : /^[aeiou]/i
+                    },
+                    "fields" : {
+                        "title" : 1,
+                        "_id" : 0
+                    },
+                    "queryPlanner" : {
+                        "plannerVersion" : 1,
+                        "namespace" : "aggregations.movies",
+                        "indexFilterSet" : false,
+                        "parsedQuery" : {
+                            "title" : {
+                                "$regex" : "^[aeiou]",
+                                "$options" : "i"
+                            }
+                        },
+                        "queryHash" : "68724CCB",
+                        "planCacheKey" : "022FFC72",
+                        "winningPlan" : {
+                            "stage" : "PROJECTION_COVERED",
+                            "transformBy" : {
+                                "title" : 1,
+                                "_id" : 0
+                            },
+                            "inputStage" : {
+                                "stage" : "IXSCAN",
+                                "filter" : {
+                                    "title" : {
+                                        "$regex" : "^[aeiou]",
+                                        "$options" : "i"
+                                    }
+                                },
+                                "keyPattern" : {
+                                    "title" : 1,
+                                    "imdb.rating" : 1
+                                },
+                                "indexName" : "title_1_imdb.rating_1",
+                                "isMultiKey" : false,
+                                "multiKeyPaths" : {
+                                    "title" : [ ],
+                                    "imdb.rating" : [ ]
+                                },
+                                "isUnique" : false,
+                                "isSparse" : false,
+                                "isPartial" : false,
+                                "indexVersion" : 2,
+                                "direction" : "forward",
+                                "indexBounds" : {
+                                    "title" : [
+                                        "[\"\", {})",
+                                        "[/^[aeiou]/i, /^[aeiou]/i]"
+                                    ],
+                                    "imdb.rating" : [
+                                        "[MinKey, MaxKey]"
+                                    ]
+                                }
+                            }
+                        },
+                        "rejectedPlans" : [
+                            {
+                                "stage" : "PROJECTION_COVERED",
+                                "transformBy" : {
+                                    "title" : 1,
+                                    "_id" : 0
+                                },
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1
+                                    },
+                                    "indexName" : "title_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "stage" : "PROJECTION_COVERED",
+                                "transformBy" : {
+                                    "title" : 1,
+                                    "_id" : 0
+                                },
+                                "inputStage" : {
+                                    "stage" : "IXSCAN",
+                                    "filter" : {
+                                        "title" : {
+                                            "$regex" : "^[aeiou]",
+                                            "$options" : "i"
+                                        }
+                                    },
+                                    "keyPattern" : {
+                                        "title" : 1,
+                                        "year" : 1
+                                    },
+                                    "indexName" : "title_1_year_1",
+                                    "isMultiKey" : false,
+                                    "multiKeyPaths" : {
+                                        "title" : [ ],
+                                        "year" : [ ]
+                                    },
+                                    "isUnique" : false,
+                                    "isSparse" : false,
+                                    "isPartial" : false,
+                                    "indexVersion" : 2,
+                                    "direction" : "forward",
+                                    "indexBounds" : {
+                                        "title" : [
+                                            "[\"\", {})",
+                                            "[/^[aeiou]/i, /^[aeiou]/i]"
+                                        ],
+                                        "year" : [
+                                            "[MinKey, MaxKey]"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "$group" : {
+                    "_id" : {
+                        "$size" : [
+                            {
+                                "$split" : [
+                                    "$title",
+                                    {
+                                        "$const" : " "
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "count" : {
+                        "$sum" : {
+                            "$const" : 1
+                        }
+                    }
+                }
+            },
+            {
+                "$sort" : {
+                    "sortKey" : {
+                        "count" : -1
+                    }
+                }
+            }
+        ],
+        "serverInfo" : {
+            "host" : "cluster0-shard-00-02-jxeqq.mongodb.net",
+            "port" : 27017,
+            "version" : "4.2.17",
+            "gitVersion" : "be089838c55d33b6f6039c4219896ee4a3cd704f"
+        },
+        "ok" : 1,
+        "$clusterTime" : {
+            "clusterTime" : Timestamp(1637499920, 1),
+            "signature" : {
+                "hash" : BinData(0,"kf+nAhXuwdQkngXS8XCB3oOn4EA="),
+                "keyId" : NumberLong("6994818544680566786")
+            }
+        },
+        "operationTime" : Timestamp(1637499920, 1)
+    }
+```
 
-As we saw, the aggregation framework assumed we knew what we were doing with each project. However, if the aggregation framework can determine the shape of the final document based only on initial input, internally it will project away unnecessary fields. That was a mouthful. So let me explain that in a little more detail. In the first match stage, the only field we cared about was the title.
+All right, let's look at the *explain output*. We can see that the *query* is the same. We can see that the fields are the same as well -- *title 1, _id is 0*. How did the *aggregation framework* know to do this when we didn't specify a project stage? Let's cover that in a moment. Down in our *rejectedPlans*, we can see there was no fetch stage, which meant that this is a covered query. If we scroll all the way down to the bottom to look at the rest of our pipeline stages, we can see the next stage after our query is group, then our sort, and we're done. A key takeaway here is to avoid needless projects.
+
+As we saw, the *aggregation framework* assumed we knew what we were doing with each project. However, if the *aggregation framework* can determine the shape of the final document based only on initial input, internally it will project away unnecessary fields. That was a mouthful. So let me explain that in a little more detail. In the first match stage, the only field we cared about was the title.
 
 In the group stage, again, the only field we care about is the title. We use this composition of expressions to get the number of words in the title. But we can do that in line by evaluating first splitting the title on spaces into an array, and then getting in the size of the array. There's no need for an intermediary project stage, because we can just calculate that value in line here. This is a very powerful feature.
 
