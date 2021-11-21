@@ -9650,6 +9650,8 @@ All right, it gives us the results we expected -- *total actions and the number 
 
 This is a visual representation of the *previous pipeline*. The *black squares are our documents*. If we start with *four documents and unwind a field with just three entries per document, we now have 12 documents*. We then *group our documents twice to produce the desired results, ending up with the same number of documents we started with*. This should start to feel *horribly inefficient*.
 
+[![Screenshot-from-2021-11-21-17-11-55.png](https://i.postimg.cc/5Ns7j8hn/Screenshot-from-2021-11-21-17-11-55.png)](https://postimg.cc/xcby4NTz)
+
 Sadly, it gets worse. Let's examine how this inefficiency impacts operations in Shard D environment. Each shard performs the unwind. Initial processing for the first group stage will be done on the shards. But the final grouping has to happen in a single location. Every other stage, including the entirety of the second group, would then take place on that location. Imagine if three or four other stages followed.
 
 When not grouping across documents, this causes needless overhead in network traffic and causes [INAUDIBLE],, after the group, to be run in the location of the merge, rather than remain distributed. Here, we're shown that the grouping is happening on Shard A. In reality, it could happen anywhere at random in our cluster. So we really need a way to iterate over the array and perform our desired logic within the document.
