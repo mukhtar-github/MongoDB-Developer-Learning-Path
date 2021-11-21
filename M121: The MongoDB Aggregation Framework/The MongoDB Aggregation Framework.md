@@ -8984,13 +8984,37 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(
 }
 ```
 
-And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
+And looking at the *explain plan*, we see again we have the same *query on the cursor*. This time the fields are different. We're keeping the *title and projecting away _id*. Let's go ahead and go down to the *rejectedPlans* to see if we *avoided that fetch stage*. All right, so looking at our *rejectedPlans*, we can see it's much better. I can see there's no *fetch* stage. So our *match stage was indeed covered*. When we see a *fetch stage*, it means *MongoDB* had to go to the *document for more information, rather than just using information from the index alone*. Of some interest here, we can also see that *_id was now projected as false*. This is because we explicitly provided that information. So let's see if we can do even better.
 
-When we see a fetch stage, it means MongoDB had to go to the document for more information, rather than just using information from the index alone. Of some interest here, we can also see that _id was now projected as false. This is because we explicitly provided that information. So let's see if we can do even better. So here's our new modified pipeline, where we have the same match stage. However, this time we have no project stage.
+```javascript
+// can we... do this? Yes, yes we can.
+db.movies.aggregate([
+  {
+    $match: {
+      title: /^[aeiou]/i
+    }
+  },
+  {
+    $group: {
+      _id: {
+        $size: { $split: ["$title", " "] }
+      },
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { count: -1 }
+  }
+]);
+```
 
-Instead, we perform the logic we need within group and then sort on those results. Let's see it in action. All right, pretty cool. We got the same results, three words, count of 1,450 documents. Let's check the explain output to see the difference between this pipeline and our previous pipeline. All right, let's look at the explain output. We can see that the query is the same. We can see that the fields are the same as well-- title 1, _id is 0.
+So here's our new modified *pipeline*, where we have the same *match stage*. However, this time we have no *project stage*. Instead, we *perform the logic we need within group and then sort on those results*. Let's see it in action.
 
-How did the aggregation framework know to do this when we didn't specify a project stage? Let's cover that in a moment. Down in our winning plan, we can see there was no fetch stage, which meant that this is a covered query. If we scroll all the way down to the bottom to look at the rest of our pipeline stages, we can see the next stage after our query is group, then our sort, and we're done. A key takeaway here is to avoid needless projects.
+
+
+All right, pretty cool. We got the same results, three words, count of 1,450 documents. Let's check the explain output to see the difference between this pipeline and our previous pipeline. All right, let's look at the explain output. We can see that the query is the same. We can see that the fields are the same as well-- title 1, _id is 0.
+
+How did the aggregation framework know to do this when we didn't specify a project stage? Let's cover that in a moment. Down in our *rejectedPlans*, we can see there was no fetch stage, which meant that this is a covered query. If we scroll all the way down to the bottom to look at the rest of our pipeline stages, we can see the next stage after our query is group, then our sort, and we're done. A key takeaway here is to avoid needless projects.
 
 As we saw, the aggregation framework assumed we knew what we were doing with each project. However, if the aggregation framework can determine the shape of the final document based only on initial input, internally it will project away unnecessary fields. That was a mouthful. So let me explain that in a little more detail. In the first match stage, the only field we cared about was the title.
 
