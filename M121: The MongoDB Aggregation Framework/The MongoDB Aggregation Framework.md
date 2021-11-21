@@ -8655,11 +8655,38 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate(
 }
 ```
 
-There is a lot of interesting information here. We can see what our *query* was, the fields that were kept which happened to be *title and _id*, and then the *query planner*. A little further down, we can also the *rejectedPlans* that used a *fetch stage followed by an index scan*. We can probably do a little better than this, because we know that we have an *index that should support this query*. We can also see the stages that were executed.
+There is a lot of interesting information here. We can see what our *query* was, the fields that were kept which happened to be *title and _id*, and then the *query planner*. A little further down, we can also the *rejectedPlans* that used a *fetch stage followed by an index scan*. We can probably do a little better than this, because we know that we have an *index that should support this query*. We can also see the stages that were executed. Here's our *converted - $const project stage* where we see *_id true* -- this is *implicit*, remember -- the *title size* where we calculated the *size of our title*, and then we can see our *group and our sort along with the sort key*; pretty interesting information. So let's see if we can do better. Our goal is to try and get this to be a *covered query, meaning there is no fetch stage*.
 
-Here's our converted project stage where we see *_id* true -- this is implicit, remember -- the title size where we calculated the size of our title, and then we can see our group and our sort along with the sort key; pretty interesting information. So let's see if we can do better. Our goal is to try and get this to be a covered query, meaning there is no fetch stage. So this aggregation pipeline is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field.
+```javascript
+/*
+this is better, we are projecting away the _id field. But this seems like
+a lot of manual work...
+*/
+db.movies.aggregate([
+  {
+    $match: {
+      title: /^[aeiou]/i
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      title_size: { $size: { $split: ["$title", " "] } }
+    }
+  },
+  {
+    $group: {
+      _id: "$title_size",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { count: -1 }
+  }
+]);
+```
 
-Remember, the project stage implicitly keeps it unless we tell it not to. Let's see if we get the same results. And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
+So this aggregation pipeline is nearly identical to the first one we had, except I'm explicitly getting rid of the *_id* field. Remember, the project stage implicitly keeps it unless we tell it not to. Let's see if we get the same results. And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
 
 And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
 
