@@ -8729,9 +8729,38 @@ MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.movies.aggregate([
 { "_id" : 17, "count" : 1 }
 ```
 
-And we do indeed get the same results as before, where it looks like movies with a length of three words have the most occurrence with 1,450 documents. OK. We verified the same results. Let's check the explain output to see if we've improved our query performance at all. Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function.
+And we do indeed get the same results as before, where it looks like *movies with a length of three words have the most occurrence with 1,450 documents*. OK. We verified the same results. Let's check the *explain output* to see if we've improved our *query performance* at all.
 
-And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
+```javascript
+// verifying that it is a covered query
+db.movies.aggregate(
+  [
+    {
+      $match: {
+        title: /^[aeiou]/i
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        title_size: { $size: { $split: ["$title", " "] } }
+      }
+    },
+    {
+      $group: {
+        _id: "$title_size",
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1 }
+    }
+  ],
+  { explain: true }
+);
+```
+
+Again, the same pipeline we just used also projecting out _id, just adding the explain true option to the aggregation function. And looking at the explain plan, we see again we have the same query on the cursor. This time the fields are different. We're keeping the title and projecting away *_id*. Let's go ahead and go down to the winning plan to see if we avoided that fetch stage. All right, so looking at our winning plan, we can see it's much better. I can see there's no fetch stage. So our match stage was indeed covered.
 
 When we see a fetch stage, it means MongoDB had to go to the document for more information, rather than just using information from the index alone. Of some interest here, we can also see that _id was now projected as false. This is because we explicitly provided that information. So let's see if we can do even better. So here's our new modified pipeline, where we have the same match stage. However, this time we have no project stage.
 
