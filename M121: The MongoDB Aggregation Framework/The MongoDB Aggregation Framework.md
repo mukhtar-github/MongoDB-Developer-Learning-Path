@@ -10573,3 +10573,165 @@ And finally, to create the view using command *createView*
 ```javascript
 db.createView("people_contacts", "people", pipeline);
 ```
+
+### Final: Question 7
+
+#### Problem7
+
+Using the *air_alliances* and *air_routes* collections, find which *alliance* has the most unique carriers(airlines) operating between the airports *JFK* and *LHR*, in either directions.
+
+Names are distinct, i.e. *Delta != Delta Air Lines*
+
+*src_airport* and *dst_airport* contain the originating and terminating airport information.
+
+#### Answer7
+
+```javascript
+var pipeline = [
+    { $match : {
+        $or : [
+            { $and : [ { "src_airport" : "JFK" }, { "dst_airport" : "LHR" } ] },
+            { $and : [ { "src_airport" : "LHR" }, { "dst_airport" : "JFK" } ] }
+            ]
+        }
+    },
+    { $lookup : {
+        from : "air_alliances",
+        localField : "airline.name",
+        foreignField : "airlines",
+        as : "alliance"
+        }
+    },
+    { $group : {
+        "_id" : '$airline.id',
+        "alliance" : { $first: "$alliance" }
+        }
+    },
+    { $match : { "alliance" : { $not : { $size : 0 } } } },
+    { $sortByCount : "$alliance" },
+    { $limit : 1 }
+];
+
+// Prints the result.
+var result = db.air_routes.aggregate(pipeline);
+print("Result: ");
+while (result.hasNext()) {
+    printjson(result.next());
+
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.air_routes.aggregate(pipeline).pretty();
+    {
+        "_id" : [
+            {
+                "_id" : ObjectId("5980bef9a39d0ba3c650ae9d"),
+                "name" : "OneWorld",
+                "airlines" : [
+                    "Air Berlin",
+                    "American Airlines",
+                    "British Airways",
+                    "Cathay Pacific",
+                    "Finnair",
+                    "Iberia Airlines",
+                    "Japan Airlines",
+                    "LATAM Chile",
+                    "LATAM Brasil",
+                    "Malaysia Airlines",
+                    "Canadian Airlines",
+                    "Qantas",
+                    "Qatar Airways",
+                    "Royal Jordanian",
+                    "SriLankan Airlines",
+                    "S7 Airlines"
+                ]
+            }
+        ],
+        "count" : 5
+    }
+```
+
+The correct answer is OneWorld, with 5 carriers
+
+A pipeline that can be used to get these results is
+
+```javascript
+db.air_routes.aggregate([
+  {
+    $match: {
+      src_airport: { $in: ["LHR", "JFK"] },
+      dst_airport: { $in: ["LHR", "JFK"] }
+    }
+  },
+  {
+    $lookup: {
+      from: "air_alliances",
+      foreignField: "airlines",
+      localField: "airline.name",
+      as: "alliance"
+    }
+  },
+  {
+    $match: { alliance: { $ne: [] } }
+  },
+  {
+    $addFields: {
+      alliance: { $arrayElemAt: ["$alliance.name", 0] }
+    }
+  },
+  {
+    $group: {
+      _id: "$airline.id",
+      alliance: { $first: "$alliance" }
+    }
+  },
+  {
+    $sortByCount: "$alliance"
+  }
+]);
+
+/*
+We begin with a $match stage and fetch routes that originate or end at either LHR and JFK
+*/
+{
+  $match: {
+    src_airport: { $in: ["LHR", "JFK"] },
+    dst_airport: { $in: ["LHR", "JFK"] }
+  }
+},
+
+/*
+We then $lookup into the air_alliances collection, matching member airline names in the airlines field to the local airline.name field in the route
+*/
+{
+  $lookup: {
+    from: "air_alliances",
+    foreignField: "airlines",
+    localField: "airline.name",
+    as: "alliance"
+  }
+},
+
+/*
+We follow with a $match stage to remove routes that are not members of an alliance. We use $addFields to cast just the name of the alliance and extract a single element in one go
+*/
+{
+  $addFields: {
+    alliance: { $arrayElemAt: ["$alliance.name", 0] }
+  }
+},
+
+/*
+Lastly, we $group on the airline.id, since we don't want to count the same airline twice. We take the $first alliance name to avoid duplicates. Then, we use $sortByCount to get our answer from the results
+*/
+{
+  $group: {
+    _id: "$airline.id",
+    alliance: { $first: "$alliance" }
+  }
+},
+{
+  $sortByCount: "$alliance"
+}
+
+// This produces the following output
+{ "_id": "OneWorld", "count": 5 }
+{ "_id": "SkyTeam", "count": 2 }
+```
