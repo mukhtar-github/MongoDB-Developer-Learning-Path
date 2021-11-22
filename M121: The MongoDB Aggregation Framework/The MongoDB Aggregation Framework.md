@@ -10154,14 +10154,44 @@ Which of the following statements are correct?
 
 The correct statements are the following:
 
-* Pipeline 3 fails because $indexStats must be the first stage in a pipeline and may not be used within a $facet.
+* *Pipeline 3* fails because *$indexStats* must be the first stage in a pipeline and may not be used within a *$facet*.
 
-$indexStats must be the first stage in an aggregation pipeline and cannot be used within a $facet stage.
+*$indexStats* must be the first stage in an aggregation pipeline and cannot be used within a *$facet* stage.
 
-* Pipeline 1 fails since $out is required to be the last stage of the pipeline.
+* *Pipeline 1* fails since *$out* is required to be the last stage of the pipeline.
 
-$out is required to be the last stage of the pipeline.
+*$out* is required to be the last stage of the pipeline.
 
-* Pipeline 2 is incorrect because $geoNear needs to be the first stage of our pipeline.
+* *Pipeline 2* is incorrect because *$geoNear* needs to be the first stage of our pipeline.
 
-$geoNear is required to be the first stage of a pipeline.
+*$geoNear* is required to be the first stage of a pipeline.
+
+### Final: Question 2
+
+#### Problem2
+
+Consider the following collection:
+
+```javascript
+db.collection.find()
+{
+  "a": [1, 34, 13]
+}
+```
+
+#### Answer2
+
+The correct answers are the following:
+
+* *Pipeline 1* is incorrect because you cannot use an accumulator expression on *$match* stage.
+
+We cannot use accumulator expressions within *$match*. Only query expressions are allowed within *$match*.
+
+* *Pipeline 3* is correct and will execute with no error.
+
+This is correct. Although we may argue that *$ROOT* variable is totally unnecessary, since *_id* field will be projected by default from the first *$project* stage of this pipeline, there are no observable errors with the use of this expression variable
+
+* *Pipeline 2* fails because $divide operator only supports numeric types.
+
+This is true, *$divide* operator will only supports expressions that represent numeric value types.
+
