@@ -280,6 +280,7 @@ db.nycFacilities.aggregate([{"$sample": { "size": 200 }}]).pretty();
 // **m121/chapter2/scaling.js**
 
 // general scaling
+
 min + (max - min) * ((x - x_min) / (x_max - x_min));
 
 // we will use 1 as the minimum value and 10 as the maximum value for scaling,
