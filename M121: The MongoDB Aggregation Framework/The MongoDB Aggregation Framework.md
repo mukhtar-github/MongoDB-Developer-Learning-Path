@@ -9905,10 +9905,190 @@ So this is *one example pipeline* that would produce those results for us. First
 
 So if it is a *buy action*, we modify the *total_count* by *adding -- ($add) 1* to *"$$value.buy.total_count"*. Remember, *$$value* refers to the accumulator, which we set initially to be *buy: { total_count: 0, total_value: 0 }*. We also modify *total_value* by *adding -- $$this.price* to *$$value.buy.total_value*. And if this was a "buy" action, we don't modify sell in any way. We just reassign it back to itself -- *sell: "$$value.sell"*. If it is a sell action, we essentially do the same thing, *adding -- ($add) 1 to $$value.sell.total_count and adding -- $$this.price to $$value.sell.total_value, and then finally re-assigning buy back to itself, because this was a sell -- buy: "$$value.buy".
 
-We can see that, based on MongoDB only, the buy total count was 10, and the sell total count was five for this specific document. We can also see the dollar value associated with all the transactions.
+```javascript
+MongoDB Enterprise Cluster0-shard-0:PRIMARY> db.stocks.aggregate([
+...   {
+...     $project: {
+...       _id: 0,
+...       mdb_only: {
+...         $reduce: {
+...           input: {
+...             $filter: {
+...               input: "$trades",
+...               cond: { $eq: ["$$this.ticker", "MDB"] }
+...             }
+...           },
+...           initialValue: {
+...             buy: { total_count: 0, total_value: 0 },
+...             sell: { total_count: 0, total_value: 0 }
+...           },
+...           in: {
+...             $cond: [
+...               { $eq: ["$$this.action", "buy"] },
+...               {
+...                 buy: {
+...                   total_count: { $add: ["$$value.buy.total_count", 1] },
+...                   total_value: {
+...                     $add: ["$$value.buy.total_value", "$$this.price"]
+...                   }
+...                 },
+...                 sell: "$$value.sell"
+...               },
+...               {
+...                 sell: {
+...                   total_count: { $add: ["$$value.sell.total_count", 1] },
+...                   total_value: {
+...                     $add: ["$$value.sell.total_value", "$$this.price"]
+...                   }
+...                 },
+...                 buy: "$$value.buy"
+...               }
+...             ]
+...           }
+...         }
+...       }
+...     }
+...   }
+... ]).pretty();
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 17,
+                "total_value" : NumberDecimal("433.47")
+            },
+            "sell" : {
+                "total_count" : 14,
+                "total_value" : NumberDecimal("355.74")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "sell" : {
+                "total_count" : 15,
+                "total_value" : NumberDecimal("381.62")
+            },
+            "buy" : {
+                "total_count" : 9,
+                "total_value" : NumberDecimal("227.97")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 10,
+                "total_value" : NumberDecimal("255.95")
+            },
+            "sell" : {
+                "total_t" : 5,
+                "total_valucoune" : NumberDecimal("127.77")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 22,
+                "total_value" : NumberDecimal("559.88")
+            },
+            "sell" : {
+                "total_count" : 19,
+                "total_value" : NumberDecimal("482.45")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 19,
+                "total_value" : NumberDecimal("483.18")
+            },
+            "sell" : {
+                "total_count" : 26,
+                "total_value" : NumberDecimal("664.59")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 44,
+                "total_value" : NumberDecimal("1122.76")
+            },
+            "sell" : {
+                "total_count" : 54,
+                "total_value" : NumberDecimal("1380.83")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "sell" : {
+                "total_count" : 30,
+                "total_value" : NumberDecimal("766.35")
+            },
+            "buy" : {
+                "total_count" : 20,
+                "total_value" : NumberDecimal("510.81")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 27,
+                "total_value" : NumberDecimal("689.15")
+            },
+            "sell" : {
+                "total_count" : 29,
+                "total_value" : NumberDecimal("740.31")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 26,
+                "total_value" : NumberDecimal("660.83")
+            },
+            "sell" : {
+                "total_count" : 26,
+                "total_value" : NumberDecimal("662.66")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 35,
+                "total_value" : NumberDecimal("890.59")
+            },
+            "sell" : {
+                "total_count" : 34,
+                "total_value" : NumberDecimal("869.90")
+            }
+        }
+    }
+    {
+        "mdb_only" : {
+            "buy" : {
+                "total_count" : 14,
+                "total_value" : NumberDecimal("357.06")
+            },
+            "sell" : {
+                "total_count" : 13,
+                "total_value" : NumberDecimal("331.05")
+            }
+        }
+    }
+Type "it" for more
+```
 
-Again, we see 22 and 19 and the value associated. All right, we've covered a lot of information in this lesson. Let's go ahead and summarize what we talked about. First, avoid unnecessary stages. The aggregation framework can project fields automatically if the final shape of the output document can be determined from initial input. Second, use accumulator expressions-- as well as dollar-map, dollar-reduce, and dollar-filter expressions-- in project stages before an unwind, if possible.
+We can see that, based on *MongoDB* only, the buy *total count was 10, and the sell total count was 5* for this specific document. We can also see the *dollar value -- ("255.95", "127.77")* associated with all the transactions. Again, we see *22 and 19* and the value associated.
 
-Again, this only applies if you need to group within a document, not among your documents.
+All right, we've covered a lot of information in this lesson. Let's go ahead and summarize what we talked about.
 
-Lastly, every high-order array function can be implemented with dollar-reduce if the provided expressions do not meet your needs.
+* Avoid unnecessary stages, the Aggregation framework can project fields automatically if the *final shape of the output document can be determined from initial input*.
+* Use accumulator expressions -- *$map, $reduce, and $filter* expressions in project stages before an *$unwind*, if possible. Again, this only applies if you need to *group within a document, not among your documents*.
+* Every high-order array function can be implemented with *$reduce* if the provided expressions do not meet your needs.
