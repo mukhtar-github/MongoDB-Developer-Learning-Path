@@ -26,4 +26,12 @@ Basically anything about a connection to *MongoDB* can be defined in the *URI st
 mongo "mongodb://cluster0-shard-00-00-jxeqq.mongodb.net:27017,cluster0-shard-00-01-jxeqq.mongodb.net:27017,cluster0-shard-00-02-jxeqq.mongodb.net:27017/aggregations?replicaSet=Cluster0-shard-0" --authenticationDatabase admin --ssl -u m121 -p aggregations --norc
 ```
 
-This is a standard *URI string*. In other to use this *URI string*, we have to be explicit about the *host names* of each of the servers in our cluster, and if the *host name* of one of these servers changes, we have to update the *URI string* to account for it.
+This is a standard *URI string*. In other to use this *URI string*, we have to be explicit about the *host names* of each of the servers in our cluster, and if the *host name* of one of these servers changes, we have to update the *URI string* to account for it. In many courses, we'll be using a new kind of *URI string*, what we called an *SRV string*.
+
+```javascript
+mongodb+srv:<username>:<password>@<host>/<database>
+
+mongodb+srv://m001-student:m001-mongodb-basics@cluster0.dkemg.mongodb.net/test
+```
+
+The *SRV string* begins at this prefix -- mongodb+srv, that tells *MongoDB*, it's the address of the *SRV record*, we'll talk about that in a minute. The next portion is composed of authentication credentials, we separate the username and password with a colon, and then follow the password with an *@ sign*. After the *@ sign*, we specify the host, which is the hostname of the *SRV record* for the *MongoDB* cluster that we want to connect to. Note that, this hostname does not actually point to a database server, it only host the *SRV records*.
