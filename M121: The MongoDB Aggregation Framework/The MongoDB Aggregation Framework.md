@@ -10092,3 +10092,76 @@ All right, we've covered a lot of information in this lesson. Let's go ahead and
 * Avoid unnecessary stages, the Aggregation framework can project fields automatically if the *final shape of the output document can be determined from initial input*.
 * Use accumulator expressions -- *$map, $reduce, and $filter* expressions in project stages before an *$unwind*, if possible. Again, this only applies if you need to *group within a document, not among your documents*.
 * Every high-order array function can be implemented with *$reduce* if the provided expressions do not meet your needs.
+
+## Final Exam
+
+### Final: Question 1
+
+#### Problem1
+
+Consider the following aggregation pipelines:
+
+* Pipeline 1
+
+```javascript
+db.coll.aggregate([
+  {"$match": {"field_a": {"$gt": 1983}}},
+  {"$project": { "field_a": "$field_a.1", "field_b": 1, "field_c": 1  }},
+  {"$replaceRoot":{"newRoot": {"_id": "$field_c", "field_b": "$field_b"}}},
+  {"$out": "coll2"},
+  {"$match": {"_id.field_f": {"$gt": 1}}},
+  {"$replaceRoot":{"newRoot": {"_id": "$field_b", "field_c": "$_id"}}}
+])
+```
+
+* Pipeline 2
+
+```javascript
+db.coll.aggregate([
+  {"$match": {"field_a": {"$gt": 111}}},
+  {"$geoNear": {
+    "near": { "type": "Point", "coordinates": [ -73.99279 , 40.719296 ] },
+    "distanceField": "distance"}},
+  {"$project": { "distance": "$distance", "name": 1, "_id": 0  }}
+])
+```
+
+* Pipeline 3
+
+```javascript
+db.coll.aggregate([
+  {
+    "$facet": {
+      "averageCount": [
+        {"$unwind": "$array_field"},
+        {"$group": {"_id": "$array_field", "count": {"$sum": 1}}}
+      ],
+      "categorized": [{"$sortByCount": "$arrayField"}]
+    },
+  },
+  {
+    "$facet": {
+      "new_shape": [{"$project": {"range": "$categorized._id"}}],
+      "stats": [{"$match": {"range": 1}}, {"$indexStats": {}}]
+    }
+  }
+])
+```
+
+Which of the following statements are correct?
+
+#### Answer1
+
+The correct statements are the following:
+
+* Pipeline 3 fails because $indexStats must be the first stage in a pipeline and may not be used within a $facet.
+
+$indexStats must be the first stage in an aggregation pipeline and cannot be used within a $facet stage.
+
+* Pipeline 1 fails since $out is required to be the last stage of the pipeline.
+
+$out is required to be the last stage of the pipeline.
+
+* Pipeline 2 is incorrect because $geoNear needs to be the first stage of our pipeline.
+
+$geoNear is required to be the first stage of a pipeline.
