@@ -205,3 +205,12 @@ This can vary depending on what settings you have for Vim but it should work.
 
 Or you can install jq which is faster (written in C) from your package manager
 (e.g. sudo apt install jq in Ubuntu/Debian, and then in vim, type: (:%!jq .)
+
+# Ticket: Connection
+# Rename this file to .env after filling in your MFLIX_DB_URI and your SECRET_KEY
+# Do not surround the URI with quotes
+# SECRET_KEY=super_secret_key_is_changed_to_mukhtar_tanimu_garba
+# MFLIX_DB_URI=mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/test
+# MFLIX_NS=sample_mflix
+# PORT=5000
+# http://localhost:5000/
