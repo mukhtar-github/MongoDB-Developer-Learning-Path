@@ -214,3 +214,7 @@ Or you can install jq which is faster (written in C) from your package manager
 # MFLIX_NS=sample_mflix
 # PORT=5000
 # http://localhost:5000/
+
+
+# Git Kraken SSH Key
+# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCspFEoEmcBA+pzgnACYfc+OF373j3Da+HGzYY5THXfuLZnSWvYbUX21oYGC6yoObPJ7nR/mrgAgxJ/NEqco1uOuHY4b95KIIBdiQ0qOIY7RaWASJqhdkLPUkWQG57TLupD6RmrVO6k3nMXOz2pmSQlTK8VmpseIkiHjVdBJVcXATwQS8wP2seQl89O0fL5OJ/zOVBIJF8iAtvwhAHE7vQ4nwwrm9Bz4NmLhBBQOZFCMPxVWfeVpQcKt/xa46uWRqc9Q1y4vc1GmUGTswRACHU52GfgpBSQgPC+WQRZpfR16aE9Dxhxb9buALRtB55O0M1hmZh7fJ+bWKgI3eNtuepr 
