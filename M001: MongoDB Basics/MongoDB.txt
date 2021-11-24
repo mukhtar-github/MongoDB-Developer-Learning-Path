@@ -205,6 +205,3 @@ This can vary depending on what settings you have for Vim but it should work.
 
 Or you can install jq which is faster (written in C) from your package manager
 (e.g. sudo apt install jq in Ubuntu/Debian, and then in vim, type: (:%!jq .)
-
-
-Atlas cluster password -- 1OPnYZOnPstjqqBO

@@ -50,4 +50,8 @@ To recap, in this lesson, we cover the structure of the *URI string*, and we bri
 
 ### Setting Up Atlas
 
-In this lesson we'll walk through setting up a free Atlast account connecting a new free tier *MongoDB cluster* and importing the sample data that we'll use through out this course. We're Atlas because it is the easiest path for setting up a *MongoDB data store*. While you can complete this course using a local installation of *MongoDB*, we assume Atlas is being used
+In this lesson we'll walk through setting up a free Atlast account connecting a new free tier *MongoDB cluster* and importing the sample data that we'll use through out this course. We're Atlas because it is the easiest path for setting up a *MongoDB data store*. While you can complete this course using a local installation of *MongoDB*, we assume Atlas is being used through out.
+
+With that, let's jump in. The first step is to create a new Atlas account, if you already have an Atlas account you don't need to create a new one, just log in and we'll add a new cluster to your existing account. Otherwise, open your browser and navigate to *mongodb.com/atlas*.
+
+
