@@ -171,3 +171,18 @@ npm start
 
 This will start the application. You can then access the MFlix application at *localhost:5000*.
 
+#### Running the Unit Tests
+
+To run the unit tests for this course, you will use Jest. Jest has been included in this project's dependencies, so npm install should install everything you need.
+
+Each course lab contains a module of unit tests that you can call individually with npm test from mflix-js directory like the following:
+
+```javascript
+npm test -t TICKET_TEST_NAME
+```
+
+Each ticket will contain the exact command to run that ticket's specific unit tests. You can run these commands from anywhere in the mflix-js project. Bear in mind that a tests will fail until the corresponding ticket is completed. For example to run the Connection Ticket test your shell command will be:
+
+```javascript
+npm test -t db-connection
+```
