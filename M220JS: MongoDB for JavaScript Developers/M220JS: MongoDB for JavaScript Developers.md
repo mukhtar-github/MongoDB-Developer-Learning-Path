@@ -52,4 +52,20 @@ To recap, in this lesson, we cover the structure of the *URI string*, and we bri
 
 In this lesson we'll walk through setting up a free Atlast account connecting a new free tier *MongoDB cluster* and importing the sample data that we'll use through out this course. We're Atlas because it is the easiest path for setting up a *MongoDB data store*. While you can complete this course using a local installation of *MongoDB*, we assume Atlas is being used through out.
 
-With that, let's jump in. The first step is to create a new Atlas account, if you already have an Atlas account you don't need to create a new one, just log in and we'll add a new cluster to your existing account. Otherwise, open your browser and navigate to *mongodb.com/atlas*.
+### OVERVIEW
+
+#### Overview
+
+We are going to have series of README instructions to be able to setup our MFLIX application successfully. With MFLIX application, you will learn to create and share a database connection, perform the basic Create, Read, Update, and Delete operations through the driver, handle errors, utilize the MongoDB best practices and more.
+
+Mflix is composed of two main components:
+
+* Frontend: All the UI functionality is already implemented for you, which includes the built-in React application that you do not need to worry about.
+* Backend: The project that provides the necessary service to the application. The code flow is already implemented except some functions.
+You'll only be implementing the functions which directly call to MongoDB.
+
+#### Database Layer
+
+We will be using MongoDB Atlas, MongoDB's official Database as a Service (DBaaS), so you will not need to manage the database component yourself. However, you will still need to install MongoDB locally to access the command line tools that interact with Atlas, to load data into MongoDB and potentially do some exploration of your database with the shell.
+
+The following README sections are here to get you setup for this course.
