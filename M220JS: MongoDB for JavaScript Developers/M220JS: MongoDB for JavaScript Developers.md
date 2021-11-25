@@ -69,3 +69,105 @@ You'll only be implementing the functions which directly call to MongoDB.
 We will be using MongoDB Atlas, MongoDB's official Database as a Service (DBaaS), so you will not need to manage the database component yourself. However, you will still need to install MongoDB locally to access the command line tools that interact with Atlas, to load data into MongoDB and potentially do some exploration of your database with the shell.
 
 The following README sections are here to get you setup for this course.
+
+### README: Setting Up mflix
+
+#### Table of Contents
+
+##### Setting Up mflix
+
+* Project Structure
+* Node Library Dependencies
+* Running the Application
+* Running the Unit Tests
+
+In order to run properly, the MFlix software project has some installation requirements and environmental dependencies.
+
+These requirements and dependencies are defined in this lesson, and they can also be found in the README.rst file from the mflix-js project, which you will download shortly. This lesson serves as a guide for setting up these necessary tools. After following this README, you should be able to successfully run the MFlix application. First, you will need to download the mflix-js project, as described below.
+
+#### Download the mflix-js.zip file
+
+You can download the mflix-js.zip file by clicking the link in the "Handouts" section of this page. Downloading this handout may take a few minutes. When the download is complete, unzip the file and cd into the project's root directory, mflix-js.
+
+```javascript
+cd ~/Downloads
+unzip mflix-js.zip
+cd mflix-js
+```
+
+Note: The handout contains some hidden files like .babelrc. Please ensure you copy the entire directory to a new location rather than selecting all files within your system's file browser to copy and paste into a new directory.
+
+#### Project Structure
+
+Most of your work will be implementing methods in the dao directory, which contains all database interfacing methods. The API will make calls to Data Access Objects (DAOs) that interact directly with MongoDB.
+
+The unit tests in test will test these database access methods directly, without going through the API. The UI will run these methods in integration tests, and therefore requires the full application to be running.
+
+The lesson handouts can be found in the test/lessons directory. These files will look like *lesson-name.spec.js*, and can be run with *npm test -t lesson-name*.
+
+The API layer is fully implemented, as is the UI. The application is programmed to run on port 5000 by default - if you need to run on a port other than 5000, you can edit the dotenv_win (if on Windows) or the dotenv_unix file (if on Linux or Mac) in the root directory to modify the value of PORT.
+
+Please do not modify the API layer in any way, under the mflix-js/src/api directory. This may result in the front-end application failing to validate some of the labs.
+
+#### Node Library Dependencies
+
+The dependencies for the MFlix application should be downloaded using the npm command-line tool. You can get this tool by downloading Node.js. Make sure to choose the correct option for your operating system.
+
+Once the installation is complete, you may need to restart your computer before using the command line tools. You can test that it's installed by running the following command:
+
+```javascript
+node -v
+```
+
+This should print out the version of node you currently have - we recommend using version 10 or later, so this command should print something like v10.x.
+
+Once npm is installed, you can install the MFlix dependencies by running the following command from the mflix-js directory:
+
+```javascript
+npm install
+```
+
+You must run this from the top level of the project, so npm has access to the package.json file where the dependencies are.
+
+While running npm install, you might encounter the below error regarding node-gyp rebuild. Although, it is completely harmless and you can start the application by running npm start.
+
+![m220js-npm-install-warning](https://s3.amazonaws.com/university-courses/m220/m220js-npm-install-warning.png)
+
+#### Running the Application
+
+In order for the application to use Atlas, you will need a file called .env to contain the connection information. In the mflix-js directory you can find two files, dotenv_unix (for Unix users) and dotenv_win (for Windows users).
+
+Open the file for your chosen operating system and enter your Atlas SRV connection string as directed in the comment. This is the information the driver will use to connect. Make sure not to wrap your Atlas SRV connection between quotes:
+
+```javascript
+MFLIX_DB_URI = mongodb+srv://...
+```
+
+It's highly suggested you also change the SECRET_KEY to some very long, very random string. While this application is only meant for local use during this course, software has a strange habit of living a long time.
+
+When you've edited the file, rename it to .env with the following command:
+
+```javascript
+mv dotenv_unix .env  # on Unix
+ren dotenv_win .env  # on Windows
+```
+
+Note: Once you rename this file to .env, it will no longer be visible in Finder or File Explorer. However, it will be visible from Command Prompt or Terminal, so if you need to edit it again, you can open it from there:
+
+```javascript
+vi .env       # on Unix
+notepad .env  # on Windows
+```
+
+In the mflix-js directory, run the following commands:
+
+```javascript
+# install MFlix dependencies
+npm install
+
+# start the MFlix application
+npm start
+```
+
+This will start the application. You can then access the MFlix application at *localhost:5000*.
+
