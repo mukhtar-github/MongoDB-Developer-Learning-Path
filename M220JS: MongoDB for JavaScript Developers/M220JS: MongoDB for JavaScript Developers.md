@@ -433,9 +433,28 @@ We just want to make sure that *MFlix has the collections* that we need to run t
 
 ### Asynchronous Programming in Node.js
 
-In this lesson, we'll discuss the difference between callbacks, promises, and async/await in modern JavaScript. We'll also discuss how the Node driver responds depending on how you call certain methods. Unless you are completely new to JavaScript-- and welcome, if you are-- you are most likely familiar with callbacks. For those of you that might need a refresher, callbacks are a way of passing a bundle of information along to a different part of our program.
+In this lesson, we'll discuss the difference between *callbacks, promises, and async/await* in modern JavaScript. We'll also discuss how the *Node driver* responds depending on how you *call certain methods*. Unless you are completely new to JavaScript -- and welcome, if you are -- you are most likely familiar with *callbacks*. For those of you that might need a refresher, *callbacks are a way of passing a bundle of information along to a different part of our program*. They are functions that some other portion of our code can run. I like to think of them like *handing a remote control to someone else*.
 
-They are functions that some other portion of our code can run. I like to think of them like handing a remote control to someone else. Let's look at an example. Here, I'm issuing a findOne query on the Movies collection, searching for movies where the title is Once Upon a Time in Mexico. I also pass along this callback here. This callback is a function that will be called back when MongoDB finds a document or encounters an error.
+```javascript
+describe("Callbacks, Promises, and Aysnc/Await", () => {
+  let movies
+  beforeAll(async () => {
+    movies = await global.mflixClient
+      .db(process.env.MFLIX_NS)
+      .collection("movies")
+  })
+
+  test("Callbacks", done => {
+    movies.findOne({ title: "Once Upon a Time in Mexico" }, function(err, doc) {
+      expect(err).toBeNull()
+      expect(doc.title).toBe("Once Upon a Time in Mexico")
+      expect(doc.cast).toContain("Salma Hayek")
+      done()
+    })
+  })
+```
+
+Let's look at an example. Here, I'm issuing a findOne query on the Movies collection, searching for movies where the title is Once Upon a Time in Mexico. I also pass along this callback here. This callback is a function that will be called back when MongoDB finds a document or encounters an error.
 
 If there is an error, this error argument will be something real, and if there is no error, and it found a document, error should be null, and there should be something in the document argument. Now, we know this movie exists, so we expect error to be null. We expect the doc title to be Once Upon a Time in Mexico, and we expect the doc cast to contain Salma Hayek. Here, I pass done, and this is only for the testing framework. Let's go ahead and give it a run.
 
