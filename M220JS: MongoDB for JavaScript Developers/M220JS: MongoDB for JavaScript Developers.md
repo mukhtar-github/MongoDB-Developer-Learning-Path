@@ -201,53 +201,19 @@ Our goal is that by the end of this chapter you are comfortable with *basic quer
 
 Hello.
 
-In this lesson, we're going to review the architecture and functionality of MFlix, as well as some of the tools that we can use to build and test the application.
+In this lesson, we're going to review the architecture and functionality of *MFlix*, as well as some of the tools that we can use to *build and test* the application. So you will be working on *MFlix*, which is a service that allows users to browse for their favorite movies, leave movie reviews, and create a dialogue about movies with other users on the site.
 
-So you will be working on MFlix, which is a service that allows users to browse for their favorite movies, leave movie reviews, and create a dialogue about movies with other users on the site.
+The version of *MFlix* that you download will have some basic functionality, but it will be missing a lot of the features that would make the site better. Throughout the course, you will build and configure the pieces necessary to help the site grow as a modern application.
 
-The version of MFlix that you download will have some basic functionality, but it will be missing a lot of the features that would make the site better.
+Now, we'll cover the architecture of the *MFlix project*. To follow along, please download the handout available for this lesson. In it, you'll find all the material that will be used throughout this course, including the application itself and the tickets that you'll be working on. So here, I'll begin at the very top level of the *MFlix JS project*. At the top level of the MFlix JS handout, you'll find a *README* file, which can help you set up all the necessary *components and dependencies* that you need for *MFlix* to function.
 
-Throughout the course, you will build and configure the pieces necessary to help the site grow as a modern application.
+When you set everything up, please follow the *README* carefully, and if you hit any roadblocks, don't hesitate to reach out on the class online forum. The Build directory contains all the files necessary for the front end of the application to run. It's also important to note that we'll be using *Express* as a layer between the *MFlix front end and back end*.
 
-Now, we'll cover the architecture of the MFlix project.
+*Express* is a *JavaScript framework*, which is a part of *Node*. You can think of it as a *routing layer*, which allows us to *route requests from a front end to our DAO methods that eventually return data from MongoDB Atlas*. We won't be working with *Express* directly in this course, but all the *routing files* in the application use *Express* in case you do decide to explore those files.
 
-To follow along, please download the handout available for this lesson.
+In this course, we'll be using *Node Package Manager, or NPM*, to *run and test* the application as well as install any of the necessary dependencies. If I run *NPM Install* here, it will find all the *dependencies in the Package.JSON* file and install the correct versions of those packages.
 
-In it, you'll find all the material that will be used throughout this course, including the application itself and the tickets that you'll be working on.
-
-So here, I'll begin at the very top level of the MFlix JS project.
-
-At the top level of the MFlix JS handout, you'll find a README file, which can help you set up all the necessary components and dependencies that you need for MFlix to function.
-
-When you set everything up, please follow the README carefully, and if you hit any roadblocks, don't hesitate to reach out on the class online forum.
-
-The Build directory contains all the files necessary for the front end of the application to run.
-
-It's also important to note that we'll be using Express as a layer between the MFlix front end and back end.
-
-Express is a JavaScript framework, which is a part of Node.
-
-You can think of it as a routing layer, which allows us to route requests from a front end to our DAO methods that eventually return data from MongoDB Atlas.
-
-We won't be working with Express directly in this course, but all the routing files in the application use Express in case you do decide to explore those files.
-
-In this course, we'll be using Node Package Manager, or NPM, to run and test the application as well as install any of the necessary dependencies.
-
-If I run NPM Install here, it will find all the dependencies in the Package.JSON file and install the correct versions of those packages.
-
-All right, great.
-
-Once we have all the dependencies, we can actually run the application.
-
-By default, the application will run on local host port 5000.
-
-The Test directory contains all the unit tests for the MFlix application.
-
-We can take a look at what's in these tests.
-
-Each .Test.JS file as a unit test that corresponds to a ticket of work in this course.
-
-These tests have been written with the [?
+All right, great. Once we have all the dependencies, we can actually run the application. By default, the application will run on local host port 5000. The Test directory contains all the unit tests for the MFlix application. We can take a look at what's in these tests. Each .Test.JS file as a unit test that corresponds to a ticket of work in this course. These tests have been written with the [?
 
 JS ?] testing framework and we can run them in this project using NPM.
 
