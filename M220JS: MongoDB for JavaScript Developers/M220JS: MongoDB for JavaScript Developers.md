@@ -211,42 +211,14 @@ When you set everything up, please follow the *README* carefully, and if you hit
 
 *Express* is a *JavaScript framework*, which is a part of *Node*. You can think of it as a *routing layer*, which allows us to *route requests from a front end to our DAO methods that eventually return data from MongoDB Atlas*. We won't be working with *Express* directly in this course, but all the *routing files* in the application use *Express* in case you do decide to explore those files.
 
-In this course, we'll be using *Node Package Manager, or NPM*, to *run and test* the application as well as install any of the necessary dependencies. If I run *NPM Install* here, it will find all the *dependencies in the Package.JSON* file and install the correct versions of those packages.
+In this course, we'll be using *Node Package Manager, or NPM*, to *run and test* the application as well as install any of the necessary dependencies. If I run *NPM Install* here, it will find all the *dependencies in the Package.JSON* file and install the correct versions of those packages. All right, great. Once we have all the dependencies, we can actually run the application.
 
-All right, great. Once we have all the dependencies, we can actually run the application. By default, the application will run on local host port 5000. The Test directory contains all the unit tests for the MFlix application. We can take a look at what's in these tests. Each .Test.JS file as a unit test that corresponds to a ticket of work in this course. These tests have been written with the [?
+By default, the application will run on local host port 5000. The Test directory contains all the unit tests for the MFlix application. We can take a look at what's in these tests. Each *.Test.JS* file as a unit test that corresponds to a *ticket* of work in this course. These tests have been written with the *Jest testing framework* and we can run them in this project using *NPM*.
 
-JS ?] testing framework and we can run them in this project using NPM.
+For example, if we wanted to run the unit test for the User Management ticket, we would use the title of the test file, User-Management. When you're starting a new ticket, make sure to first read the ticket description. And then, to verify your understanding, check out the respective unit test in this directory. You may notice that there is an additional folder called Lessons under the Test directory.
 
-For example, if we wanted to run the unit test for the User Management ticket, we would use the title of the test file, User-Management.
+This folder contains example code that will be used throughout the course during lectures. You may use the files from this directory to follow along. So now we're back at the top level of MFlix.JS, and we're finally going to tackle the biggest directory in this project, the SRC directory. This is where most of your work will be done. At the top level of the SRC directory, you'll find an API directory which has the routing files that we discussed before.
 
-When you're starting a new ticket, make sure to first read the ticket description.
+It also contains the controller methods used to communicate with the front end. You won't need to touch any of these files, but you're welcome to explore them if you're curious. However, altering them may result in some unexpected behavior. Adjacent to the API directory, we have the DAO directory, which is really where the work is going to be done in this course. This is where you'll find the movies DAO and comments DAO files that you will need to edit in order to complete your tickets.
 
-And then, to verify your understanding, check out the respective unit test in this directory.
-
-You may notice that there is an additional folder called Lessons under the Test directory.
-
-This folder contains example code that will be used throughout the course during lectures.
-
-You may use the files from this directory to follow along.
-
-So now we're back at the top level of MFlix.JS, and we're finally going to tackle the biggest directory in this project, the SRC directory.
-
-This is where most of your work will be done.
-
-At the top level of the SRC directory, you'll find an API directory which has the routing files that we discussed before.
-
-It also contains the controller methods used to communicate with the front end.
-
-You won't need to touch any of these files, but you're welcome to explore them if you're curious.
-
-However, altering them may result in some unexpected behavior.
-
-Adjacent to the API directory, we have the DAO directory, which is really where the work is going to be done in this course.
-
-This is where you'll find the movies DAO and comments DAO files that you will need to edit in order to complete your tickets.
-
-The unit tests you run will test functionality directly from the DAO files, while requests made on the front end will have to go through the controller before they are received by the DAO.
-
-So that's it for our brief overview of the MFlix architecture.
-
-Good luck in the first chapter.
+The unit tests you run will test functionality directly from the DAO files, while requests made on the front end will have to go through the controller before they are received by the DAO. So that's it for our brief overview of the MFlix architecture. Good luck in the first chapter.

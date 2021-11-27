@@ -206,6 +206,11 @@ This can vary depending on what settings you have for Vim but it should work.
 Or you can install jq which is faster (written in C) from your package manager
 (e.g. sudo apt install jq in Ubuntu/Debian, and then in vim, type: (:%!jq .)
 
+# Git Kraken SSH
+# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCspFEoEmcBA+pzgnACYfc+OF373j3Da+HGzYY5THXfuLZnSWvYbUX21oYGC6yoObPJ7nR/mrgAgxJ/NEqco1uOuHY4b95KIIBdiQ0qOIY7RaWASJqhdkLPUkWQG57TLupD6RmrVO6k3nMXOz2pmSQlTK8VmpseIkiHjVdBJVcXATwQS8wP2seQl89O0fL5OJ/zOVBIJF8iAtvwhAHE7vQ4nwwrm9Bz4NmLhBBQOZFCMPxVWfeVpQcKt/xa46uWRqc9Q1y4vc1GmUGTswRACHU52GfgpBSQgPC+WQRZpfR16aE9Dxhxb9buALRtB55O0M1hmZh7fJ+bWKgI3eNtuepr 
+
+
+# M220JS: MongoDB for JavaScript Developers
 # Ticket: Connection
 # Rename this file to .env after filling in your MFLIX_DB_URI and your SECRET_KEY
 # Do not surround the URI with quotes
@@ -214,9 +219,5 @@ Or you can install jq which is faster (written in C) from your package manager
 # MFLIX_NS=sample_mflix
 # PORT=5000
 # http://localhost:5000/
-mongosh mongodb+srv://mflix.sa8ij.mongodb.net/mflix --username m220student
-
-
-# Git Kraken SSH
-# ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCspFEoEmcBA+pzgnACYfc+OF373j3Da+HGzYY5THXfuLZnSWvYbUX21oYGC6yoObPJ7nR/mrgAgxJ/NEqco1uOuHY4b95KIIBdiQ0qOIY7RaWASJqhdkLPUkWQG57TLupD6RmrVO6k3nMXOz2pmSQlTK8VmpseIkiHjVdBJVcXATwQS8wP2seQl89O0fL5OJ/zOVBIJF8iAtvwhAHE7vQ4nwwrm9Bz4NmLhBBQOZFCMPxVWfeVpQcKt/xa46uWRqc9Q1y4vc1GmUGTswRACHU52GfgpBSQgPC+WQRZpfR16aE9Dxhxb9buALRtB55O0M1hmZh7fJ+bWKgI3eNtuepr 
-
+# mongosh mongodb+srv://mflix.sa8ij.mongodb.net/mflix --username m220student
+# tree -L 1 (sudo snap install tree)
