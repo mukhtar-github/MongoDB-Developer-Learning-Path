@@ -258,8 +258,28 @@ test
 
 Each *.test.js* file as a *unit test* that corresponds to a *ticket of work* in this course. These *tests* have been written with the *Jest testing framework* and we can run them in this project using *npm*. For example, if we wanted to run the *unit test* for the *User Management ticket*, we would use the *title of the test file, User-Management*. When you're starting a *new ticket*, make sure to first *read the ticket description*. And then, to verify your understanding, check out the respective unit test in this directory.
 
-You may notice that there is an additional folder called *Lessons under the Test directory*. This folder contains *example code* that will be used throughout the course during lectures. You may use the files from this directory to follow along. So now we're back at the top level of *MFlix.JS*, and we're finally going to tackle the biggest directory in this project, the *SRC directory*. This is where most of your work will be done.
+You may notice that there is an additional folder called *Lessons under the Test directory*. This folder contains *example code* that will be used throughout the course during lectures. You may use the files from this directory to follow along. So now let's go back to the top level of our *MFlix.JS*, and we're finally going to tackle the biggest directory in this project, the *SRC directory*. This is where most of your work will be done.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220JS: MongoDB for JavaScript Developers$ tree -L 1 src
+src
+├── api
+├── dao
+├── index.js
+├── migrations
+└── server.js
+
+3 directories, 2 files
+```
 
 At the top level of the *SRC directory*, you'll find an *API directory* which has the *routing files* that we discussed before. It also contains the *controller methods used to communicate with the front end*. You won't need to touch any of these files, but you're welcome to explore them if you're curious. However, altering them may result in some unexpected behavior. Adjacent to the *API directory*, we have the *DAO directory*, which is really where the work is going to be done in this course.
 
 This is where you'll find the *movies DAO and comments DAO files* that you will need to edit in order to complete your *tickets*. The *unit tests* you run will test functionality directly from the *DAO files*, while requests made on the *front end* will have to go through the *controller* before they are received by the *DAO*. So that's it for our brief overview of the *MFlix architecture*. Good luck in the first chapter.
+
+### MongoClient
+
+Welcome back. In this lesson, we'll use the MongoClient object to initiate a connection with the database. So here is a MongoClient object initialized with a URI string. I've connected here and then stored the client's configuration in this variable. If we look through the options, we can see that this connection uses SSL. That's because we connected with an SRV string. We can also see the name of the user that were connected as in the database where that user's credentials are stored.
+
+So here we've initialized MongoClient with a URI string, but we've also passed a few optional parameters. We can read these parameters by looking again in the Client Configuration. And we can see the options that we pass to MongoClient will be used throughout this connection. So now that we've created a MongoClient object, we can use it to connect to a specific database. This connection is called a database handle. And we can use it to exploit the database and send queries to it. Here we're just looking at the collections that exist on this database.
+
+We just want to make sure that MFlix has the collections that we need to run the application. And from the database handle naturally comes the collection handle. We verified in the previous test that the MFlix database has a collection called Movies on it. Now let's see if the Movies collection has all the data we expect. And it looks like all the movies we need are on the database. So we're good to go. To recap, we can use a MongoClient to create a connection to MongoDB. And from that client object, we can read and write data against a database or a collection.
