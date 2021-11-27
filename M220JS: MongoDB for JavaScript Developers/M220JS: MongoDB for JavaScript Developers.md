@@ -201,21 +201,66 @@ Our goal is that by the end of this chapter you are comfortable with *basic quer
 
 Hello.
 
-In this lesson, we're going to review the architecture and functionality of *MFlix*, as well as some of the tools that we can use to *build and test* the application. So you will be working on *MFlix*, which is a service that allows users to browse for their favorite movies, leave movie reviews, and create a dialogue about movies with other users on the site.
+In this lesson, we're going to review the architecture and functionality of *MFlix*, as well as some of the tools that we can use to *build and test* the application. So you will be working on *MFlix*, which is a service that allows users to browse for their favorite movies, leave movie reviews, and create a dialogue about movies with other users on the site. The version of *MFlix* that you download will have some basic functionality, but it will be missing a lot of the features that would make the site better. Throughout the course, you will build and configure the pieces necessary to help the site grow as a modern application.
 
-The version of *MFlix* that you download will have some basic functionality, but it will be missing a lot of the features that would make the site better. Throughout the course, you will build and configure the pieces necessary to help the site grow as a modern application.
+Now, we'll cover the architecture of the *MFlix project*. To follow along, please download the handout available for this lesson. In it, you'll find all the material that will be used throughout this course, including the application itself and the *tickets* that you'll be working on. So here, I'll begin at the very top level of the *MFlix JS project*.
 
-Now, we'll cover the architecture of the *MFlix project*. To follow along, please download the handout available for this lesson. In it, you'll find all the material that will be used throughout this course, including the application itself and the tickets that you'll be working on. So here, I'll begin at the very top level of the *MFlix JS project*. At the top level of the MFlix JS handout, you'll find a *README* file, which can help you set up all the necessary *components and dependencies* that you need for *MFlix* to function.
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220JS: MongoDB for JavaScript Developers$ tree -L 1
+locales-launch: Data of en_GB locale not found, generating, please wait...
+.
+├── build
+├── dotenv_win
+├── index.js
+├── jest.config.js
+├── M220JS: MongoDB for JavaScript Developers.md
+├── mflix
+├── mflix-js.zip
+├── node_modules
+├── package.json
+├── package-lock.json
+├── README.rst
+├── src
+└── test
 
-When you set everything up, please follow the *README* carefully, and if you hit any roadblocks, don't hesitate to reach out on the class online forum. The Build directory contains all the files necessary for the front end of the application to run. It's also important to note that we'll be using *Express* as a layer between the *MFlix front end and back end*.
+5 directories, 8 files
+```
 
-*Express* is a *JavaScript framework*, which is a part of *Node*. You can think of it as a *routing layer*, which allows us to *route requests from a front end to our DAO-(Data Access Object) methods that eventually return data from MongoDB Atlas*. We won't be working with *Express* directly in this course, but all the *routing files* in the application use *Express* in case you do decide to explore those files.
+At the top level of the *MFlix JS handout*, you'll find a *README* file, which can help you set up all the necessary *components and dependencies* that you need for *MFlix* to function.
 
-In this course, we'll be using *Node Package Manager, or NPM*, to *run and test* the application as well as install any of the necessary dependencies. If I run *NPM Install* here, it will find all the *dependencies in the Package.JSON* file and install the correct versions of those packages. All right, great. Once we have all the dependencies, we can actually run the application.
+When you set everything up, please follow the *README* carefully, and if you hit any roadblocks, don't hesitate to reach out on the class online forum. The Build directory contains all the files necessary for the *front end of the application* to run. It's also important to note that we'll be using *Express* as a layer between the *MFlix front end and back end*. *Express* is a *JavaScript framework*, which is a part of *Node*. You can think of it as a *routing layer*, which allows us to *route requests from a front end to our DAO-(Data Access Object) methods that eventually return data from MongoDB Atlas*. We won't be working with *Express* directly in this course, but all the *routing files* in the application use *Express* in case you do decide to explore those files.
 
-By default, the application will run on *local host port 5000*. The Test directory contains all the unit tests for the *MFlix application*. We can take a look at what's in these *tests*. Each *.test.js* file as a unit test that corresponds to a *ticket of work* in this course. These *tests* have been written with the *Jest testing framework* and we can run them in this project using *npm*.
+In this course, we'll be using *Node Package Manager, or npm*, to *run and test* the application as well as install any of the necessary *dependencies*. If I run *npm Install* here, it will find all the *dependencies in the Package.JSON* file and install the correct versions of those packages. All right, great. Once we have all the *dependencies*, we can actually *run* the application.
 
-For example, if we wanted to run the unit test for the *User Management ticket*, we would use the *title of the test file, User-Management*. When you're starting a *new ticket*, make sure to first *read the ticket description*. And then, to verify your understanding, check out the respective unit test in this directory. You may notice that there is an additional folder called *Lessons under the Test directory*. This folder contains *example code* that will be used throughout the course during lectures. You may use the files from this directory to follow along.
+By default, the application will run on *local host port 5000*. The *Test directory* contains all the *unit tests* for the *MFlix application*. We can take a look at what's in these *tests*.
+
+```javascript
+mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220JS: MongoDB for JavaScript Developers$ tree -L 1 test
+test
+├── config
+├── connection-pooling.test.js
+├── create-update-comments.test.js
+├── db-connection.test.js
+├── delete-comments.test.js
+├── error-handling.test.js
+├── facets.test.js
+├── get-comments.test.js
+├── lessons
+├── migration.test.js
+├── paging.test.js
+├── projection.test.js
+├── text-subfield.test.js
+├── timeouts.test.js
+├── user-management.test.js
+├── user-preferences.test.js
+└── user-report.test.js
+
+2 directories, 15 files
+```
+
+Each *.test.js* file as a *unit test* that corresponds to a *ticket of work* in this course. These *tests* have been written with the *Jest testing framework* and we can run them in this project using *npm*.
+
+For example, if we wanted to run the *unit test* for the *User Management ticket*, we would use the *title of the test file, User-Management*. When you're starting a *new ticket*, make sure to first *read the ticket description*. And then, to verify your understanding, check out the respective unit test in this directory. You may notice that there is an additional folder called *Lessons under the Test directory*. This folder contains *example code* that will be used throughout the course during lectures. You may use the files from this directory to follow along.
 
 So now we're back at the top level of *MFlix.JS*, and we're finally going to tackle the biggest directory in this project, the *SRC directory*. This is where most of your work will be done. At the top level of the *SRC directory*, you'll find an *API directory* which has the *routing files* that we discussed before. It also contains the *controller methods used to communicate with the front end*. You won't need to touch any of these files, but you're welcome to explore them if you're curious.
 
