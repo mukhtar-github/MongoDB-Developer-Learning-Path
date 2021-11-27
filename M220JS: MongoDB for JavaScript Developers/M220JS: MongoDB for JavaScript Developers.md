@@ -458,6 +458,22 @@ Let's look at an example. Here, I'm issuing a *findOne* query on the *Movies col
 
 Now, we know this *movie* exists, so we expect *error* to be *null*. We expect the *doc.title* to be *Once Upon a Time in Mexico*, and we expect the *doc.cast* to contain *Salma Hayek*. Here, I pass *done()*, and this is only for the *testing framework*. Let's go ahead and give it a run. Great. I can see that the *movie* I found was *Once Upon a Time in Mexico*, and the *cast* did contain *Salma Hayek*. Otherwise, this test wouldn't have passed.
 
+```javascript
+test("Promises", done => {
+    movies
+      .findOne({ title: "Once Upon a Time in Mexico" })
+      .then(doc => {
+        expect(doc.title).toBe("Once Upon a Time in Mexico")
+        expect(doc.cast).toContain("Salma Hayek")
+        done()
+      })
+      .catch(err => {
+        expect(err).toBeNull()
+        done()
+      })
+  })
+```
+
 So now let's jump in to *promises*. *Promises* are a way of saying, do this thing, and when it's done, do one of two things -- *resolve or reject*. *Promises* allow us to be more declarative. Let's look at the same query as before, but instead, use a *promise*. Now there's one interesting note. While browsing the *Node driver documentation*, you may encounter documentation like the following -- *findOne*, where it takes these arguments, and you see the return type is a *promise*.
 
 The driver inspects whether a *callback* is passed. If no *callback* is passed, the driver will return a *promise* automatically. Great stuff. So here, I'm issuing a findOne against the *movies database*, and again, I'm searching for a *movie* where the *title* is *Once Upon a Time in Mexico*. Instead of passing a *callback*, you can see I'm calling *.then*, receiving the *document argument*, where I expect, again, for the *title* to be *Once Upon a Time in Mexico* and the *cast* to contain *Salma Hayek*.
