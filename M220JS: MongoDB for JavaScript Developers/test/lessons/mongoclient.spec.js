@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb"
+import { MongoClient } from "mongodb";
 
 describe("MongoClient", () => {
   /**
@@ -24,23 +24,23 @@ describe("MongoClient", () => {
       // retrieve client options
       const clientOptions = testClient.s.options
       // console.error("OPTS", clientOptions)
-      expect(clientOptions).not.toBeUndefined()
+      expect(clientOptions).not.toBeUndefined();
 
       // expect this connection to have SSL enabled
       if (typeof clientOptions.ssl !== "undefined") {
-        expect(clientOptions).toHaveProperty("ssl")
-        expect(clientOptions.ssl).toBe(true)
+        expect(clientOptions).toHaveProperty("ssl");
+        expect(clientOptions.ssl).toBe(true);
 
         // expect this user to authenticate against the "admin" database
-        expect(clientOptions).toHaveProperty("authSource")
-        expect(clientOptions.authSource).toBe("admin")
+        expect(clientOptions).toHaveProperty("authSource");
+        expect(clientOptions.authSource).toBe("admin");
       }
     } catch (e) {
-      expect(e).toBeNull()
+      expect(e).toBeNull();
     } finally {
-      testClient.close()
+      testClient.close();
     }
-  })
+  });
 
   test("Client initialized with URI and options", async () => {
     /**
@@ -55,20 +55,20 @@ describe("MongoClient", () => {
         connectTimeoutMS: 200,
         retryWrites: true,
         useNewUrlParser: true,
-      })
+      });
 
-      const clientOptions = testClient.s.options
+      const clientOptions = testClient.s.options;
 
       // expect clientOptions to have the correct settings
-      expect(clientOptions.connectTimeoutMS).toBe(200)
-      expect(clientOptions.retryWrites).toBe(true)
-      expect(clientOptions.useNewUrlParser).toBe(true)
+      expect(clientOptions.connectTimeoutMS).toBe(200);
+      expect(clientOptions.retryWrites).toBe(true);
+      expect(clientOptions.useNewUrlParser).toBe(true);
     } catch (e) {
-      expect(e).toBeNull()
+      expect(e).toBeNull();
     } finally {
-      testClient.close()
+      testClient.close();
     }
-  })
+  });
 
   test("Database handle created from MongoClient", async () => {
     /**
@@ -84,7 +84,7 @@ describe("MongoClient", () => {
     try {
       testClient = await MongoClient.connect(process.env.MFLIX_DB_URI, {
         useNewUrlParser: true,
-      })
+      });
 
       // create a database object for the "mflix" database
       const mflixDB = testClient.db(process.env.MFLIX_NS)
@@ -99,14 +99,14 @@ describe("MongoClient", () => {
         "sessions",
       ]
       expectedCollectionNames.map(collection => {
-        expect(actualCollectionNames).toContain(collection)
-      })
+        expect(actualCollectionNames).toContain(collection);
+      });
     } catch (e) {
-      expect(e).toBeNull()
+      expect(e).toBeNull();
     } finally {
-      testClient.close()
+      testClient.close();
     }
-  })
+  });
 
   test("Collection handle created from database handle", async () => {
     /**
@@ -122,21 +122,21 @@ describe("MongoClient", () => {
         connectTimeoutMS: 200,
         retryWrites: true,
         useNewUrlParser: true,
-      })
+      });
 
       // create a database object for the "mflix" database
-      const mflixDB = testClient.db(process.env.MFLIX_NS)
+      const mflixDB = testClient.db(process.env.MFLIX_NS);
 
       // create a collection object for the "movies" collection
-      const movies = mflixDB.collection("movies")
+      const movies = mflixDB.collection("movies");
 
       // expect the "movies" collection to have the correct number of movies
-      const numMoves = await movies.countDocuments({})
-      expect(numMoves).toBe(23530)
+      const numMoves = await movies.countDocuments({});
+      expect(numMoves).toBe(23530);
     } catch (e) {
-      expect(e).toBeNull()
+      expect(e).toBeNull();
     } finally {
-      testClient.close()
+      testClient.close();
     }
-  })
-})
+  });
+});
