@@ -236,3 +236,8 @@ $ git rm --cached FILENAME
 Open Terminal.
 Configure Git to use the exclude file ~/.gitignore_global for all Git repositories.
 $ git config --global core.excludesfile ~/.gitignore_global
+
+move up a level in your directory tree and create a new folder named *cloned_locator*
+in the same directory level as *locator*:
+cd ..
+mkdir cloned_locator
