@@ -241,3 +241,70 @@ move up a level in your directory tree and create a new folder named *cloned_loc
 in the same directory level as *locator*:
 cd ..
 mkdir cloned_locator
+
+*** Starting Vagrant ... 8/12/2021
+(VBoxManage --version
+WARNING: The vboxdrv kernel module is not loaded. Either there is no module
+         available for the current kernel (5.11.0-41-generic) or it failed to
+         load. Please recompile the kernel module and install it by
+           sudo /sbin/vboxconfig
+)
+> cd vagrant@m103
+> sudo systemctl start mongod.service
+> vagrant up
+(default: SSH address: 127.0.0.1:2222
+  default: SSH username: vagrant
+  default: SSH auth method: private key)
+> vagrant ssh
+
+*** Initial Server Setup with Ubuntu 18.04
+
+> Step 1 — Logging in as Root
+ssh root@127.0.0.1 -- your_server_ip
+(The authenticity of host '127.0.0.1 (127.0.0.1)' can't be established.
+ECDSA key fingerprint is SHA256:uY6GIjFdI9qTC4QYb980QRk+WblJF9cd5glr3SmmL+w.
+Are you sure you want to continue connecting (yes/no)?)
+*Type (exit .) This will logout the super user and go back to your account. If you run (sudo su),
+that will open a shell as the superuser. Type (exit or Ctrl - D) to exit this shell.*
+> sudo vim /etc/ssh/sshd_config
+> vagrant ssh root-psswd -- 0759@vm
+
+> Step 2 — Creating a New User
+# adduser mtg
+> Enter a strong password -- 0759@vmuser
+
+> Step 3 — Granting Administrative Privileges
+# usermod -aG sudo mtg
+
+> Step 4 — Setting Up a Basic Firewall
+Run the following command to get a list of all current available profiles:
+# ufw app list
+// Output
+Available applications:
+  OpenSSH
+You need to make sure that the firewall allows SSH connections so that you can log back in next time.
+You can allow these connections by typing:
+# ufw allow OpenSSH
+Afterwards, you can enable the firewall with:
+# ufw enable
+Type “y” and press ENTER to proceed. You can see that SSH connections are still allowed by typing:
+# ufw status
+As the firewall is currently blocking all connections except for SSH, if you install and configure additional services,
+you will need to adjust the firewall settings to allow acceptable traffic in.
+You can learn some common UFW operations in this guide.
+
+> Step 5 — Enabling External Access for Your Regular User
+(SSH, or Secure Shell, is a remote administration protocol that allows users to control and 
+modify their remote servers over the Internet. ... It provides a mechanism for authenticating a remote user,
+transferring inputs from the client to the host, and relaying the output back to the client.)
+The process for configuring SSH access for your new user depends on whether your server’s root account uses a
+password or SSH keys for authentication.
+
+If the Root Account Uses Password Authentication
+If you logged in to your root account using a password, it means that password authentication is enabled for SSH.
+You can SSH to your new user account by opening up a new terminal session and using SSH with your new username:
+$ ssh mtg@127.0.0.1
+
+After entering your regular user’s password, you will be logged in. Remember, if you need to run a command
+with administrative privileges, type sudo before it like this:
+
