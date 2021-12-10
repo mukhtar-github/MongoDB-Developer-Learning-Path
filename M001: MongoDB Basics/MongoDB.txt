@@ -388,20 +388,24 @@ your_domain site, leaving /var/www/html in place as the default directory to be 
 match any other sites.
 
 Create the directory for your_domain as follows, using the -p flag to create any necessary parent directories:
-$ sudo mkdir -p /var/www/example.com/html
-$ sudo rm -r /var/www/your_domain/html
+
+$ sudo mkdir -p /var/www/your_domain/html
 
 Next, assign ownership of the directory with the $USER environment variable:
-$ sudo chown -R $USER:$USER /var/www/example.com/html
+
+$ sudo chown -R $USER:$USER /var/www/your_domain/html
 
 The permissions of your web roots should be correct if you haven’t modified your (umask) value,
 but you can make sure by typing the following:
-$ sudo chmod -R 755 /var/www/example.com
+
+$ sudo chmod -R 755 /var/www/your_domain
 
 Next, create a sample index.html page using vim or your favorite editor:
-$ vim /var/www/example.com/html/index.html
+
+$ vim /var/www/your_domain/html/index.html
 
 Inside, add the following sample HTML:
+
 <html>
     <head>
         <title>Welcome to your_domain!</title>
@@ -414,18 +418,20 @@ Inside, add the following sample HTML:
 In order for Nginx to serve this content, it’s necessary to create a server block with the correct directives.
 Instead of modifying the default configuration file directly,
 make a new one at /etc/nginx/sites-available/your_domain:
-$ sudo vim /etc/nginx/sites-available/example.com
+
+$ sudo vim /etc/nginx/sites-available/your_domain
 
 Add the following configuration block, which is similar to the default,
 but updated for your new directory and domain name:
+
 server {
         listen 80;
         listen [::]:80;
 
-        root /var/www/example.com/html;
+        root /var/www/your_domain/html;
         index index.html index.htm index.nginx-debian.html;
 
-        server_name example.com www.example;
+        server_name your_domain.com www.your_domain;
 
         location / {
                 try_files $uri $uri/ =404;
@@ -436,7 +442,8 @@ Notice that we’ve updated the (root) configuration to the new directory,
 and the (server_name) to the domain name. Save and close the file when you are finished.
 
 Next, enable the file by creating a link from it to the (sites-enabled) directory, which Nginx reads from during startup:
-$ sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/
+
+$ sudo ln -s /etc/nginx/sites-available/your_domain /etc/nginx/sites-enabled/
 
 Two server blocks are now enabled and configured to respond to requests based on their (listen) and (server_name)
 directives (you can read more about how Nginx processes these directives):
@@ -444,4 +451,32 @@ directives (you can read more about how Nginx processes these directives):
 * (example.com): Will respond to requests for (example.com) and www.(example.com).
 * (default): Will respond to any requests on port (80) that do not match the other two blocks.
 
+To avoid a possible hash bucket memory problem that can arise from adding additional server names,
+it is necessary to adjust a single value in the (/etc/nginx/nginx.conf) file. Open the file:
 
+$ sudo vim /etc/nginx/nginx.conf
+
+Find the (server_names_hash_bucket_size) directive and remove the (#) symbol to uncomment the line:
+
+...
+http {
+    ...
+    server_names_hash_bucket_size 64;
+    ...
+}
+...
+
+Next, test to make sure that there are no syntax errors in any of your Nginx files:
+
+$ sudo nginx -t
+
+If there aren’t any problems, restart Nginx to enable your changes:
+
+$ sudo systemctl restart nginx
+
+Nginx should now be serving your domain name. You can test this by navigating to http://your_domain,
+where you should see something like the following:
+
+curl -4 127.0.0.1
+
+sudo vim /etc/hosts
