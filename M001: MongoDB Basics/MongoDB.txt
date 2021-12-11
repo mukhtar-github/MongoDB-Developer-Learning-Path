@@ -260,7 +260,7 @@ WARNING: The vboxdrv kernel module is not loaded. Either there is no module
 *** Initial Server Setup with Ubuntu 18.04
 
 > Step 1 — Logging in as Root
-ssh root@127.0.0.1 -- your_server_ip
+ssh root@46.101.63.136 -- your_server_ip (Digital-Ocean-Droplet)
 (The authenticity of host '127.0.0.1 (127.0.0.1)' can't be established.
 ECDSA key fingerprint is SHA256:uY6GIjFdI9qTC4QYb980QRk+WblJF9cd5glr3SmmL+w.
 Are you sure you want to continue connecting (yes/no)?)
@@ -303,6 +303,7 @@ password or SSH keys for authentication.
 If the Root Account Uses Password Authentication
 If you logged in to your root account using a password, it means that password authentication is enabled for SSH.
 You can SSH to your new user account by opening up a new terminal session and using SSH with your new username:
+
 $ ssh mtg@127.0.0.1
 
 After entering your regular user’s password, you will be logged in. Remember, if you need to run a command
@@ -388,30 +389,30 @@ your_domain site, leaving /var/www/html in place as the default directory to be 
 match any other sites.
 
 Create the directory for your_domain as follows, using the -p flag to create any necessary parent directories:
-
-$ sudo mkdir -p /var/www/your_domain/html
+$ sudo rm -r /var/www/your_domain/html
+$ sudo mkdir -p /var/www/mymtg.live/html
 
 Next, assign ownership of the directory with the $USER environment variable:
 
-$ sudo chown -R $USER:$USER /var/www/your_domain/html
+$ sudo chown -R $USER:$USER /var/www/mymtg.live/html
 
 The permissions of your web roots should be correct if you haven’t modified your (umask) value,
 but you can make sure by typing the following:
 
-$ sudo chmod -R 755 /var/www/your_domain
+$ sudo chmod -R 755 /var/www/mymtg.live
 
 Next, create a sample index.html page using vim or your favorite editor:
 
-$ vim /var/www/your_domain/html/index.html
+$ vim /var/www/mymtg.live/html/index.html
 
 Inside, add the following sample HTML:
 
 <html>
     <head>
-        <title>Welcome to your_domain!</title>
+        <title>Welcome to mymtg.live!</title>
     </head>
     <body>
-        <h1>Success! The your_domain server block is working!</h1>
+        <h1>Success! The mymtg.live server block is working!</h1>
     </body>
 </html>
 
@@ -419,7 +420,7 @@ In order for Nginx to serve this content, it’s necessary to create a server bl
 Instead of modifying the default configuration file directly,
 make a new one at /etc/nginx/sites-available/your_domain:
 
-$ sudo vim /etc/nginx/sites-available/your_domain
+$ sudo vim /etc/nginx/sites-available/mymtg.live
 
 Add the following configuration block, which is similar to the default,
 but updated for your new directory and domain name:
@@ -428,10 +429,10 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /var/www/your_domain/html;
+        root /var/www/mymtg.live/html;
         index index.html index.htm index.nginx-debian.html;
 
-        server_name your_domain.com www.your_domain;
+        server_name mymtg.live www.mymtg.live;
 
         location / {
                 try_files $uri $uri/ =404;
@@ -443,12 +444,12 @@ and the (server_name) to the domain name. Save and close the file when you are f
 
 Next, enable the file by creating a link from it to the (sites-enabled) directory, which Nginx reads from during startup:
 
-$ sudo ln -s /etc/nginx/sites-available/your_domain /etc/nginx/sites-enabled/
+$ sudo ln -s /etc/nginx/sites-available/mymtg.live /etc/nginx/sites-enabled/
 
 Two server blocks are now enabled and configured to respond to requests based on their (listen) and (server_name)
 directives (you can read more about how Nginx processes these directives):
 
-* (example.com): Will respond to requests for (example.com) and www.(example.com).
+* (mymtg.live): Will respond to requests for (mymtg.live) and www.(mymtg.live).
 * (default): Will respond to any requests on port (80) that do not match the other two blocks.
 
 To avoid a possible hash bucket memory problem that can arise from adding additional server names,
@@ -474,9 +475,89 @@ If there aren’t any problems, restart Nginx to enable your changes:
 
 $ sudo systemctl restart nginx
 
-Nginx should now be serving your domain name. You can test this by navigating to http://your_domain,
+Nginx should now be serving your domain name. You can test this by navigating to http://mymtg.live,
 where you should see something like the following:
 
 curl -4 127.0.0.1
 
 sudo vim /etc/hosts
+
+> Step 6 – Getting Familiar with Important Nginx Files and Directories
+Now that you know how to manage the Nginx service itself, you should take a few minutes to familiarize yourself
+with a few important directories and files.
+
+> Content
+(/var/www/html): The actual web content, which by default only consists of the default Nginx page you saw earlier,
+is served out of the (/var/www/html) directory. This can be changed by altering Nginx configuration files.
+
+> Server Configuration
+(/etc/nginx): The Nginx configuration directory. All of the Nginx configuration files reside here.
+
+(/etc/nginx/nginx.conf): The main Nginx configuration file. This can be modified to make changes to the
+Nginx global configuration.
+
+(/etc/nginx/sites-available/): The directory where per-site server blocks can be stored. Nginx will not use the
+configuration files found in this directory unless they are linked to the (sites-enabled) directory.
+Typically, all server block configuration is done in this directory, and then enabled by linking to the other directory.
+
+(/etc/nginx/sites-enabled/): The directory where enabled per-site server blocks are stored.
+Typically, these are created by linking to configuration files found in the sites-available directory.
+
+(/etc/nginx/snippets): This directory contains configuration fragments that can be included elsewhere in the
+Nginx configuration. Potentially repeatable configuration segments are good candidates for refactoring into snippets.
+
+> Server Logs
+(/var/log/nginx/access.log): Every request to your web server is recorded in this log file
+unless Nginx is configured to do otherwise.
+
+(/var/log/nginx/error.log): Any Nginx errors will be recorded in this log.
+
+
+*** How To Secure Nginx with Let's Encrypt on Ubuntu 18.04
+
+> Step 1 — Installing Certbot
+The first step to using Let’s Encrypt to obtain an SSL certificate is to install the Certbot software on your server.
+
+The Certbot project recommends that most users install the software through snap, a package manager originally
+developed by Canonical (the company behind Ubuntu) and now available on many Linux distributions:
+
+$ sudo snap install --classic certbot
+
+Next, create a symbolic link to the newly installed /snap/bin/certbot executable from the /usr/bin/ directory.
+This will ensure that the certbot command can run correctly on your server. To do this, run the following ln command.
+This contains the -s flag which will create a symbolic or soft link, as opposed to a hard link:
+
+$ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+> Step 2 — Confirming Nginx’s Configuration
+Certbot needs to be able to find the correct (server) block in your Nginx configuration for it to be able to automatically
+configure SSL. Specifically, it does this by searching for a (server_name) directive that matches the domain you request a
+certificate for.
+
+$  sudo vim /etc/nginx/sites-available/mymtg.live
+
+Certbot can now find the correct server block and update it.
+
+> Step 3 — Allowing HTTPS Through the Firewall
+If you have the (ufw) firewall enabled, as recommended by the prerequisite guides, you’ll need to adjust the settings to
+allow for HTTPS traffic. Luckily, Nginx registers a few profiles with (ufw) upon installation.
+
+You can check the current setting by running the following:
+
+$ sudo ufw status
+
+To let in additional HTTPS traffic, allow the (Nginx Full) profile and delete the redundant (Nginx HTTP) profile allowance:
+
+$ sudo ufw allow 'Nginx Full'
+$ sudo ufw delete allow 'Nginx HTTP'
+
+Now when you run the ufw status command it will reflect these new rules:
+
+$ sudo ufw status
+
+Next, you’ll run Certbot and fetch your certificates.
+
+$ sudo certbot --nginx -d mymtg.live -d mymtg.live
+
+ssh root@46.101.63.136
+ssh -i /home/mukhtar/.ssh/id_rsa root@46.101.63.136
