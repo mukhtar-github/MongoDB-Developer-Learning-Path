@@ -538,26 +538,169 @@ $  sudo vim /etc/nginx/sites-available/mymtg.live
 
 Certbot can now find the correct server block and update it.
 
-> Step 3 — Allowing HTTPS Through the Firewall
-If you have the (ufw) firewall enabled, as recommended by the prerequisite guides, you’ll need to adjust the settings to
-allow for HTTPS traffic. Luckily, Nginx registers a few profiles with (ufw) upon installation.
-
-You can check the current setting by running the following:
-
-$ sudo ufw status
-
-To let in additional HTTPS traffic, allow the (Nginx Full) profile and delete the redundant (Nginx HTTP) profile allowance:
-
-$ sudo ufw allow 'Nginx Full'
-$ sudo ufw delete allow 'Nginx HTTP'
-
-Now when you run the ufw status command it will reflect these new rules:
-
-$ sudo ufw status
-
-Next, you’ll run Certbot and fetch your certificates.
-
-$ sudo certbot --nginx -d mymtg.live -d mymtg.live
-
 ssh root@46.101.63.136
-ssh -i /home/mukhtar/.ssh/id_rsa root@46.101.63.136
+ssh mtg@46.101.63.136
+ssh-copy-id mtg@46.101.63.136
+sudo vim /etc/ssh/sshd_config
+rsync --archive --chown=mtg:mtg ~/.ssh /home/mtg
+http://46.101.63.136
+sudo mkdir -p /var/www/mymtg.live/html
+sudo chown -R $USER:$USER /var/www/mymtg.live/html
+sudo chmod -R 755 /var/www/mymtg.live
+vim /var/www/mymtg.live/html/index.html
+<html>
+    <head>
+        <title>Welcome to mymtg.live!</title>
+    </head>
+    <body>
+        <h1>Success!  The mymtg.live server block is working!</h1>
+    </body>
+</html>
+sudo vim /etc/nginx/sites-available/mymtg.live
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/mymtg.live/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name mymtg.live www.mymtg.live;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+sudo ln -s /etc/nginx/sites-available/mymtg.live /etc/nginx/sites-enabled/
+sudo vim /etc/nginx/nginx.conf
+sudo nginx -t
+https://mymtg.live
+sudo certbot --nginx -d mymtg.live -d www.mymtg.live
+sudo vim $HOME/.ssh/authorized_keys
+
+*** How To Set Up a Node.js Application for Production on Ubuntu 20.04
+> Step 1 — Installing Node.js
+cd ~
+curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+vim nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt install nodejs
+sudo apt install build-essential
+
+> Step 2 — Creating a Node.js Application
+cd ~
+vim hello.js
+
+```
+const http = require('http');
+
+const hostname = 'localhost';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World!\n');
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+```
+node hello.js
+Output
+Server running at http://localhost:3000/
+
+To test the application, open another terminal session on your server, and connect to localhost with curl:
+curl http://localhost:3000
+Output
+Hello World!
+kill the application by pressing CTRL+C
+
+> Step 3 — Installing PM2
+sudo npm install pm2@latest -g
+pm2 start hello.js
+pm2 startup systemd
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u mtg --hp /home/mtg
+pm2 save
+
+You have now created a systemd unit that runs pm2 for your user on boot. This pm2 instance, in turn, runs hello.js.
+sudo systemctl start pm2-mtg
+systemctl status pm2-mtg
+
+Stop an application with this command (specify the PM2 App name or id):
+pm2 stop hello
+
+Restart an application:
+pm2 restart 0
+
+List the applications currently managed by PM2:
+pm2 list
+
+Get information about a specific application using its App name:
+pm2 info hello
+
+The PM2 process monitor can be pulled up with the monit subcommand.
+This displays the application status, CPU, and memory usage:
+pm2 monit
+
+> Step 4 — Setting Up Nginx as a Reverse Proxy Server
+Your application is running and listening on (localhost), but you need to set up a way for your users to access it.
+We will set up the Nginx web server as a reverse proxy for this purpose.
+
+In the prerequisite tutorial, you set up your Nginx configuration in the /etc/nginx/sites-available/example.com file.
+Open this file for editing:
+sudo vim /etc/nginx/sites-available/mymtg.live
+
+Within the (server) block, you should have an existing (location) / block. Replace the contents of that block
+with the following configuration. If your application is set to listen on a different port,
+update the highlighted portion to the correct port number:
+```
+server {
+...
+    location / {
+        proxy_pass http://localhost:127.0.1.1;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+...
+}
+```
+This configures the server to respond to requests at its root. Assuming our server is available at mymtg.live,
+accessing https://mymtg.live/ via a web browser would send the request to (hello.js),
+listening on port (127.0.1.1) at (localhost).
+
+sudo vim /etc/hosts
+127.0.1.1 ubuntu-s-4vcpu-8gb-amd-lon1-01 ubuntu-s-4vcpu-8gb-amd-lon1-01
+127.0.0.1 localhost
+/etc/cloud/templates/hosts.debian.tmpl
+/etc/cloud/cloud.cfg or cloud-config
+sudo vim -r /etc/nginx/sites-available/mymtg.live
+sudo rm -r /etc/nginx/sites-available/.mymtg.live.swp
+curl -4 127.0.1.1
+** How do I find my port number in Ubuntu? -- sudo lsof -i -P -n | grep LISTEN
+node\x20/  1271   mtg   20u  IPv4  28689   0t0  TCP 127.0.0.1:3000 (LISTEN)
+
+You can add additional (location) blocks to the same server block to provide access to other applications on the same
+server. For example, if you were also running another Node.js application on port (127.0.0.1), you could add this
+location block to allow access to it via https://mymtg.live/app2:
+```
+server {
+...
+    location /app2 {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+...
+}
+```
+Make sure you didn’t introduce any syntax errors by typing:
+sudo nginx -t
+Restart Nginx:
+sudo systemctl restart nginx
