@@ -704,3 +704,8 @@ Make sure you didn’t introduce any syntax errors by typing:
 sudo nginx -t
 Restart Nginx:
 sudo systemctl restart nginx
+
+*** Conclusion
+Congratulations! You now have your Node.js application running behind an Nginx reverse proxy on an Ubuntu 20.04 server.
+This reverse proxy setup is flexible enough to provide your users access to other applications or static web content
+that you want to share.
