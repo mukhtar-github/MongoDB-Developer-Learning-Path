@@ -85,7 +85,7 @@ describe("Basic Reads", () => {
 
     // Note that only the fields we specify in the projection section of the
     // query will be returned in our result set with the exception of the _id
-    // field.We need to explicitly specify when we don't want the _id field to
+    // field. We need to explicitly specify when we don't want the _id field to
     // be returned. Lets try that.
 
     let result2 = await movies.findOne(
