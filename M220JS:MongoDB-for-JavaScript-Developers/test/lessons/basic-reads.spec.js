@@ -72,7 +72,7 @@ describe("Basic Reads", () => {
 
     let result = await movies.findOne(
       { cast: filter },
-      { projection: { title: 1, year: 1 } },
+      { projection: { title: 1, year: 1 } }
     )
 
     expect(result).not.toBeNull()
@@ -90,7 +90,7 @@ describe("Basic Reads", () => {
 
     let result2 = await movies.findOne(
       { cast: filter },
-      { projection: { title: 1, year: 1, _id: 0 } },
+      { projection: { title: 1, year: 1, _id: 0 } }
     )
 
     expect(result2).not.toBeNull()
@@ -124,7 +124,7 @@ describe("Basic Reads", () => {
     // dataset
     expect(result).not.toBeNull()
 
-    let { title, year, cast } = await result.next();
+    let { title, year, cast } = await result.next()
 
     // you can see that we are using the result.next cursor method.
     // The db.collection.find() method in MongoDB returns a cursor.
@@ -138,12 +138,12 @@ describe("Basic Reads", () => {
     // we expect the title of Once Upon a Time in Mexico, the year to be 2003,
     // and the cast to include Salma Hayek and Johnny Depp.
 
-    expect(title).toBe("Once Upon a Time in Mexico");
-    expect(year).toBe(2003);
-    expect(cast).toContain("Johnny Depp");
-    expect(cast).toContain("Salma Hayek");
+    expect(title).toBe("Once Upon a Time in Mexico")
+    expect(year).toBe(2003)
+    expect(cast).toContain("Johnny Depp")
+    expect(cast).toContain("Salma Hayek")
 
-    console.log({ title, year, cast });
+    console.log({ title, year, cast })
   })
 })
 
