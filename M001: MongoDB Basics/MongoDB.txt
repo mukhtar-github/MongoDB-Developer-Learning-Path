@@ -257,3 +257,10 @@ WARNING: The vboxdrv kernel module is not loaded. Either there is no module
   default: SSH auth method: private key)
 > vagrant ssh
 
+**To Update changes/files**
+$ git rm -r --cached FILENAME
+$ touch .gitignore
+$ git add .
+$ git commit -m "Update changes"
+$ git pull -- type (merge commit) in nano and press ctrl x, then yes, then press enter to save.
+$ git push
