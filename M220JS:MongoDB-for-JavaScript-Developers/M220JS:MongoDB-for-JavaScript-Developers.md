@@ -804,20 +804,75 @@ test("Can sort the results returned by a pipeline", async () => {
   })
 ```
 
-So in aggregation we perform the same action with *$sort* stage, sorting our results on *year* in ascending order. But we've passed our sort key and direction as a key value pair, as opposed to a list of lists. So the last scenario we're going to cover in this lesson is skipping documents in a cursor, which we specify with an integer value. However, skipping only really makes sense when the results are sorted, because otherwise we're not really sure which documents were skipping over.
+So in *aggregation*, we perform the same action with *$sort* stage, sorting our results on *year* in ascending order. But we've passed our sort key and direction as a *key value pair*, as opposed to a *list of lists*.
 
-So here, we've sorted on year in ascending order and then skipped the first five documents.
+```javascript
+test("Can skip through results in a cursor", async () => {
+    /**
+     * Sometimes we don't need all the results in a cursor. Especially when the
+     * results in the cursor are sorted, we can skip a few results to retrieve
+     * just the results that we need.
+     *
+     * To skip through results in a cursor, we can use the .skip() method with
+     * an integer denoting how many documents to skip. For example, skip(5) will
+     * skip the first 5 documents in a cursor, and only return the documents
+     * that appear after those first 5.
 
-What this does is skip the five oldest movies he directed and only returns his most recent movies.
+     * Given that we are sorting on year in ascending order, the .skip(5) will
+     * skip the 5 oldest movies that Sam Raimi directed, and only return the
+     * more recent movies.
+     */
+    const skippedCursor = movies
+      .find({ directors: "Sam Raimi" }, { _id: 0, year: 1, title: 1, cast: 1 })// *offloading work* to the *server*
+      .sort([["year", 1]])
+      .skip(5)
 
-And here we can verify that the cursor using skip is identical to the one that didn't use skip, but used slice to remove the first five elements.
+    const regularCursor = movies
+      .find({ directors: "Sam Raimi" }, { _id: 0, year: 1, title: 1, cast: 1 })// *doing that work* on the *client side*
+      .sort([["year", 1]])
 
-So again, this is just the difference between offloading work to the server and doing that work on the client side.
+    // expect the skipped cursor to contain the same results as the regular
+    // cursor, minus the first five results
+    expect(await skippedCursor.toArray()).toEqual(
+      (await regularCursor.toArray()).slice(5),
+    )
+  })
+```
 
-To do the same with aggregation, we add $skip stage to our pipeline and then specify the number of documents that we want to skip.
+So the last scenario we're going to cover in this lesson is *skipping documents in a cursor*, which we specify with an *integer* value. However, *skipping* only really makes sense when the results are *sorted*, because otherwise we're not really sure which documents were *skipping* over. So here, we've *sorted* on *year* in ascending order and then *skipped the first five documents*. What this does is *skip the five oldest movies* he directed and only returns his most recent movies. And here we can verify that the *cursor using skip* is identical to the one that didn't use *skip*, but used *slice* to remove the *first five elements*. So again, this is just the difference between *offloading work* to the *server* and *doing that work* on the *client side*.
 
-So just to recap, we covered the three basic methods we can perform against cursors and MongoDB-- limit, sort, and skip.
+```javascript
+test("Can skip through results in a pipeline", async () => {
+    /**
+     * We can also skip through the results returned by a pipeline, by adding a
+     * $skip stage in our aggregation.
+     *
+     * This pipeline should sort our results by year, in ascending order, and
+     * then skip the 5 oldest movies.
+     */
+    const skippedPipeline = [
+      { $match: { directors: "Sam Raimi" } },
+      { $project: { _id: 0, year: 1, title: 1, cast: 1 } },
+      { $sort: { year: 1 } },
+      { $skip: 5 },
+    ]
 
-We've also shown that we can chain them together if we need to use more than one.
+    const regularPipeline = [
+      { $match: { directors: "Sam Raimi" } },
+      { $project: { _id: 0, year: 1, title: 1, cast: 1 } },
+      { $sort: { year: 1 } },
+    ]
 
-If we're using the aggregation framework, we can perform the same three actions with these three stages in a pipeline.
+    const skippedAggregation = await movies.aggregate(skippedPipeline)
+    const regularAggregation = await movies.aggregate(regularPipeline)
+
+    expect(await skippedAggregation.toArray()).toEqual(
+      (await regularAggregation.toArray()).slice(5),
+    )
+  })
+})
+```
+
+To do the same with *aggregation*, we add *$skip* stage to our *pipeline* and then specify the *number of documents* that we want to *skip*.
+
+So just to recap, we covered the three basic methods we can perform against *cursors* and *MongoDB* -- *limit, sort, and skip*. We've also shown that we can chain them together if we need to use more than one. If we're using the *aggregation framework*, we can perform the same three actions with these three stages in a *pipeline*.
