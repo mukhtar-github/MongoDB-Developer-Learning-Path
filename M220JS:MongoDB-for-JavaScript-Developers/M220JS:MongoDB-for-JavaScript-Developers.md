@@ -876,3 +876,94 @@ test("Can skip through results in a pipeline", async () => {
 To do the same with *aggregation*, we add *$skip* stage to our *pipeline* and then specify the *number of documents* that we want to *skip*.
 
 So just to recap, we covered the three basic methods we can perform against *cursors* and *MongoDB* -- *limit, sort, and skip*. We've also shown that we can chain them together if we need to use more than one. If we're using the *aggregation framework*, we can perform the same three actions with these three stages in a *pipeline*.
+
+### Ticket: Paging 4
+
+#### Problem 4
+
+##### User Story 4
+
+"As a user, I'd like to get the next page of results for my query by scrolling down in the main window of the application."
+
+##### Task 4
+
+Modify the method *getMovies* in *moviesDAO.js* to allow the application to display *new pages of movies*.
+
+##### MFlix Functionality 4
+
+The UI is already asking for infinite scroll, but it's not implemented yet. Only the first 20 movies (the first "page" of movies) appear on the MFlix homepage.
+
+Once this ticket is completed, scrolling to the bottom of the page will load the next 20 movies, or the next page of movies.
+
+##### Testing and Running the Application 4
+
+Make sure you look at the tests in *paging.test.js* to look at what is expected.
+
+### Answer 4
+
+```javascript
+/**
+   * Finds and returns movies by country.
+   * Returns a list of objects, each object contains a title and an _id.
+   * @param {Object} filters - The search parameters to use in the query.
+   * @param {number} page - The page of movies to retrieve.
+   * @param {number} moviesPerPage - The number of movies to display per page.
+   * @returns {GetMoviesResult} An object with movie results and total results
+   * that would match this query
+   */
+  static async getMovies({
+    // here's where the default parameters are set for the getMovies method
+    filters = null,
+    page = 0,
+    moviesPerPage = 20,
+  } = {}) {
+    let queryParams = {}
+    if (filters) {
+      if ("text" in filters) {
+        queryParams = this.textSearchQuery(filters["text"])
+      } else if ("cast" in filters) {
+        queryParams = this.castSearchQuery(filters["cast"])
+      } else if ("genre" in filters) {
+        queryParams = this.genreSearchQuery(filters["genre"])
+      }
+    }
+
+    let { query = {}, project = {}, sort = DEFAULT_SORT } = queryParams
+    let cursor
+    try {
+      cursor = await movies
+        .find(query)
+        .project(project)
+        .sort(sort)
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return { moviesList: [], totalNumMovies: 0 }
+    }
+
+    /**
+    Ticket: Paging
+
+    Before this method returns back to the API, use the "moviesPerPage" and
+    "page" arguments to decide the movies to display.
+
+    Paging can be implemented by using the skip() and limit() cursor methods.
+    */
+
+    // TODO Ticket: Paging
+    // Use the cursor to only return the movies that belong on the current page
+    // const displayCursor = cursor.limit(moviesPerPage)?
+    const displayCursor = cursor.skip(moviesPerPage*page).limit(moviesPerPage)
+
+    try {
+      const moviesList = await displayCursor.toArray()
+      const totalNumMovies = page === 0 ? await movies.countDocuments(query) : 0
+
+      return { moviesList, totalNumMovies }
+    } catch (e) {
+      console.error(
+        `Unable to convert cursor to array or problem counting documents, ${e}`,
+      )
+      return { moviesList: [], totalNumMovies: 0 }
+    }
+  }
+```
