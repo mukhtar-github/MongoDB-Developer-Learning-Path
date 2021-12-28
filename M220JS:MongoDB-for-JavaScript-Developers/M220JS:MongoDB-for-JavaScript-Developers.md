@@ -527,3 +527,47 @@ So in this case, for example, we're going to have a *cast* that matches all elem
 To do that, we have the *.next* or *next* method, or we can even use a *toArray* method to do that. The *next* method will return the *next* result in the *cursor*. If there are no more *results*, the *next* method resolves to *null*. As we are movie experts and have examined this data set before, this time we expect the *title of Once Upon a Time in Mexico* to be present, the year to be *2003*, and containing both *Johnny Depp* and *Salma Hayek* as *cast* members. Once we execute all the tests that we reviewed, everything passes with flying colors. But let's summarize.
 
 We saw how to limit the *results* to one document with *findOne* or get all documents that match a *query* filter with *find* method. We can also see how we can include or exclude fields that we might be interested on the return documents by specifying a *projection*. Few things to keep in mind-- finding one document typically involves querying on a unique *index*, such as *_id* field. When projecting, by specifying an inclusion, like *{title: 1}*, all fields that are not included will be excluded except for *_id* field where we need to be explicit about and say if we are not interested, we also want to exclude that same from the resulting document, like *{title: 1, _id: 0}*.
+
+
+#### Problem 1
+
+Which of the following statements is true regarding reads in MongoDB?
+
+#### Answers 1
+
+Field projection is specified as a JSON object.
+
+* Field projection is specified as the second parameter to *.find()* and *.findOne()*.
+* It is passed to these methods as a *JSON object*.
+
+We must explicitly remove the *_id* field in a projection.
+
+* The *_id* field will be returned unless you explicitly remove it from your result set using projection.
+* *value* may be 0 (or false) to exclude the field, or 1 (or true) to include it.
+* With the exception of the *_id* field, you may not have both inclusions and exclusions in the same projection document.
+
+### Ticket: Projection
+
+#### Problem 2
+
+##### User Story
+
+"As a user, I'd like to be able to search movies by country and see a list of movie titles. I should be able to specify a comma-separated list of countries to search multiple countries."
+
+##### Task
+
+Implement the *getMoviesByCountry* method in *src/dao/moviesDAO.js* to search movies by country and use projection to return the *title* and *_id* field. The *_id* field will be returned by default.
+
+##### MFlix Functionality
+
+Once you complete this ticket, the UI will allow movie searches by one or more countries.
+
+##### Testing and Running the Application
+
+Make sure to look at the tests in *projection.test.js* to understand what is expected.
+
+You can run the unit tests for this ticket by running:
+
+```javascript
+npm test -t projection
+```
