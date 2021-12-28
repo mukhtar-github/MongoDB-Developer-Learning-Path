@@ -724,31 +724,87 @@ test("Can limit the number of results returned by a cursor", async () => {
 
 In this example, we're looking for *movies* that were directed by *Sam Raimi*, but we don't need all of the *movies* that he directed. In fact, we only want two of them. The way that we limit the number of results that are returned by a *cursor* is with this *.limit* method. We call the *.limit* immediately after the *.find*. And we specify an integer value for the number of documents that we want back in the *cursor* so that when we do iterate through the *cursor*, we can be sure that there are no more than *two documents* in it.
 
-We can perform the same action in aggregation using a dollar limit stage in our pipeline.
+```javascript
+test("Can limit the number of results returned by a pipeline", async () => {
+    /**
+     * We can also limit the number of results returned by a pipeline, by adding
+     * a $limit stage in our aggregation.
+     *
+     * This pipeline should return only 2 results.
+     */
+    const limitPipeline = [
+      { $match: { directors: "Sam Raimi" } },
+      { $project: { _id: 0, title: 1, cast: 1 } },
+      { $limit: 2 },
+    ]
 
-And we pass the same integer value that represents the number of documents we want back in the *cursor*.
+    const limitedAggregation = await movies.aggregate(limitPipeline)
 
-In this example, we want the documents and the *cursor* to be sorted.
+    expect((await limitedAggregation.toArray()).length).toEqual(2)
+  })
+```
 
-Using .sort or the aggregation equivalent that we'll cover in a minute is nice, because it sorts documents on the server side so that on the client side, we can treat the *cursor* like it's already sorted.
+We can perform the same action in *aggregation* using a *$limit* stage in our pipeline. And we pass the same integer value that represents the number of documents we want back in the *cursor*.
 
-In this case, we're still looking for *movies* that were directed by *Sam Raimi*.
+```javascript
+test("Can sort the results returned by a cursor", async () => {
+    /**
+     * By default, the results in a cursor are sorted in "natural" order - this
+     * order is an internal implementation, and often has no particular
+     * structure.
+     *
+     * To sort our results in a more structured way, we can choose a key and a
+     * sort order, then use .sort() to return the results accordingly.
+     *
+     * The "year" field denotes the release date of each movie, so the
+     * .sort([["year", 1]]) will sort our results on the "year" key, in
+     * ascending order. Conversely, .sort([["year", -1]]) would return them in
+     * descending order.
+     */
+    const sortedCursor = movies
+      .find({ directors: "Sam Raimi" }, { _id: 0, year: 1, title: 1, cast: 1 })
+      .sort([["year", 1]])
 
-But this time we're going to sort them by year.
+    const movieArray = await sortedCursor.toArray()
 
-The 1 here denotes ascending order.
+    // expect each movie in our cursor to be newer than the next movie in the
+    // cursor
+    for (var i = 0; i < movieArray.length - 1; i++) {
+      let movie = movieArray[i]
+      let nextMovie = movieArray[i + 1]
+      expect(movie.year).toBeLessThanOrEqual(nextMovie.year)
+    }
+```
 
-So the first movie he directed will appear first in our *cursor*, and his latest project will appear last.
+In this example, we want the *documents* and the *cursor* to be *sorted*. Using *.sort* or the *aggregation* equivalent that we'll cover in a minute is nice, because it *sorts documents* on the *server side* so that on the *client side*, we can treat the *cursor* like it's already *sorted*. In this case, we're still looking for *movies* that were directed by *Sam Raimi*. But this time we're going to *sort* them by *year*. The *1* here denotes ascending order. So the first *movie* he directed will appear first in our *cursor*, and his latest project will appear last. And here we can verify that the *movies* in our *cursor* had been *sorted* in ascending order on *year*.
 
-And here we can verify that the movies in our *cursor* had been sorted in ascending order on year.
+```javascript
+test("Can sort the results returned by a pipeline", async () => {
+    /**
+     * We can also sort the results returned by a pipeline, by adding a $sort
+     * stage in our aggregation. In the Aggregation Framework, we say
+     * { $sort: { year: 1 } } instead of .sort([["year", 1]]).
+     *
+     * This pipeline should sort our results by year, in ascending order.
+     */
+    const sortPipeline = [
+      { $match: { directors: "Sam Raimi" } },
+      { $project: { _id: 0, year: 1, title: 1, cast: 1 } },
+      { $sort: { year: 1 } },
+    ]
 
-So in aggregation we perform the same action with $sort stage, sorting our results on year in ascending order.
+    const sortAggregation = await movies.aggregate(sortPipeline)
+    const movieArray = await sortAggregation.toArray()
 
-But we've passed our sort key and direction as a key value pair, as opposed to a list of lists.
+    for (var i = 0; i < movieArray.length - 1; i++) {
+      let movie = movieArray[i]
+      let nextMovie = movieArray[i + 1]
+      expect(movie.year).toBeLessThanOrEqual(nextMovie.year)
+    }
+  })
+```
 
-So the last scenario we're going to cover in this lesson is skipping documents in a cursor, which we specify with an integer value.
-
-However, skipping only really makes sense when the results are sorted, because otherwise we're not really sure which documents were skipping over.
+So in aggregation we perform the same action with *$sort* stage, sorting our results on *year* in ascending order. But we've passed our sort key and direction as a key value pair, as opposed to a list of lists. So the last scenario we're going to cover in this lesson is skipping documents in a cursor, which we specify with an integer value. However, skipping only really makes sense when the results are sorted, because otherwise we're not really sure which documents were skipping over.
 
 So here, we've sorted on year in ascending order and then skipped the first five documents.
 
