@@ -546,28 +546,115 @@ We must explicitly remove the *_id* field in a projection.
 * *value* may be 0 (or false) to exclude the field, or 1 (or true) to include it.
 * With the exception of the *_id* field, you may not have both inclusions and exclusions in the same projection document.
 
-### Ticket: Projection
+### Ticket: Projection 2
 
 #### Problem 2
 
-##### User Story
+##### User Story 2
 
 "As a user, I'd like to be able to search movies by country and see a list of movie titles. I should be able to specify a comma-separated list of countries to search multiple countries."
 
-##### Task
+##### Task 2
 
 Implement the *getMoviesByCountry* method in *src/dao/moviesDAO.js* to search movies by country and use projection to return the *title* and *_id* field. The *_id* field will be returned by default.
 
-##### MFlix Functionality
+##### MFlix Functionality 2
 
 Once you complete this ticket, the UI will allow movie searches by one or more countries.
 
-##### Testing and Running the Application
+##### Testing and Running the Application 2
 
 Make sure to look at the tests in *projection.test.js* to understand what is expected.
 
-You can run the unit tests for this ticket by running:
+### Answer 2
 
 ```javascript
-npm test -t projection
+/**
+   * Finds and returns movies originating from one or more countries.
+   * Returns a list of objects, each object contains a title and an _id.
+   * @param {string[]} countries - The list of countries.
+   * @returns {Promise<CountryResult>} A promise that will resolve to a list of CountryResults.
+   */
+  static async getMoviesByCountry(countries) {
+    let cursor
+    try {
+      // TODO Ticket: Projection
+      // Find movies matching the "countries" list, but only return the title
+      // and _id. Do not put a limit in your own implementation, the limit
+      // here is only included to avoid sending 46000 documents down the
+      // wire.
+      cursor = await movies.find(
+        { countries: {'$in': countries} },
+        { projection: { title: 1, _id: 1 } }
+      )//.limit(1)
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return []
+    }
+
+    return cursor.toArray()
+  }
+```
+
+### Ticket: Projection 3
+
+#### Problem 3
+
+##### User Story 3
+
+"As a user, I'd like to be able to search movies by cast members, genre, or perform a text search of the plot summary, full plot, and title."
+
+##### Task 3
+
+For this ticket, you will need to modify the method *genreSearchQuery in moviesDAO.js* to allow the following movie search criteria:
+
+* *genres*: finds movies that include any of the wanted genres.
+
+The methods for *text* and *cast* searches are already implemented:
+
+* *textSearchQuery* : performs a text search in the movies collection
+* *castSearchQuery*: finds movies that include any of the specified cast
+
+You just need to construct the query in *genreSearchQuery* that queries the *movies* collection by genre. This method should project all document fields.
+
+A text index was created for you when you restored the collections with *mongorestore*, so these queries will be performant once they are implemented.
+
+*Hint*: Check the implementation of similar formats of search criteria - the *genres* query should be similar.
+
+##### MFlix Functionality 3
+
+Once you complete this ticket, the UI will allow movie searches by members of the *cast, movie genres, movie title, and plot* summary.
+
+##### Testing and Running the Application 3
+
+Make sure to look at the tests in *text_subfield.test.js* to understand what is expected.
+
+### Answer 3
+
+```javascript
+/**
+   * Finds and returns movies originating from one or more countries.
+   * Returns a list of objects, each object contains a title and an _id.
+   * @param {string[]} countries - The list of countries.
+   * @returns {Promise<CountryResult>} A promise that will resolve to a list of CountryResults.
+   */
+  static async getMoviesByCountry(countries) {
+    let cursor
+    try {
+      // TODO Ticket: Projection
+      // Find movies matching the "countries" list, but only return the title
+      // and _id. Do not put a limit in your own implementation, the limit
+      // here is only included to avoid sending 46000 documents down the
+      // wire.
+      cursor = await movies.find(
+        { countries: {'$in': countries} },
+        { projection: { title: 1, _id: 1 } }
+      )//.limit(1)
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return []
+    }
+
+    return cursor.toArray()
+  }
 ```
