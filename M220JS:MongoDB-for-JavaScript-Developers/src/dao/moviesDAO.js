@@ -89,7 +89,7 @@ export default class MoviesDAO {
    * @returns {QueryParams} The QueryParams for text search
    */
   static textSearchQuery(text) {
-    const query = { $text: { $search: text } }
+    const query = { $text: { $search: text } } 
     const meta_score = { $meta: "textScore" }
     const sort = [["score", meta_score]]
     const project = { score: meta_score }
@@ -129,7 +129,7 @@ export default class MoviesDAO {
 
     // TODO Ticket: Text and Subfield Search
     // Construct a query that will search for the chosen genre.
-    const query = {}
+    const query = {genres: {$in: searchGenre }}
     const project = {}
     const sort = DEFAULT_SORT
 

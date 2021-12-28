@@ -633,28 +633,57 @@ Make sure to look at the tests in *text_subfield.test.js* to understand what is 
 
 ```javascript
 /**
-   * Finds and returns movies originating from one or more countries.
-   * Returns a list of objects, each object contains a title and an _id.
-   * @param {string[]} countries - The list of countries.
-   * @returns {Promise<CountryResult>} A promise that will resolve to a list of CountryResults.
+   * Finds and returns movies matching a given text in their title or description.
+   * @param {string} text - The text to match with.
+   * @returns {QueryParams} The QueryParams for text search
    */
-  static async getMoviesByCountry(countries) {
-    let cursor
-    try {
-      // TODO Ticket: Projection
-      // Find movies matching the "countries" list, but only return the title
-      // and _id. Do not put a limit in your own implementation, the limit
-      // here is only included to avoid sending 46000 documents down the
-      // wire.
-      cursor = await movies.find(
-        { countries: {'$in': countries} },
-        { projection: { title: 1, _id: 1 } }
-      )//.limit(1)
-    } catch (e) {
-      console.error(`Unable to issue find command, ${e}`)
-      return []
-    }
+  static textSearchQuery(text) {
+    const query = { $text: { $search: text } } 
+    const meta_score = { $meta: "textScore" }
+    const sort = [["score", meta_score]]
+    const project = { score: meta_score }
 
-    return cursor.toArray()
+    return { query, project, sort }
   }
+
+  /**
+   * Finds and returns movies including one or more cast members.
+   * @param {string[]} cast - The cast members to match with.
+   * @returns {QueryParams} The QueryParams for cast search
+   */
+  static castSearchQuery(cast) {
+    const searchCast = Array.isArray(cast) ? cast : cast.split(", ")
+
+    const query = { cast: { $in: searchCast } }
+    const project = {}
+    const sort = DEFAULT_SORT
+
+    return { query, project, sort }
+  }
+
+/**
+   * Finds and returns movies matching a one or more genres.
+   * @param {string[]} genre - The genres to match with.
+   * @returns {QueryParams} The QueryParams for genre search
+   */
+  static genreSearchQuery(genre) {
+    /**
+    Ticket: Text and Subfield Search
+
+    Given an array of one or more genres, construct a query that searches
+    MongoDB for movies with that genre.
+    */
+
+    const searchGenre = Array.isArray(genre) ? genre : genre.split(", ")
+
+    // TODO Ticket: Text and Subfield Search
+    // Construct a query that will search for the chosen genre.
+    // const query = {}?
+    const query = {genres: {$in: searchGenre }} // Answer
+    const project = {}
+    const sort = DEFAULT_SORT
+
+    return { query, project, sort }
+  }
+
 ```
