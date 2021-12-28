@@ -698,3 +698,70 @@ In this chapter, we'll learn why some *complex queries* are not possible with th
 As far as *mflix* is concerned, the application's functionality will grow immensely in this chapter. *New users* will be able to join the site, *update their preferences*, and leave *reviews* on the *movies* they feel strongly about. We'll even allow *users* to *edit or remove* their own *reviews*, but make sure they can't mess with anyone else's. All told, this is a dynamite chapter designed to make you comfortable *writing mflix data to Mongo*.
 
 At the end of the chapter, *mflix users* should be able to not only read about their *favorite movies*, but actually create a community on the site.
+
+### Cursor Methods and Aggregation Equivalents
+
+Welcome back. In this lesson, we'll discuss the methods we can call against *MongoDB cursors* and the same actions that we could perform in *aggregation pipeline*.
+
+```javascript
+test("Can limit the number of results returned by a cursor", async () => {
+    /**
+     * We're looking for movies that Sam Raimi directed, but we don't need ALL
+     * the movies he directed - we only want a couple of them.
+     *
+     * Because Sam Raimi directed more than 2 movies in this collection, the
+     * .limit(2) will return only 2 results. Similarly, .limit(10) will only
+     * return 10 results, and so on.
+     */
+    const limitedCursor = movies
+      .find({ directors: "Sam Raimi" }, { _id: 0, title: 1, cast: 1 })
+      .limit(2)
+
+    // expect this cursor to contain exactly 2 results
+    expect((await limitedCursor.toArray()).length).toEqual(2)
+  })
+```
+
+In this example, we're looking for *movies* that were directed by *Sam Raimi*, but we don't need all of the *movies* that he directed. In fact, we only want two of them. The way that we limit the number of results that are returned by a *cursor* is with this *.limit* method. We call the *.limit* immediately after the *.find*. And we specify an integer value for the number of documents that we want back in the *cursor* so that when we do iterate through the *cursor*, we can be sure that there are no more than *two documents* in it.
+
+We can perform the same action in aggregation using a dollar limit stage in our pipeline.
+
+And we pass the same integer value that represents the number of documents we want back in the *cursor*.
+
+In this example, we want the documents and the *cursor* to be sorted.
+
+Using .sort or the aggregation equivalent that we'll cover in a minute is nice, because it sorts documents on the server side so that on the client side, we can treat the *cursor* like it's already sorted.
+
+In this case, we're still looking for *movies* that were directed by *Sam Raimi*.
+
+But this time we're going to sort them by year.
+
+The 1 here denotes ascending order.
+
+So the first movie he directed will appear first in our *cursor*, and his latest project will appear last.
+
+And here we can verify that the movies in our *cursor* had been sorted in ascending order on year.
+
+So in aggregation we perform the same action with $sort stage, sorting our results on year in ascending order.
+
+But we've passed our sort key and direction as a key value pair, as opposed to a list of lists.
+
+So the last scenario we're going to cover in this lesson is skipping documents in a cursor, which we specify with an integer value.
+
+However, skipping only really makes sense when the results are sorted, because otherwise we're not really sure which documents were skipping over.
+
+So here, we've sorted on year in ascending order and then skipped the first five documents.
+
+What this does is skip the five oldest movies he directed and only returns his most recent movies.
+
+And here we can verify that the cursor using skip is identical to the one that didn't use skip, but used slice to remove the first five elements.
+
+So again, this is just the difference between offloading work to the server and doing that work on the client side.
+
+To do the same with aggregation, we add $skip stage to our pipeline and then specify the number of documents that we want to skip.
+
+So just to recap, we covered the three basic methods we can perform against cursors and MongoDB-- limit, sort, and skip.
+
+We've also shown that we can chain them together if we need to use more than one.
+
+If we're using the aggregation framework, we can perform the same three actions with these three stages in a pipeline.
