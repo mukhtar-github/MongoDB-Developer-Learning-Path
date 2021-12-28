@@ -685,5 +685,16 @@ Make sure to look at the tests in *text_subfield.test.js* to understand what is 
 
     return { query, project, sort }
   }
-
 ```
+
+## Chapter 2: User-Facing Backend
+
+### Introduction to Chapter 2
+
+Hello and welcome to Chapter 2 of the *M220 Developer Course*. I hope you've had success developing the *mflix application* into a *MongoDB database* client. Setting up the *driver to read data from Mongo into your application* is fundamental. And I hope you've enjoyed building that crucial piece of infrastructure. Now that we do have a connection from *mflix to Mongo*, we can start really leveraging the *driver* to create a more functional and durable *backend*.
+
+In this chapter, we'll learn why some *complex queries* are not possible with the *query language* alone and how the *aggregation framework* can actually help us build these *queries*. We'll start using the *driver* to *write data* to *MongoDB*. But not all those *writes* are created equal. We'll explore the nature of these *writes* to determine which are critical to our application and then use the *driver* to increase the durability of those *writes*.
+
+As far as *mflix* is concerned, the application's functionality will grow immensely in this chapter. *New users* will be able to join the site, *update their preferences*, and leave *reviews* on the *movies* they feel strongly about. We'll even allow *users* to *edit or remove* their own *reviews*, but make sure they can't mess with anyone else's. All told, this is a dynamite chapter designed to make you comfortable *writing mflix data to Mongo*.
+
+At the end of the chapter, *mflix users* should be able to not only read about their *favorite movies*, but actually create a community on the site.
