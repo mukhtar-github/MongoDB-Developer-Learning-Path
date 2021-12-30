@@ -970,97 +970,46 @@ Make sure you look at the tests in *paging.test.js* to look at what is expected.
 
 ### Basic Aggregation
 
-So in this lesson, we're going to briefly cover the Aggregation framework in MongoDB.
+So in this lesson, we're going to briefly cover the *Aggregation framework in MongoDB*. We're going to use the *Aggregation builder in Compass* to export this pipeline to the language of our choice. So the first thing to know about *Aggregation in MongoDB* is that *it's a pipeline composed of one or more stages*. And within each stage, we define expressions that evaluate and transform the data at that particular stage. To use an analogy, documents flow through the pipeline, sort of like the widgets do on a factory conveyor belt. Each stage is like an assembly station.
 
-We're going to use the Aggregation builder in Compass to export this pipeline to the language of our choice.
+Documents enter, some work is performed, and then some output is produced that gets piped in as the input to the following stage. So, we have a stage - ($match) that filters out the colors we don't want. Then we have a stage - ($project) to transform the shapes. And then we have a stage - ($group) that collects all input and gives us a ratio of the colors. So each one of those stages in the pipeline used expressions. And at their core, expressions are functions.
 
-So the first thing to know about Aggregation in MongoDB is that it's a pipeline composed of one or more stages.
+So here we're going to take a look at the *add function* in three different programming languages, as well as the *Aggregation framework*.
 
-And within each stage, we define expressions that evaluate and transform the data at that particular stage.
+```python
+def add(a, b):
+  return a + b
+```
 
-To use an analogy, documents flow through the pipeline, sort of like the widgets do on a factory conveyor belt.
+So here it is in *Python* -- simple function, has two inputs, and returns the sum of those two inputs.
 
-Each stage is like an assembly station.
+```java
+static <T extends Number> double add(T a, T b) {
+  return a.doubleValue() + b.doubleValue();
+}
+```
 
-Documents enter, some work is performed, and then some output is produced that gets piped in as the input to the following stage.
+So here in *Java*, we have a little more *strict typing*. So we've just specified that the type of each of our input has to extend this number interface, which is to say that we can add the two inputs. But it's more or less the same function.
 
-So in this example, we have a stage that filters out the colors we don't want.
+```javascript
+function add(a, b) {
+  return a + b
+}
+```
 
-Then we have a stage to transform the shapes.
+And here it is in *JavaScript*. It's about as short as it is in *Python*, but the syntax looks a little bit like *Java*.
 
-And then we have a stage that collects all input and gives us a ratio of the colors.
+```javascript
+{ "$add": ["$a", "$b"] }
+```
 
-So each one of those stages in the pipeline used expressions.
+So now, here is the *add function* in *aggregation*. Essentially it's this *add expression*, to which we pass an *array of the values* that we want to *sum up*. *So all expressions and stages in the Aggregation framework will have the dollar sign before them*. And the *dollar sign* is just how we refer to *variables within the expression*. We have a course that dives much more deeply into *Aggregation*, covering *syntax and semantics at almost every stage*. You can find more by looking at the lesson handout. Also included is a link to the *Aggregation* quick reference.
 
-And at their core, expressions are functions.
+So now, let's jump into *Compass* and start building some *Aggregations*. So here I've just opened up *Compass and connected to my Atlas cluster*. Currently I'm connected to the *movie's collection on the MFlix database*. And I'm using the *Aggregations tab* so we can write a *pipeline* against the *movies collection*. The first stage we're going to add is a *match stage* to only pick up *movies that were directed by Sam Raimi*. The way that we're going to do that is by specifying the *field and the value* that we want.
 
-So here we're going to take a look at the add function in three different programming languages, as well as the Aggregation framework.
+And we can see this is only returning movies to us that have *Sam Raimi as a director in them*. So the way the *match stage* works is actually very interesting and somewhat subtle. So here the *director's field* actually has an *array* as its *value*. And that *array* has all the *directors* for that specific movie. But we only need to specify the one that we want to *match* against, and it will actually parse the *array* out for us.
 
-So here it is in Python-- simple function, has two inputs, and returns the sum of those two inputs.
-
-So here in Java, we have a little more strict typing.
-
-So we've just specified that the type of each of our input has to extend this number interface, which is to say that we can add the two inputs.
-
-But it's more or less the same function.
-
-And here it is in JavaScript.
-
-It's about as short as it is in Python, but the syntax looks a little bit like Java.
-
-So now, here is the add function in aggregation.
-
-Essentially it's this add expression, to which we pass an array of the values that we want to sum up.
-
-So all expressions and stages in the Aggregation framework will have this dollar sign before them.
-
-And the dollar sign is just how we refer to variables within the expression.
-
-We have a course that dives much more deeply into Aggregation, covering syntax and semantics at almost every stage.
-
-You can find more by looking at the lesson handout.
-
-Also included is a link to the Aggregation quick reference.
-
-So now, let's jump into Compass and start building some Aggregations.
-
-So here I've just opened up Compass and connected to my Atlas cluster.
-
-Currently I'm connected to the movie's collection on the MFlix database.
-
-And I'm using the Aggregations tab so we can write a pipeline against the movies collection.
-
-The first stage we're going to add is a match stage to only pick up movies that were directed by Sam Raimi.
-
-The way that we're going to do that is by specifying the field and the value that we want.
-
-And we can see this is only returning movies to us that have Sam Raimi as a director in them.
-
-So the way the match stage works is actually very interesting and somewhat subtle.
-
-So here the director's field actually has an array as its value.
-
-And that array has all the directors for that specific movie.
-
-But we only need to specify the one that we want to match against, and it will actually parse the array out for us.
-
-So now let's add another stage to this pipeline.
-
-We're going to try to figure out the average IMDb rating for all the movies that Sam Raimi has directed.
-
-Just going to add a new stage here.
-
-So here's a project stage in our pipeline.
-
-This is going to essentially choose which fields we want to display and suppress from the previous stage in the pipeline.
-
-I don't really care about the underscore ID in this case.
-
-So I'm gonna say I don't want it with a zero.
-
-I do want the title of the movie.
-
-And I need the IMDb rating in order to find the average.
+So now let's add another stage to this *pipeline*. We're going to try to figure out the average *IMDb rating* for all the movies that *Sam Raimi has directed*. Just going to add a new stage here. So here's a *project stage* in our pipeline. This is going to essentially choose which fields we want to display and suppress from the previous stage in the pipeline. I don't really care about the *underscore ID* in this case. So I'm gonna say I don't want it with a zero. I do want the *title of the movie*. And I need the *IMDb rating* in order to find the average.
 
 Now because rating is contained within an IMDb object, we have to use dot notation in order to project that field.
 
@@ -1068,9 +1017,9 @@ And when we use dot notation, we have to just surround this in quotes.
 
 And it looks like this did what we wanted it to do.
 
-We only got back the title and the IMDb rating for each movie.
+We only got back the title and the *IMDb rating* for each movie.
 
-So now that we have all the IMDb ratings, we can find the average.
+So now that we have all the *IMDb rating*s, we can find the average.
 
 And to do so, we're going to use a group stage.
 
