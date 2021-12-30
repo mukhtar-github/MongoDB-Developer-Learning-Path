@@ -1009,32 +1009,100 @@ So now, let's jump into *Compass* and start building some *Aggregations*. So her
 
 And we can see this is only returning movies to us that have *Sam Raimi as a director in them*. So the way the *match stage* works is actually very interesting and somewhat subtle. So here the *director's field* actually has an *array* as its *value*. And that *array* has all the *directors* for that specific movie. But we only need to specify the one that we want to *match* against, and it will actually parse the *array* out for us.
 
-So now let's add another stage to this *pipeline*. We're going to try to figure out the average *IMDb rating* for all the movies that *Sam Raimi has directed*. Just going to add a new stage here. So here's a *project stage* in our pipeline. This is going to essentially choose which fields we want to display and suppress from the previous stage in the pipeline. I don't really care about the *underscore ID* in this case. So I'm gonna say I don't want it with a zero. I do want the *title of the movie*. And I need the *IMDb rating* in order to find the average.
+```javascript
+//$match stage
+/**
+ * query: The query in MQL.
+ */
+{
+  directors: "Sam Raimi"
+}
+```
 
-Now because rating is contained within an IMDb object, we have to use dot notation in order to project that field.
+So now let's add another stage to this *pipeline*. We're going to try to figure out the *average IMDb rating* for all the movies that *Sam Raimi has directed*. Just going to add a new stage here. So here's a *project stage* in our pipeline. This is going to essentially choose *which fields we want to display and suppress from the previous stage in the pipeline*. I don't really care about the *underscore ID* in this case. So I'm gonna say *I don't want it with a zero*. I do want the *title of the movie*. And I need the *IMDb rating* in order to find the *average*.
 
-And when we use dot notation, we have to just surround this in quotes.
+```javascript
+// $project stage
+/**
+ * specifications: The fields to
+ *   include or exclude.
+ */
+{
+  _id: 0,
+  title: 1,
+  "imdb.rating": 1
+}
 
-And it looks like this did what we wanted it to do.
+// output
+title:"The Evil Dead"
+imdb:Object
+rating:7.6
+```
 
-We only got back the title and the *IMDb rating* for each movie.
+*Now, because rating is contained within an IMDb object, we have to use dot notation in order to project that field. And when we use dot notation, we have to just surround this in quotes*. And it looks like this did what we wanted it to do. We only got back the *title and the IMDb rating* for each movie. So now that we have all the *IMDb rating*s, we can find the *average*. And to do so, we're going to use a *group stage*.
 
-So now that we have all the *IMDb rating*s, we can find the average.
+So the *group stage* can be used for a lot of different purposes, but the way we're using it right now is to find the *average of all of the movies Sam Raimi directed*. We've already *matched all the movies that Sam Raimi directed*, so we don't need to *transform the input*. But we really do want to find the *average of all the movies*. So I've specified a *0 as my underscore ID* here.
 
-And to do so, we're going to use a group stage.
+```javascript
+// $group stage
+/**
+ * _id: The id of the group.
+ * fieldN: The first field name.
+ */
+{
+  _id: 0,
+  avg_rating: {
+    "$avg": "$imdb.rating"
+  }
+}
 
-So the group stage can be used for a lot of different purposes, but the way we're using it right now is to find the average of all of the movies Sam Raimi directed.
+// output
+_id:0
+avg_rating:6.946153846153846
+```
 
-We've already matched all the movies that Sam Raimi directed, so we don't need to transform the input.
+*And as the output of this stage, which is the last stage in our pipeline, we see the grouping criteria, which was none, and the average rating value, which was 6.946*. "Way to go, *Sam Raimi*". So just to recap -- *Aggregations in MongoDB are pipelines that are composed of one or more stages. And each stage uses functions that we write in the Aggregation syntax to transform and evaluate the data*.
 
-But we really do want to find the average of all the movies.
+### Ticket: Faceted Search
 
-So I've specified a 0 as my underscore ID here.
+#### Problem 5
 
-And as the output of this stage, which is the last stage in our pipeline, we see the grouping criteria, which was none, and the average rating value, which was 6.86.
+##### User Story 5
 
-Way to go, Sam Raimi.
+"As a user, I want to be able to *filter cast search results by one facet, metacritic rating*."
 
-So just to recap-- Aggregations in MongoDB are pipelines that are composed of one or more stages.
+##### Task 5
 
-And each stage uses functions that we write in the Aggregation syntax to transform and evaluate the data.
+For this Ticket, you'll be required to implement one method in *moviesDAO.js, facetedSearch*, so the MFlix application can perform *faceted searches*.
+
+##### MFlix Functionality 5
+
+Once the change is implemented for this ticket, the user interface will reflect this change when you search for cast member like "Tom Hanks", then additional search parameters will be added as shown below:
+
+![facetedSearchScreenshot](https://university-courses.s3.amazonaws.com/m220/facetedSearchScreenshot.png)
+
+What is a Faceted Search?
+
+Faceted search is a way of narrowing down search results as search parameters are added. For example, let's say MFlix allows users to filter movies by a rating from 1 to 10, but Kate Winslet has only acted in movies that have a rating of 6 or higher.
+
+If we didn't specify any other search parameters, MFlix would allow us to choose a rating between 1 and 10. But if we first search for Kate Winslet, MFlix would only let us choose a rating between 6 and 10, because none of the movie documents in the result set have a rating below 6.
+
+If you're curious, you can read more about Faceted Search here.
+
+Faceted Search in MFlix
+
+Faceted searches on the MFlix site cannot be supported with the basic search method getMovies, because that method uses the Mongo query language. For faceted searches, the application must use the Aggregation Framework.
+
+The method facetedSearch uses the Aggregation Framework, and the individual stages in the pipeline have already been completed. Follow instructions in the moviesDAO.js file to append the required stages to the pipeline object.
+
+##### Testing and Running the Application 4
+
+Make sure you look at the tests in *paging.test.js* to look at what is expected.
+
+### Answer 5
+
+```javascript
+
+
+    
+```
