@@ -1095,14 +1095,100 @@ Faceted searches on the MFlix site cannot be supported with the basic search met
 
 The method facetedSearch uses the Aggregation Framework, and the individual stages in the pipeline have already been completed. Follow instructions in the moviesDAO.js file to append the required stages to the pipeline object.
 
-##### Testing and Running the Application 4
+##### Testing and Running the Application 5
 
-Make sure you look at the tests in *paging.test.js* to look at what is expected.
+Look in the *facets.test.js* file in your test directory to view the unit tests for this ticket.
 
 ### Answer 5
 
 ```javascript
+ /**
+   *
+   * @param {Object} filters - The search parameter to use in the query. Comes
+   * in the form of `{cast: { $in: [...castMembers]}}`
+   * @param {number} page - The page of movies to retrieve.
+   * @param {number} moviesPerPage - The number of movies to display per page.
+   * @returns {FacetedSearchReturn} FacetedSearchReturn
+   */
+  static async facetedSearch({
+    filters = null,
+    page = 0,
+    moviesPerPage = 20,
+  } = {}) {
+    if (!filters || !filters.cast) {
+      throw new Error("Must specify cast members to filter by.")
+    }
+    const matchStage = { $match: filters }
+    const sortStage = { $sort: { "tomatoes.viewer.numReviews": -1 } }
+    const countingPipeline = [matchStage, sortStage, { $count: "count" }]
+    const skipStage = { $skip: moviesPerPage * page }
+    const limitStage = { $limit: moviesPerPage }
+    const facetStage = {
+      $facet: {
+        runtime: [
+          {
+            $bucket: {
+              groupBy: "$runtime",
+              boundaries: [0, 60, 90, 120, 180],
+              default: "other",
+              output: {
+                count: { $sum: 1 },
+              },
+            },
+          },
+        ],
+        rating: [
+          {
+            $bucket: {
+              groupBy: "$metacritic",
+              boundaries: [0, 50, 70, 90, 100],
+              default: "other",
+              output: {
+                count: { $sum: 1 },
+              },
+            },
+          },
+        ],
+        movies: [
+          {
+            $addFields: {
+              title: "$title",
+            },
+          },
+        ],
+      },
+    }
 
+    /**
+    Ticket: Faceted Search
 
-    
+    Please append the skipStage, limitStage, and facetStage to the queryPipeline
+    (in that order). You can accomplish this by adding the stages directly to
+    the queryPipeline.
+
+    The queryPipeline is a Javascript array, so you can use push() or concat()
+    to complete this task, but you might have to do something about `const`.
+    */
+
+    const queryPipeline = [
+      matchStage,
+      sortStage,
+      skipStage,//added
+      limitStage,//added
+      facetStage//added
+      // TODO Ticket: Faceted Search
+      // Add the stages to queryPipeline in the correct order.
+    ]
+
+    try {
+      const results = await (await movies.aggregate(queryPipeline)).next()
+      const count = await (await movies.aggregate(countingPipeline)).next()
+      return {
+        ...results,
+        ...count,
+      }
+    } catch (e) {
+      return { error: "Results too large, be more restrictive in filter" }
+    }
+  }   
 ```
