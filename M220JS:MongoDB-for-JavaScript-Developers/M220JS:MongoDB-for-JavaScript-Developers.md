@@ -1192,3 +1192,131 @@ Look in the *facets.test.js* file in your test directory to view the unit tests 
     }
   }   
 ```
+
+### Basic Writes
+
+In this lesson, we'll discuss how to perform write operations in MongoDB.
+
+The C and U in Create, Read, Update, and Delete.
+
+The first method we'll talk about is insertOne.
+
+InsertOne inserts one document into the database.
+
+Here, I'm performing some global setup and tear down.
+
+Let's insert our document with the title of Fortnite and the year of 2018.
+
+When we insert our document, we get an insertOneWriteOpResult.
+
+Now that's a mouthful, but don't be worried.
+
+One of the useful properties is Result on this object, and in the Result object, we have two keys that we need to pay attention to, N and OK.
+
+N is the total number of documents inserted, and OK means the database responded that the command executed correctly.
+
+Here, I'm peeling off N and OK using object destructuring from the insert.result object.
+
+And then I expect N and OK to equal 1, and OK 1 because I am inserting one document.
+
+The insert result also contains an insert count key, which should be the same as N above.
+
+The last property we'll talk about is the insertedId.
+
+If we don't specify an _id when we write to the database, MongoDB will insertOne for us and return this to us here.
+
+So here, I'm expecting that the insertResult.insertedId won't be undefined, and I'm logging out the insertedId that was given to the document we wrote.
+
+Here, let's ensure that we can find the document we just inserted with the insertedId we received.
+
+So I specify that the title and year are the result of the object when we find one with the _id of the returned Id that we just got, and I expect that the title and year should equal Fortnite and 2018.
+
+Our tests are passing, and here, we can see the insertedId that was assigned to the object we wrote.
+
+What if we tried to insert a document with the same _id.
+
+Here, we're going to try and insert a document with the same _id, but a different title and a year.
+
+We put this in a try and catch the error, and we'll expect E to not be undefined.
+
+We do expect an error, and we expect the error message to contain the error code E11000 duplicate key error.
+
+Let's check this out.
+
+All the assertions passed for our first test, so we know that insertOne is working correctly.
+
+Now, the insertOne method is useful, but what if we want to insert more than one document at a time?
+
+The preferred method for that is insertMany.
+
+Here, I've defined an array of years correlating to the year of release for Mega Man games.
+
+And here, I'm mapping over that array and creating a document where we get the title and the year.
+
+So let's insert these results in the database here.
+
+Now, just like insertOne, we'll get a result object back that has information like the number of documents inserted and the inserted _ids.
+
+We also expect that the insertResult.insertedIds should have 10 values.
+
+Let's go ahead and log those out and see what they were.
+
+Great.
+
+I can see all of the _ids that were automatically created for us by MongoDB.
+
+Inserting is a very useful write operation, but it's also very simple.
+
+It inserts new data into the database without regard for what the new data is or what's already in the database, as long as we don't specify a duplicate _id or some other value that has the unique index on it.
+
+So what happens if we want to insert a document but we're not sure if it's already in the database?
+
+We could issue a find and check to see if it's there, but that's inefficient when we have the ability to upsert.
+
+This here is an upsert.
+
+We use the update method instead of the Insert method.
+
+The first argument to update is the query, so we're going to look to update a document where the title is Call of Duty.
+
+This portion here is the update itself, where we set title Call of Duty and year 2003.
+
+And this is the options document, the third parameter to update.
+
+We specified upsert true, so if the query doesn't find a document to update, it will be written instead as a new document.
+
+Now, we've controlled all of the data that's gone into this collection, so we don't expect any documents to have been modified.
+
+So here, we have an expect that the upsertResult.result.nModified is going to be zero.
+
+And scrolling down a little, we'll go ahead and console log out the upserted key of the result object.
+
+And that key contains an array that holds an index information and the _id of the upserted or freshly written document.
+
+So what if the document existed?
+
+Here, we have another update operation where we search for a document with the title Call of Duty.
+
+We know it was just inserted.
+
+This time, we'll update the year to 2018.
+
+Next year, we'll have to update it to 2019 based on the Call of Duty release schedule.
+
+Lastly, we'll specify upsert true.
+
+Then, we'll console log out the result of that update operation, and expect that upsertResult.result.nModified is one.
+
+We see a lot of information printed out, but if we scroll up through this output, we can see nModified is one, and there is no upsert key in this object.
+
+Upserts are useful, especially when we can make a write operation generic enough that updating or inserting should give the same result to our application.
+
+This is how some websites handle sign up and updating a client account within the same operation.
+
+So let's summarize.
+
+The two idiomatic methods for inserting documents are insertOne and insertMany.
+
+Trying to insert a duplicate _id will fail.
+
+And as an alternative to inserting a document, an upsert in an update method can be used instead.
