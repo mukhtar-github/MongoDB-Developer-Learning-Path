@@ -1195,35 +1195,83 @@ Look in the *facets.test.js* file in your test directory to view the unit tests 
 
 ### Basic Writes
 
-In this lesson, we'll discuss how to perform write operations in MongoDB.
+In this lesson, we'll discuss how to perform *write operations in MongoDB*. The *C* and *U* in *Create, Read, Update, and Delete*. The first method we'll talk about is *insertOne*. *InsertOne inserts one document into the database*. Here, I'm performing some global setup and tear down.
 
-The C and U in Create, Read, Update, and Delete.
+```javascript
+import { ObjectId } from "mongodb"
+describe("Basic Writes", () => {
+  /**
+   * In this lesson, we'll discuss how to perform write operations in MongoDB,
+   * the "C" and "U" in Create, Read, Update, Delete
+   *
+   * The first method we'll talk about is insertOne. insertOne inserts one
+   * document into the database.
+   */
 
-The first method we'll talk about is insertOne.
+//performing some global
+  let videoGames
+  // for this lesson we're creating a new collection called videoGames
+  beforeAll(async () => {
+    videoGames = await global.mflixClient
+      .db(process.env.MFLIX_NS)
+      .collection("videoGames")
+  })
 
-InsertOne inserts one document into the database.
+  //and tear down
+  // and after all the tests run, we'll drop this collection
+  afterAll(async () => {
+    await videoGames.drop()
+  })
+```
 
-Here, I'm performing some global setup and tear down.
+Let's insert our document with the *title of Fortnite* and the *year of 2018*. When we insert our document, we get an *insertOneWriteOpResult*. Now that's a mouthful, but don't be worried. One of the useful properties is Result on this object, and in the Result object, we have two keys that we need to pay attention to, *N* and *OK*. *N* is the total number of documents inserted, and *OK* means the database responded that the command executed correctly.
 
-Let's insert our document with the title of Fortnite and the year of 2018.
+```javascript
+it("insertOne", async () => {
+    /**
+     * Let's insert a document with the title Fortnite and a year of 2018
+     */
+    let insertResult = await videoGames.insertOne({
+      title: "Fortnite",
+      year: 2018,
+    })
+    // when we insert a document, we get an insertOneWriteOpResult
+    // one of its properties is result. n is the total documents inserted
+    // and ok means the database responded that the command executed correctly
+    let { n, ok } = insertResult.result
+    expect({ n, ok }).toEqual({ n: 1, ok: 1 })
+    // it also contains an insertedCount key, which should be the same as n
+    // above
+    expect(insertResult.insertedCount).toBe(1)
+    // the last property we'll talk about on it is insertedId
+    // if we don't specify an _id when we write to the database, MongoDB will
+    // insert one for us and return this to us here
+    expect(insertResult.insertedId).not.toBeUndefined()
+    console.log("inserted _id", insertResult.insertedId)
 
-When we insert our document, we get an insertOneWriteOpResult.
+    // let's ensure that we can find document we just inserted with the
+    // insertedId we just received
+    let { title, year } = await videoGames.findOne({
+      _id: ObjectId(insertResult.insertedId),
+    })
+    expect({ title, year }).toEqual({ title: "Fortnite", year: 2018 })
 
-Now that's a mouthful, but don't be worried.
+    // and what if we tried to insert a document with the same _id?
+    try {
+      let dupId = await videoGames.insertOne({
+        _id: insertResult.insertedId,
+        title: "Foonite",
+        year: 2099,
+      })
+    } catch (e) {
+      expect(e).not.toBeUndefined()
+      // we get an error message stating we've tried to insert a duplicate key
+      expect(e.errmsg).toContain("E11000 duplicate key error collection")
+    }
+  })
+```
 
-One of the useful properties is Result on this object, and in the Result object, we have two keys that we need to pay attention to, N and OK.
-
-N is the total number of documents inserted, and OK means the database responded that the command executed correctly.
-
-Here, I'm peeling off N and OK using object destructuring from the insert.result object.
-
-And then I expect N and OK to equal 1, and OK 1 because I am inserting one document.
-
-The insert result also contains an insert count key, which should be the same as N above.
-
-The last property we'll talk about is the insertedId.
-
-If we don't specify an _id when we write to the database, MongoDB will insertOne for us and return this to us here.
+Here, I'm peeling off *N* and *OK* using *object destructuring* from the *insertResult.result* object. And then I expect *N* and *OK* to equal *1*, and *OK 1* because I am *inserting one document*. The *insert result* also contains an *insert count key*, which should be the same as *N* above. The last property we'll talk about is the *insertedId*. If we don't specify an *_id* when we write to the database, *MongoDB* will *insertOne* for us and return this to us here.
 
 So here, I'm expecting that the insertResult.insertedId won't be undefined, and I'm logging out the insertedId that was given to the document we wrote.
 
