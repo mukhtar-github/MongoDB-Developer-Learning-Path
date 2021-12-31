@@ -1588,34 +1588,10 @@ You can think of {w: majority} as a contract with the *client* that this *write*
 
 But there's no additional load on the server, so the *primary* can still perform the same number of *writes per second*. However, {w: majority} essentially guarantees to the *client* that a *write* will not be *rolled back during fail over*, because the *write* was committed to a *majority of nodes*. This is useful when some of our *writes* are vital to the success of the application. A common example of this is a *new user on a website*. These types of operations must succeed, because *without an account, the user can't really do anything else on the site*.
 
-So I just want to discuss one more write concern, w 0.
+So I just want to discuss one more *write concern, {w: 0}*. By now, you must have realized that when the value of *w is a number*, it's the *number of nodes* that must apply a write before the client receives an acknowledgment. We can pass any number here to the *w field*, but it will throw us an error if this number is higher than the total *number of nodes* in the set. Following that rule, when *w's 0*, *none of the nodes* in the set actually need to apply a *write* before the *client* gets acknowledgment.
 
-By now, you must have realized that when the value of w is a number, it's the number of nodes that must apply a write before the client receives an acknowledgment.
+This means that when we're {w: 0}, there's a chance that we get acknowledgment before any data has actually been written.So if the *server crashes*, we might lose a few *writes*. This type of *write* is referred to as a *fire and forget operation*, because it sends the *write* and doesn't really worry about the response. But this isn't entirely true, because the acknowledgment from a {w: 0} operation can also alert us to *network errors and socket exceptions*. So the *client* can implement some logic to figure out if the *write* was actually received by the database.
 
-We can pass any number here to the w field, but it will throw us an error if this number is higher than the total number of nodes in the set.
+In any case, *writing with {w: 0}* is very fast and can be useful for less important *writes* that occur frequently. For example, if an *internet of things* device is sending a ping to *Mango* every two minutes to report its status, it might be OK to speed up every write operation at the risk of losing a *few writes*.
 
-Following that rule, when w's 0, none of the nodes in the set actually need to apply a write before the client gets acknowledgment.
-
-This means that when we're w 0, there's a chance that we get acknowledgment before any data has actually been written.
-
-So if the server crashes, we might lose a few writes.
-
-This type of write is referred to as a fire and forget operation, because it sends the write and doesn't really worry about the response.
-
-But this isn't entirely true, because the acknowledgment from a w 0 operation can also alert us to network errors and socket exceptions.
-
-So the client can implement some logic to figure out if the write was actually received by the database.
-
-In any case, writing with w 0 is very fast and can be useful for less important writes that occur frequently.
-
-For example, if an internet of things device is sending a ping to Mango every two minutes to report its status, it might be OK to speed up every write operation at the risk of losing a few writes.
-
-So to recap, w 1 is the default write concern in Mongo, and it commits a write to one node before sending an acknowledgement back to the client.
-
-w majority will make sure the write was applied by a majority of the set before sending an acknowledgment back to the client.
-
-This means the application will have to wait a little longer for a response, but it should not have a performance impact so long as you have enough connections to the primary to handle your requests.
-
-w 0 does not commit the write at all, but sends an acknowledgement back to the client immediately.
-
-So there's a slightly higher chance that we lose data in the event of a primary going down.
+So to recap, {w: 1} is the default *write concern in Mongo*, and it *commits a write to one node* before sending an acknowledgement back to the *client*. {w: majority} will make sure the write was applied by a majority of the set before sending an acknowledgment back to the *client*. This means the application will have to wait a little longer for a response, but it should not have a performance impact so long as you have enough connections to the primary to handle your requests. {w: 0} does not commit the *write at all*, but sends an acknowledgement back to the *client* immediately. So there's a slightly higher chance that we *lose data* in the event of a primary going down.
