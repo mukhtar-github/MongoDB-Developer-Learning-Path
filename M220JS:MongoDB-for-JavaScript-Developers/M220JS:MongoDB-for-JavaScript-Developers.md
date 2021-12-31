@@ -1596,3 +1596,113 @@ This means that when we're {w: 0}, there's a chance that we get acknowledgment b
 In any case, *writing with {w: 0}* is very fast and can be useful for less important *writes* that occur frequently. For example, if an *internet of things* device is sending a ping to *Mango* every two minutes to report its status, it might be OK to speed up every write operation at the risk of losing a *few writes*.
 
 So to recap, {w: 1} is the default *write concern in Mongo*, and it *commits a write to one node* before sending an acknowledgement back to the *client*. {w: majority} will make sure the write was applied by a majority of the set before sending an acknowledgment back to the *client*. This means the application will have to wait a little longer for a response, but it should not have a performance impact so long as you have enough connections to the primary to handle your requests. {w: 0} does not commit the *write at all*, but sends an acknowledgement back to the *client* immediately. So there's a slightly higher chance that we *lose data* in the event of a primary going down.
+
+### Basic Updates
+
+All right, welcome back. So in this lesson, we'll discuss *updating documents with the Node.js driver*. There are two different *update operations* we can perform, *UpdateOne and UpdateMany*. These operations both return and *update result* which we will discuss as well. We can *update a single document in a collection with UpdateOne*. *UpdateOne* takes a *query predicate* to match a document, and *an object of one or more update operators* describing how exactly to *update* that document.
+
+```javascript
+it("Can update one document in a collection", async () => {
+    /**
+     * We can update a single document in a collection with updateOne().
+     * updateOne() takes a query predicate, to match a document, and a JSON
+     * object of one or more update operators, describing how to update that
+     * document.
+     *
+     * If the predicate matches more than one document, updateOne() will update
+     * the first document it finds in the collection. This may be unpredictable,
+     * so the query predicate we use should only match one document.
+     *
+     * In the following example, one of the theaters in our database moved
+     * location, down the street from its original address.
+     *
+     * This operation should only update one of the theaters in this collection,
+     * to change the address of that theater. It performs the following updates:
+     *
+     * Use $set to update the new address of this theater
+     * Use $inc to update the new geo coordinates of this theater
+     */
+
+    // when accessing a subdocument, we must use quotes
+    // for example, "location.address.street1" would fail without quotes
+    const oldTheaterAddress = await theaters.findOne({ theaterId: 8 })
+
+    // expect the address of this theater to be "14141 Aldrich Ave S"
+    expect(oldTheaterAddress.location.address.street1).toEqual(
+      "14141 Aldrich Ave S",
+    )
+    expect(oldTheaterAddress.location.geo.coordinates).toEqual([
+      -93.288039,
+      44.747404,
+    ])
+```
+
+If the predicate matches more than one document, *UpdateOne* will only *update* the first document it finds in the collection. This may be unpredictable, so the *query predicate* we use should only match one document. In this example, one of the theaters in our database moved location, down the street from its original address.
+
+Here, we're just pulling data on the movie theater that we're going to *update*, movie theater with theater ID 8, and verifying the street address and the geo coordinates are what we expect.
+
+So the *update* we perform has two different *update* operators.
+
+We use the $set operator to *update* the string representing the street address of this movie theater, and we use the $inc operator to increment, or in this case, decrement the integer values of this theater's geo coordinates.
+
+Using the *update* result, we find that the matched count was equal to one, which means that this predicate only matched one document.
+
+And the modified count is also equal to one, which makes sense given that we issued an UpdateOne command.
+
+We can also update multiple documents in a collection using UpdateMany.
+
+Like UpdateOne, UpdateMany takes a query predicate and an object containing one or more update operators.
+
+But unlike UpdateOne, UpdateMany will update any documents matching the query predicate.
+
+In this example, the state of Minnesota has relocated one of its zip codes from Minneapolis to the neighboring city of Bloomington.
+
+This operation should find all the movie theaters in that zip code and update the value of their city field to Bloomington.
+
+Here, we're just pulling the data that's currently in the database for all the theaters in this zip code and verifying that their street address has the city Minneapolis.
+
+In our UpdateMany operation, we use the same predicate as our Find statement above to find all the theaters in the zip code 55111, and then we use the $set operator to update their city to Bloomington.
+
+Here, the update result has a matched count equal to six.
+
+This means that six of the theaters in our collection have the zip code 55111.
+
+We also have a modified count equal to six, which means that all six of the theaters in this zip code have been updated to contain the city Bloomington.
+
+And we can verify that here.
+
+If we look for all the movies in the zip code, we can verify that they have the correct data.
+
+The last kind of update we're going to cover in this lesson is called an upsert, which is technically just a regular update, but with some special properties.
+
+Sometimes we want to update a document but we're not sure if it exists in the collection already.
+
+In these cases, we can use an upsert to update a document if it exists and insert it if it does not exist.
+
+In this example, we're not actually sure if this data exists in the collection, but we do want to make sure that there's a document in the collection that contains the correct data.
+
+We use the $set operator to make sure that if the document already exists, the updated document will contain all the correct fields.
+
+We also pass a new flag, upsert true.
+
+This way, if the document does not exist, meaning the predicate came up empty, the contents of the new theater doc will be used to create a new document.
+
+Using the update result, we can see that the matched count was equal to zero, which means that the predicate didn't match any documents.
+
+We can also see that the modified count was equal to zero which makes sense seeing as the predicate didn't match anything.
+
+So now, because the predicate didn't match any documents and we passed this upsert true flag, we can expect this upserted ID property will not be null.
+
+The upserted ID represents the underscore ID of the document inserted by this operation.
+
+Let's take a look.
+
+So now if I run this test, we get back an underscore ID which we could potentially use to find the document that we just inserted.
+
+So just to recap, in this lesson, we covered the two update commands in the Node.js driver, UpdateOne and UpdateMany.
+
+We pass a predicate to both, but UpdateOne will only update the first document that it matches, while UpdateMany will update all the documents it matches.
+
+We can also pass this upsert true flag to the update, which adds a bit of flexibility to the update.
+
+In case the predicate doesn't match anything, we can still make sure the updated data exists in our database.
