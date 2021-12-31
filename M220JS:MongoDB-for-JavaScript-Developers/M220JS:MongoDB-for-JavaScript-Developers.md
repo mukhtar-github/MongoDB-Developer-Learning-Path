@@ -1582,17 +1582,13 @@ It assumes that the *secondary nodes* will *replicate the data* sometime soon, b
 
 So now let's consider a different level of *write concern*. Our *shopping cart application* sends a *write statement* to the *primary node*, and the *primary* applies that *write* just like it did before. But this time, the *primary* waits before sending an acknowledgment back to the *client*. And what is it waiting for? Well, before sending an acknowledgment of the *write* back to the *client*, the *primary* will actually wait for one of the *secondary nodes to replicate the data*. When the *secondary* applies the *write*, it will send an acknowledgment back to the *primary* saying, hey, I applied this *write to my copy of the data*.
 
-Once the *primary* knows that in addition to it having applied the *write* itself, one of the secondaries has also applied the *write*, only then will it send an acknowledgment back to the *client*.
+Once the *primary* knows that in addition to it having applied the *write* itself, one of the secondaries has also applied the *write*, only then will it send an acknowledgment back to the *client*. This *write* was sent with {w: majority}, which means that the *client* isn't going to get an acknowledgment back from the driver until a *majority of nodes in the set have applied the write*. In this case, this is a *three-node set*, so we only needed *two of the nodes to apply the write*.
 
-This *write* was sent with w majority, which means that the *client* isn't going to get an acknowledgment back from the driver until a majority of nodes in the set have applied the *write*.
+You can think of {w: majority} as a contract with the *client* that this *write* will not be lost, even in the event of hosts going down.
 
-In this case, this is a three-node set, so we only needed two of the nodes to apply the *write*.
+If an application sends a *write with {w majority}* and gets an acknowledgment back for that *write*, it knows that even if the current *primary* were to go down, one of the secondaries in the set has also captured the write.
 
-You can think of w majority as a contract with the *client* that this *write* will not be lost, even in the event of hosts going down.
-
-If an application sends a *write* with w majority and gets an acknowledgment back for that *write*, it knows that even if the current *primary* were to go down, one of the secondaries in the set has also captured the write.
-
-So with w majority, the connection is going to wait for a majority of nodes to apply the write before sending an acknowledgment back to the *client*.
+So with {w majority}, the connection is going to wait for a majority of nodes to apply the write before sending an acknowledgment back to the *client*.
 
 For that reason, it takes a little longer and is subject to replication lag.
 
