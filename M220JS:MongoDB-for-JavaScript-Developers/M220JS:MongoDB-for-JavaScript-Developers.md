@@ -1315,11 +1315,7 @@ it("insertMany", async () => {
   })
 ```
 
-Now, the *insertOne* method is useful, but what if *we want to insert more than one document at a time*? The preferred method for that is *insertMany*. Here, I've defined an *array of years* correlating to the year of release for *Mega Man games*. And here, I'm mapping over that array and creating a document where we get the title and the year.
-
-So let's insert these results in the database here.
-
-Now, just like *insertOne*, we'll get a result object back that has information like the number of documents inserted and the inserted _ids.
+Now, the *insertOne* method is useful, but what if *we want to insert more than one document at a time*? The preferred method for that is *insertMany*. Here, I've defined an *array of years* correlating to the year of release for *megaManYears*. And here, I'm mapping over that array and creating a document where we get the title and the year. So let's insert these results in the database here. Now, just like *insertOne*, we'll get a result object back that has information like the number of *documents inserted* and the *inserted _ids*.
 
 We also expect that the insertResult.insertedIds should have 10 values.
 
