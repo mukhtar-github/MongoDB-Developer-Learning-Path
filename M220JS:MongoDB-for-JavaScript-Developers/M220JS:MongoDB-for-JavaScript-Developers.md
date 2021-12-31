@@ -1377,52 +1377,12 @@ Let's go ahead and log those out and see what they were. Great. I can see all of
 })
 ```
 
-We could issue a *find and check* to see if it's there, but that's inefficient when we have the ability to *upsert*.
+We could issue a *find and check* to see if it's there, but that's inefficient when we have the ability to *upsert*. This here is an *upsert*. We use the *update* method instead of the *Insert* method. The first argument to *update* is the query, so we're going to look to *update* a document where the *title is Call of Duty*. This portion here is the *update* itself, where we set *title  to Call of Duty and year  to 2003*. And this is the *upsert* document, the third parameter to *update*. We specified *upsert  to true*, so if the query doesn't find a document to *update*, it will be written instead as a new document.
 
-This here is an *upsert*.
+Now, we've controlled all of the data that's gone into this collection, so we don't expect any documents to have been modified. So here, we have an expect that the *upsertResult.result.nModified is going to be zero*. And scrolling down a little, we'll go ahead and *console log* out the *upserted key of the result object*. And that key contains an *array* that holds an *index information and the _id of the upserted or freshly written document*.
 
-We use the update method instead of the Insert method.
+So what if the document existed? Here, we have another *update* operation where we search for a document with the *title, Call of Duty*. We know it was just *inserted*. This time, we'll *update the year to 2018*. Next year, we'll have to *update it to 2019* based on the *Call of Duty* release schedule. Lastly, we'll specify *upsert true*. Then, we'll *console log* out the result of that *update* operation, and expect that *upsertResult.result.nModified is one*.
 
-The first argument to update is the query, so we're going to look to update a document where the title is Call of Duty.
+We see a lot of information printed out, but if we scroll up through this output, we can see *nModified is one*, and there is no *upsert key in this object*. *Upserts* are useful, especially when we can make a write operation generic enough that *updating or inserting* should give the same result to our application. *This is how some websites handle sign up and updating a client account within the same operation*.
 
-This portion here is the update itself, where we set title Call of Duty and year 2003.
-
-And this is the options document, the third parameter to update.
-
-We specified upsert true, so if the query doesn't find a document to update, it will be written instead as a new document.
-
-Now, we've controlled all of the data that's gone into this collection, so we don't expect any documents to have been modified.
-
-So here, we have an expect that the upsertResult.result.nModified is going to be zero.
-
-And scrolling down a little, we'll go ahead and console log out the upserted key of the result object.
-
-And that key contains an array that holds an index information and the _id of the upserted or freshly written document.
-
-So what if the document existed?
-
-Here, we have another update operation where we search for a document with the title Call of Duty.
-
-We know it was just inserted.
-
-This time, we'll update the year to 2018.
-
-Next year, we'll have to update it to 2019 based on the Call of Duty release schedule.
-
-Lastly, we'll specify upsert true.
-
-Then, we'll console log out the result of that update operation, and expect that upsertResult.result.nModified is one.
-
-We see a lot of information printed out, but if we scroll up through this output, we can see nModified is one, and there is no upsert key in this object.
-
-Upserts are useful, especially when we can make a write operation generic enough that updating or inserting should give the same result to our application.
-
-This is how some websites handle sign up and updating a client account within the same operation.
-
-So let's summarize.
-
-The two idiomatic methods for inserting documents are insertOne and insertMany.
-
-Trying to insert a duplicate _id will fail.
-
-And as an alternative to inserting a document, an upsert in an update method can be used instead.
+So let's summarize. The two idiomatic methods for inserting documents are *insertOne and insertMany*. Trying to insert a *duplicate _id* will fail. And as an alternative to inserting a document, *an upsert in an update method* can be used instead.
