@@ -1386,3 +1386,39 @@ So what if the document existed? Here, we have another *update* operation where 
 We see a lot of information printed out, but if we scroll up through this output, we can see *nModified is one*, and there is no *upsert key in this object*. *Upserts* are useful, especially when we can make a write operation generic enough that *updating or inserting* should give the same result to our application. *This is how some websites handle sign up and updating a client account within the same operation*.
 
 So let's summarize. The two idiomatic methods for inserting documents are *insertOne and insertMany*. Trying to insert a *duplicate _id* will fail. And as an alternative to inserting a document, *an upsert in an update method* can be used instead.
+
+### Ticket: User Management
+
+#### Problem 6
+
+##### User Story 6
+
+"As a user, I should be able to register for an account, log in, logout, and delete my account."
+
+##### Task 6
+
+For this Ticket, you'll be required to implement all the methods in *usersDAO.js* that are called by the API endpoints in *users.controller.js*. Specifically, you'll implement:
+
+* getUser
+* addUser
+* loginUser
+* logoutUser
+* getUserSession
+
+Registering a new user will insert a document into the *users collection*, and logging in a user will insert a document into the *sessions collection*.
+
+There is a *[unique index](https://docs.mongodb.com/manual/core/index-unique/?jmp=university)* on the *user_id* field in *sessions*, so we can efficiently query on this field.
+
+##### MFlix Functionality 6
+
+Once this ticket is completed, users will be able to register for a new account, log in, logout, and delete their account.
+
+##### Testing and Running the Application 6
+
+Look within the user-management.test.js file to view the unit tests for this ticket.
+
+### Answer 6
+
+```javascript
+   
+```
