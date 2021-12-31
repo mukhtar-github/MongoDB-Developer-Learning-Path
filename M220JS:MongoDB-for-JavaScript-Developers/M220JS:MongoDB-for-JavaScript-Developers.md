@@ -1584,19 +1584,9 @@ So now let's consider a different level of *write concern*. Our *shopping cart a
 
 Once the *primary* knows that in addition to it having applied the *write* itself, one of the *secondaries* has also applied the *write*, only then will it send an acknowledgment back to the *client*. This *write* was sent with {w: majority}, which means that the *client* isn't going to get an acknowledgment back from the driver until a *majority of nodes in the set have applied the write*. In this case, this is a *three-node set*, so we only needed *two of the nodes to apply the write*.
 
-You can think of {w: majority} as a contract with the *client* that this *write* will not be lost, even in the event of *hosts going down*. If an application sends a *write with {w majority}* and gets an acknowledgment back for that *write*, it knows that even if the current *primary* were to go down, one of the *secondaries* in the set has also captured the *write*. So with {w majority}, the connection is going to wait for a *majority of nodes* to apply the *write* before sending an acknowledgment back to the *client*.
+You can think of {w: majority} as a contract with the *client* that this *write* will not be lost, even in the event of *hosts going down*. If an application sends a *write with {w majority}* and gets an acknowledgment back for that *write*, it knows that even if the current *primary* were to go down, one of the *secondaries* in the set has also captured the *write*. So with {w majority}, the connection is going to wait for a *majority of nodes* to apply the *write* before sending an acknowledgment back to the *client*. For that reason, it takes a little longer and is subject to *replication lag*.
 
-For that reason, it takes a little longer and is subject to replication lag.
-
-But there's no additional load on the server, so the *primary* can still perform the same number of *writes* per second.
-
-However, w majority essentially guarantees to the *client* that a *write* will not be rolled back during fail over, because the *write* was committed to a *majority of nodes*.
-
-This is useful when some of our writes are vital to the success of the application.
-
-A common example of this is a new user on a website.
-
-These types of operations must succeed, because without an account, the user can't really do anything else on the site.
+But there's no additional load on the server, so the *primary* can still perform the same number of *writes per second*. However, {w: majority} essentially guarantees to the *client* that a *write* will not be *rolled back during fail over*, because the *write* was committed to a *majority of nodes*. This is useful when some of our *writes* are vital to the success of the application. A common example of this is a *new user on a website*. These types of operations must succeed, because *without an account, the user can't really do anything else on the site*.
 
 So I just want to discuss one more write concern, w 0.
 
