@@ -1578,37 +1578,27 @@ All right, so in this lesson, we're going to discuss *write concerns* and how th
 
 So the first thing the *primary node's* going to do when it receives this *write* is, it's going to apply the *write and its copy of the data*. And by default, as soon as it's done performing the *write in its database*, it's going to send an acknowledgment back to the *client*. So at this point, the *client* has received a *write acknowledgment* back from the database, and it considers the *write* to be complete.
 
-It assumes that the *secondary nodes* will *replicate the data* sometime soon, but it doesn't actually have any immediate proof of it from this acknowledgment alone. So that was an example of a *write with writeConcern -- {w 1}*. The *number 1* here refers to the number of *nodes* in this set that must apply the *write before a client* gets an acknowledgment back from the driver. In this case, it was just *one node*. This is the default behavior in *MongoDB*, so if you send a *write* to *MongoDB* without a writeConcern specified, it will use {w 1} by default.
+It assumes that the *secondary nodes* will *replicate the data* sometime soon, but it doesn't actually have any immediate proof of it from this acknowledgment alone. So that was an example of a *write with writeConcern -- {w: 1}*. The *number 1* here refers to the number of *nodes* in this set that must apply the *write before a client* gets an acknowledgment back from the driver. In this case, it was just *one node*. This is the default behavior in *MongoDB*, so if you send a *write* to *MongoDB* without a writeConcern specified, it will use {w: 1} by default.
 
-So now let's consider a different level of write concern.
+So now let's consider a different level of *write concern*. Our *shopping cart application* sends a *write statement* to the *primary node*, and the *primary* applies that *write* just like it did before. But this time, the *primary* waits before sending an acknowledgment back to the *client*. And what is it waiting for? Well, before sending an acknowledgment of the *write* back to the *client*, the *primary* will actually wait for one of the *secondary nodes to replicate the data*. When the *secondary* applies the *write*, it will send an acknowledgment back to the *primary* saying, hey, I applied this *write to my copy of the data*.
 
-Our shopping cart application sends a write statement to the primary node, and the primary applies that write just like it did before.
+Once the *primary* knows that in addition to it having applied the *write* itself, one of the secondaries has also applied the *write*, only then will it send an acknowledgment back to the *client*.
 
-But this time, the primary waits before sending an acknowledgment back to the client.
+This *write* was sent with w majority, which means that the *client* isn't going to get an acknowledgment back from the driver until a majority of nodes in the set have applied the *write*.
 
-And what is it waiting for?
+In this case, this is a three-node set, so we only needed two of the nodes to apply the *write*.
 
-Well, before sending an acknowledgment of the write back to the client, the primary will actually wait for one of the secondary nodes to *replicate the data*.
+You can think of w majority as a contract with the *client* that this *write* will not be lost, even in the event of hosts going down.
 
-When the secondary applies the write, it will send an acknowledgment back to the primary saying, hey, I applied this write to my copy of the data.
+If an application sends a *write* with w majority and gets an acknowledgment back for that *write*, it knows that even if the current *primary* were to go down, one of the secondaries in the set has also captured the write.
 
-Once the primary knows that in addition to it having applied the write itself, one of the secondaries has also applied the write, only then will it send an acknowledgment back to the client.
-
-This write was sent with w majority, which means that the client isn't going to get an acknowledgment back from the driver until a majority of nodes in the set have applied the write.
-
-In this case, this is a three-node set, so we only needed two of the nodes to apply the write.
-
-You can think of w majority as a contract with the client that this write will not be lost, even in the event of hosts going down.
-
-If an application sends a write with w majority and gets an acknowledgment back for that write, it knows that even if the current primary were to go down, one of the secondaries in the set has also captured the write.
-
-So with w majority, the connection is going to wait for a majority of nodes to apply the write before sending an acknowledgment back to the client.
+So with w majority, the connection is going to wait for a majority of nodes to apply the write before sending an acknowledgment back to the *client*.
 
 For that reason, it takes a little longer and is subject to replication lag.
 
-But there's no additional load on the server, so the primary can still perform the same number of writes per second.
+But there's no additional load on the server, so the *primary* can still perform the same number of writes per second.
 
-However, w majority essentially guarantees to the client that a write will not be rolled back during fail over, because the write was committed to a majority of nodes.
+However, w majority essentially guarantees to the *client* that a write will not be rolled back during fail over, because the write was committed to a majority of nodes.
 
 This is useful when some of our writes are vital to the success of the application.
 
