@@ -1315,25 +1315,71 @@ it("insertMany", async () => {
   })
 ```
 
-Now, the *insertOne* method is useful, but what if *we want to insert more than one document at a time*? The preferred method for that is *insertMany*. Here, I've defined an *array of years* correlating to the year of release for *megaManYears*. And here, I'm mapping over that array and creating a document where we get the title and the year. So let's insert these results in the database here. Now, just like *insertOne*, we'll get a result object back that has information like the number of *documents inserted* and the *inserted _ids*.
+Now, the *insertOne* method is useful, but what if *we want to insert more than one document at a time*? The preferred method for that is *insertMany*. Here, I've defined an *array of years* correlating to the year of release for *megaManYears*. And here, I'm *mapping over that array and creating a document where we get the title and the year*. So let's insert these results in the database here. Now, just like *insertOne*, we'll get a result object back that has information like the number of *documents inserted* and the *inserted _ids*. We also expect that the *insertResult.insertedIds should have 10 values*.
 
-We also expect that the insertResult.insertedIds should have 10 values.
+Let's go ahead and log those out and see what they were. Great. I can see all of the *_ids* that were automatically created for us by *MongoDB*. Inserting is a very useful *write operation*, but it's also very simple. It inserts new data into the database without regard for what the new data is or what's already in the database, as long as we don't specify a duplicate *_id* or some other value that has the unique index on it. So what happens if we want to *insert a document* but we're not sure if it's already in the database?
 
-Let's go ahead and log those out and see what they were.
+```javascript
+/**
+   * Inserting is a useful write operation, but it's very simple. It inserts
+   * new data into the database without regard for what the new data is, or
+   * what's already in the database as as long as we don't specify a duplicate
+   * _id.
+   *
+   * So what happens if we want to insert a document, but we're not sure if it's
+   * already in the database? We could do a find to check, but that's
+   * inefficient when we have the ability to upsert.
+   */
+  it("upsert", async () => {
+    // this is an upsert. We use the update method instead of insert.
+    let upsertResult = await videoGames.updateOne(
+      // this is the "query" portion of the update
+      { title: "Call of Duty" },
+      // this is the update
+      {
+        $set: {
+          title: "Call of Duty",
+          year: 2003,
+        },
+      },
+      // this is the options document. We've specified upsert: true, so if the
+      // query doesn't find a document to update, it will be written instead as
+      // a new document
+      { upsert: true },
+    )
 
-Great.
+    // we don't expect any documents to have been modified
+    expect(upsertResult.result.nModified).toBe(0)
+    // and here's the information that the result.upserted key contains
+    // an _id and an index
+    console.log(upsertResult.result.upserted)
 
-I can see all of the _ids that were automatically created for us by MongoDB.
+    // what if the document existed?
+    upsertResult = await videoGames.updateOne(
+      { title: "Call of Duty" },
+      // we'll update the year to 2018
+      {
+        $set: {
+          title: "Call of Duty",
+          year: 2018,
+        },
+      },
+      { upsert: true },
+    )
+    // we can see the second upsert result does not have an upserted key
+    console.log("second upsert result", upsertResult.result)
+    expect(upsertResult.result.nModified).toBe(1)
 
-Inserting is a very useful write operation, but it's also very simple.
+    // upserts are useful, especially when we can make a write operation
+    // generic enough that updating or inserting should give the same result
+    // to our application
+  })
+})
+```
 
-It inserts new data into the database without regard for what the new data is or what's already in the database, as long as we don't specify a duplicate _id or some other value that has the unique index on it.
+We could issue a *find and check* to see if it's there, but that's inefficient when we have the ability to *upsert*.
 
-So what happens if we want to insert a document but we're not sure if it's already in the database?
-
-We could issue a find and check to see if it's there, but that's inefficient when we have the ability to upsert.
-
-This here is an upsert.
+This here is an *upsert*.
 
 We use the update method instead of the Insert method.
 

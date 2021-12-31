@@ -63,6 +63,7 @@ describe("Basic Writes", () => {
       expect(e.errmsg).toContain("E11000 duplicate key error collection")
     }
   })
+  
   it("insertMany", async () => {
     /**
      * The insertOne method is useful, but what if we want to insert more than
