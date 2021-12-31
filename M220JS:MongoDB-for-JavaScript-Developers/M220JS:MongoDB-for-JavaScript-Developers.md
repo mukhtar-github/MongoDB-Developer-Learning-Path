@@ -1571,3 +1571,79 @@ export default class UsersDAO {
     }
   } 
 ```
+
+### Write Concerns
+
+All right, so in this lesson, we're going to discuss *write concerns* and how they can provide a different level of *write durability* in our application. If you're not sure right now what *write durability* is, no worries. We'll cover it in this lesson. So for right now, let's just consider a *small supermarket application* using a *replica set* as its data source. Whenever a customer puts an item into their cart, the application will send a *write statement over to MongoDB*, and that *write* will be received for that *primary node of the replica set*.
+
+So the first thing the *primary node's* going to do when it receives this *write* is, it's going to apply the *write and its copy of the data*. And by default, as soon as it's done performing the *write in its database*, it's going to send an acknowledgment back to the *client*. So at this point, the *client* has received a *write acknowledgment* back from the database, and it considers the *write* to be complete.
+
+It assumes that the *secondary nodes* will *replicate the data* sometime soon, but it doesn't actually have any immediate proof of it from this acknowledgment alone. So that was an example of a *write with writeConcern -- {w 1}*. The *number 1* here refers to the number of *nodes* in this set that must apply the *write before a client* gets an acknowledgment back from the driver. In this case, it was just *one node*. This is the default behavior in *MongoDB*, so if you send a *write* to *MongoDB* without a writeConcern specified, it will use {w 1} by default.
+
+So now let's consider a different level of write concern.
+
+Our shopping cart application sends a write statement to the primary node, and the primary applies that write just like it did before.
+
+But this time, the primary waits before sending an acknowledgment back to the client.
+
+And what is it waiting for?
+
+Well, before sending an acknowledgment of the write back to the client, the primary will actually wait for one of the secondary nodes to *replicate the data*.
+
+When the secondary applies the write, it will send an acknowledgment back to the primary saying, hey, I applied this write to my copy of the data.
+
+Once the primary knows that in addition to it having applied the write itself, one of the secondaries has also applied the write, only then will it send an acknowledgment back to the client.
+
+This write was sent with w majority, which means that the client isn't going to get an acknowledgment back from the driver until a majority of nodes in the set have applied the write.
+
+In this case, this is a three-node set, so we only needed two of the nodes to apply the write.
+
+You can think of w majority as a contract with the client that this write will not be lost, even in the event of hosts going down.
+
+If an application sends a write with w majority and gets an acknowledgment back for that write, it knows that even if the current primary were to go down, one of the secondaries in the set has also captured the write.
+
+So with w majority, the connection is going to wait for a majority of nodes to apply the write before sending an acknowledgment back to the client.
+
+For that reason, it takes a little longer and is subject to replication lag.
+
+But there's no additional load on the server, so the primary can still perform the same number of writes per second.
+
+However, w majority essentially guarantees to the client that a write will not be rolled back during fail over, because the write was committed to a majority of nodes.
+
+This is useful when some of our writes are vital to the success of the application.
+
+A common example of this is a new user on a website.
+
+These types of operations must succeed, because without an account, the user can't really do anything else on the site.
+
+So I just want to discuss one more write concern, w 0.
+
+By now, you must have realized that when the value of w is a number, it's the number of nodes that must apply a write before the client receives an acknowledgment.
+
+We can pass any number here to the w field, but it will throw us an error if this number is higher than the total number of nodes in the set.
+
+Following that rule, when w's 0, none of the nodes in the set actually need to apply a write before the client gets acknowledgment.
+
+This means that when we're w 0, there's a chance that we get acknowledgment before any data has actually been written.
+
+So if the server crashes, we might lose a few writes.
+
+This type of write is referred to as a fire and forget operation, because it sends the write and doesn't really worry about the response.
+
+But this isn't entirely true, because the acknowledgment from a w 0 operation can also alert us to network errors and socket exceptions.
+
+So the client can implement some logic to figure out if the write was actually received by the database.
+
+In any case, writing with w 0 is very fast and can be useful for less important writes that occur frequently.
+
+For example, if an internet of things device is sending a ping to Mango every two minutes to report its status, it might be OK to speed up every write operation at the risk of losing a few writes.
+
+So to recap, w 1 is the default write concern in Mongo, and it commits a write to one node before sending an acknowledgement back to the client.
+
+w majority will make sure the write was applied by a majority of the set before sending an acknowledgment back to the client.
+
+This means the application will have to wait a little longer for a response, but it should not have a performance impact so long as you have enough connections to the primary to handle your requests.
+
+w 0 does not commit the write at all, but sends an acknowledgement back to the client immediately.
+
+So there's a slightly higher chance that we lose data in the event of a primary going down.
