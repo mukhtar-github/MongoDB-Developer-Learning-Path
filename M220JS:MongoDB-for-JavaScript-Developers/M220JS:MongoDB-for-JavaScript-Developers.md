@@ -1273,37 +1273,53 @@ it("insertOne", async () => {
 
 Here, I'm peeling off *N* and *OK* using *object destructuring* from the *insertResult.result* object. And then I expect *N* and *OK* to equal *1*, and *OK 1* because I am *inserting one document*. The *insert result* also contains an *insert count key*, which should be the same as *N* above. The last property we'll talk about is the *insertedId*. If we don't specify an *_id* when we write to the database, *MongoDB* will *insertOne* for us and return this to us here.
 
-So here, I'm expecting that the insertResult.insertedId won't be undefined, and I'm logging out the insertedId that was given to the document we wrote.
+So here, I'm expecting that the *insertResult.insertedId* won't be undefined, and I'm logging out the *insertedId* that was given to the document we wrote. Here, let's ensure that we can find the document we just inserted with the *insertedId* we received. So I specify that the *title and year* are the result of the object when we find one with the *_id* of the returned Id that we just got, and I expect that the *title and year* should equal *Fortnite and 2018*. Our tests are passing, and here, we can see the *insertedId* that was assigned to the object we wrote.
 
-Here, let's ensure that we can find the document we just inserted with the insertedId we received.
+What if we tried to insert a document with the same *_id*. Here, we're going to try and insert a document with the same *_id*, but a different *title and a year*. We put this in a *try and catch the error*, and we'll *expect E to not be undefined*. We do *expect an error*, and we expect the error message *to contain* the error code *E11000 duplicate key error*. Let's check this out. All the assertions passed for our first test, so we know that *insertOne* is working correctly.
 
-So I specify that the title and year are the result of the object when we find one with the _id of the returned Id that we just got, and I expect that the title and year should equal Fortnite and 2018.
+```javascript
+it("insertMany", async () => {
+    /**
+     * The insertOne method is useful, but what if we want to insert more than
+     * one document at a time? The preferred method for that is insertMany
+     */
 
-Our tests are passing, and here, we can see the insertedId that was assigned to the object we wrote.
+    let megaManYears = [
+      1987,
+      1988,
+      1990,
+      1991,
+      1992,
+      1993,
+      1995,
+      1996,
+      2008,
+      2010,
+    ]
 
-What if we tried to insert a document with the same _id.
+    // Creating documents to insert based on the megaManYears array above
+    let docs = megaManYears.map((year, idx) => ({
+      title: `Mega Man ${idx + 1}`,
+      year,
+    }))
 
-Here, we're going to try and insert a document with the same _id, but a different title and a year.
+    // now let's insert these into the database
+    let insertResult = await videoGames.insertMany(docs)
 
-We put this in a try and catch the error, and we'll expect E to not be undefined.
+    // just like insertOne, we'll get a result object back that has information
+    // like the number of documents inserted and the inserted _ids
+    expect(insertResult.insertedCount).toBe(10)
+    expect(Object.values(insertResult.insertedIds).length).toBe(10)
+    // and we can see what the insertIds were
+    console.log(Object.values(insertResult.insertedIds))
+  })
+```
 
-We do expect an error, and we expect the error message to contain the error code E11000 duplicate key error.
-
-Let's check this out.
-
-All the assertions passed for our first test, so we know that insertOne is working correctly.
-
-Now, the insertOne method is useful, but what if we want to insert more than one document at a time?
-
-The preferred method for that is insertMany.
-
-Here, I've defined an array of years correlating to the year of release for Mega Man games.
-
-And here, I'm mapping over that array and creating a document where we get the title and the year.
+Now, the *insertOne* method is useful, but what if *we want to insert more than one document at a time*? The preferred method for that is *insertMany*. Here, I've defined an *array of years* correlating to the year of release for *Mega Man games*. And here, I'm mapping over that array and creating a document where we get the title and the year.
 
 So let's insert these results in the database here.
 
-Now, just like insertOne, we'll get a result object back that has information like the number of documents inserted and the inserted _ids.
+Now, just like *insertOne*, we'll get a result object back that has information like the number of documents inserted and the inserted _ids.
 
 We also expect that the insertResult.insertedIds should have 10 values.
 
