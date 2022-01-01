@@ -2003,7 +2003,6 @@ So just to recap, *expressive lookup* up allows us to pass an *aggregation pipel
 
 For more information, refer the to *MongoDB documentation* on [$lookup](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/)
 
-
 ### Ticket: Get Comments
 
 #### Problem 8
@@ -2027,5 +2026,56 @@ Once this ticket is completed, each movie's comments will be displayed on that m
 ### Answer 8
 
 ```javascript
+/**
+   * Gets a movie by its id
+   * @param {string} id - The desired movie id, the _id in Mongo
+   * @returns {MflixMovie | null} Returns either a single movie or nothing
+   */
+  static async getMovieByID(id) {
+    try {
+      /**
+      Ticket: Get Comments
 
+      Given a movie ID, build an Aggregation Pipeline to retrieve the comments
+      matching that movie's ID.
+
+      The $match stage is already completed. You will need to add a $lookup
+      stage that searches the `comments` collection for the correct comments.
+      */
+
+      // TODO Ticket: Get Comments
+      // Implement the required pipeline.
+      const pipeline = [
+        {
+          $match: {
+            _id: ObjectId(id)
+          }
+        },
+        {
+          '$lookup': { // answer
+            'from': 'comments', 
+            'let': {
+              'id': '$_id'
+            }, 
+            'pipeline': [
+              {
+                '$match': {
+                  '$expr': {
+                    '$eq': [
+                      '$movie_id', '$$id'
+                    ]
+                  }
+                }
+              }, {
+                '$sort': {
+                  date: -1
+                }
+              }
+            ], 
+            'as': 'comments'
+          }
+        }
+      ]
+    }
+  }
 ```

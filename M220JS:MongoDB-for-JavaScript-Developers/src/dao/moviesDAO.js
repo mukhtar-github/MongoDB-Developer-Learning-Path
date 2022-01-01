@@ -331,9 +331,13 @@ export default class MoviesDAO {
                     ]
                   }
                 }
+              }, {
+                '$sort': {
+                  date: -1
+                }
               }
             ], 
-            'as': 'movie_comments'
+            'as': 'comments'
           }
         }
       ]
