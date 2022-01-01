@@ -2185,3 +2185,53 @@ Once this ticket is completed, each movie's comments will be displayed on that m
     }
   }
 ```
+
+### Basic Deletes
+
+In this lesson, we'll discuss how to perform *delete operations in MongoDB*. Similar to *updating documents*, we have two *delete operations in the Node.js driver, deleteOne and deleteMany*. So the first thing to understand is that a *delete operation* is, in fact, a *write* in the database world. And what this means is that when we perform a *delete*, *collection data* is changed, the indexes will need to be updated to reflect this change, and entries will need to be added to the *oplog*. The *oplog* is part of the mechanism that *allows data to be replicated in MongoDB*.
+
+If you're interested in learning more about *replication*, you should take the *Basic Cluster Administration course on MongoDB University*. Anyway, let's go *delete* some documents. So here, we're just performing an *insertMany* to create the documents that we will eventually *delete from the video games collection*. There should only be *10 documents in the collection*, and we can verify that here.
+
+So in this example, we're going to perform a single document *delete* with *deleteOne*.
+
+Before we do that, we're just counting the number of documents that exist in the video games collection at the time of the *delete*.
+
+Here, when we call deleteOne, we're passing an empty predicate, which means that deleteOne will search all the documents in the collection, and then delete the first one that it finds in natural order.
+
+Remember that natural order is the order in which documents were inserted.
+
+So in this case, we would know.
+
+But in practice, we're not really sure which document we're deleting when we do a statement like this.
+
+However, we can be sure that the number of documents we delete is equal to one, and we can verify that here.
+
+So now if we count the documents, we can check that this operation behaved normally.
+
+So now if we run this lesson's spec, it looks like we did successfully delete one document from the collection.
+
+However, we don't typically send deleteOne operations without a predicate, so let's be more specific about the document that we want to delete.
+
+Here, I've specified that I want to delete the document that has year equal to 2008.
+
+We can verify that this operation did match a document and delete it.
+
+We can also delete multiple documents in one operation using deleteMany.
+
+Here, we're counting the number of documents that exist at the time of the delete.
+
+It should be equal to eight because we just did two deleteOne statements.
+
+And the predicate that I'm passing to deleteMany here specifies all the documents that have year less than 1993.
+
+We can verify from the delete result that four documents were deleted from the collection.
+
+And if we look at the documents in the video video games collection that exist after our delete, we can verify that they all have year greater than or equal to 1993.
+
+All right.
+
+So just to recap, in this lesson, we discussed how to delete documents in MongoDB, and in the Node.js driver, we have two operations to do so, deleteOne and deleteMany.
+
+Just keep in mind that when you're using deleteOne, make sure that your predicate matches only one document in the collection.
+
+Otherwise, you could end up deleting the wrong document by accident.
