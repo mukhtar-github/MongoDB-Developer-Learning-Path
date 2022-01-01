@@ -2192,13 +2192,122 @@ In this lesson, we'll discuss how to perform *delete operations in MongoDB*. Sim
 
 If you're interested in learning more about *replication*, you should take the *Basic Cluster Administration course on MongoDB University*. Anyway, let's go *delete* some documents. So here, we're just performing an *insertMany* to create the documents that we will eventually *delete from the video games collection*. There should only be *10 documents in the collection*, and we can verify that here.
 
-So in this example, we're going to perform a single document *delete* with *deleteOne*.
+```javascript
+describe("Basic Deletes", () => {
+  /**
+   * In this lesson, we'll discuss how to perform delete operations in MongoDB.
+   *
+   * The first method we'll talk about is deleteOne. Before we do this, we need
+   * to create a collection and insert some documents into it.
+   */
 
-Before we do that, we're just counting the number of documents that exist in the video games collection at the time of the *delete*.
+  let videoGames
+  // As with our updates lesson,  we're creating a new collection called videoGames
+  beforeAll(async () => {
+    videoGames = await global.mflixClient
+      .db(process.env.MFLIX_NS)
+      .collection("videoGames")
+  })
 
-Here, when we call deleteOne, we're passing an empty predicate, which means that deleteOne will search all the documents in the collection, and then delete the first one that it finds in natural order.
+  // and then after all the tests run, we'll drop this collection
+  afterAll(async () => {
+    await videoGames.drop()
+  })
 
-Remember that natural order is the order in which documents were inserted.
+  it("insertMany", async () => {
+    /**
+     * First, let's insert documents into this collection so that we can delete
+     * them during this lesson.
+     */
+
+    let megaManYears = [
+      1987,
+      1988,
+      1990,
+      1991,
+      1992,
+      1993,
+      1995,
+      1996,
+      2008,
+      2010,
+    ]
+
+    // Here we are creating documents to insert based on the megaManYears array above
+    let docs = megaManYears.map((year, idx) => ({
+      title: "Mega Man",
+      year,
+    }))
+
+    // now let's insert these into the database
+    let insertResult = await videoGames.insertMany(docs)
+
+    // Let's check that our documents are present.
+    expect(insertResult.insertedCount).toBe(10)
+    expect(Object.values(insertResult.insertedIds).length).toBe(10)
+    // and we can see what the insertIds were
+    console.log(Object.values(insertResult.insertedIds))
+  })
+```
+
+So in this example, we're going to perform a single document *delete* with *deleteOne*. Before we do that, we're just counting the number of documents that exist in the *video games collection* at the time of the *delete*. Here, when we call *deleteOne*, we're passing an empty predicate, which means that *deleteOne* will search all the documents in the collection, and then delete the first one that it finds in natural order. Remember that natural order is the order in which documents were inserted.
+
+```javascript
+it("deleteOne", async () => {
+    /**
+    Now let's try to delete a document using deleteOne()
+    The first thing to understand is that a delete operation is in fact
+    a write in database world. Confused? What I mean by this is that
+    when we delete a document from our database we are actually
+    executing a state change in the data, that implies a database write
+    Deletes imply that several different things will happen:
+    - collection data will be changed
+    - indexes will be updated
+    - entries in the oplog (replication mechanism) will be added.
+
+    All the same operations that an insert or an update would originate.
+
+    But let's go ahead and see this in action with a single document
+    delete.
+
+    Before I start deleting data from my collection I'm going to count
+    the number of documents in the sports collection.
+    */
+
+    let countDocumentsBefore = await videoGames.count({})
+
+    // We will then delete a document without specifying any query predicates using deleteOne()
+    let deleteDocument = await videoGames.deleteOne({})
+
+    // To check that our delete was successful, we can check that result.n is
+    // equal to 1. This is an object returned by the MongoDB Javascript driver
+    // which will tell the client if a delete has been successful or not.
+    // Let's test to see if the delete was successful.
+
+    expect(deleteDocument.result.n).toBe(1)
+
+    // Great. That's what we expected!
+
+    // If we now count the number of documents remaining in our collection, we
+    // should see that there is one less than we inserted
+
+    let countDocuments = await videoGames.count({})
+
+    console.log(
+      `collection had ${countDocumentsBefore} documents, now has ${countDocuments}`,
+    )
+
+    // We just did our first delete.
+  })
+
+  // All good. As expected.
+
+  // Wait, but which document did I just remove from the collection?
+  // Well, in this case MongoDB will select the first $natural document
+  // it encounters in the collection and delete that one.
+  // Given that the insertMany inserts documents in order, the document
+  // that I have just deleted will be the one with year = 1987.
+```
 
 So in this case, we would know.
 
@@ -2210,7 +2319,7 @@ So now if we count the documents, we can check that this operation behaved norma
 
 So now if we run this lesson's spec, it looks like we did successfully delete one document from the collection.
 
-However, we don't typically send deleteOne operations without a predicate, so let's be more specific about the document that we want to delete.
+However, we don't typically send *deleteOne* operations without a predicate, so let's be more specific about the document that we want to delete.
 
 Here, I've specified that I want to delete the document that has year equal to 2008.
 
