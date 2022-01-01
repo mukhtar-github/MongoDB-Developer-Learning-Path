@@ -1692,6 +1692,65 @@ So the *update* we perform has two different *update operators*. We use the *$se
 
 We can also *update multiple documents in a collection using UpdateMany*. Like *UpdateOne, UpdateMany takes a query predicate and an object containing one or more update operators*. But unlike *UpdateOne, UpdateMany will update any documents matching the query predicate*. In this example, *the state of Minnesota has relocated one of its zip codes from Minneapolis to the neighboring city of Bloomington*. This operation should *find all the movie theaters in that zip code and update the value of their city field to Bloomington*.
 
+```javascript
+it("Can update many documents in a collection", async () => {
+    /**
+     * We can update multiple documents in a collection with updateMany().
+     *
+     * Like updateOne(), updateMany() takes a query predicate and a JSON object
+     * containing one or more update operators.
+     *
+     * But unlike updateOne(), updateMany() will update any documents matching
+     * the query predicate.
+     *
+     * In the following example, the state of Minnesota has relocated one of its
+     * zip codes, 55111, from Minneapolis to the neighboring city of
+     * Bloomington.
+     *
+     * This operation should find all the movie theaters in the zip code 55111,
+     * and update the value of the "city" field to Bloomington.
+     */
+
+    const oldTheaterDocuments = await (await theaters.find({
+      "location.address.zipcode": "55111",
+    })).toArray()
+
+    // expect all the theaters in 55111 to reside in Minneapolis
+    oldTheaterDocuments.map(theater => {
+      expect(theater.location.address.city).toEqual("Minneapolis")
+    })
+
+    // same query predicate as the find() statement above
+    const updateManyResult = await theaters.updateMany(
+      { "location.address.zipcode": "55111" },
+      { $set: { "location.address.city": "Bloomington" } },
+    )
+
+    // expect this operation to match exactly 6 theater document
+    expect(updateManyResult.matchedCount).toEqual(6)
+
+    // expect this operation to update exactly 6 theater document
+    expect(updateManyResult.modifiedCount).toEqual(6)
+
+    const newTheaterDocuments = await (await theaters.find({
+      "location.address.zipcode": "55111",
+    })).toArray()
+
+    // expect all the updated theater documents to reside in Bloomington
+    newTheaterDocuments.map(theater => {
+      expect(theater.location.address.city).toEqual("Bloomington")
+    })
+
+    // clean up
+    const cleanUp = await theaters.updateMany(
+      { "location.address.zipcode": "55111" },
+      { $set: { "location.address.city": "Minneapolis" } },
+    )
+
+    expect(cleanUp.modifiedCount).toEqual(6)
+  })
+```
+
 Here, we're just pulling the data that's currently in the database for all the theaters in this zip code and verifying that their street address has the city Minneapolis.
 
 In our UpdateMany operation, we use the same predicate as our Find statement above to find all the theaters in the zip code 55111, and then we use the $set operator to update their city to Bloomington.
