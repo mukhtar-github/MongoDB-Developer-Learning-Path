@@ -1827,3 +1827,27 @@ We use the *$set operator* to make sure that if the document already exists, the
 We can also see that the *modified count was equal to zero* which makes sense seeing as the predicate didn't match anything. So now, because the *predicate didn't match any documents* and we passed this *upsert true flag*, we can expect this *upserted ID property* will not be null. *The upserted ID represents the underscore ID of the document inserted by this operation*. Let's take a look. So now if I run this test, we get back an *underscore ID* which we could potentially use to find the document that we just inserted.
 
 So just to recap, in this lesson, we covered the two update commands in the *Node.js driver, UpdateOne and UpdateMany*. We pass a predicate to both, but *UpdateOne will only update the first document that it matches, while UpdateMany will update all the documents it matches*. We can also pass this *upsert true flag* to the update, which adds a bit of flexibility to the update. In case the predicate doesn't match anything, we can still make sure the updated data exists in our database.
+
+Problem
+
+Which of the following can be passed to the updateOne() and updateMany() commands?
+
+Correct answers:
+
+A query predicate
+
+This is used to match the document to update.
+An update operation
+
+This is used to specify the way the document is updated. For example, $inc will increment the value of a field by a specified amount.
+An upsert flag
+
+This is used to perform an upsert operation, which will insert the desired document if it does not already exist.
+Incorrect answers:
+
+A read preference
+
+A read preference cannot be passed to updateOne() or updateMany(), because write operations are always performed against the primary node.
+An aggregation function
+
+Aggregation pipelines cannot be passed to updateOne() or updateMany(). To update data with an aggregation pipeline, use the $out aggregation stage.
