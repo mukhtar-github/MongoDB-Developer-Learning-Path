@@ -2397,5 +2397,28 @@ Once this ticket is completed, users will be able to delete their own comments, 
 ### Answer 10
 
 ```javascript
+static async deleteComment(commentId, userEmail) {
+    /**
+    Ticket: Delete Comments
 
+    Implement the deleteOne() call in this method.
+
+    Ensure the delete operation is limited so only the user can delete their own
+    comments, but not anyone else's comments.
+    */
+
+    try {
+      // TODO Ticket: Delete Comments
+      // Use the userEmail and commentId to delete the proper comment.
+      const deleteResponse = await comments.deleteOne({
+        _id: ObjectId(commentId),
+        email: userEmail // answer
+      })
+
+      return deleteResponse
+    } catch (e) {
+      console.error(`Unable to delete comment: ${e}`)
+      return { error: e }
+    }
+  }
 ```
