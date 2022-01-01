@@ -2435,23 +2435,9 @@ In this chapter, we'll learn how to use different *read concerns, join collectio
 
 In this lesson, we're going to discuss *read concerns in MongoDB*. So *read concerns are similar write concerns*, in that they both involve *how many nodes have applied a database operation*. While *write concerns* affect the *acknowledgment received by the driver after a write, read concerns affect the data returned by a read operation*. Different *read concerns* are referred to as different levels of *read isolation* because you can essentially *isolate a read* from the rest of the database if the *data being read has only been written to one of the nodes in the set*.
 
-If data can be *read* by clients before that data has been replicated to a majority of nodes, it's considered a low level of *read* isolation.
+*If data can be read by clients before that data has been replicated to a majority of nodes, it's considered a low level of read isolation*. The *read concern* you choose will depend on *how consistent your view of the database needs to be*. So by default, when an application sends a *read to Mongo, Mongo will use Read Concern Local*. From the perspective of the *database client*, the data read using *Read Concerned Local* has only been written to the *primary node*.
 
-The read concern you choose will depend on how consistent your view of the database needs to be.
-
-So by default, when an application sends a read to Mongo, Mongo will use Read Concern Local.
-
-From the perspective of the database client, the data read using Read Concerned Local has only been written to the primary node.
-
-In the vast majority of cases, the data will also have been written to the secondary nodes in the set.
-
-But the client only has proof that this one note applied the write.
-
-This means that there's a chance, however slim, that the data returned by this read will be rolled back.
-
-This would happen if sometime after this data is returned, the primary goes down and the secondaries haven't replicated the data yet.
-
-That means that when one of these two nodes becomes the primary, this primary will be secondary.
+In the vast majority of cases, the data will also have been written to the *secondary nodes* in the set. But the client only has proof that this *one node applied the write*. This means that there's a chance, however slim, that the data returned by this *read will be rolled back*. This would happen if sometime after this *data is returned, the primary goes down and the secondaries haven't replicated the data yet*. That means that when one of these *two nodes becomes the primary, this primary will be secondary*.
 
 And it'll be rolled back to match the state of whichever node became the new primary.
 
