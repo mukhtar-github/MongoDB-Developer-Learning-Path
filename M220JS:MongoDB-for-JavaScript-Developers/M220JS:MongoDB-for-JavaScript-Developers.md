@@ -1915,7 +1915,7 @@ So in this lesson, we're going to cover *joins in MongoDB*. So *joins are used t
 }
 ```
 
-So here I'm just *connected to the mflix database in Compass*. And we're going to *start our aggregation from the movies collection, and then join from the comments collection*. Although it would probably work the other way around, as well. Just going to move to the *Aggregations* tab. And I can select a new stage. I'm going to add a *match stage* to select only the *movies that came out in the 1980s*. And now that our *match stage* is fully written out, it looks like *Compass* has already loaded the documents that would be returned by this query. And it looks like all of these movies came out in the *1980s*.
+So here I'm just *connected to the mflix database in Compass*. And we're going to *start our aggregation from the movies collection, and then join from the comments collection*. Although it would probably work the other way around, as well. Just going to move to the *Aggregations* tab. And I can select a new stage. I'm going to add a *match stage* to select only the *movies that came out in the 1980s*. And now that our *match stage* is fully written out, it looks like *Compass* has already loaded the documents that would be returned by this query. And it looks like all of these *movies* came out in the *1980s*.
 
 ```javascript
 // $lookup
@@ -1933,37 +1933,13 @@ So here I'm just *connected to the mflix database in Compass*. And we're going t
 
 So now here's the stage where the *join* actually happens. This is a *lookup stage* in the expressive version. And there are four fields -- *from, let, pipeline, and as*. *From* is going to be the collection that we're *joining from*. So we're running this *aggregation from the movies collection*, and we want to *join from the comments collection*. So that's the one I've specified.
 
-So *let* is when this starts to get a little complicated, so try to follow closely. The *pipeline* we write inside the *join* has access to *fields of documents inside the comments collection*, because that's the *collection that we're joining from*. But it doesn't have access to the field inside the *movies collection*, unless we specify them in *let*.
+So *let* is when this starts to get a little complicated, so try to follow closely. The *pipeline* we write inside the *join* has access to *fields of documents inside the comments collection*, because that's the *collection that we're joining from*. But it doesn't have access to the field inside the *movies collection*, unless we specify them in *let*. So if we want to use the *underscore ID* from the *movies documents* inside the *pipeline*, we have to declare this variable *ID* and assign it to the *dollar underscore ID* from the *movies collection*.
 
-So if we want to use the underscore ID from the movies documents inside the *pipeline*, we have to declare this variable ID and assign it to the dollar underscore ID from the *movies collection*.
+So if we look inside the *pipeline*, we can see that we refer to this *variable with two dollar signs*, because the variables with *one dollar signs* refer to fields inside the *comment documents*. This obviously can get a little bit complicated with all the *dollar signs, but just remember that double dollar sign means that the variable was defined in the let statement*. The *pipeline* itself only has one *match stage* right now, and it's *matching the movie ID of the comment to the underscore ID from the movie*.
 
-So if we look inside the *pipeline*, we can see that we refer to this variable with two dollar signs, because the variables with one dollar signs refer to fields inside the comment documents.
+We've set *as to movie_comments*, so that the *movie document* will now have an *array* field called *movie_comments* that contains a list of all the *comments associated with that movie*. And we can check that that field exists down here. It looks like it did create this *movie_comments* field, which is a type *array*. And each *element of the array is its own document*, which look like the *exact comment documents from the comments collection*. Now I embedded all the *comment documents inside each movie*, but all I really wanted to figure out was *how many comments were associated with each movie*. I don't really care what each comment says, or who wrote it, or when it was written. I just care *how many there are*.
 
-This obviously can get a little bit complicated with all the dollar signs, but just remember that double dollar sign means that the variable was defined in the let statement.
-
-The pipeline itself only has one match stage right now, and it's matching the movie ID of the comment to the underscore ID from the movie.
-
-We've set as to movie comments, so that the movie document will now have an array field called movie documents that contains a list of all the comments associated with that movie.
-
-And we can check that that field exists down here.
-
-It looks like it did create this movie comments field, which is a type array.
-
-And each element of the array is its own document, which look like the exact comment documents from the comments collection.
-
-Now I embedded all the comment documents inside each movie, but all I really wanted to figure out was how many comments were associated with each movie.
-
-I don't really care what each comment says, or who wrote it, or when it was written.
-
-I just care how many there are.
-
-So here I've changed up our look up stage a little bit by adding this count stage to the pipeline.
-
-Count is just going to count all the documents that pass through this pipeline.
-
-And since we already used a match stage to make sure that each comment was associated only with that movie, this meets our needs perfectly.
-
-And we can see we've ended up with a single array field with one value that just has a count of the number of comments associated with this movie.
+So here I've changed up our *lookup stage* a little bit by adding this *count stage to the pipeline*. *Count* is just going to *count* all the documents that *pass through this pipeline*. And since we already used a *match stage* to make sure that each comment was associated only with that *movie*, this meets our needs perfectly. And we can see we've ended up with a single *array* field with one value that just has a *count* of the number of comments associated with this *movie*.
 
 So this pipeline in the expressive lookup is actually very powerful, because it allows us to transform the comments documents returned by a join on the server before that data even gets embedded inside this movies document.
 
