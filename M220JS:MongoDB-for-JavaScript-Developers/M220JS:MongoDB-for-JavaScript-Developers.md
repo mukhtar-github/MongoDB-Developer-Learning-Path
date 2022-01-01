@@ -1904,17 +1904,7 @@ static async updatePreferences(email, preferences) {
 
 ### Basic Joins
 
-So in this lesson, we're going to cover joins in MongoDB.
-
-So joins are used to combine data from two or more collections, which is true for all database systems, but the implementation is going to be a little different in MongoDB.
-
-The join we're going to do here is between the movies and comments collection from the mflix database.
-
-Each comment in mflix is posted by a user, and associated with one specific movie.
-
-And we want to count how many comments are associated with each movie.
-
-Users use comments as a way to discuss movies, so we can think of this sort of like a popularity contest.
+So in this lesson, we're going to cover *joins in MongoDB*. So *joins are used to combine data from two or more collections*, which is true for all database systems, but the implementation is going to be a little different in *MongoDB*. *The join we're going to do here is between the movies and comments collection from the mflix database*. Each *comment in mflix* is posted by a *user*, and associated with *one specific movie*. And we want to *count how many comments are associated with each movie*. *Users use comments as a way to discuss movies*, so we can think of this sort of like a popularity contest.
 
 You know, which movies are being talked about the most on our site.
 
