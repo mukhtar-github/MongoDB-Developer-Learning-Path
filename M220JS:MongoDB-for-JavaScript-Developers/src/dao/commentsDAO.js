@@ -102,7 +102,7 @@ export default class CommentsDAO {
       // Use the userEmail and commentId to delete the proper comment.
       const deleteResponse = await comments.deleteOne({
         _id: ObjectId(commentId),
-        email: userEmail
+        email: userEmail // answer
       })
 
       return deleteResponse
