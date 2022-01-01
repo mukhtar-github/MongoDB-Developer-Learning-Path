@@ -2031,9 +2031,8 @@ Once this ticket is completed, each movie's comments will be displayed on that m
    * @param {string} id - The desired movie id, the _id in Mongo
    * @returns {MflixMovie | null} Returns either a single movie or nothing
    */
-  static async getMovieByID(id) {
-    try {
-      /**
+
+  /**
       Ticket: Get Comments
 
       Given a movie ID, build an Aggregation Pipeline to retrieve the comments
@@ -2045,37 +2044,45 @@ Once this ticket is completed, each movie's comments will be displayed on that m
 
       // TODO Ticket: Get Comments
       // Implement the required pipeline.
-      const pipeline = [
-        {
-          $match: {
-            _id: ObjectId(id)
-          }
+  static async getMovieByID(id) {
+  try {
+    const pipeline = [
+      {
+        // find the current movie in the "movies" collection
+        $match: {
+          _id: ObjectId(id),
         },
-        {
-          '$lookup': { // answer
-            'from': 'comments', 
-            'let': {
-              'id': '$_id'
-            }, 
-            'pipeline': [
-              {
-                '$match': {
-                  '$expr': {
-                    '$eq': [
-                      '$movie_id', '$$id'
-                    ]
-                  }
-                }
-              }, {
-                '$sort': {
-                  date: -1
-                }
-              }
-            ], 
-            'as': 'comments'
-          }
-        }
-      ]
-    }
+      },
+      {
+        // lookup comments from the "comments" collection
+        $lookup: {
+          from: "comments",
+          let: { id: "$_id" },
+          pipeline: [
+            {
+              // only join comments with a match movie_id
+              $match: {
+                $expr: {
+                  $eq: ["$movie_id", "$$id"],
+                },
+              },
+            },
+            {
+              // sort by date in descending order
+              $sort: {
+                date: -1,
+              },
+            },
+          ],
+          // call embedded field comments
+          as: "comments",
+        },
+      },
+    ]
+    return await movies.aggregate(pipeline).next()
+  } catch (e) {
+    console.error(`Something went wrong in getMovieByID, ${e}`)
+    return null
   }
+}
 ```
