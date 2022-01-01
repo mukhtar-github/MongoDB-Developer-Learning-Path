@@ -1851,3 +1851,25 @@ A read preference cannot be passed to updateOne() or updateMany(), because write
 An aggregation function
 
 Aggregation pipelines cannot be passed to updateOne() or updateMany(). To update data with an aggregation pipeline, use the $out aggregation stage.
+
+### Ticket: User Preferences
+
+#### Problem 7
+
+##### User Story 7
+
+"As a user, I want to be able to store preferences such as my favorite cast member and preferred language."
+
+##### Task 7
+
+For this Ticket, you'll be required to implement one method in *usersDAO.js, updatePreferences*. This method allows updates to be made to the "preferences" field in the users collection.
+
+##### MFlix Functionality 7
+
+Once this ticket is completed, users will be able to save preferences in their account information.
+
+### Answer 7
+
+```javascript
+
+```
