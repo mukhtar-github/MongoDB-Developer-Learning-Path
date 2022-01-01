@@ -1939,20 +1939,78 @@ So if we look inside the *pipeline*, we can see that we refer to this *variable 
 
 We've set *as to movie_comments*, so that the *movie document* will now have an *array* field called *movie_comments* that contains a list of all the *comments associated with that movie*. And we can check that that field exists down here. It looks like it did create this *movie_comments* field, which is a type *array*. And each *element of the array is its own document*, which look like the *exact comment documents from the comments collection*. Now I embedded all the *comment documents inside each movie*, but all I really wanted to figure out was *how many comments were associated with each movie*. I don't really care what each comment says, or who wrote it, or when it was written. I just care *how many there are*.
 
+```javascript
+// $lookup
+{
+  from: 'comments',
+  let: {'id': '$_id'},
+  pipeline:[
+    { '$match':
+      { '$expr': { '$eq': [ '$movie_id', '$$id' ] } }
+    },
+    {
+      '$count': 'count'
+    }
+  ],
+  as: 'movie_comments'
+}
+```
+
 So here I've changed up our *lookup stage* a little bit by adding this *count stage to the pipeline*. *Count* is just going to *count* all the documents that *pass through this pipeline*. And since we already used a *match stage* to make sure that each comment was associated only with that *movie*, this meets our needs perfectly. And we can see we've ended up with a single *array* field with one value that just has a *count* of the number of comments associated with this *movie*.
 
-So this pipeline in the expressive lookup is actually very powerful, because it allows us to transform the comments documents returned by a join on the server before that data even gets embedded inside this movies document.
+So this *pipeline in the expressive lookup* is actually very powerful, because it allows us to transform the *comments documents* returned by a *join* on the server before that data even gets embedded inside this *movies document*. And now that we've written out our *pipeline*, we can verify that our output documents look the way we expect. We can export the *pipeline* to a language that suits our application's needs. We have *Python 3, C#, Node JS, and Java* available to us.
 
-And now that we've written out our pipeline, we can verify that our output documents look the way we expect.
+```javascript
+/*
+ * Requires the MongoDB Node.js Driver
+ * https://mongodb.github.io/node-mongodb-native
+ */
 
-We can export the pipeline to a language that suits our application's needs.
+const agg = [
+  {
+    '$match': {
+      'year': {
+        '$gte': 1980, 
+        '$lt': 1990
+      }
+    }
+  }, {
+    '$lookup': {
+      'from': 'comments', 
+      'let': {
+        'id': '$_id'
+      }, 
+      'pipeline': [
+        {
+          '$match': {
+            '$expr': {
+              '$eq': [
+                '$movie_id', '$$id'
+              ]
+            }
+          }
+        }, {
+          '$count': 'count'
+        }
+      ], 
+      'as': 'movie_comments'
+    }
+  }
+];
 
-We have Python 3, C#, Node JS, and Java available to us.
+MongoClient.connect(
+  'mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/test?authSource=admin&replicaSet=atlas-5i660a-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  function(connectErr, client) {
+    assert.equal(null, connectErr);
+    const coll = client.db('sample_mflix').collection('movies');
+    coll.aggregate(agg, (cmdErr, result) => {
+      assert.equal(null, cmdErr);
+    });
+    client.close();
+  });
+```
 
-So just to recap, expressive lookup up allows us to pass an aggregation pipeline to the command that can transform the data before that data is actually joined.
-
-And let allows us to declare variables in that pipeline that refer to document fields in our source collection.
-
-Once we're done writing the pipeline out in Compass, we can use the export to language feature to produce the aggregation in the language that's native to our application.
+So just to recap, *expressive lookup* up allows us to pass an *aggregation pipeline* to the command that can transform the data before that data is actually *joined*. And *let* allows us to declare variables in that *pipeline* that refer to document fields in our *source collection*. Once we're done writing the *pipeline* out in *Compass*, we can use the *export to language* feature to produce the *aggregation in the language that's native to our application*.
 
 For more information, refer the to *MongoDB documentation* on [$lookup](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/)
