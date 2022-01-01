@@ -1599,7 +1599,7 @@ So to recap, {w: 1} is the default *write concern in Mongo*, and it *commits a w
 
 ### Basic Updates
 
-All right, welcome back. So in this lesson, we'll discuss *updating documents with the Node.js driver*. There are two different *update operations* we can perform, *UpdateOne and UpdateMany*. These operations both return and *update result* which we will discuss as well. We can *update a single document in a collection with UpdateOne*. *UpdateOne* takes a *query predicate* to match a document, and *an object of one or more update operators* describing how exactly to *update* that document.
+All right, welcome back. So in this lesson, we'll discuss *updating documents with the Node.js driver*. There are two different *update operations* we can perform, *UpdateOne and UpdateMany*. These operations both return and *update result* which we will discuss as well. We can *update a single document in a collection with UpdateOne*. *UpdateOne* takes a *query predicate to match a document*, and *an object of one or more update operators* describing how exactly to *update* that document.
 
 ```javascript
 it("Can update one document in a collection", async () => {
@@ -1637,13 +1637,11 @@ it("Can update one document in a collection", async () => {
     ])
 ```
 
-If the predicate matches more than one document, *UpdateOne* will only *update* the first document it finds in the collection. This may be unpredictable, so the *query predicate* we use should only match one document. In this example, one of the theaters in our database moved location, down the street from its original address.
-
-Here, we're just pulling data on the movie theater that we're going to *update*, movie theater with theater ID 8, and verifying the street address and the geo coordinates are what we expect.
+If the *predicate matches more than one document*, *UpdateOne* will only *update the first document* it finds in the collection. This may be unpredictable, so the *query predicate* we use should only *match one document*. In this example, one of the *theaters in our database* moved location, down the street from its original address. Here, we're just pulling data on the *movie theater* that we're going to *update*, *movie theater* with *theater ID 8*, and verifying the *street address and the geo coordinates* are what we expect.
 
 So the *update* we perform has two different *update* operators.
 
-We use the $set operator to *update* the string representing the street address of this movie theater, and we use the $inc operator to increment, or in this case, decrement the integer values of this theater's geo coordinates.
+We use the $set operator to *update* the string representing the street address of this *movie theater*, and we use the $inc operator to increment, or in this case, decrement the integer values of this theater's geo coordinates.
 
 Using the *update* result, we find that the matched count was equal to one, which means that this predicate only matched one document.
 
