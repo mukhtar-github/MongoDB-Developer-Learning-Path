@@ -2309,15 +2309,7 @@ it("deleteOne", async () => {
   // that I have just deleted will be the one with year = 1987.
 ```
 
-So in this case, we would know.
-
-But in practice, we're not really sure which document we're deleting when we do a statement like this.
-
-However, we can be sure that the number of documents we delete is equal to one, and we can verify that here.
-
-So now if we count the documents, we can check that this operation behaved normally.
-
-So now if we run this lesson's spec, it looks like we did successfully delete one document from the collection.
+So in this case, we would know. But in practice, we're not really sure which document we're deleting when we do a statement like this. However, we can be sure that the number of documents we *delete is equal to one*, and we can verify that here. So now if we count the documents, we can check that this operation behaved normally. So now if we run this *lesson's spec*, it looks like we did successfully *delete one document from the collection*.
 
 However, we don't typically send *deleteOne* operations without a predicate, so let's be more specific about the document that we want to delete.
 
