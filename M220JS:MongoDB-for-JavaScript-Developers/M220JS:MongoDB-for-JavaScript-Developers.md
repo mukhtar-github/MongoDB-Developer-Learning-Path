@@ -1871,5 +1871,33 @@ Once this ticket is completed, users will be able to save preferences in their a
 ### Answer 7
 
 ```javascript
+static async updatePreferences(email, preferences) {
+    try {
+      /**
+      Ticket: User Preferences
 
+      Update the "preferences" field in the corresponding user's document to
+      reflect the new information in preferences.
+      */
+
+      preferences = preferences || {}
+
+      // TODO Ticket: User Preferences
+      // Use the data in "preferences" to update the user's preferences.
+      const updateResponse = await users.updateOne(
+        { email: email },// answer
+        { $set: { preferences: preferences || {} } },// answer
+      )
+
+      if (updateResponse.matchedCount === 0) {
+        return { error: "No user found with that email" }
+      }
+      return updateResponse
+    } catch (e) {
+      console.error(
+        `An error occurred while updating this user's preferences, ${e}`,
+      )
+      return { error: e }
+    }
+  }
 ```
