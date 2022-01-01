@@ -2422,3 +2422,11 @@ static async deleteComment(commentId, userEmail) {
     }
   }
 ```
+
+## Chapter 3: Admin Backend
+
+### Introduction to Chapter 3
+
+Hello and welcome to *Chapter 3 of the M220 Developer Course*. I hope you were successfully able to build the *user-facing back end of the MFlix application*. Now we can move on to the *admin back end*.
+
+In this chapter, we'll learn how to use different *read concerns, join collections using expressive $lookup, perform bulk operations, and clean data*. With that you'll be able to expand the functionality of your *MFlix site*. This will include reporting on a *movie's popularity and listing all reviews*. This is going to be a great chapter, so good luck and have fun.
