@@ -1997,18 +1997,6 @@ const agg = [
     }
   }
 ];
-
-MongoClient.connect(
-  'mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/test?authSource=admin&replicaSet=atlas-5i660a-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true',
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  function(connectErr, client) {
-    assert.equal(null, connectErr);
-    const coll = client.db('sample_mflix').collection('movies');
-    coll.aggregate(agg, (cmdErr, result) => {
-      assert.equal(null, cmdErr);
-    });
-    client.close();
-  });
 ```
 
 So just to recap, *expressive lookup* up allows us to pass an *aggregation pipeline* to the command that can transform the data before that data is actually *joined*. And *let* allows us to declare variables in that *pipeline* that refer to document fields in our *source collection*. Once we're done writing the *pipeline* out in *Compass*, we can use the *export to language* feature to produce the *aggregation in the language that's native to our application*.
@@ -2039,33 +2027,5 @@ Once this ticket is completed, each movie's comments will be displayed on that m
 ### Answer 8
 
 ```javascript
-static async updatePreferences(email, preferences) {
-    try {
-      /**
-      Ticket: User Preferences
 
-      Update the "preferences" field in the corresponding user's document to
-      reflect the new information in preferences.
-      */
-
-      preferences = preferences || {}
-
-      // TODO Ticket: User Preferences
-      // Use the data in "preferences" to update the user's preferences.
-      const updateResponse = await users.updateOne(
-        { email: email },// answer
-        { $set: { preferences: preferences || {} } },// answer
-      )
-
-      if (updateResponse.matchedCount === 0) {
-        return { error: "No user found with that email" }
-      }
-      return updateResponse
-    } catch (e) {
-      console.error(
-        `An error occurred while updating this user's preferences, ${e}`,
-      )
-      return { error: e }
-    }
-  }
 ```
