@@ -2311,28 +2311,69 @@ it("deleteOne", async () => {
 
 So in this case, we would know. But in practice, we're not really sure which document we're deleting when we do a statement like this. However, we can be sure that the number of documents we *delete is equal to one*, and we can verify that here. So now if we count the documents, we can check that this operation behaved normally. So now if we run this *lesson's spec*, it looks like we did successfully *delete one document from the collection*.
 
-However, we don't typically send *deleteOne* operations without a predicate, so let's be more specific about the document that we want to delete.
+```javascript
+it("deletewithPredicate", async () => {
+    /**
+     * A delete that takes the first element of the collection $natural
+     * order tends to be a less than usual thing that you would do in your
+     * application, so let's use something a bit more elaborate.
+     * Let's say I would like to delete a document that matches a
+     * particular year.
+     */
 
-Here, I've specified that I want to delete the document that has year equal to 2008.
+    let deleteDocument = await videoGames.deleteOne({ year: 2008 })
 
-We can verify that this operation did match a document and delete it.
+    // To check that our delete was successful, we'll check the result.n object.
 
-We can also delete multiple documents in one operation using deleteMany.
+    expect(deleteDocument.result.n).toBe(1)
 
-Here, we're counting the number of documents that exist at the time of the delete.
+    // If we now count the number of documents remaining in our we should see
+    // that there is one less than we inserted
+    let countDocuments = await videoGames.count({})
 
-It should be equal to eight because we just did two deleteOne statements.
+    console.log(countDocuments)
+    // All good. As expected.
+  })
+```
 
-And the predicate that I'm passing to deleteMany here specifies all the documents that have year less than 1993.
+However, we don't typically send *deleteOne* operations without a *predicate*, so let's be more specific about the document that we want to *delete*. Here, I've specified that I want to *delete* the document that has *year equal to 2008*. We can verify that this operation did *match a document and delete it*.
 
-We can verify from the delete result that four documents were deleted from the collection.
+```javascript
+// Next, we will use the deleteMany operator. As the name suggests, this
+  // operator allows us to delete many documents, which match a given filter in
+  // our delete statement. Let's check it out:
+  it("deleteMany", async () => {
+    // let's see how many documents are left in the collection before we use
+    // the deleteMany operator.
+    let countDocuments = await videoGames.count({})
+    expect(countDocuments).toEqual(8)
 
-And if we look at the documents in the video video games collection that exist after our delete, we can verify that they all have year greater than or equal to 1993.
+    // Now let's try to delete multiple documents using deleteMany().
+    // To do this, we will need to specify a filter for the delete statement
+    // that will match multiple documents.
+    let deleteManyDocs = await videoGames.deleteMany({ year: { $lt: 1993 } })
 
-All right.
+    // This will delete all documents that have a year before 1993.
+    // To check that our delete was successful, we can check what the value of
+    // deleteMayDocs.result.n is equal to. In this case, we expect it to be 4.
+    expect(deleteManyDocs.result.n).toBe(4)
 
-So just to recap, in this lesson, we discussed how to delete documents in MongoDB, and in the Node.js driver, we have two operations to do so, deleteOne and deleteMany.
+    let findResult = await videoGames.find({})
+    let findResultArray = await findResult.toArray()
 
-Just keep in mind that when you're using deleteOne, make sure that your predicate matches only one document in the collection.
+    // After the delete operation, we expect all the documents to have a year
+    // greater than or equal to 1993.
+    for (var i = 0; i < findResultArray.length - 1; i++) {
+      let videoGame = findResultArray[i]
+      expect(videoGame.year).toBeGreaterThanOrEqual(1993)
+    }
 
-Otherwise, you could end up deleting the wrong document by accident.
+    countDocuments = await videoGames.count({})
+    expect(countDocuments).toEqual(4)
+  })
+})
+```
+
+We can also *delete multiple documents in one operation using deleteMany*. Here, we're counting the number of documents that exist at the time of the *delete*. It should be equal to eight because we just did *two deleteOne statements*. And the *predicate* that I'm passing to *deleteMany* here specifies all the documents that have *year less than 1993*. We can verify from the *delete result* that *four documents were deleted from the collection*. And if we look at the documents in the *video video games collection* that exist after our *delete*, we can verify that they all have *year greater than or equal to 1993*.
+
+All right. So just to recap, in this lesson, we discussed how to *delete documents in MongoDB*, and in the *Node.js driver*, we have two operations to do so, *deleteOne and deleteMany*. Just keep in mind that when you're using *deleteOne*, make sure that your *predicate matches only one document in the collection*. Otherwise, you could end up deleting the wrong document by accident.
