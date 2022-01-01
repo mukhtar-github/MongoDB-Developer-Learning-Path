@@ -2430,3 +2430,55 @@ static async deleteComment(commentId, userEmail) {
 Hello and welcome to *Chapter 3 of the M220 Developer Course*. I hope you were successfully able to build the *user-facing back end of the MFlix application*. Now we can move on to the *admin back end*.
 
 In this chapter, we'll learn how to use different *read concerns, join collections using expressive $lookup, perform bulk operations, and clean data*. With that you'll be able to expand the functionality of your *MFlix site*. This will include reporting on a *movie's popularity and listing all reviews*. This is going to be a great chapter, so good luck and have fun.
+
+### Read Concerns
+
+In this lesson, we're going to discuss *read concerns in MongoDB*. So *read concerns are similar write concerns*, in that they both involve *how many nodes have applied a database operation*. While *write concerns* affect the *acknowledgment received by the driver after a write, read concerns affect the data returned by a read operation*. Different *read concerns* are referred to as different levels of *read isolation* because you can essentially *isolate a read* from the rest of the database if the *data being read has only been written to one of the nodes in the set*.
+
+If data can be *read* by clients before that data has been replicated to a majority of nodes, it's considered a low level of *read* isolation.
+
+The read concern you choose will depend on how consistent your view of the database needs to be.
+
+So by default, when an application sends a read to Mongo, Mongo will use Read Concern Local.
+
+From the perspective of the database client, the data read using Read Concerned Local has only been written to the primary node.
+
+In the vast majority of cases, the data will also have been written to the secondary nodes in the set.
+
+But the client only has proof that this one note applied the write.
+
+This means that there's a chance, however slim, that the data returned by this read will be rolled back.
+
+This would happen if sometime after this data is returned, the primary goes down and the secondaries haven't replicated the data yet.
+
+That means that when one of these two nodes becomes the primary, this primary will be secondary.
+
+And it'll be rolled back to match the state of whichever node became the new primary.
+
+So the default read concern MongoDB is Local, which reads whatever copy of the data exists on the primary node, regardless of whether or not the other nodes have replicated that data.
+
+And for the vast majority of reads, Read Concern Local is just fine.
+
+But we might want a higher level of consistency on some of our reads, which we can achieve with a read concern called Majority.
+
+When a database client sends a read to Mongo with Read Concern Majority, it can verifiably claim that the data it gets back has been replicated to a majority of nodes in the set.
+
+The benefit of this read concern level is that once data has been replicated to majority of nodes, it's very durable in the event of a failure.
+
+Even if the current primary fails, this secondary can be elected primary, and then the data will get rolled back.
+
+One thing to note here, if these secondaries aren't done replicating data at the time that this primary receives the read, then whenever the copy of the data has been copied to a majority of nodes, will be returned to the client.
+
+This means that if my age in the primary is 66 but the secondaries still think that I'm 65, the age returned to the client will be 65 because in a three-node replica set, two members are required to constitute a majority.
+
+So clearly, Read Concern Majority might return slightly stale data, but provides a higher level of read isolation.
+
+So you can be more confident the data you received won't get rolled back.
+
+For this reason, it's most useful in reading mission-critical data, because lower levels of read isolation have slightly higher chance of being rolled back in an emergency.
+
+If your application's core functionality depends on one read, like checking a user's account balance, then you probably want that read to have a higher durability.
+
+So just to recap, issuing a read with Read Concern Local will return whatever copy of the data exists on the primary node in the set.
+
+Issuing a read with Read Concern Majority will return whatever copy of data has been replicated to a majority of nodes in the set.
