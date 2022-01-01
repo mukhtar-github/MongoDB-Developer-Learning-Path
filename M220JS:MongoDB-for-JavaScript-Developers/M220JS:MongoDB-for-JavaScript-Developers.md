@@ -2086,3 +2086,102 @@ Once this ticket is completed, each movie's comments will be displayed on that m
   }
 }
 ```
+
+### Ticket: Create/Update Comments
+
+#### Problem 9
+
+##### User Story 9
+
+"As a user, I want to be able to post comments to a movie page as well as edit my own comments."
+
+##### Task 9
+
+For this ticket, you'll be required to implement two methods in *commentsDAO.js*, *addComment and updateComment*.
+
+Ensure that *updateComment* only allows users to *update their own comments, and no one else's comments*.
+
+Note:
+
+Remember to wrap the *commentId argument with ObjectId()*, e.g. *ObjectId(commentId)*. This is the expected format of the *_id* field.
+
+##### MFlix Functionality 9
+
+Once this ticket is completed, each movie's comments will be displayed on that movie's detail page.
+
+### Answer 9
+
+```javascript
+/**
+  Ticket: Create/Update Comments
+
+  For this ticket, you will need to implement the following two methods:
+
+  - addComment
+  - updateComment
+
+  You can find these methods below this docstring. Make sure to read the comments
+  to better understand the task.
+  */
+
+  /**
+   * Inserts a comment into the `comments` collection, with the following fields:
+
+     - "name", the name of the user posting the comment
+     - "email", the email of the user posting the comment
+     - "movie_id", the _id of the movie pertaining to the comment
+     - "text", the text of the comment
+     - "date", the date when the comment was posted
+
+   * @param {string} movieId - The _id of the movie in the `movies` collection.
+   * @param {Object} user - An object containing the user's name and email.
+   * @param {string} comment - The text of the comment.
+   * @param {string} date - The date on which the comment was posted.
+   * @returns {DAOResponse} Returns an object with either DB response or "error"
+   */
+  static async addComment(movieId, user, comment, date) {
+    try {
+      // TODO Ticket: Create/Update Comments
+      // Construct the comment document to be inserted into MongoDB.
+      const commentDoc = { 
+        name: user.name,
+        email: user.email,
+        movie_id: ObjectId(movieId),
+        text: comment,
+        date: date
+      }// answer
+
+      return await comments.insertOne(commentDoc)
+    } catch (e) {
+      console.error(`Unable to post comment: ${e}`)
+      return { error: e }
+    }
+  }
+
+  /**
+   * Updates the comment in the comment collection. Queries for the comment
+   * based by both comment _id field as well as the email field to doubly ensure
+   * the user has permission to edit this comment.
+   * @param {string} commentId - The _id of the comment to update.
+   * @param {string} userEmail - The email of the user who owns the comment.
+   * @param {string} text - The updated text of the comment.
+   * @param {string} date - The date on which the comment was updated.
+   * @returns {DAOResponse} Returns an object with either DB response or "error"
+   */
+  static async updateComment(commentId, userEmail, text, date) {
+    try {
+      // TODO Ticket: Create/Update Comments
+      // Use the commentId and userEmail to select the proper comment, then
+      // update the "text" and "date" fields of the selected comment.
+      const updateResponse = await comments.updateOne(
+        { _id: ObjectId(commentId), email: userEmail },
+        { $set: { text: text, date: date } },
+      )// answer
+
+      return updateResponse
+    } catch (e) {
+      console.error(`Unable to update comment: ${e}`)
+      return { error: e }
+    }
+  }
+```
