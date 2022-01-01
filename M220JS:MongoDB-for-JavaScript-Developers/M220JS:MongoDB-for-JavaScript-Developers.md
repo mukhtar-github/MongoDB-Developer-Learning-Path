@@ -1751,15 +1751,7 @@ it("Can update many documents in a collection", async () => {
   })
 ```
 
-Here, we're just pulling the data that's currently in the database for all the theaters in this zip code and verifying that their street address has the city Minneapolis.
-
-In our UpdateMany operation, we use the same predicate as our Find statement above to find all the theaters in the zip code 55111, and then we use the $set operator to update their city to Bloomington.
-
-Here, the update result has a matched count equal to six.
-
-This means that six of the theaters in our collection have the zip code 55111.
-
-We also have a modified count equal to six, which means that all six of the theaters in this zip code have been updated to contain the city Bloomington.
+Here, we're just pulling the data that's currently in the database for all the *theaters in this zip code* and verifying that their *street address has the city Minneapolis*. In our *UpdateMany operation*, we use the same *predicate as our Find statement* above to find *all the theaters in the zip code 55111*, and then we use the *$set operator to update their city to Bloomington*. Here, the *update result has a matched count equal to six*. This means that *six of the theaters in our collection have the zip code 55111*. We also have a *modified count equal to six*, which means that *all six of the theaters in this zip code have been updated to contain the city Bloomington*.
 
 And we can verify that here.
 
