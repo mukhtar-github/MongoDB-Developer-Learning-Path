@@ -2014,3 +2014,58 @@ MongoClient.connect(
 So just to recap, *expressive lookup* up allows us to pass an *aggregation pipeline* to the command that can transform the data before that data is actually *joined*. And *let* allows us to declare variables in that *pipeline* that refer to document fields in our *source collection*. Once we're done writing the *pipeline* out in *Compass*, we can use the *export to language* feature to produce the *aggregation in the language that's native to our application*.
 
 For more information, refer the to *MongoDB documentation* on [$lookup](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/)
+
+
+### Ticket: Get Comments
+
+#### Problem 8
+
+##### User Story 8
+
+"As a user, I want to be able to view comments for a movie when I look at the movie detail page."
+
+##### Task 8
+
+Modify the *getMovieByID* method in *moviesDAO.js* so that it also fetches the comments for a given movie.
+
+The comments should be returned in order from most recent to least recent using the *date key*.
+
+Movie comments are stored in the *comments collection*, so this task can be accomplished by performing a *$lookup*. Refer to the Aggregation [Quick Reference](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/?jmp=university#join-conditions-and-uncorrelated-sub-queries) for the specific syntax.
+
+##### MFlix Functionality 8
+
+Once this ticket is completed, each movie's comments will be displayed on that movie's detail page.
+
+### Answer 8
+
+```javascript
+static async updatePreferences(email, preferences) {
+    try {
+      /**
+      Ticket: User Preferences
+
+      Update the "preferences" field in the corresponding user's document to
+      reflect the new information in preferences.
+      */
+
+      preferences = preferences || {}
+
+      // TODO Ticket: User Preferences
+      // Use the data in "preferences" to update the user's preferences.
+      const updateResponse = await users.updateOne(
+        { email: email },// answer
+        { $set: { preferences: preferences || {} } },// answer
+      )
+
+      if (updateResponse.matchedCount === 0) {
+        return { error: "No user found with that email" }
+      }
+      return updateResponse
+    } catch (e) {
+      console.error(
+        `An error occurred while updating this user's preferences, ${e}`,
+      )
+      return { error: e }
+    }
+  }
+```
