@@ -1751,42 +1751,79 @@ it("Can update many documents in a collection", async () => {
   })
 ```
 
-Here, we're just pulling the data that's currently in the database for all the *theaters in this zip code* and verifying that their *street address has the city Minneapolis*. In our *UpdateMany operation*, we use the same *predicate as our Find statement* above to find *all the theaters in the zip code 55111*, and then we use the *$set operator to update their city to Bloomington*. Here, the *update result has a matched count equal to six*. This means that *six of the theaters in our collection have the zip code 55111*. We also have a *modified count equal to six*, which means that *all six of the theaters in this zip code have been updated to contain the city Bloomington*.
+Here, we're just pulling the data that's currently in the database for all the *theaters in this zip code* and verifying that their *street address has the city Minneapolis*. In our *UpdateMany operation*, we use the same *predicate as our Find statement* above to find *all the theaters in the zip code 55111*, and then we use the *$set operator to update their city to Bloomington*. Here, the *update result has a matched count equal to six*. This means that *six of the theaters in our collection have the zip code 55111*. We also have a *modified count equal to six*, which means that *all six of the theaters in this zip code have been updated to contain the city Bloomington*. And we can verify that here. If we look for all the movies in the zip code, we can verify that they have the correct data.
 
-And we can verify that here.
+```javascript
+it("Can update a document if it exists, and insert if it does not", async () => {
+    /**
+     * Sometimes, we want to update a document, but we're not sure if it exists
+     * in the collection.
+     *
+     * We can use an "upsert" to update a document if it exists, and insert it
+     * if it does not exist.
+     *
+     * In the following example, we're not sure if this theater exists in our
+     * collection, but we want to make sure there is a document in the
+     * collection that contains the correct data.
+     *
+     * This operation may do one of two things:
+     *
+     * If the predicate matches a document, update the theater document to
+     * contain the correct data
+     * If the document doesn't exist, create the desired theater document
+     */
 
-If we look for all the movies in the zip code, we can verify that they have the correct data.
+    const newTheaterDoc = {
+      theaterId: 954,
+      location: {
+        address: {
+          street1: "570 2nd Ave",
+          street2: null,
+          city: "New York",
+          state: "NY",
+          zipcode: "10016",
+        },
+        geo: {
+          type: "Point",
+          coordinates: [-75, 42],
+        },
+      },
+    }
 
-The last kind of update we're going to cover in this lesson is called an upsert, which is technically just a regular update, but with some special properties.
+    const upsertResult = await theaters.updateOne(
+      {
+        "location.address": newTheaterDoc.location.address,
+      },
+      {
+        $set: newTheaterDoc,
+      },
+      { upsert: true },
+    )
 
-Sometimes we want to update a document but we're not sure if it exists in the collection already.
+    // expect this operation not to match any theater documents
+    expect(upsertResult.matchedCount).toEqual(0)
 
-In these cases, we can use an upsert to update a document if it exists and insert it if it does not exist.
+    // expect this operation not to update any theater documents
+    expect(upsertResult.modifiedCount).toEqual(0)
 
-In this example, we're not actually sure if this data exists in the collection, but we do want to make sure that there's a document in the collection that contains the correct data.
+    // this upsertedId contains the _id of the document that we just upserted
+    expect(upsertResult.upsertedId).not.toBeNull()
+    console.log(upsertResult.upsertedId)
 
-We use the $set operator to make sure that if the document already exists, the updated document will contain all the correct fields.
+    // remove the document so it can be upserted again
+    const cleanUp = await theaters.deleteOne({
+      "location.address": newTheaterDoc.location.address,
+    })
 
-We also pass a new flag, upsert true.
+    expect(cleanUp.deletedCount).toEqual(1)
+  })
+})
+```
 
-This way, if the document does not exist, meaning the predicate came up empty, the contents of the new theater doc will be used to create a new document.
+The last kind of update we're going to cover in this lesson is called an *upsert, which is technically just a regular update, but with some special properties*. Sometimes we want to update a document but we're not sure if it *exists in the collection already*. In these cases, we can use an *upsert to update a document if it exists and insert it if it does not exist*. In this example, we're not actually sure if this data exists in the collection, but we do want to make sure that there's a document in the collection that contains the correct data.
 
-Using the update result, we can see that the matched count was equal to zero, which means that the predicate didn't match any documents.
+We use the *$set operator* to make sure that if the document already exists, the *updated document will contain all the correct fields*. We also pass a new flag, *upsert true*. This way, if the document does not exist, meaning the predicate came up empty, the contents of the *new theater doc will be used to create a new document*. Using the *update result*, we can see that the *matched count was equal to zero*, which means that the *predicate didn't match any documents*.
 
-We can also see that the modified count was equal to zero which makes sense seeing as the predicate didn't match anything.
+We can also see that the *modified count was equal to zero* which makes sense seeing as the predicate didn't match anything. So now, because the *predicate didn't match any documents* and we passed this *upsert true flag*, we can expect this *upserted ID property* will not be null. *The upserted ID represents the underscore ID of the document inserted by this operation*. Let's take a look. So now if I run this test, we get back an *underscore ID* which we could potentially use to find the document that we just inserted.
 
-So now, because the predicate didn't match any documents and we passed this upsert true flag, we can expect this upserted ID property will not be null.
-
-The upserted ID represents the underscore ID of the document inserted by this operation.
-
-Let's take a look.
-
-So now if I run this test, we get back an underscore ID which we could potentially use to find the document that we just inserted.
-
-So just to recap, in this lesson, we covered the two update commands in the Node.js driver, UpdateOne and UpdateMany.
-
-We pass a predicate to both, but UpdateOne will only update the first document that it matches, while UpdateMany will update all the documents it matches.
-
-We can also pass this upsert true flag to the update, which adds a bit of flexibility to the update.
-
-In case the predicate doesn't match anything, we can still make sure the updated data exists in our database.
+So just to recap, in this lesson, we covered the two update commands in the *Node.js driver, UpdateOne and UpdateMany*. We pass a predicate to both, but *UpdateOne will only update the first document that it matches, while UpdateMany will update all the documents it matches*. We can also pass this *upsert true flag* to the update, which adds a bit of flexibility to the update. In case the predicate doesn't match anything, we can still make sure the updated data exists in our database.
