@@ -1639,23 +1639,58 @@ it("Can update one document in a collection", async () => {
 
 If the *predicate matches more than one document*, *UpdateOne* will only *update the first document* it finds in the collection. This may be unpredictable, so the *query predicate* we use should only *match one document*. In this example, one of the *theaters in our database* moved location, down the street from its original address. Here, we're just pulling data on the *movie theater* that we're going to *update*, *movie theater* with *theater ID 8*, and verifying the *street address and the geo coordinates* are what we expect.
 
-So the *update* we perform has two different *update* operators.
+```javascript
+// update a single theater document in this collection
+    const updateOneResult = await theaters.updateOne(
+      { theaterId: 8 },
+      {
+        $set: { "location.address.street1": "14161 Aldrich Ave S" },
+        $inc: {
+          "location.geo.coordinates.0": -10,
+          "location.geo.coordinates.1": -25,
+        },
+      },
+    )
 
-We use the $set operator to *update* the string representing the street address of this *movie theater*, and we use the $inc operator to increment, or in this case, decrement the integer values of this theater's geo coordinates.
+    // expect this operation to match exactly 1 theater document
+    expect(updateOneResult.matchedCount).toEqual(1)
 
-Using the *update* result, we find that the matched count was equal to one, which means that this predicate only matched one document.
+    // expect this operation to update exactly 1 theater document
+    expect(updateOneResult.modifiedCount).toEqual(1)
 
-And the modified count is also equal to one, which makes sense given that we issued an UpdateOne command.
+    const newTheaterAddress = await theaters.findOne(
+      { theaterId: 8 },
+      { "location.address.street1": 1 },
+    )
 
-We can also update multiple documents in a collection using UpdateMany.
+    // expect the updated address of this theater to be "14161 Aldrich Ave S"
+    expect(newTheaterAddress.location.address.street1).toEqual(
+      "14161 Aldrich Ave S",
+    )
+    expect(newTheaterAddress.location.geo.coordinates).toEqual([
+      -103.288039,
+      19.747404000000003,
+    ])
 
-Like UpdateOne, UpdateMany takes a query predicate and an object containing one or more update operators.
+    // do some cleanup
+    const cleanUp = await theaters.updateOne(
+      { theaterId: 8 },
+      {
+        $set: { "location.address.street1": "14141 Aldrich Ave S" },
+        $inc: {
+          "location.geo.coordinates.0": 10,
+          "location.geo.coordinates.1": 25,
+        },
+      },
+    )
 
-But unlike UpdateOne, UpdateMany will update any documents matching the query predicate.
+    expect(cleanUp.modifiedCount).toEqual(1)
+  })
+```
 
-In this example, the state of Minnesota has relocated one of its zip codes from Minneapolis to the neighboring city of Bloomington.
+So the *update* we perform has two different *update operators*. We use the *$set operator* to *update the string representing the street address of this movie theater*, and we use the *$inc operator to increment, or in this case, decrement the integer values of this theater's geo coordinates*. Using the *update result*, we find that the matched *count was equal to one*, which means that this *predicate only matched one document*. And the *modified count is also equal to one, which makes sense given that we issued an UpdateOne command*.
 
-This operation should find all the movie theaters in that zip code and update the value of their city field to Bloomington.
+We can also *update multiple documents in a collection using UpdateMany*. Like *UpdateOne, UpdateMany takes a query predicate and an object containing one or more update operators*. But unlike *UpdateOne, UpdateMany will update any documents matching the query predicate*. In this example, *the state of Minnesota has relocated one of its zip codes from Minneapolis to the neighboring city of Bloomington*. This operation should *find all the movie theaters in that zip code and update the value of their city field to Bloomington*.
 
 Here, we're just pulling the data that's currently in the database for all the theaters in this zip code and verifying that their street address has the city Minneapolis.
 
