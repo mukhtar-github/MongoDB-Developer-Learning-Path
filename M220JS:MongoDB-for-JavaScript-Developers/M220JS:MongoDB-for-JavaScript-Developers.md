@@ -2377,3 +2377,25 @@ However, we don't typically send *deleteOne* operations without a *predicate*, s
 We can also *delete multiple documents in one operation using deleteMany*. Here, we're counting the number of documents that exist at the time of the *delete*. It should be equal to eight because we just did *two deleteOne statements*. And the *predicate* that I'm passing to *deleteMany* here specifies all the documents that have *year less than 1993*. We can verify from the *delete result* that *four documents were deleted from the collection*. And if we look at the documents in the *video video games collection* that exist after our *delete*, we can verify that they all have *year greater than or equal to 1993*.
 
 All right. So just to recap, in this lesson, we discussed how to *delete documents in MongoDB*, and in the *Node.js driver*, we have two operations to do so, *deleteOne and deleteMany*. Just keep in mind that when you're using *deleteOne*, make sure that your *predicate matches only one document in the collection*. Otherwise, you could end up deleting the wrong document by accident.
+
+### Ticket: Delete Comments
+
+#### Problem 10
+
+##### User Story 10
+
+"As a user, I want to be able to delete my own comments."
+
+##### Task 10
+
+For this ticket, you'll be required to modify one method in *commentsDAO.js, deleteComment*. Ensure the delete operation is limited so only the user can delete their own comments, but not anyone else's comments.
+
+##### MFlix Functionality 10
+
+Once this ticket is completed, users will be able to delete their own comments, but they won't be able to delete anyone else's comments.
+
+### Answer 10
+
+```javascript
+
+```
