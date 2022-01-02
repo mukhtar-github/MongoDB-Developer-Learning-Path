@@ -2630,3 +2630,11 @@ mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220J
  Found 23530 documents to update
  23530 documents updated
 ```
+
+## Chapter 4: Resiliency
+
+### Introduction to Chapter 4
+
+Welcome to Chapter 4. We are almost there. Before we start uncorking the champagne and celebrating your course completion certificate, we need to go through the last chapter of this course. This chapter is all about application resilience and robustness.
+
+We will be looking to how to make your applications resilient to a variety of different situations that may impact the performance and availability of your system. Don't forget, we are living in a distributive database world, and therefore, we need to prepare our application to be robust and performant, as well as scalable. Hang tight. This is going to be fun.
