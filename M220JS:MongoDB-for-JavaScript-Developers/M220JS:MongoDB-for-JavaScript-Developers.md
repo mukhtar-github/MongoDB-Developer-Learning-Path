@@ -2499,43 +2499,13 @@ static async mostActiveCommenters() {
 
 ### Bulk Writes
 
-So in this lesson we're going to discuss bulk writes, which is a different kind of write in MongoDB, and we're going to talk about the performance application of these kinds of writes.
+So in this lesson we're going to discuss *bulk writes*, which is a different kind of *write in MongoDB*, and we're going to talk about the performance application of these kinds of writes. So oftentimes our applications will encounter situations in which they need to perform a *series of writes at once*. And in some cases, these *writes* have a causal effect on one another. One of them failing or succeeding may affect the *application logic*.
 
-So oftentimes our applications will encounter situations in which they need to perform a series of writes at once.
+So in this case, a customer is on our *supermarket application* and they're purchasing items from the store. We want to *update the database* to reflect the new quantities of that food that we have in stock. So they *bought two apples*, so we want to *decrease the total quantity by two*. They bought *four sticks of butter, one slice of bread*, et cetera. When our application received these *writes*, one option it has is to send each of them to the database one at a time. So it would send the *first write*, and then some time later, it will receive an acknowledgment back from the database.
 
-And in some cases, these writes have a causal effect on one another.
+Nice. Now we'll see the next *write over*. So we send the *next write*, wait for acknowledgment. So we just performed *two write operations*, and it required two round trips to the database. We need to send the operation, and then receive an acknowledgment back from the database. That's round trip to the database for each operation. But if we already knew all the *writes* we wanted to perform, why is our client *sending them each one at a time*? So you can probably see where this is going.
 
-One of them failing or succeeding may affect the application logic.
-
-So in this case, a customer is on our supermarket application and they're purchasing items from the store.
-
-We want to update the database to reflect the new quantities of that food that we have in stock.
-
-So they bought two apples, so we want to decrease the total quantity by two.
-
-They bought four sticks of butter, one slice of bread, et cetera.
-
-When our application received these writes, one option it has is to send each of them to the database one at a time.
-
-So it would send the first write, and then some time later, it will receive an acknowledgment back from the database.
-
-Nice.
-
-Now we'll see the next write over.
-
-So we send the next write, wait for acknowledgment.
-
-So we just performed two write operations, and it required two round trips to the database.
-
-We need to send the operation, and then receive an acknowledgment back from the database.
-
-That's round trip to the database for each operation.
-
-But if we already knew all the writes we wanted to perform, why is our client sending them each one at a time?
-
-So you can probably see where this is going.
-
-So what we can do instead is batch these writes together and then send them in bulk.
+So what we can do instead is batch these *writes* together and then send them in bulk.
 
 The exact method of grouping documents together is implemented differently in each driver, just because the data structures are different.
 
