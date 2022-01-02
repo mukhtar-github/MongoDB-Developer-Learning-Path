@@ -2515,15 +2515,7 @@ In that situation, the first operation in the batch you get the last stick of bu
 
 That means that even though we sent all the *writes* at the same time, the *replica set* will apply them in the order that they were sent. Sending an *ordered bulk write* implies that *each write* in the batch depends on *all the writes* that occurred before it. So if a *write operation* results in error, all subsequent *writes* will not be executed, because *Mongo* assumes that those *writes* were expecting the ones before to succeed.
 
-But there's a chance that the *writes* in our batch are not dependent on each other.
-
-In this case, we've just received a shipment of food to the warehouse and we want to update the new food quantities in stock.
-
-Because all these operations are additive, we don't need them to be executed in order.
-
-So I passed this order of false flag to the bulk write command which will execute them in parallel.
-
-If some of them fail for whatever reason, we can still continue on with the execution of the other operations in the batch.
+But there's a chance that the *writes in our batch* are not dependent on each other. In this case, we've just received a shipment of food to the warehouse and we want to update the new food quantities in stock. Because all these operations are additive, we don't need them to be executed in order. So I passed this order of false flag to the bulk write command which will execute them in parallel. If some of them fail for whatever reason, we can still continue on with the execution of the other operations in the batch.
 
 And when we get an acknowledgment back from the server, it'll let us know if any of the operations fail.
 
