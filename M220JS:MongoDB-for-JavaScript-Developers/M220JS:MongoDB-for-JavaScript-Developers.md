@@ -2505,31 +2505,11 @@ So in this case, a customer is on our *supermarket application* and they're purc
 
 Nice. Now we'll see the next *write over*. So we send the *next write*, wait for acknowledgment. So we just performed *two write operations*, and it required two round trips to the database. We need to send the operation, and then receive an acknowledgment back from the database. That's round trip to the database for each operation. But if we already knew all the *writes* we wanted to perform, why is our client *sending them each one at a time*? So you can probably see where this is going.
 
-So what we can do instead is batch these *writes* together and then send them in bulk.
+So what we can do instead is *batch these writes together and then send them in bulk*. The exact method of grouping documents together is implemented differently in each driver, just because the data structures are different. But the general idea is the same. *Package a bunch of writes into a batch, usually a list or an array* -- but again, the implementation is different in every language -- and then send that *whole batch to MongoDB and get one acknowledgment back from the server*.
 
-The exact method of grouping documents together is implemented differently in each driver, just because the data structures are different.
+This is an implementation of *bulk writes in the Mongo shell*, and you can copy this from the handout if you want to try it out. But this will look different and your chosen programming language, so just bear that in mind. When a client sends a bulk write, it gets one acknowledgment back from the database for the whole batch. And this is a *benefit to our application's performance because it limits the effect of latency on the overall speed of the operation*. If it takes one second for each round trip, then setting each write one at a time takes four total seconds.
 
-But the general idea is the same.
-
-Package a bunch of writes into a batch, usually a list or an array-- but again, the implementation is different in every language-- and then send that whole batch to MongoDB and get one acknowledgment back from the server.
-
-This is an implementation of bulk writes in the Mongols shell, and you can copy this from the handout if you want to try it out.
-
-But this will look different and your chosen programming language, so just bear that in mind.
-
-When a client sends a bulk write, it gets one acknowledgment back from the database for the whole batch.
-
-And this is a benefit to our application's performance because it limits the effect of latency on the overall speed of the operation.
-
-If it takes one second for each round trip, then setting each write one at a time takes four total seconds.
-
-But if we can send all four writes in one trip, then sending four writes only takes one second.
-
-Now the default behavior of a bulk write in Mongo is an ordered execution of these writes.
-
-In the order bulk write, any failure will stop the execution of the rest of the batch.
-
-This benefits us in this case because these writes might be causally related, like if two different update operations want to buy sticks of butter but there's only one left.
+But if we can send *all four writes in one trip, then sending four writes only takes one second*. Now the default behavior of a *bulk write in Mongo is an ordered execution of these writes*. In the *order bulk write, any failure will stop the execution of the rest of the batch*. This benefits us in this case because these *writes* might be causally related, like *if two different update operations want to buy sticks of butter but there's only one left*.
 
 In that situation, the first operation in the batch you get the last stick of butter, and the second operation should error out.
 
