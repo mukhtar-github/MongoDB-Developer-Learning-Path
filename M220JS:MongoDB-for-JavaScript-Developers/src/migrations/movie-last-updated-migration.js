@@ -3,6 +3,7 @@ const ObjectId = require("mongodb").ObjectId
 const MongoError = require("mongodb").MongoError
 require("dotenv").config()
 
+
 /**
  * Ticket: Migration
  *
@@ -17,11 +18,17 @@ require("dotenv").config()
 // Immediately Invoked Function Expression (IIFE). It's being used to wrap this logic in an asynchronous function
 // so we can use await within.
 // To read more about this type of expression, refer to https://developer.mozilla.org/en-US/docs/Glossary/IIFE
+/*
+MFLIX_DB_URI=mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/sample_mflix
+MFLIX_NS=sample_mflix
+*/
 ;(async () => {
   try {
-    const host = process.env.MFLIX_DB_URI
+    //const host = process.env.MFLIX_DB_URI
+    const host = "mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/sample_mflix"
     const client = await MongoClient.connect(host, { useNewUrlParser: true })
-    const mflix = client.db(process.env.MFLIX_NS)
+    //const mflix = client.db(process.env.MFLIX_NS)
+    const mflix = client.db("sample_mflix")
 
     // TODO: Create the proper predicate and projection
     // add a predicate that checks that the `lastupdated` field exists, and then
@@ -29,8 +36,9 @@ require("dotenv").config()
     // a projection is not required, but may help reduce the amount of data sent
     // over the wire!
     //const predicate = { somefield: { $someOperator: true } } ?
-    const predicate = { lastupdated: { $exists: true, $type: 'string'} }// answer
-    const projection = {}
+    const predicate = { lastupdated: { $exists: true, $type: "string"} }// answer
+    // we use the projection here to only return the _id and lastupdated fields
+    const projection = { lastupdated: 1 }// answer
     const cursor = await mflix
       .collection("movies")
       .find(predicate, projection)

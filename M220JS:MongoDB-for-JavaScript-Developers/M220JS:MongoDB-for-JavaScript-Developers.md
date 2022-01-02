@@ -2544,5 +2544,89 @@ node movie-last-updated-migration.js
 ### Answer 12
 
 ```javascript
+const MongoClient = require("mongodb").MongoClient
+const ObjectId = require("mongodb").ObjectId
+const MongoError = require("mongodb").MongoError
+require("dotenv").config()
 
+
+/**
+ * Ticket: Migration
+ *
+ * Update all the documents in the `movies` collection, such that the
+ * "lastupdated" field is stored as an ISODate() rather than a string.
+ *
+ * The Date.parse() method build into Javascript will prove very useful here!
+ * Refer to http://mongodb.github.io/node-mongodb-native/3.1/tutorials/crud/#bulkwrite
+ */
+
+// This leading semicolon (;) is to signify to the parser that this is a new expression. This expression is an
+// Immediately Invoked Function Expression (IIFE). It's being used to wrap this logic in an asynchronous function
+// so we can use await within.
+// To read more about this type of expression, refer to https://developer.mozilla.org/en-US/docs/Glossary/IIFE
+/*
+MFLIX_DB_URI=mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/sample_mflix
+MFLIX_NS=sample_mflix
+*/
+;(async () => {
+  try {
+    //const host = process.env.MFLIX_DB_URI
+    const host = "mongodb+srv://m220student:m220password@mflix.sa8ij.mongodb.net/sample_mflix"
+    const client = await MongoClient.connect(host, { useNewUrlParser: true })
+    //const mflix = client.db(process.env.MFLIX_NS)
+    const mflix = client.db("sample_mflix")
+
+    // TODO: Create the proper predicate and projection
+    // add a predicate that checks that the `lastupdated` field exists, and then
+    // check that its type is a string
+    // a projection is not required, but may help reduce the amount of data sent
+    // over the wire!
+    //const predicate = { somefield: { $someOperator: true } } ?
+    const predicate = { lastupdated: { $exists: true, $type: "string"} }// answer
+    // we use the projection here to only return the _id and lastupdated fields
+    const projection = { lastupdated: 1 }// answer
+    const cursor = await mflix
+      .collection("movies")
+      .find(predicate, projection)
+      .toArray()
+    const moviesToMigrate = cursor.map(({ _id, lastupdated }) => ({
+      updateOne: {
+        filter: { _id: ObjectId(_id) },
+        update: {
+          $set: { lastupdated: new Date(Date.parse(lastupdated)) },
+        },
+      },
+    }))
+    console.log(
+      "\x1b[32m",
+      `Found ${moviesToMigrate.length} documents to update`,
+    )
+    // TODO: Complete the BulkWrite statement below
+    //const { modifiedCount } = await "some bulk operation"?
+    const { modifiedCount } = await mflix.collection('movies').bulkWrite(moviesToMigrate)// answer
+
+    console.log("\x1b[32m", `${modifiedCount} documents updated`)
+    client.close()
+    process.exit(0)
+  } catch (e) {
+    if (
+      e instanceof MongoError &&
+      e.message.slice(0, "Invalid Operation".length) === "Invalid Operation"
+    ) {
+      console.log("\x1b[32m", "No documents to update")
+    } else {
+      console.error("\x1b[31m", `Error during migration, ${e}`)
+    }
+    process.exit(1)
+  }
+})()
+mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220JS:MongoDB-for-JavaScript-Developers/src/migrations$ node movie-last-updated-migration.js
+(node:55247) Warning: Accessing non-existent property 'count' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:55247) Warning: Accessing non-existent property 'findOne' of module exports inside circular dependency
+(node:55247) Warning: Accessing non-existent property 'remove' of module exports inside circular dependency
+(node:55247) Warning: Accessing non-existent property 'updateOne' of module exports inside circular dependency
+(node:55247) DeprecationWarning: current Server Discovery and Monitoring engine is deprecated, and will be removed in a future version. To use the new Server Discover and Monitoring engine, pass option { useUnifiedTopology: true } to MongoClient.connect.
+ Found 23530 documents to update
+ 23530 documents updated
 ```
