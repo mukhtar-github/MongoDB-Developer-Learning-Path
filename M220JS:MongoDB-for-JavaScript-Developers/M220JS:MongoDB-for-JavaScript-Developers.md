@@ -2517,26 +2517,8 @@ That means that even though we sent all the *writes* at the same time, the *repl
 
 But there's a chance that the *writes in our batch* are not dependent on each other. In this case, we've just received a shipment of food to the warehouse and we want to update the new food quantities in stock. Because all these operations are additive, we don't need them to be executed in order. So I passed this order of false flag to the bulk write command which will execute them in parallel. If some of them fail for whatever reason, we can still continue on with the execution of the other operations in the batch.
 
-And when we get an acknowledgment back from the server, it'll let us know if any of the operations fail.
+And when we get an acknowledgment back from the server, it'll let us know if any of the operations fail. So if the *writes in our batch* don't have any sort of causal relationship, then the client can send them over in an *unordered bulk write*. This will execute the *write operations* in parallel so the *writes are non-blocking*. And as a result, a single failure won't prevent any of the *other writes* from succeeding. Now those *writes* might fail on their own, but their execution is not tied to the success of any of the *other writes*.
 
-So if the writes in our batch don't have any sort of causal relationship, then the client can send them over in an unordered bulk write.
+So in conclusion, *bulk writes* make it more efficient to *update or insert in many documents in a database by setting them all in batches*. *These bulk writes can be ordered, which means writes are executed in the order in which they were sent to the database and any errors will prevent subsequent writes from executing*. They can also be *unordered, which means the writes are executed in parallel, and errors don't affect the execution of other writes*.
 
-This will execute the write operations in parallel so the writes are non-blocking.
-
-And as a result, a single failure won't prevent any of the other writes from succeeding.
-
-Now those writes might fail on their own, but their execution is not tied to the success of any of the other writes.
-
-So in conclusion, bulk writes make it more efficient to update or insert in many documents in a database by setting them all in batches.
-
-These bulk writes can be ordered, which means writes are executed in the order in which they were sent to the database and any errors will prevent subsequent writes from executing.
-
-They can also be unordered, which means the writes are executed in parallel, and errors don't affect the execution of other writes.
-
-Now one small thing to note.
-
-In a shorted collection, ordered bulk rates are expected to take a little longer because write operations need to be routed to the designated shards.
-
-And unordered bulk write might reach the mongos in one batch, but then it has to be serialized across each designated shard.
-
-Regardless of the designated shard, the write operation needs to be evaluated to see if we should continue or exit the execution of the rest of the batch.
+Now one small thing to note. In a *sorted collection*, *ordered bulk rates* are expected to take a little longer because *write operations* need to be routed to the *designated shards*. And *unordered bulk write* might reach the *mongos in one batch*, but then it has to be serialized across each *designated shard*. Regardless of the *designated shard*, the write operation needs to be evaluated to see if we should continue or exit the execution of the rest of the batch.
