@@ -2496,3 +2496,117 @@ static async mostActiveCommenters() {
   }
 }
 ```
+
+### Bulk Writes
+
+So in this lesson we're going to discuss bulk writes, which is a different kind of write in MongoDB, and we're going to talk about the performance application of these kinds of writes.
+
+So oftentimes our applications will encounter situations in which they need to perform a series of writes at once.
+
+And in some cases, these writes have a causal effect on one another.
+
+One of them failing or succeeding may affect the application logic.
+
+So in this case, a customer is on our supermarket application and they're purchasing items from the store.
+
+We want to update the database to reflect the new quantities of that food that we have in stock.
+
+So they bought two apples, so we want to decrease the total quantity by two.
+
+They bought four sticks of butter, one slice of bread, et cetera.
+
+When our application received these writes, one option it has is to send each of them to the database one at a time.
+
+So it would send the first write, and then some time later, it will receive an acknowledgment back from the database.
+
+Nice.
+
+Now we'll see the next write over.
+
+So we send the next write, wait for acknowledgment.
+
+So we just performed two write operations, and it required two round trips to the database.
+
+We need to send the operation, and then receive an acknowledgment back from the database.
+
+That's round trip to the database for each operation.
+
+But if we already knew all the writes we wanted to perform, why is our client sending them each one at a time?
+
+So you can probably see where this is going.
+
+So what we can do instead is batch these writes together and then send them in bulk.
+
+The exact method of grouping documents together is implemented differently in each driver, just because the data structures are different.
+
+But the general idea is the same.
+
+Package a bunch of writes into a batch, usually a list or an array-- but again, the implementation is different in every language-- and then send that whole batch to MongoDB and get one acknowledgment back from the server.
+
+This is an implementation of bulk writes in the Mongols shell, and you can copy this from the handout if you want to try it out.
+
+But this will look different and your chosen programming language, so just bear that in mind.
+
+When a client sends a bulk write, it gets one acknowledgment back from the database for the whole batch.
+
+And this is a benefit to our application's performance because it limits the effect of latency on the overall speed of the operation.
+
+If it takes one second for each round trip, then setting each write one at a time takes four total seconds.
+
+But if we can send all four writes in one trip, then sending four writes only takes one second.
+
+Now the default behavior of a bulk write in Mongo is an ordered execution of these writes.
+
+In the order bulk write, any failure will stop the execution of the rest of the batch.
+
+This benefits us in this case because these writes might be causally related, like if two different update operations want to buy sticks of butter but there's only one left.
+
+In that situation, the first operation in the batch you get the last stick of butter, and the second operation should error out.
+
+That's why we need these executed in order.
+
+The bulk rate would throw some sort of error on the update statement, and then return an acknowledgment back to the client before trying to purchase any more items.
+
+The acknowledgment we get back would tell us if something errored out.
+
+So bulk writes in MongoDB will be ordered by default.
+
+That means that even though we sent all the writes at the same time, the replica set will apply them in the order that they were sent.
+
+Sending an ordered bulk write implies that each write in the batch depends on all the writes that occurred before it.
+
+So if a write operation results in error, all subsequent writes will not be executed, because Mongo assumes that those writes were expecting the ones before to succeed.
+
+But there's a chance that the writes in our batch are not dependent on each other.
+
+In this case, we've just received a shipment of food to the warehouse and we want to update the new food quantities in stock.
+
+Because all these operations are additive, we don't need them to be executed in order.
+
+So I passed this order of false flag to the bulk write command which will execute them in parallel.
+
+If some of them fail for whatever reason, we can still continue on with the execution of the other operations in the batch.
+
+And when we get an acknowledgment back from the server, it'll let us know if any of the operations fail.
+
+So if the writes in our batch don't have any sort of causal relationship, then the client can send them over in an unordered bulk write.
+
+This will execute the write operations in parallel so the writes are non-blocking.
+
+And as a result, a single failure won't prevent any of the other writes from succeeding.
+
+Now those writes might fail on their own, but their execution is not tied to the success of any of the other writes.
+
+So in conclusion, bulk writes make it more efficient to update or insert in many documents in a database by setting them all in batches.
+
+These bulk writes can be ordered, which means writes are executed in the order in which they were sent to the database and any errors will prevent subsequent writes from executing.
+
+They can also be unordered, which means the writes are executed in parallel, and errors don't affect the execution of other writes.
+
+Now one small thing to note.
+
+In a shorted collection, ordered bulk rates are expected to take a little longer because write operations need to be routed to the designated shards.
+
+And unordered bulk write might reach the mongos in one batch, but then it has to be serialized across each designated shard.
+
+Regardless of the designated shard, the write operation needs to be evaluated to see if we should continue or exit the execution of the rest of the batch.
