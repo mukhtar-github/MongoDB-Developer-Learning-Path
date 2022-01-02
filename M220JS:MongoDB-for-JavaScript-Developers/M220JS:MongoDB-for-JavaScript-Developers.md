@@ -2638,3 +2638,13 @@ mukhtar@mukhtar-Aspire-ES1-431:~/Documents/MongoDB-Developer-Learning-Path/M220J
 Welcome to Chapter 4. We are almost there. Before we start uncorking the champagne and celebrating your course completion certificate, we need to go through the last chapter of this course. This chapter is all about application resilience and robustness.
 
 We will be looking to how to make your applications resilient to a variety of different situations that may impact the performance and availability of your system. Don't forget, we are living in a distributive database world, and therefore, we need to prepare our application to be robust and performant, as well as scalable. Hang tight. This is going to be fun.
+
+### Connection Pooling
+
+In this lesson, we're going to cover *connection pooling in MongoDB*. So *connection pooling* is all about *reusing database connections*. The *connection pool* itself is just the *cache of database connections maintains* that they can be reused when future requests to the database are required. When issuing several different requests of the database, we could take the lazy approach and just create a new connection whenever we needed to make a request.
+
+And then when the request is done, we just destroy the connection. The issue with this approach is that establishing a *database connection* requires time and computing resources to complete the handshake with the server and everything else. We're essentially paying the costs of waiting for this connection to be established for every request. *Connection pooling* helps reduce the overhead of creating database connections by creating a whole bunch right off the bat.
+
+The next requests come in different connections in the pool get allocated to fulfill these requests. By default, the driver will create a *connection pool of 100 connections* to share. The default of *100 connections* is adequate for most applications. Additionally, if we didn't use a *connection pool* and suddenly got a whole lot of requests, we might easily reach the limit that our hardware and software could handle, leading to a lot of errors and unhappy developers.
+
+So just to recap, *connection pools* allow connections to be recycled for new requests to the database. To the developer, this will make database operations look faster because the cost to create a new connection has already been paid. In the *Mongo drivers, the default connection pools 100 connections large*, which should be fine for most average applications.
