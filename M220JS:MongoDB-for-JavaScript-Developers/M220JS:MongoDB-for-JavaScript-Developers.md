@@ -2511,23 +2511,11 @@ This is an implementation of *bulk writes in the Mongo shell*, and you can copy 
 
 But if we can send *all four writes in one trip, then sending four writes only takes one second*. Now the default behavior of a *bulk write in Mongo is an ordered execution of these writes*. In the *order bulk write, any failure will stop the execution of the rest of the batch*. This benefits us in this case because these *writes* might be causally related, like *if two different update operations want to buy sticks of butter but there's only one left*.
 
-In that situation, the first operation in the batch you get the last stick of butter, and the second operation should error out.
+In that situation, the first operation in the batch you get the last stick of butter, and the second operation should error out. That's why we need these executed in order. The bulk rate would throw some sort of error on the update statement, and then return an acknowledgment back to the client before trying to purchase any more items. The acknowledgment we get back would tell us if something errored out. *So bulk writes in MongoDB will be ordered by default*.
 
-That's why we need these executed in order.
+That means that even though we sent all the *writes* at the same time, the *replica set* will apply them in the order that they were sent. Sending an *ordered bulk write* implies that *each write* in the batch depends on *all the writes* that occurred before it. So if a *write operation* results in error, all subsequent *writes* will not be executed, because *Mongo* assumes that those *writes* were expecting the ones before to succeed.
 
-The bulk rate would throw some sort of error on the update statement, and then return an acknowledgment back to the client before trying to purchase any more items.
-
-The acknowledgment we get back would tell us if something errored out.
-
-So bulk writes in MongoDB will be ordered by default.
-
-That means that even though we sent all the writes at the same time, the replica set will apply them in the order that they were sent.
-
-Sending an ordered bulk write implies that each write in the batch depends on all the writes that occurred before it.
-
-So if a write operation results in error, all subsequent writes will not be executed, because Mongo assumes that those writes were expecting the ones before to succeed.
-
-But there's a chance that the writes in our batch are not dependent on each other.
+But there's a chance that the *writes* in our batch are not dependent on each other.
 
 In this case, we've just received a shipment of food to the warehouse and we want to update the new food quantities in stock.
 
