@@ -2446,3 +2446,29 @@ The benefit of this *read concern* level is that *once data has been replicated 
 So clearly, *Read Concern Majority might return slightly stale data, but provides a higher level of read isolation*. So you can be more confident the data you received won't get rolled back. For this reason, it's most useful in reading *mission-critical data*, because lower levels of read isolation have slightly higher chance of being rolled back in an emergency. If your application's core functionality *depends on one read, like checking a user's account balance*, then you probably want *that read to have a higher durability*.
 
 So just to recap, *issuing a read with Read Concern Local will return whatever copy of the data exists on the primary node in the set. Issuing a read with Read Concern Majority will return whatever copy of data has been replicated to a majority of nodes in the set*.
+
+### Ticket: User Report
+
+#### Problem 11
+
+##### User Story 11
+
+"As an administrator, I want to be able to view the top 20 users by their number of comments."
+
+##### Task 11
+
+For this ticket, you'll be required to modify one method in *commentsDAO.js, mostActiveCommenters*. This method produces a report of the *20 most frequent commenters on the MFlix site*.
+
+Hint: This report is meant to be run from the backend by a manager that is very particular about the accuracy of data. Ensure that the read concern used in this read avoids any potential document rollback.
+
+Remember to add the necessary changes in the pipeline to meet the requirements. More information can be found in the comments of the method.
+
+##### MFlix Functionality 11
+
+Once this ticket is completed, administrators will be able to generate a report of the top commenters on the site.
+
+### Answer 11
+
+```javascript
+
+```
