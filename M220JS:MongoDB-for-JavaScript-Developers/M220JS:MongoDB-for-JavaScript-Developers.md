@@ -2470,5 +2470,29 @@ Once this ticket is completed, administrators will be able to generate a report 
 ### Answer 11
 
 ```javascript
+// TODO Ticket: User Report
+// Return the 20 users who have commented the most on MFlix.
+static async mostActiveCommenters() {
+  try {
+    // here's how the pipeline stages are assembled
+    const groupStage = { $group: { _id: "$email", count: { $sum: 1 } } }
+    const sortStage = { $sort: { count: -1 } }
+    const limitStage = { $limit: 20 }
+    const pipeline = [groupStage, sortStage, limitStage]
 
+// TODO Ticket: User Report
+// Use a more durable Read Concern here to make sure this data is not stale.
+// here's how the Read Concern durability is increased
+    const readConcern = { level: "majority" }
+
+    const aggregateResult = await comments.aggregate(pipeline, {
+      readConcern
+    })
+
+    return await aggregateResult.toArray()
+  } catch (e) {
+    console.error(`Unable to delete comment: ${e}`)
+    return { error: e }
+  }
+}
 ```
