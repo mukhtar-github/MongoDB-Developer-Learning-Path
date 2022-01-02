@@ -2522,3 +2522,27 @@ And when we get an acknowledgment back from the server, it'll let us know if any
 So in conclusion, *bulk writes* make it more efficient to *update or insert in many documents in a database by setting them all in batches*. *These bulk writes can be ordered, which means writes are executed in the order in which they were sent to the database and any errors will prevent subsequent writes from executing*. They can also be *unordered, which means the writes are executed in parallel, and errors don't affect the execution of other writes*.
 
 Now one small thing to note. In a *sorted collection*, *ordered bulk rates* are expected to take a little longer because *write operations* need to be routed to the *designated shards*. And *unordered bulk write* might reach the *mongos in one batch*, but then it has to be serialized across each *designated shard*. Regardless of the *designated shard*, the write operation needs to be evaluated to see if we should continue or exit the execution of the rest of the batch.
+
+### Ticket: Migration
+
+#### Problem 12
+
+##### Task 12
+
+For this ticket, you'll be required to complete the command-line script located in the *migrations* directory of *src* called *movie-last-updated-migration.js*.
+
+Things always change, and a requirement has come down that the lastupdated value in each document of the movies collection needs to be stored as an *ISODate* rather than a *String*.
+
+Complete the script so it updates the format of l*astupdated* using a *bulk write*. You can find the exact *Node.js* syntax in the docs.
+
+To perform the migration, run the script:
+
+```javascript
+node movie-last-updated-migration.js
+```
+
+### Answer 12
+
+```javascript
+
+```
