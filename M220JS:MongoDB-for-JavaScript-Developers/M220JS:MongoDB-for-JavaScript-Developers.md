@@ -2439,17 +2439,9 @@ In this lesson, we're going to discuss *read concerns in MongoDB*. So *read conc
 
 In the vast majority of cases, the data will also have been written to the *secondary nodes* in the set. But the client only has proof that this *one node applied the write*. This means that there's a chance, however slim, that the data returned by this *read will be rolled back*. This would happen if sometime after this *data is returned, the primary goes down and the secondaries haven't replicated the data yet*. That means that when one of these *two nodes becomes the primary, this primary will be secondary*.
 
-And it'll be rolled back to match the state of whichever node became the new primary.
+And it'll be rolled back to match the state of whichever *node became the new primary*. So the default *read concern MongoDB is Local*, which reads whatever copy of the data exists on the *primary node*, regardless of whether or not the *other nodes have replicated that data*. And for the *vast majority of reads, Read Concern Local is just fine*. But we might want a *higher level of consistency on some of our reads*, which we can achieve with a *read concern called Majority*. When a *database client sends a read to Mongo with Read Concern Majority*, it can verifiably claim that the *data it gets back has been replicated to a majority of nodes in the set*.
 
-So the default read concern MongoDB is Local, which reads whatever copy of the data exists on the primary node, regardless of whether or not the other nodes have replicated that data.
-
-And for the vast majority of reads, Read Concern Local is just fine.
-
-But we might want a higher level of consistency on some of our reads, which we can achieve with a read concern called Majority.
-
-When a database client sends a read to Mongo with Read Concern Majority, it can verifiably claim that the data it gets back has been replicated to a majority of nodes in the set.
-
-The benefit of this read concern level is that once data has been replicated to majority of nodes, it's very durable in the event of a failure.
+The benefit of this *read concern* level is that once data has been replicated to majority of nodes, it's very durable in the event of a failure.
 
 Even if the current primary fails, this secondary can be elected primary, and then the data will get rolled back.
 
