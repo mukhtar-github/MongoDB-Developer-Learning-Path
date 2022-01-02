@@ -2443,14 +2443,6 @@ So the default *read concern MongoDB is Local*, which reads whatever copy of the
 
 The benefit of this *read concern* level is that *once data has been replicated to majority of nodes, it's very durable in the event of a failure*. Even if the *current primary fails, this secondary can be elected primary, and then the data will get rolled back*. One thing to note here, if these secondaries aren't done replicating data at the time that this primary receives the read, then whenever the copy of the data has been copied to a majority of nodes, will be returned to the client. *This means that if my age in the primary is 66 but the secondaries still think that I'm 65, the age returned to the client will be 65 because in a three-node replica set, two members are required to constitute a majority*.
 
-So clearly, Read Concern Majority might return slightly stale data, but provides a higher level of read isolation.
+So clearly, *Read Concern Majority might return slightly stale data, but provides a higher level of read isolation*. So you can be more confident the data you received won't get rolled back. For this reason, it's most useful in reading *mission-critical data*, because lower levels of read isolation have slightly higher chance of being rolled back in an emergency. If your application's core functionality *depends on one read, like checking a user's account balance*, then you probably want *that read to have a higher durability*.
 
-So you can be more confident the data you received won't get rolled back.
-
-For this reason, it's most useful in reading mission-critical data, because lower levels of read isolation have slightly higher chance of being rolled back in an emergency.
-
-If your application's core functionality depends on one read, like checking a user's account balance, then you probably want that read to have a higher durability.
-
-So just to recap, issuing a read with Read Concern Local will return whatever copy of the data exists on the primary node in the set.
-
-Issuing a read with Read Concern Majority will return whatever copy of data has been replicated to a majority of nodes in the set.
+So just to recap, *issuing a read with Read Concern Local will return whatever copy of the data exists on the primary node in the set. Issuing a read with Read Concern Majority will return whatever copy of data has been replicated to a majority of nodes in the set*.
