@@ -2648,3 +2648,32 @@ And then when the request is done, we just destroy the connection. The issue wit
 The next requests come in different connections in the pool get allocated to fulfill these requests. By default, the driver will create a *connection pool of 100 connections* to share. The default of *100 connections* is adequate for most applications. Additionally, if we didn't use a *connection pool* and suddenly got a whole lot of requests, we might easily reach the limit that our hardware and software could handle, leading to a lot of errors and unhappy developers.
 
 So just to recap, *connection pools* allow connections to be recycled for new requests to the database. To the developer, this will make database operations look faster because the cost to create a new connection has already been paid. In the *Mongo drivers, the default connection pools 100 connections large*, which should be fine for most average applications.
+
+### Ticket: Connection Pooling
+
+#### Problem 13
+
+##### Task 13
+
+For this ticket, you'll be required to modify the configuration of the *MongoClient* to set the maximum size of the connection pool to *50* connections.
+
+The *MongoClient* is initialized in the *src/index.js* file. A link to the [URI connection settings](https://mongodb.github.io/node-mongodb-native/3.5/reference/connecting/connection-settings/) is included here for your reference.
+
+##### Testing and Running the Application 13
+
+Note: The unit test only has access to *DAO methods*, but the connection pool size for the MFlix application is set in the *index.js* file.
+
+However, the connection pool size for the testing environment is set in *test/config/mongoEnvironment.js*, so you can test your changes there and the unit test will tell you if something is wrong.
+
+When the unit test passes, make sure to update the code in *src/index.js* so you can retrieve the validation code from the integration test.
+
+### Answer 13
+
+```javascript
+MongoClient.connect(
+  process.env.MFLIX_DB_URI,
+  // TODO: Connection Pooling
+  // Set the poolSize to 50 connections.
+  { useNewUrlParser: true, poolSize: 50 },
+)
+```
