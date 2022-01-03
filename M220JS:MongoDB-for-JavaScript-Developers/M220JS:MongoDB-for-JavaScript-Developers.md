@@ -2988,24 +2988,10 @@ So in this list we're going to talk about the *principle of least privilege* and
 
 We'll see what he means by that in a second. So to a certain extent at the application layer, we are already kind of doing this for our *mFlux users*. For example, we make sure that only *certain resources and privileges* are available to *users* who have been logged in. And even those *users* have *different permissions from each other*. For example, a *user* only has the *permission once they're logged in to delete their own comments and no one else's*.
 
-So MongoDB actually offers the same sort of robust user management at the database level.
+So *MongoDB* actually offers the same sort of *robust user management at the database level*. So by creating a *database user* specifically for the application, we can in a more granular way select the privileges and resources that *mFlix* should have access to. So this kind of forces us to ask the question, *should the application be able to create indexes or create new collections, or should the application be able to drop an entire database*?
 
-So by creating a database user specifically for the application, we can in a more granular way select the privileges and resources that mFlux should have access to.
+Questions like these tend to require some foresight about what actions the applications should be able to perform, so they won't always be easy to answer. But they are very important in order to prevent the application from accessing a resource that it should never need. If the application has permission to use an important collection that it's not programmed to ever use, than that permission exists only as a vulnerability in our application, and we should remove it.
 
-So this kind of forces us to ask the question, should the application be able to create indexes or create new collections, or should the application be able to drop an entire database?
+So that's all for now about security. We highly recommend that if you're interested, you should take our *MongoDB security course* to learn more about *securing your MongoDB deployments in production*.
 
-Questions like these tend to require some foresight about what actions the applications should be able to perform so they won't always be easy to answer.
-
-But they are very important in order to prevent the application from accessing a resource that it should never need.
-
-If the application has permission to use an important collection that it's not programmed to ever use, than that permission exists only as a vulnerability in our application, and we should remove it.
-
-So that's all for now about security.
-
-We highly recommend that if you're interested, you should take our MongoDB security course to learn more about securing your MongoDB deployments in production.
-
-So just to recap, make sure to engineer your systems with the principle of least privilege in mind.
-
-In order to do this, we have to first consider what kinds of users we'll have on our system and what kind of permissions they'll need.
-
-This includes application users who will be using the application itself and database users who will connect to and apply operations against the database.
+So just to recap, make sure to engineer your systems with *the principle of least privilege* in mind. In order to do this, we have to first consider *what kinds of users* we'll have on our system and what kind of permissions they'll need. This includes *application users* who will be using the application itself and *database users who will connect to and apply operations against the database*.
