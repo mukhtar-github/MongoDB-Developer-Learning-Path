@@ -2906,3 +2906,41 @@ So the last *error* that we're going to cover in this lesson is the *write conce
 So here, the *write concern error* tells us what happened, that it could not satisfy the write concern we requested, and the reason was that it didn't have enough data bearing nodes. So one solution to this problem is to just *go on Atlas and add two more data bearing nodes to our set*. But if we don't need to have *five nodes in our replica set*, then we're better off just setting our *write concern to w majority or some number less than or equal to 3*.
 
 So just to recap, in this lesson, we covered these *three basic errors*, and we discussed some ways we can deal with them. It's really important to use a *try/catch block* in these cases so that we don't have to disrupt the application to handle errors.
+
+### Ticket: Handling Errors
+
+#### Problem 15
+
+##### Task 15
+
+For this ticket, you'll be required to make the API more robust by handling exceptions. Specifically, what should happen if an incorrectly formatted *_id* is passed to the *getMovieByID()* method in *moviesDAO.js*?
+
+In this case, an error will be thrown to *getMovieByID()* because of an invalid ID. However, the method does not need to return this error. Instead, if this error is thrown, the method should return *null*.
+
+A *try/catch* block is already included for you in *getMovieByID()*. Use the variable *e* to figure out if the invalid ID error is being thrown, and then return *null* in this case.
+
+Hint: When the *error e* is caught, it has *type Error*. You might want to convert this to a *string*.
+
+##### Testing and Running the Application 15
+
+You can run the unit tests for this ticket by running:
+
+```javascript
+npm test -t error-handling
+```
+
+### Answer 15
+
+```javascript
+MongoClient.connect(
+  process.env.MFLIX_DB_URI,
+  // TODO: Timeouts
+  // Set the write timeout limit to 2500 milliseconds.
+  { useNewUrlParser: true, poolSize: 50, writeConcern: {wtimeout: 2500} },
+)
+
+MongoClient.connect(
+  process.env.MFLIX_DB_URI,
+  { wtimeout: 2500, poolSize: 50, useNewUrlParser: true },
+)
+```
