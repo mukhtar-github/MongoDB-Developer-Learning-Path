@@ -2692,16 +2692,8 @@ No matter how well we engineer a system, we should always expect application ext
 { w: "majority", wtimeout: 5000 }
 ```
 
-This *wtimeout value* is determined in milliseconds. So this would wait for *5 seconds* before *timing out on a w majority operation*. And lastly, always configure for and handle the *serverSelectionTimeout error*. No ifs, ands, or buts about it. By handling this error, you also passively monitor the health of your application stack, and also become quickly aware of any hardware or software problems that haven't recovered in an adequate amount of time.
+This *wtimeout value* is determined in milliseconds. So this would wait for *5 seconds* before *timing out on a w majority operation*. And lastly, always configure for and handle the *serverSelectionTimeout error*. No ifs, ands, or buts about it. By handling this error, you also passively monitor the health of your application stack, and also become quickly aware of any hardware or software problems that haven't recovered in an adequate amount of time. If one of these servers goes down, the response we get back might let us know what happened.
 
-If one of these servers goes down, the response we get back might let us know what happened. By default, the driver's going to *wait 30 seconds* before raising a *serverSelectionTimeout error*, but you could change this to suit your application's needs. By handling the server, we also passively monitor the health of the application stack, and become quickly aware of any hardware and software problems that haven't been recovered in an adequate amount of time.
+By default, the driver's going to *wait 30 seconds* before raising a *serverSelectionTimeout error*, but you could change this to suit your application's needs. By handling the server, we also passively monitor the health of the application stack, and become quickly aware of any hardware and software problems that haven't been recovered in an adequate amount of time. Each driver and programming language has a specific way of dealing with errors, and we do handle this error in particular in the *mflix application*.
 
-Each driver and programming language has a specific way of dealing with errors, and we do handle this error in particular in the [INAUDIBLE] application.
-
-So just to recap here, always use connection pooling, which, by default, will allow a connection pool of 100 connections.
-
-Always specify a write timeout for majority writes to make sure that the server isn't waiting for too long.
-
-And always handles serverSelectionTimeout errors.
-
-This will make sure that the application becomes quickly aware of any hardware and software problems that haven't recovered in time.
+So just to recap here, always use *connection pooling*, which, by default, will allow a *connection pool of 100 connections*. Always specify a *write timeout* for *majority writes* to make sure that the server isn't waiting for too long. And always handles *serverSelectionTimeout errors*. This will make sure that the application becomes quickly aware of any hardware and software problems that haven't recovered in time.
