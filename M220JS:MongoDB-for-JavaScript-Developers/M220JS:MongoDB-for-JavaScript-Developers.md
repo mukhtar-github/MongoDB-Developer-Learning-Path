@@ -2682,43 +2682,19 @@ MongoClient.connect(
 
 In this lesson, we're going to discuss ways in which you can make your application more robust with respect to how it communicates with the database. So you've learned about *connection pooling* all ready, but it's very important so we're going to briefly cover it again. Creating a new *Mongo client* for every request of the database might service your application in the short term, but it will eventually result in the application consuming and depleting available resources that become more and more scarce over time.
 
-Connection pooling reduces the total overhead associated with creating these new connections by allowing the application to recycle and reuse database connections for new requests.
+*Connection pooling* reduces the total overhead associated with creating these new connections by allowing the application to recycle and *reuse database connections* for new requests. The *M220 API* you've been given correctly reuses the same class or object for all client communication, if you'd like to look at an example of how we did it.Another way to make a *more robust database client is with the write timeout or wtimeout*.
 
-The M220 API you've been given correctly reuses the same class or object for all client communication, if you'd like to look at an example of how we did it.
+No matter how well we engineer a system, we should always expect application external resources like *queues, networks, and databases* to take more time than expected. For an application or consumer critical operations, a developer may choose to write with *w majority* to ensure that acknowledged rights are *written to a majority of nodes in the set*. But if there's a problem on one of the *secondary nodes,* we might not get an acknowledgment back from the server for a while.
 
-Another way to make a more robust database client is with the write timeout or wtimeout.
+*If more writes than reads are coming into the system, and operations aren't being acknowledged, this will eventually lead to system gridlock*. But we can avoid this *gridlock by using a wtimeout*. For any *write operation written with w majority, always specify a write timeout*. The specific length of a *timeout* will need to be determined based on your network and hardware, *but you should always be setting timeouts on these sorts of writes*.
 
-No matter how well we engineer a system, we should always expect application external resources like queues, networks, and databases to take more time than expected.
+```javascript
+{ w: "majority", wtimeout: 5000 }
+```
 
-For an application or consumer critical operations, a developer may choose to write with w majority to ensure that acknowledged rights are written to a majority of nodes in the set.
+This *wtimeout value* is determined in milliseconds. So this would wait for *5 seconds* before *timing out on a w majority operation*. And lastly, always configure for and handle the *serverSelectionTimeout error*. No ifs, ands, or buts about it. By handling this error, you also passively monitor the health of your application stack, and also become quickly aware of any hardware or software problems that haven't recovered in an adequate amount of time.
 
-But if there's a problem on one of the secondary nodes, we might not get an acknowledgment back from the server for a while.
-
-If more writes than reads are coming into the system, and operations aren't being acknowledged, this will eventually lead to system gridlock.
-
-But we can avoid this gridlock by using a wtimeout.
-
-For any write operation written with w majority, always specify a write timeout.
-
-The specific length of a timeout will need to be determined based on your network and hardware, but you should always be setting timeouts on these sorts of writes.
-
-This wtimeout value is determined in milliseconds.
-
-So this would wait for 5 seconds before timing out on a w majority operation.
-
-And lastly, always handle the server selection timeout error.
-
-No ifs, ands, or buts about it.
-
-By handling this error, you also passively monitor the health of your application stack, and also become quickly aware of any hardware or software problems that haven't recovered in an adequate amount of time.
-
-If one of these servers goes down, the response we get back might let us know what happened.
-
-By default, the driver's going to wait 30 seconds before raising a server selection timeout error, but you could change this to suit your application's needs.
-
-By handling the [?
-
-server, ?] we also passively monitor the health of the application stack, and become quickly aware of any hardware and software problems that haven't been recovered in an adequate amount of time.
+If one of these servers goes down, the response we get back might let us know what happened. By default, the driver's going to *wait 30 seconds* before raising a *serverSelectionTimeout error*, but you could change this to suit your application's needs. By handling the server, we also passively monitor the health of the application stack, and become quickly aware of any hardware and software problems that haven't been recovered in an adequate amount of time.
 
 Each driver and programming language has a specific way of dealing with errors, and we do handle this error in particular in the [INAUDIBLE] application.
 
