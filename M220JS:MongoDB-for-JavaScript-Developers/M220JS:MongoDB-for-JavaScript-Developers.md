@@ -2995,3 +2995,77 @@ Questions like these tend to require some foresight about what actions the appli
 So that's all for now about security. We highly recommend that if you're interested, you should take our *MongoDB security course* to learn more about *securing your MongoDB deployments in production*.
 
 So just to recap, make sure to engineer your systems with *the principle of least privilege* in mind. In order to do this, we have to first consider *what kinds of users* we'll have on our system and what kind of permissions they'll need. This includes *application users* who will be using the application itself and *database users who will connect to and apply operations against the database*.
+
+### Ticket: Principle of Least Privilege
+
+#### Problem 16
+
+##### Task 16
+
+For this ticket, you'll be required to add a new user on your Atlas cluster for the MFlix application to connect with.
+
+The user should have the following credentials:
+
+* username: *mflixAppUser*
+* password: *mflixAppPwd*
+
+This user should have the *readWrite* role on the *sample_mflix* database. Use *Add Default Privileges* to assign the user this specific role.
+
+After you have created this user, modify the SRV connection string in your configuration file so the application connects with the new username and password.
+
+##### Testing and Running the Application 16
+
+There are no unit tests associated with this ticket.
+
+Once you have modified the connection string, stop and restart the application.
+
+### Answer 16
+
+```javascript
+static async getMovieByID(id) {
+  try {
+    const pipeline = [
+      {
+        $match: {
+          _id: ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          let: { id: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$movie_id", "$$id"],
+                },
+              },
+            },
+            {
+              $sort: {
+                date: -1,
+              },
+            },
+          ],
+          as: "comments",
+        },
+      },
+    ]
+    return await movies.aggregate(pipeline).next()
+  } catch (e) {
+    // here's how the InvalidId error is identified and handled
+    if (
+      e
+        .toString()
+        .startsWith(
+          "Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters",
+        )
+    ) {
+      return null
+    }
+    console.error(`Something went wrong in getMovieByID: ${e}`)
+    throw e
+  }
+}
+```
