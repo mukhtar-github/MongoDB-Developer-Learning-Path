@@ -2865,6 +2865,42 @@ So the next *error* we're going to cover is the *timeout error*. In situations w
 
 If this does not do the trick, we can resort to reducing the *durability guarantee* by lowering the value of the *write concern*. But the best way to handle the *timeout error* depends on the *durability and speed requirements* of your application.
 
+```javascript
+/*
+   *
+   * Another possible error can occur when the write concern that is
+   * requested cannot be fulfilled.
+   *
+   * For example, our replica set has 3 nodes that was automatically created by
+   * Atlas. We can dictate the type of write concern that we want for our write
+   * operations. In the example below we are asking for a 5 node
+   * acknowledgement, which is impossible in our situation. As a result we get a
+   * Write Concern Exception.
+   *
+   * This error is easy to solve by either assigning a majority write concern or
+   * a number that is less than or equal to 3.
+   *
+   */
+
+  it("WriteConcernError", async () => {
+    try {
+      let dupId = await errors.insertOne(
+        {
+          _id: 6,
+        },
+        { w: 5 },
+      )
+    } catch (e) {
+      expect(e).not.toBeNull()
+      // Now let's check the error that was returned from the driver.
+      console.log(e)
+    }
+  })
+})
+
+// That's it for our lesson on error handling. Enjoy the rest of the course!
+```
+
 So the last *error* that we're going to cover in this lesson is the *write concern error*. This *error* occurs when we request a *write concern* that cannot be fulfilled by the cluster. In this example, our *replica set* has *three nodes* that were automatically created for us by Atlas, but we've issued a *write with write concern w5*.
 
 As you can see, this is impossible, and the driver knows it so it's going to send us back a *write concern error*.
