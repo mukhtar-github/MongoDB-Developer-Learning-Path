@@ -3049,3 +3049,55 @@ This will find the documents whose winner_party is Republican, and whose winner_
 ```javascript
 elections.find( { winner_party: "Republican", winner_electoral_votes: { "$gte": 160 } } )
 ```
+
+### Final: Question 2
+
+Problem:
+
+Consider a collection of phones called phones, used by a phone manufacturer to keep track of the phones currently in production.
+
+Each document in phones looks like this:
+
+```javascript
+{
+  model: 5,
+  date_issued : Date("2016-07-27T20:27:52.834Z"),
+  software_version: 4.8,
+  needs_to_update: false
+}
+```
+
+There is an update required for phones with *software_version* earlier than 4.0. Anyone still using a version older than 4.0 will be asked to update.
+
+The phone manufacturer wants to set the flag *needs_to_update* to true when the value of *software_version* is lower than 4.0. For example, a document like this one:
+
+```javascript
+{
+  model: 5,
+  date_issued : Date("2014-03-04T14:23:43.123Z"),
+  software_version: 3.7,
+  needs_to_update: false
+}
+```
+
+Should be updated to look like this:
+
+```javascript
+{
+  model: 5,
+  date_issued : Date("2014-03-04T14:23:43.123Z"),
+  software_version: 3.7,
+  needs_to_update: true
+}
+```
+
+Which of the following update statements will correctly perform this update?
+
+Choose the best answer:
+
+```javascript
+phones.updateMany( { 
+  software_version: { "$lt": 4.0 } },
+  { "$set": { needs_to_update: true } 
+} )
+```
