@@ -3019,53 +3019,33 @@ There are no unit tests associated with this ticket.
 
 Once you have modified the connection string, stop and restart the application.
 
-### Answer 16
+## Final Exam
+
+### Final: Question 1
+
+Problem:
+
+Assume we have a collection called elections that holds data about all United States Presidential Elections since 1789. All the documents in the elections collection look like this:
 
 ```javascript
-static async getMovieByID(id) {
-  try {
-    const pipeline = [
-      {
-        $match: {
-          _id: ObjectId(id),
-        },
-      },
-      {
-        $lookup: {
-          from: "comments",
-          let: { id: "$_id" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $eq: ["$movie_id", "$$id"],
-                },
-              },
-            },
-            {
-              $sort: {
-                date: -1,
-              },
-            },
-          ],
-          as: "comments",
-        },
-      },
-    ]
-    return await movies.aggregate(pipeline).next()
-  } catch (e) {
-    // here's how the InvalidId error is identified and handled
-    if (
-      e
-        .toString()
-        .startsWith(
-          "Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters",
-        )
-    ) {
-      return null
-    }
-    console.error(`Something went wrong in getMovieByID: ${e}`)
-    throw e
-  }
+{
+  year: 1828,
+  winner: "Andrew Jackson",
+  winner_running_mate: "John C. Calhoun",
+  winner_party: "Democratic",
+  winner_electoral_votes: 178,
+  total_electoral_votes: 261
 }
+```
+
+*total_electoral_votes* represents the total number of electoral votes that year, and *winner_electoral_votes* represents the number of electoral votes received by the winning candidates.
+
+Which of the following queries will retrieve all the Republican winners with at least 160 electoral votes?
+
+Correct Answer:
+
+This will find the documents whose winner_party is Republican, and whose winner_electoral_votes is greater than or equal to 160.
+
+```javascript
+elections.find( { winner_party: "Republican", winner_electoral_votes: { "$gte": 160 } } )
 ```
