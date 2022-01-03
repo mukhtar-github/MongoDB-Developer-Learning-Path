@@ -3209,4 +3209,25 @@ A Timeout error, resolved by wrapping the call in a try/catch block.
 
 This error is best handled in the backend by wrapping the database call in a try/catch block. This way, the error can be handled somewhere in the catch block, instead of the error bubbling up to other layers of the software.
 
+### Final: Question 7
 
+Problem:
+
+Assume a collection called *people_heights* with documents that look like this:
+
+```javascript
+{
+  name: "Ada",
+  height: 1.7
+}
+```
+
+Which of the following queries will find *only* the *4th- and 5th-tallest people* in the *people_heights* collection?
+
+Correct Answer
+
+This will sort on height, and then skip the *top 3 tallest people* to get the *4th- and 5th-tallest people*.
+
+```javascript
+people_heights.find().sort({ height: -1 }).skip(3).limit(2)
+```
