@@ -3231,3 +3231,11 @@ This will sort on height, and then skip the *top 3 tallest people* to get the *4
 ```javascript
 people_heights.find().sort({ height: -1 }).skip(3).limit(2)
 ```
+
+Incorrect Answer
+
+```javascript
+people_heights.find().sort({ height: -1 }).limit(5).skip(3)
+```
+
+MongoDB will rearrange the order and execute the skip before the limit. So this query will sort on height, skip the first 3 and them limit to the top 5 tallest people. It will still return 5 documents after the skip, representing the 4th, 5th, 6th, 7th and 8th-tallest people.
