@@ -2697,3 +2697,46 @@ This *wtimeout value* is determined in milliseconds. So this would wait for *5 s
 By default, the driver's going to *wait 30 seconds* before raising a *serverSelectionTimeout error*, but you could change this to suit your application's needs. By handling the server, we also passively monitor the health of the application stack, and become quickly aware of any hardware and software problems that haven't been recovered in an adequate amount of time. Each driver and programming language has a specific way of dealing with errors, and we do handle this error in particular in the *mflix application*.
 
 So just to recap here, always use *connection pooling*, which, by default, will allow a *connection pool of 100 connections*. Always specify a *write timeout* for *majority writes* to make sure that the server isn't waiting for too long. And always handles *serverSelectionTimeout errors*. This will make sure that the application becomes quickly aware of any hardware and software problems that haven't recovered in time.
+
+When should you set a wtimeout?
+
+When our application is using a Write Concern more durable than w: 1.
+
+The primary reason to use a wtimeout is because by default, when using Write Concern more durable than w: 1, there is no wtimeout, so the server will wait indefinitely for operations to complete.
+
+Our application can use wtimeout to put a time limit on how long the server waits before a Write Concern is satisfied.
+
+### Ticket: Timeouts
+
+#### Problem 14
+
+##### Task 14
+
+For this ticket, you'll be required to modify the configuration of MongoClient to set a write timeout of 2500 milliseconds.
+
+The MongoClient is initialized in the src/index.js file. A link to the URI connection settings is included here for your reference.
+
+##### Testing and Running the Application 14
+
+Note: The unit test only has access to DAO methods, but the write timeout for the MFlix application is set in the index.js file.
+
+However, the write timeout for the testing environment is set in test/config/mongoEnvironment.js, so you can test your changes there and the unit test will tell you if something is wrong.
+
+When the unit test passes, make sure to update the code in src/index.js so you can retrieve the validation code from the integration test.
+
+You can run the unit tests for this ticket by running:
+
+```javascript
+npm test -t timeouts
+```
+
+### Answer 14
+
+```javascript
+MongoClient.connect(
+  process.env.MFLIX_DB_URI,
+  // TODO: Connection Pooling
+  // Set the poolSize to 50 connections.
+  { useNewUrlParser: true, poolSize: 50 },
+)
+```
