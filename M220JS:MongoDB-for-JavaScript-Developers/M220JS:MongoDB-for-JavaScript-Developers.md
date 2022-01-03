@@ -3095,9 +3095,47 @@ Which of the following update statements will correctly perform this update?
 
 Choose the best answer:
 
+This will find all phones with a *software_version* below 4.0, and set the *needs_to_update* field to *True* for those documents.
+
 ```javascript
 phones.updateMany( { 
   software_version: { "$lt": 4.0 } },
   { "$set": { needs_to_update: true } 
 } )
 ```
+
+### Final: Question 3
+
+Problem:
+
+Suppose an instance of *MongoClient* is created with the following settings:
+
+```javascript
+import { MongoClient } from "mongodb"
+
+const URI = "mongodb+srv://m220-user:m220-pass@m220-test.mongodb.net/test"
+
+const testClient = await MongoClient.connect(
+  URI,
+  {
+    authSource: "admin",
+    connectTimeoutMS: 50,
+    retryWrites: true,
+    useNewUrlParser: true
+  },
+)
+```
+
+The variable representing our client, testClient, will:
+
+Correct Answers:
+
+*automatically retry writes that fail*.
+
+This *MongoClient* object will retry writes, because it was initialized with the option *retryWrites: true*.
+wait at most 50 milliseconds for timing out a connection.
+
+This *MongoClient* object will wait *50ms* before timing out, because it was initialized with the option *connectTimeoutMS: 50*.
+
+
+
