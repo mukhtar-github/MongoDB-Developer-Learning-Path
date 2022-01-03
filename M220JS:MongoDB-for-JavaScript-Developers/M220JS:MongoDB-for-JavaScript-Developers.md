@@ -2932,15 +2932,50 @@ npm test -t error-handling
 ### Answer 15
 
 ```javascript
-MongoClient.connect(
-  process.env.MFLIX_DB_URI,
-  // TODO: Timeouts
-  // Set the write timeout limit to 2500 milliseconds.
-  { useNewUrlParser: true, poolSize: 50, writeConcern: {wtimeout: 2500} },
-)
-
-MongoClient.connect(
-  process.env.MFLIX_DB_URI,
-  { wtimeout: 2500, poolSize: 50, useNewUrlParser: true },
-)
+static async getMovieByID(id) {
+  try {
+    const pipeline = [
+      {
+        $match: {
+          _id: ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "comments",
+          let: { id: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$movie_id", "$$id"],
+                },
+              },
+            },
+            {
+              $sort: {
+                date: -1,
+              },
+            },
+          ],
+          as: "comments",
+        },
+      },
+    ]
+    return await movies.aggregate(pipeline).next()
+  } catch (e) {
+    // here's how the InvalidId error is identified and handled
+    if (
+      e
+        .toString()
+        .startsWith(
+          "Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters",
+        )
+    ) {
+      return null
+    }
+    console.error(`Something went wrong in getMovieByID: ${e}`)
+    throw e
+  }
+}
 ```
