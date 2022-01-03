@@ -2807,7 +2807,7 @@ What this means is the document had a value for a unique field that was not uniq
   })
 ```
 
-The *error message* contains the *unique field* that encountered the *error* as well as *the duplicate value*. We should also note that this test still passed even though we encountered an *error* because we were able to handle it in a *try/catch block*.
+The *error message* contains the *unique field* that encountered the *error* as well as *the duplicate value*. We should also note that this test still passed even though we encountered an *error* because we were able to handle it in a *try/catch block*. And here, we can retry the write with a different *_id* value and verify that this value does not already exist in the collection.
 
 ```javascript
 /* Great! It looks like the test passed, but it would be great to know
@@ -2829,19 +2829,43 @@ The *error message* contains the *unique field* that encountered the *error* as 
   })
 ```
 
-And here, we can retry the write with a different *_id* value and verify that this value does not already exist in the collection.
+So the next *error* we're going to cover is the *timeout error*. In situations where we encounter a *timeout error*, the *try/catch block* is our best friend because it allows us to handle this *error* without really disrupting the application. You may notice that here, the *write timeout milliseconds is set to 1 millisecond*, which may be difficult to fulfill if the application has a *write heavy workload*. So one potential solution is to increase this value and see if the extra few milliseconds allow the cluster enough time to catch up.
 
-So the next error we're going to cover is the timeout error.
+```javascript
+/* Another error to be on the lookout for is the timeout error. In this test
+   * case we are trying to avoid breaking the application by using the try/catch
+   * block.
+   *
+   * This particular test case won't cause a timeout error. In fact, it is very
+   * hard to induce a timeout error or any of the errors covered in this lesson
+   * on an application that is running on Atlas.
+   *
+   * But if that does happen, then a try/catch block will help you identify the
+   * situation.
+   *
+   * To fix a timeout issue you need to consider the needs of your application,
+   * and depending on that you can either reduce durability guarantees by
+   * lowering the write concern value or increase the timeout and keep the app
+   * durable.
+   */
 
-In situations where we encounter a timeout error, the *try/catch block* is our best friend because it allows us to handle this error without really disrupting the application.
-
-You may notice that here, the write timeout milliseconds is set to 1 millisecond, which may be difficult to fulfill if the application has a write heavy workload.
-
-So one potential solution is to increase this value and see if the extra few milliseconds allow the cluster enough time to catch up.
+  it("timeout", async () => {
+    try {
+      let dupId = await errors.insertOne(
+        {
+          _id: 6,
+        },
+        { wtimeoutMS: 1 },
+      )
+    } catch (e) {
+      expect(e).toBeUndefined()
+    }
+  })
+```
 
 If this does not do the trick, we can resort to reducing the durability guarantee by lowering the value of the write concern.
 
-But the best way to handle the timeout error depends on the durability and speed requirements of your application.
+But the best way to handle the *timeout error* depends on the durability and speed requirements of your application.
 
 So the last error that we're going to cover in this lesson is the write concern error.
 
