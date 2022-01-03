@@ -2863,23 +2863,17 @@ So the next *error* we're going to cover is the *timeout error*. In situations w
   })
 ```
 
-If this does not do the trick, we can resort to reducing the durability guarantee by lowering the value of the write concern.
+If this does not do the trick, we can resort to reducing the *durability guarantee* by lowering the value of the *write concern*. But the best way to handle the *timeout error* depends on the *durability and speed requirements* of your application.
 
-But the best way to handle the *timeout error* depends on the durability and speed requirements of your application.
+So the last *error* that we're going to cover in this lesson is the *write concern error*. This *error* occurs when we request a *write concern* that cannot be fulfilled by the cluster. In this example, our *replica set* has *three nodes* that were automatically created for us by Atlas, but we've issued a *write with write concern w5*.
 
-So the last error that we're going to cover in this lesson is the write concern error.
+As you can see, this is impossible, and the driver knows it so it's going to send us back a *write concern error*.
 
-This error occurs when we request a write concern that cannot be fulfilled by the cluster.
-
-In this example, our replica set has three nodes that were automatically created for us by Atlas, but we've issued a write with write concern w5.
-
-As you can see, this is impossible, and the driver knows it so it's going to send us back a write concern error.
-
-So here, the write concern error tells us what happened, that it could not satisfy the write concern we requested, and the reason was that it didn't have enough data bearing nodes.
+So here, the *write concern error* tells us what happened, that it could not satisfy the write concern we requested, and the reason was that it didn't have enough data bearing nodes.
 
 So one solution to this problem is to just go on Atlas and add two more data bearing nodes to our set.
 
-But if we don't need to have five nodes in our replica set, then we're better off just setting our write concern to w majority or some number less than or equal to 3.
+But if we don't need to have five nodes in our *replica set*, then we're better off just setting our write concern to w majority or some number less than or equal to 3.
 
 So just to recap, in this lesson, we covered these three basic errors, and we discussed some ways we can deal with them.
 
