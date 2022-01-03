@@ -2809,6 +2809,26 @@ What this means is the document had a value for a unique field that was not uniq
 
 The *error message* contains the *unique field* that encountered the *error* as well as *the duplicate value*. We should also note that this test still passed even though we encountered an *error* because we were able to handle it in a *try/catch block*.
 
+```javascript
+/* Great! It looks like the test passed, but it would be great to know
+   * exactly what kind of error we are getting. In this test case you can see
+   * that the error returned is the Duplicate Key error, which means that in
+   * order to correct it we should not be trying to insert a Document with an
+   * existing key.
+   *
+   * Simply changing the key value should do the trick.
+   */
+  it("avoids duplicateKey", async () => {
+    try {
+      let notdupId = await errors.insertOne({
+        _id: 3,
+      })
+    } catch (e) {
+      expect(e).toBeUndefined()
+    }
+  })
+```
+
 And here, we can retry the write with a different *_id* value and verify that this value does not already exist in the collection.
 
 So the next error we're going to cover is the timeout error.
