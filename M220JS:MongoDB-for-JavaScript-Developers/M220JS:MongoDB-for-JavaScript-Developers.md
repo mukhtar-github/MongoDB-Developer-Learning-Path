@@ -2773,15 +2773,43 @@ let errors
     })
 ```
 
-What this means is the document had a value for a unique field that was not unique to the collection. The *_id* field is unique in every collection, so we'll use that in our example. Here, we're prompting the driver to throw a duplicate key error by inserting a document with *_id 0*, verifying that it was inserted, and then trying to insert it again. Note that we use the *try/catch block* here to handle this gracefully.
+What this means is the document had a value for a unique field that was not unique to the collection. The *_id* field is unique in every collection, so we'll use that in our example. Here, we're prompting the driver to throw a *duplicate key error* by inserting a document with *_id 0*, verifying that it was inserted, and then trying to insert it again. Note that we use the *try/catch block* here to handle this gracefully. We're using a *string matching* here to identify the *error*, now let's take a look at it.
 
-We're using a string matching here to identify the error, now let's take a look at it.
+```javascript
 
-The error message contains the unique field that encountered the error as well as the duplicate value.
+    /* The first common error can occur when you are trying to insert a document
+     * in place of an already existing document. In our example there is already
+     * a document with _id that equals 0, so inserting another document with the
+     * same _id value should cause a duplicate key error.
+     *
+     * Let's test to see if this is true.
+     *
+     * In this test case we are specifying that we are expecting to get a
+     * Duplicate Key error.
+     */
 
-We should also note that this test still passed even though we encountered an error because we were able to handle it in a *try/catch block*.
+    let { n, ok } = insertResult.result
+    expect({ n, ok }).toEqual({ n: 1, ok: 1 })
+    // Let's check that the document was successfully inserted.
+    expect(insertResult.insertedCount).toBe(1)
 
-And here, we can retry the write with a different _id value and verify that this value does not already exist in the collection.
+    // and what if we tried to insert a document with the same _id?
+    try {
+      let dupId = await errors.insertOne({
+        _id: 0,
+      })
+    } catch (e) {
+      expect(e).not.toBeUndefined()
+      // we get an error message stating we've tried to insert a duplicate key
+      expect(e.errmsg).toContain("E11000 duplicate key error collection")
+      console.log(e)
+    }
+  })
+```
+
+The *error message* contains the *unique field* that encountered the *error* as well as *the duplicate value*. We should also note that this test still passed even though we encountered an *error* because we were able to handle it in a *try/catch block*.
+
+And here, we can retry the write with a different *_id* value and verify that this value does not already exist in the collection.
 
 So the next error we're going to cover is the timeout error.
 
