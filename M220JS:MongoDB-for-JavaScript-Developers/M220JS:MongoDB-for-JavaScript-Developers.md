@@ -2745,3 +2745,70 @@ MongoClient.connect(
   { wtimeout: 2500, poolSize: 50, useNewUrlParser: true },
 )
 ```
+
+### Error Handling
+
+Hello. In this lesson, we are going to talk about *error handling*. We'll cover a few different kinds of *errors* and discuss *ways to handle them gracefully*. This way, we can ensure that *our application is resilient to issues that occur in both concurrent and distributed systems*. *Distributed systems are prone to network issues, while concurrent systems will more likely encounter duplicate key errors*. A *duplicate key error occurs when we try to insert a document in place of an already existing document*.
+
+```javascript
+let errors
+  // for this lesson we're creating a new collection called errors to work with.
+  beforeAll(async () => {
+    errors = await global.mflixClient
+      .db(process.env.MFLIX_NS)
+      .collection("errors")
+  })
+
+  // and after all the tests run, we'll drop this collection
+  afterAll(async () => {
+    await errors.drop()
+  })
+
+  it("duplicateKey", async () => {
+    /**
+     * add one document to the "errors" database with the _id value set to 0
+     */
+    let insertResult = await errors.insertOne({
+      _id: 0,
+    })
+```
+
+What this means is the document had a value for a unique field that was not unique to the collection. The *_id* field is unique in every collection, so we'll use that in our example. Here, we're prompting the driver to throw a duplicate key error by inserting a document with *_id 0*, verifying that it was inserted, and then trying to insert it again. Note that we use the *try/catch block* here to handle this gracefully.
+
+We're using a string matching here to identify the error, now let's take a look at it.
+
+The error message contains the unique field that encountered the error as well as the duplicate value.
+
+We should also note that this test still passed even though we encountered an error because we were able to handle it in a *try/catch block*.
+
+And here, we can retry the write with a different _id value and verify that this value does not already exist in the collection.
+
+So the next error we're going to cover is the timeout error.
+
+In situations where we encounter a timeout error, the *try/catch block* is our best friend because it allows us to handle this error without really disrupting the application.
+
+You may notice that here, the write timeout milliseconds is set to 1 millisecond, which may be difficult to fulfill if the application has a write heavy workload.
+
+So one potential solution is to increase this value and see if the extra few milliseconds allow the cluster enough time to catch up.
+
+If this does not do the trick, we can resort to reducing the durability guarantee by lowering the value of the write concern.
+
+But the best way to handle the timeout error depends on the durability and speed requirements of your application.
+
+So the last error that we're going to cover in this lesson is the write concern error.
+
+This error occurs when we request a write concern that cannot be fulfilled by the cluster.
+
+In this example, our replica set has three nodes that were automatically created for us by Atlas, but we've issued a write with write concern w5.
+
+As you can see, this is impossible, and the driver knows it so it's going to send us back a write concern error.
+
+So here, the write concern error tells us what happened, that it could not satisfy the write concern we requested, and the reason was that it didn't have enough data bearing nodes.
+
+So one solution to this problem is to just go on Atlas and add two more data bearing nodes to our set.
+
+But if we don't need to have five nodes in our replica set, then we're better off just setting our write concern to w majority or some number less than or equal to 3.
+
+So just to recap, in this lesson, we covered these three basic errors, and we discussed some ways we can deal with them.
+
+It's really important to use a try/catch block in these cases so that we don't have to disrupt the application to handle errors.
