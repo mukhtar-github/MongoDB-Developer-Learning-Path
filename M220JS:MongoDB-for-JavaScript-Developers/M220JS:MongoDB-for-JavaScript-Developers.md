@@ -3154,3 +3154,59 @@ What Write Concern was used in this operation?
 The answer is *w: majority*.
 
 Sending a write with *w: majority* will cause MongoDB to wait for the write to be applied by a majority of nodes in the set. In a 3-node replica set, a majority is constituted by 2 nodes, so MongoDB will send an acknowledgement back to the client when 2 nodes have applied the write.
+
+### Final: Question 5
+
+Problem:
+
+Given the following bulk write statement, to a collection called *employees*:
+
+```javascript
+const baseballPlayers = [
+  { insertOne: { '_id': 11, 'name': 'Edgar Martinez', 'salary': "8.5M" }},    // Insert #1
+  { insertOne: { '_id': 3, 'name': 'Alex Rodriguez', 'salary': "18.3M" }},    // Insert #2
+  { insertOne: { '_id': 24, 'name': 'Ken Griffey Jr.', 'salary': "12.4M" }},  // Insert #3
+  { insertOne: { '_id': 11, 'name': 'David Bell', 'salary': "2.5M" }},        // Insert #4
+  { insertOne: { '_id': 19, 'name': 'Jay Buhner', 'salary': "5.1M" }}         // Insert #5
+]
+
+const bulkWriteResponse = employees.bulkWrite(baseballPlayers)
+```
+
+Assume the *employees* collection is empty, and that there were no network errors in the execution of the bulk write.
+
+Which of the insert operations in *requests* will succeed?
+
+Correct Answers:
+
+Inserts #1, #2, and #3 will succeed.
+
+These writes do not conflict with each other, and they should all succeed if there are no network errors.
+
+Incorrect Answers:
+
+Inserts #4 and #5 will not succeed.
+
+Insert #4 has the same _id as Insert #1, and the driver will throw a *DuplicateKeyError* on this insert, after receiving a similar exception from the server.
+
+The default behavior for bulk writes is an ordered execution of the batch. So when Insert #4 fails, Insert #5 will not be executed.
+
+### Final: Question 6
+
+Problem:
+
+Suppose a client application is sending writes to a replica set with three nodes, but the primary node stops responding:
+
+![replica_set_primary_down](https://s3.amazonaws.com/edu-static.mongodb.com/lessons/M220/notebook_assets/replica_set_primary_down.png)
+
+Assume that none of the connection settings have been changed, and that the client is only sending insert statements with write concern w: 1 to the server.
+
+After 30 seconds, the client still cannot connect to a new primary. Which of the following errors will be thrown by the Node.js driver, and how should it be handled?
+
+Correct Answer:
+
+A Timeout error, resolved by wrapping the call in a try/catch block.
+
+This error is best handled in the backend by wrapping the database call in a try/catch block. This way, the error can be handled somewhere in the catch block, instead of the error bubbling up to other layers of the software.
+
+
