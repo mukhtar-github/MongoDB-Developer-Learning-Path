@@ -2735,8 +2735,13 @@ npm test -t timeouts
 ```javascript
 MongoClient.connect(
   process.env.MFLIX_DB_URI,
-  // TODO: Connection Pooling
-  // Set the poolSize to 50 connections.
-  { useNewUrlParser: true, poolSize: 50 },
+  // TODO: Timeouts
+  // Set the write timeout limit to 2500 milliseconds.
+  { useNewUrlParser: true, poolSize: 50, writeConcern: {wtimeout: 2500} },
+)
+
+MongoClient.connect(
+  process.env.MFLIX_DB_URI,
+  { wtimeout: 2500, poolSize: 50, useNewUrlParser: true },
 )
 ```
