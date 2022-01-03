@@ -3137,5 +3137,20 @@ wait at most 50 milliseconds for timing out a connection.
 
 This *MongoClient* object will wait *50ms* before timing out, because it was initialized with the option *connectTimeoutMS: 50*.
 
+### Final: Question 4
 
+Problem:
 
+Suppose a client application is sending writes to a replica set with 3 nodes:
+
+![replica_set_primary_secondary_highlighted_ack](https://s3.amazonaws.com/edu-static.mongodb.com/lessons/M220/notebook_assets/replica_set_primary_secondary_highlighted_ack.png)
+
+Before returning an acknowledgement back to the client, the replica set *waits*.
+
+When the write has been applied by the nodes marked in *stripes*, it returns an acknowledgement back to the client.
+
+What Write Concern was used in this operation?
+
+The answer is *w: majority*.
+
+Sending a write with *w: majority* will cause MongoDB to wait for the write to be applied by a majority of nodes in the set. In a 3-node replica set, a majority is constituted by 2 nodes, so MongoDB will send an acknowledgement back to the client when 2 nodes have applied the write.
